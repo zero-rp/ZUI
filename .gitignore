@@ -80,4 +80,4 @@ $RECYCLE.BIN/
 *.sdf
 *.opensdf
 *.suo
-.vs/*
+.vs/
