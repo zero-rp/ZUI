@@ -1,0 +1,51 @@
+﻿#ifndef _mxml_h_
+#define _mxml_h_
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <errno.h>
+
+#define strdup		_strdup
+
+#  define MXML_DESCEND		1	/* Descend when finding/walking */
+#  define MXML_NO_DESCEND	0	/* Don't descend when finding/walking */
+#  define MXML_DESCEND_FIRST	-1	/* Descend for first find */
+
+#  define MXML_ADD_BEFORE	0	/* Add node before specified node */
+#  define MXML_ADD_AFTER	1	/* Add node after specified node */
+#  define MXML_ADD_TO_PARENT	NULL	/* Add node relative to parent */
+
+typedef struct mxml_attr_s		/**** XML元素节点的属性值 ****/
+{
+	char			*name;		/* 属性名 */
+	char			*value;		/* 属性值 */
+} mxml_attr_t;
+
+typedef struct mxml_value_u		/**** XML元素值 ****/
+{
+	char			*name;		/* Name of element */
+	int			num_attrs;	/* Number of attributes */
+	mxml_attr_t		*attrs;		/* Attributes */
+} mxml_value_t;
+
+typedef struct mxml_node_s			/**** XML 节点 ****/
+{
+	struct mxml_node_s	*next;			/* 同级的下一个节点（在同一个父节点下）*/
+	struct mxml_node_s	*prev;			/* 同级的上一个节点（在同一个父节点下 */
+	struct mxml_node_s	*parent;		/* 父节点 */
+	struct mxml_node_s	*child;			/* 第一个子节点 */
+	struct mxml_node_s	*last_child;	/* 最后一个子节点 */
+	mxml_value_t		value;			/* Node value */
+	void				*user_data;		/* 用户关联数据 */
+}mxml_node_t ;
+
+mxml_node_t *mxmlLoadString(mxml_node_t *top, const char *s);
+
+mxml_node_t *mxmlFindElement(mxml_node_t *node, mxml_node_t *top, const char *name, const char *attr, const char *value, int descend);
+mxml_node_t *mxmlFindPath(mxml_node_t *top, const char  *path);
+mxml_node_t *mxmlWalkNext(mxml_node_t *node, mxml_node_t *top, int descend);
+mxml_node_t *mxmlWalkPrev(mxml_node_t *node, mxml_node_t *top, int descend);
+
+#endif /* !_mxml_h_ */
