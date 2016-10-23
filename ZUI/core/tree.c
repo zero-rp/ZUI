@@ -523,6 +523,17 @@ void rb_free(rb_root*root){
 	rb_delete(root, root->rb_node);
 }
 
+void rb_foreach_c(rb_node *node, TreeVisitFunc visitfunc) {
+	if (node != NULL) {
+		rb_foreach_c(node->rb_left, visitfunc);
+		visitfunc(node->data);
+		rb_foreach_c(node->rb_right, visitfunc);
+	}
+}
+void rb_foreach(rb_root *root, TreeVisitFunc visitfunc) {
+	rb_foreach_c(root->rb_node, visitfunc);
+}
+
 #if (defined DEBUG_BORDER) && (DEBUG_BORDER == 1)
 void rb_print_c(rb_node *node){
 	if (node != NULL){

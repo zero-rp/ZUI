@@ -25,7 +25,7 @@
 	}rb_root;
 
 
-
+	typedef void(*TreeVisitFunc)(void *data);
 
 	/*操作函数*/
 
@@ -39,7 +39,8 @@
 	void rb_delete(key_t key, rb_root*root);
 	/*释放树*/
 	void rb_free(rb_root*root);
-
+	/*遍历树*/
+	void rb_foreach(rb_root *root, TreeVisitFunc visitfunc);
 #if (defined DEBUG_BORDER) && (DEBUG_BORDER == 1)
 	void rb_print(rb_root *root);
 #endif

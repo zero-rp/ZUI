@@ -6,6 +6,8 @@
 void* CALLBACK ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalLayout p, void* Param1, void* Param2, void* Param3) {
 	switch (ProcId)
 	{
+	case Proc_CoreInit:
+		return 0;
 	case Proc_OnCreate: {
 		p = (ZuiHorizontalLayout)malloc(sizeof(ZHorizontalLayout));
 		memset(p, 0, sizeof(ZHorizontalLayout));

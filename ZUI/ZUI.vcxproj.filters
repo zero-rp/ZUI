@@ -81,9 +81,6 @@
     <ClCompile Include="control\Register.c">
       <Filter>源文件\control</Filter>
     </ClCompile>
-    <ClCompile Include="control\window.c">
-      <Filter>源文件\control</Filter>
-    </ClCompile>
     <ClCompile Include="core\global.c">
       <Filter>源文件\core</Filter>
     </ClCompile>
@@ -113,6 +110,12 @@
     </ClCompile>
     <ClCompile Include="layout\TileLayout.c">
       <Filter>源文件\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="control\Window.c">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\Browser.c">
+      <Filter>源文件\control</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -164,9 +167,6 @@
     <ClInclude Include="control\Register.h">
       <Filter>头文件\control</Filter>
     </ClInclude>
-    <ClInclude Include="control\window.h">
-      <Filter>头文件\control</Filter>
-    </ClInclude>
     <ClInclude Include="core\manager.h">
       <Filter>头文件\core</Filter>
     </ClInclude>
@@ -195,6 +195,12 @@
       <Filter>头文件\layout</Filter>
     </ClInclude>
     <ClInclude Include="control\Button.h">
+      <Filter>头文件\control</Filter>
+    </ClInclude>
+    <ClInclude Include="control\Window.h">
+      <Filter>头文件\control</Filter>
+    </ClInclude>
+    <ClInclude Include="control\Browser.h">
       <Filter>头文件\control</Filter>
     </ClInclude>
   </ItemGroup>

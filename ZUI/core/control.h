@@ -8,6 +8,7 @@ typedef struct _ZControl *ZuiControl, ZControl;
 typedef ZuiControl(ZCALL* FINDCONTROLPROC)(ZuiControl, LPVOID);
 typedef ZuiAny (ZCALL *ZCtlProc)(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 
+#define	Proc_CoreInit			9999//用于控件内核初始化
 #define	Proc_GetControlFlags	1	//
 #define	Proc_Activate			2	//活动
 #define	Proc_SetVisible			3	//设置是否可视

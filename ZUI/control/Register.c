@@ -1,6 +1,9 @@
 ﻿#include <ZUI.h>
 
 rb_root *Global_ControlClass;
+void ZuiCoreInit(void *data) {
+	((ZCtlProc)data)(Proc_CoreInit, NULL, NULL, NULL, NULL, NULL);
+}
 BOOL ZuiControlRegister()
 {
 	Global_ControlClass = rb_new();
@@ -13,8 +16,10 @@ BOOL ZuiControlRegister()
 
 	ZuiControlRegisterAdd("window", (ZCtlProc)&ZuiWindowProc);
 	ZuiControlRegisterAdd("button", (ZCtlProc)&ZuiButtonProc);
+	ZuiControlRegisterAdd("browser", (ZCtlProc)&ZuiBrowserProc);
 
-
+	/*初始化全部控件*/
+	rb_foreach(Global_ControlClass, ZuiCoreInit);
 	return TRUE;
 }
 ZAPI(BOOL) ZuiControlRegisterAdd(char *name, ZCtlProc Proc)

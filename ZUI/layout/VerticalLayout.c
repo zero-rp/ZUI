@@ -5,6 +5,8 @@
 void* CALLBACK ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayout p, void* Param1, void* Param2, void* Param3) {
 	switch (ProcId)
 	{
+	case Proc_CoreInit:
+		return 0;
 	case Proc_OnCreate: {
 		p = (ZuiVerticalLayout)malloc(sizeof(ZVerticalLayout));
 		memset(p, 0, sizeof(ZVerticalLayout));

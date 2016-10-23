@@ -4,6 +4,8 @@
 void* CALLBACK ZuiTileLayoutProc(int ProcId, ZuiControl cp, ZuiTileLayout p, void* Param1, void* Param2, void* Param3) {
 	switch (ProcId)
 	{
+	case Proc_CoreInit:
+		return 0;
 	case Proc_OnCreate: {
 		p = (ZuiTileLayout)malloc(sizeof(ZTileLayout));
 		memset(p, 0, sizeof(ZTileLayout));

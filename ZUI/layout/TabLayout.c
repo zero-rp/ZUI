@@ -1,15 +1,17 @@
-#include <ZUI.h>
+ï»¿#include <ZUI.h>
 
 void* CALLBACK ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Param1, void* Param2, void* Param3) {
 	switch (ProcId)
 	{
+	case Proc_CoreInit:
+		return 0;
 	case Proc_OnCreate: {
 		p = (ZuiTabLayout)malloc(sizeof(ZTabLayout));
 		memset(p, 0, sizeof(ZTabLayout));
-		//´´½¨¼Ì³ÐµÄ¿Ø¼þ ±£´æÊý¾ÝÖ¸Õë
+		//åˆ›å»ºç»§æ‰¿çš„æŽ§ä»¶ ä¿å­˜æ•°æ®æŒ‡é’ˆ
 		p->old_udata = ZuiLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
 		p->old_call = (ZCtlProc)&ZuiLayoutProc;
-
+		p->m_iCurSel = -1;
 		return p;
 		break;
 	}
@@ -71,7 +73,7 @@ void* CALLBACK ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void*
 		
 		if (p->m_iCurSel == -1 && ((ZuiControl)(Param1))->m_bVisible)
 		{
-			p->m_iCurSel = ZuiLayoutProc(Proc_Layout_GetItemIndex, cp, p->old_call, Param1, Param2, Param3);
+			p->m_iCurSel = ZuiLayoutProc(Proc_Layout_GetItemIndex, cp, p->old_udata, Param1, Param2, Param3);
 		}
 		else
 		{
@@ -88,7 +90,7 @@ void* CALLBACK ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void*
 
 		if (p->m_iCurSel == -1 && ((ZuiControl)(Param1))->m_bVisible)
 		{
-			p->m_iCurSel = ZuiLayoutProc(Proc_Layout_GetItemIndex, cp, p->old_call, Param1, Param2, Param3);
+			p->m_iCurSel = ZuiLayoutProc(Proc_Layout_GetItemIndex, cp, p->old_udata, Param1, Param2, Param3);
 		}
 		else if (p->m_iCurSel != -1 && Param2 <= p->m_iCurSel)
 		{
@@ -107,7 +109,7 @@ void* CALLBACK ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void*
 			return FALSE;
 
 		int index = ZuiControlCall(Proc_Layout_GetItemIndex, cp, Param1, Param2, Param3);
-		BOOL ret = ZuiLayoutProc(Proc_Layout_Remove, cp, p->old_call, Param1, Param2, Param3);
+		BOOL ret = ZuiLayoutProc(Proc_Layout_Remove, cp, p->old_udata, Param1, Param2, Param3);
 		if (!ret)
 			return FALSE;
 
@@ -132,7 +134,7 @@ void* CALLBACK ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void*
 	}
 	case Proc_Layout_RemoveAll: {
 		p->m_iCurSel = -1;
-		ZuiLayoutProc(Proc_Layout_RemoveAll, cp, p->old_call, Param1, Param2, Param3);
+		ZuiLayoutProc(Proc_Layout_RemoveAll, cp, p->old_udata, Param1, Param2, Param3);
 		ZuiControlNeedParentUpdate(cp);
 		return 0;
 		break;

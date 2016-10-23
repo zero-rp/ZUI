@@ -1,5 +1,5 @@
-#ifndef __UIBUTTON_H__
-#define __UIBUTTON_H__
+#ifndef __BUTTON_H__
+#define __BUTTON_H__
 
 typedef struct ZButton
 {
@@ -9,4 +9,4 @@ typedef struct ZButton
 ZAPI(ZuiAny) ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 
 
-#endif	//__UIBUTTON_H__
+#endif	//__BUTTON_H__

@@ -1,18 +1,20 @@
 ﻿#include <ZUI.h>
+#pragma comment(lib, "libcef.lib")
 
-
-
-
-ZAPI(ZuiAny) ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+ZAPI(ZuiAny) ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 	switch (ProcId)
 	{
-	case Proc_CoreInit:
+	case Proc_CoreInit: {
+		wkeInitialize();
 		return 0;
+	}
 	case Proc_OnCreate: {
-		p = (ZuiButton)malloc(sizeof(ZButton));
-		memset(p, 0, sizeof(ZButton));
+		p = (ZuiBrowser)malloc(sizeof(ZBrowser));
+		memset(p, 0, sizeof(ZBrowser));
 		//保存原来的回调地址,创建成功后回调地址指向当前函数
 		p->old_call = cp->call;
+		p->view = wkeCreateWebView();
+
 		return p;
 	}
 		break;

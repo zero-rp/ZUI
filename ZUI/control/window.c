@@ -46,8 +46,23 @@ LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 ZAPI(ZuiAny) ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 	switch (ProcId)
 	{
+	case Proc_CoreInit: {
+		WNDCLASS wc = { 0 };
+		wc.style = 8;
+		wc.cbClsExtra = 0;
+		wc.cbWndExtra = 0;
+		wc.hIcon = NULL;
+		wc.lpfnWndProc = __WndProc;
+		wc.hInstance = GetModuleHandleA(NULL);
+		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+		wc.hbrBackground = NULL;
+		wc.lpszMenuName = NULL;
+		wc.lpszClassName = L"AA";
+		RegisterClass(&wc);
+		return 0;
+	}
+		break;
 	case Proc_OnCreate: {
-		static INT ClassRegistered;//是否注册WNDCLASS
 		p = (ZuiWindow)malloc(sizeof(ZWindow));
 		memset(p, 0, sizeof(ZWindow));
 		//保存原来的回调地址,创建成功后回调地址指向当前函数
@@ -56,21 +71,6 @@ ZAPI(ZuiAny) ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, ZuiAny Par
 		p->old_call = (ZCtlProc)&ZuiVerticalLayoutProc;
 
 		//创建宿主窗口
-		if (!ClassRegistered)
-		{
-			WNDCLASS wc = { 0 };
-			wc.style = 8;
-			wc.cbClsExtra = 0;
-			wc.cbWndExtra = 0;
-			wc.hIcon = NULL;
-			wc.lpfnWndProc = __WndProc;
-			wc.hInstance = GetModuleHandleA(NULL);
-			wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-			wc.hbrBackground = NULL;
-			wc.lpszMenuName = NULL;
-			wc.lpszClassName = L"AA";
-			RegisterClass(&wc);
-		}
 		//创建绘制管理器
 		p->m_pm = NewCPaintManagerUI();
 		p->m_OldWndProc = DefWindowProc;
