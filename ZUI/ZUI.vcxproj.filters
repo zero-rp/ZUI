@@ -81,9 +81,6 @@
     <ClCompile Include="control\Register.c">
       <Filter>源文件\control</Filter>
     </ClCompile>
-    <ClCompile Include="control\UIButton.c">
-      <Filter>源文件\control</Filter>
-    </ClCompile>
     <ClCompile Include="control\window.c">
       <Filter>源文件\control</Filter>
     </ClCompile>
@@ -109,6 +106,12 @@
       <Filter>源文件\layout</Filter>
     </ClCompile>
     <ClCompile Include="layout\VerticalLayout.c">
+      <Filter>源文件\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="control\Button.c">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\TileLayout.c">
       <Filter>源文件\layout</Filter>
     </ClCompile>
   </ItemGroup>
@@ -161,9 +164,6 @@
     <ClInclude Include="control\Register.h">
       <Filter>头文件\control</Filter>
     </ClInclude>
-    <ClInclude Include="control\UIButton.h">
-      <Filter>头文件\control</Filter>
-    </ClInclude>
     <ClInclude Include="control\window.h">
       <Filter>头文件\control</Filter>
     </ClInclude>
@@ -193,6 +193,9 @@
     </ClInclude>
     <ClInclude Include="layout\VerticalLayout.h">
       <Filter>头文件\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="control\Button.h">
+      <Filter>头文件\control</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
