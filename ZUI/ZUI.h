@@ -1,5 +1,7 @@
+﻿#ifndef __ZUI_H__
 #define __ZUI_H__
 
+/*系统头文件*/
 #define WIN32_LEAN_AND_MEAN
 #include <olectl.h>
 #include <windows.h>
@@ -56,6 +58,7 @@
 #endif
 
 
+typedef wchar_t*	ZuiText, _ZuiText;	//内核默认Unicode存储字符
 typedef float		ZuiReal;
 #ifdef _WIN64
 typedef int64_t		ZuiInt;
@@ -70,9 +73,17 @@ typedef unsigned	ZuiByte;
 
 typedef struct _ZRect
 {
+	ZuiInt Left;	//左边
+	ZuiInt Top;		//顶边
+	ZuiInt Width;	//宽度
+	ZuiInt Height;	//高度
 } *ZuiRect, ZRect;
 typedef struct _ZRectR
 {
+	ZuiReal Left;//左边
+	ZuiReal Top;//顶边
+	ZuiReal Width;//宽度
+	ZuiReal Height;//高度
 } *ZuiRectR, ZRectR;
 typedef struct _ZPoint
 {
@@ -81,6 +92,8 @@ typedef struct _ZPoint
 } *ZuiPoint, ZPoint;
 typedef struct _ZSize
 {
+	ZuiInt Width;	//宽度
+	ZuiInt Height;	//高度
 } *ZuiSize, ZSize;
 typedef struct _ZPointR
 {
@@ -99,14 +112,19 @@ typedef struct _ZPointR
 	r->Width = W;\
 	r->Height = H;
 
+/*基础辅助函数*/
 #include "Core/carray.h"
 #include "Core/function.h"
 #include "Core/tree.h"
 #include "Core/unzip.h"
 #include "Core/gdi.h"
 #include "Core/global.h"
+/*内核*/
+#include "Core/manager.h"		//绘制管理器
+#include "Core/control.h"		//控件基类
 
 
+/*控件*/
 #include "Control/Register.h"
 #include "Control/window.h"
 
@@ -114,6 +132,12 @@ typedef struct _ZPointR
 #include "Control/Button.h"
 
 
+/*布局*/
+#include "Layout/Layout.h"			//容器基类
+#include "Layout/VerticalLayout.h"	//纵向布局
+#include "Layout/HorizontalLayout.h"	//横向布局
+#include "Layout/TileLayout.h"		//列表布局
+#include "Layout/TabLayout.h"		//选择夹布局
 
 
 

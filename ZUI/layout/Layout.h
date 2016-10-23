@@ -1,3 +1,5 @@
+﻿#ifndef __LAYOUT_H__
+#define __LAYOUT_H__
 
 #define	Proc_Layout_Add			1101	//添加控件
 #define	Proc_Layout_AddAt			1102	//插入控件
@@ -23,3 +25,4 @@ typedef struct _ZuiLayout
 void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, void* Param2, void* Param3);
 
 
+#endif // __LAYOUT_H__

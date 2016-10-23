@@ -1,5 +1,5 @@
-﻿#ifndef __UICONTROL_H__
-#define __UICONTROL_H__
+﻿#ifndef __CONTROL_H__
+#define __CONTROL_H__
 
 /////////////////////////////////////////////////////////////////////////////////////
 //
@@ -63,7 +63,6 @@ typedef struct _ZControl
 
 	ZuiPaintManager m_pManager;		//关联的管理器
 	struct _ZControl* m_pParent;	//父控件
-	char *m_sName;					//
 	BOOL m_bUpdateNeeded;			//是否需要更新布局
 	BOOL m_bMenuUsed;				//
 	RECT m_rcItem;					//
@@ -109,4 +108,4 @@ ZAPI(ZuiVoid) ZuiControlEvent(ZuiControl p, TEventUI *event);	//发送事件
 ZAPI(ZuiVoid) ZuiControlMove(ZuiControl p, SIZE szOffset, BOOL bNeedInvalidate); //移动位置
 
 
-#endif // __UICONTROL_H__
+#endif // __CONTROL_H__
