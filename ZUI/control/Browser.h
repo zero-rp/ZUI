@@ -4,7 +4,8 @@
 typedef struct _ZuiBrowser
 {
 	wkeWebView view;
-	int type;
+	ZuiControl cp;
+	ZuiBool init;
 	ZCtlProc old_call;
 }*ZuiBrowser, ZBrowser;
 ZAPI(ZuiAny) ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);

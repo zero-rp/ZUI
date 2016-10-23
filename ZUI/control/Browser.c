@@ -1,5 +1,11 @@
 ﻿#include <ZUI.h>
 #pragma comment(lib, "libcef.lib")
+void _staticOnPaintUpdated(wkeWebView webView, void* param, const HDC hdc, int x, int y, int cx, int cy)
+{
+	ZuiBrowser pthis = (ZuiBrowser)param;
+	pthis->init = TRUE;
+	ZuiControlInvalidate(pthis->cp);
+}
 
 ZAPI(ZuiAny) ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 	switch (ProcId)
@@ -13,37 +19,102 @@ ZAPI(ZuiAny) ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, ZuiAny P
 		memset(p, 0, sizeof(ZBrowser));
 		//保存原来的回调地址,创建成功后回调地址指向当前函数
 		p->old_call = cp->call;
+		p->cp = cp;
 		p->view = wkeCreateWebView();
-
+		wkeOnPaintUpdated(p->view, _staticOnPaintUpdated, p);
+		wkeLoadURL(p->view, "http://127.0.0.1");
+		
 		return p;
+	}
+		break;
+	case Proc_OnSize: {
+		wkeResize(p->view, Param1, Param2);
+		if (cp->m_bVisible) {
+			wkeRepaintIfNeeded(p->view);
+		}
 	}
 		break;
 	case Proc_OnEvent: {
 		TEventUI *event= (TEventUI *)Param1;
 		switch (event->Type)
 		{
-		case ZEVENT_MOUSELEAVE: {
-			p->type = 0;
-			ZuiControlInvalidate(cp);
+		case ZEVENT_TIMER: {
+			if (cp->m_bVisible) {
+				wkeRepaintIfNeeded(p->view);
+			}
 		}
 			break;
-		case ZEVENT_MOUSEENTER: {
-			p->type = 1;
-			ZuiControlInvalidate(cp);
+		case ZEVENT_SETFOCUS:
+			if (p->view) wkeSetFocus(p->view); break;
+		case ZEVENT_KILLFOCUS:
+			if (p->view) wkeKillFocus(p->view); break;
+		case ZEVENT_BUTTONDOWN:
+		case ZEVENT_BUTTONUP:
+		case ZEVENT_RBUTTONDOWN:
+		case ZEVENT_DBLCLICK:
+		case ZEVENT_MOUSEMOVE:
+		{
+			if (event->Type == ZEVENT_BUTTONDOWN)
+			{
+				ZuiPaintManagerSetCapture(cp->m_pManager);
+			}
+			else if (event->Type == ZEVENT_BUTTONUP)
+				ZuiPaintManagerReleaseCapture(cp->m_pManager);
+
+			unsigned int flags = 0;
+			
+			if (event->wParam & MK_CONTROL)
+				flags |= WKE_CONTROL;
+			if (event->wParam & MK_SHIFT)
+				flags |= WKE_SHIFT;
+
+			if (event->wParam & MK_LBUTTON)
+				flags |= WKE_LBUTTON;
+			if (event->wParam & MK_MBUTTON)
+				flags |= WKE_MBUTTON;
+			if (event->wParam & MK_RBUTTON)
+				flags |= WKE_RBUTTON;
+
+			UINT uMsg = 0;
+			switch (event->Type)
+			{
+			case ZEVENT_BUTTONDOWN:    uMsg = WM_LBUTTONDOWN; break;
+			case ZEVENT_BUTTONUP:      uMsg = WM_LBUTTONUP; break;
+			case ZEVENT_RBUTTONDOWN:   uMsg = WM_RBUTTONDOWN; break;
+			case ZEVENT_DBLCLICK:      uMsg = WM_LBUTTONDBLCLK; break;
+			case ZEVENT_MOUSEMOVE:     uMsg = WM_MOUSEMOVE; break;
+			}
+			if (wkeFireMouseEvent(p->view, uMsg, event->ptMouse.x - cp->m_rcItem.left, event->ptMouse.y - cp->m_rcItem.top, flags))
+				return 0;
+		}
+		break;
+		case ZEVENT_SCROLLWHEEL:
+		{
+			POINT pt;
+			pt.x = LOWORD(event->lParam);
+			pt.y = HIWORD(event->lParam);
+			int nFlag = GET_X_LPARAM(event->wParam);
+			int delta = (nFlag == SB_LINEDOWN) ? -120 : 120;
+			unsigned int flags = 0;
+			if (event->wParam & MK_CONTROL)
+				flags |= WKE_CONTROL;
+			if (event->wParam & MK_SHIFT)
+				flags |= WKE_SHIFT;
+			if (event->wParam & MK_LBUTTON)
+				flags |= WKE_LBUTTON;
+			if (event->wParam & MK_MBUTTON)
+				flags |= WKE_MBUTTON;
+			if (event->wParam & MK_RBUTTON)
+				flags |= WKE_RBUTTON;
+			bool handled = wkeFireMouseWheelEvent(p->view,pt.x, pt.y, delta, flags);
+			if (handled)
+				return;
 		}
 			break;
-		case ZEVENT_BUTTONDOWN: {
-			p->type = 2;
-			ZuiControlInvalidate(cp);
-		}
+		case ZEVENT_SETCURSOR:
+			if (wkeFireWindowsMessage(p->view, cp->m_pManager->m_hWndPaint, WM_SETCURSOR, 0, 0, NULL))
+				return 0;
 			break;
-		case ZEVENT_BUTTONUP: {
-			p->type = 1;
-			ZuiControlInvalidate(cp);
-			ZuiControl pBut1 = NewCControlUI("button", NULL, NULL, NULL);
-			ZuiControlCall(Proc_Layout_Add, cp->m_pParent, pBut1, NULL, NULL);
-		}
-			 break;
 		default:
 			break;
 		}
@@ -55,19 +126,9 @@ ZAPI(ZuiAny) ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, ZuiAny P
 	case Proc_OnPaint:{
 		ZuiGraphics gp = (ZuiGraphics)Param1;
 		RECT *rc = &cp->m_rcItem;
-		HPEN hPen=0;
-		if (p->type == 0) {
-			ZuiDrawRect(gp, ARGB(200, 0, 3, 255), rc->left + 5, rc->top+5, rc->right - rc->left-10, rc->bottom - rc->top - 10, 10);
+		if (p->init) {
+			BitBlt(gp->hdc, rc->left, rc->top, rc->right-rc->left, rc->bottom-rc->top, wkeGetViewDC(p->view), 0, 0, SRCCOPY);
 		}
-		else if(p->type==1) {
-			ZuiDrawRect(gp, ARGB(200, 0, 255, 255), rc->left + 5, rc->top+5, rc->right - rc->left-10, rc->bottom - rc->top - 10,10);
-		}
-		else if (p->type == 2) {
-			ZuiDrawRect(gp, ARGB(200, 255, 255, 255), rc->left + 5, rc->top+5, rc->right - rc->left-10, rc->bottom - rc->top - 10,10);
-		}
-		ZRect r;
-		MAKEZRECT(r, rc->left + 5, rc->top + 5, rc->right - rc->left - 10, rc->bottom - rc->top - 10);
-		ZuiDrawString(gp, Global_StringFormat, cp->m_sText, &r);
 	}
 		break;
 	case Proc_SetPos:{
@@ -75,8 +136,12 @@ ZAPI(ZuiAny) ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, ZuiAny P
 	}
 		break;
 	case Proc_OnInit:{
-
+		
+		ZuiPaintManagerSetTimer(cp, 1000, 20);
 	}
+		break;
+	case Proc_GetControlFlags:
+		return ZFLAG_SETCURSOR;
 		break;
 	default:
 		break;

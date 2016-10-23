@@ -131,7 +131,7 @@ ZAPI(ZuiAny) ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny UserData,
 
 			if (!p->m_bSetPos) {
 				p->m_bSetPos = TRUE;
-				ZuiControlCall(Proc_OnSize, p, NULL, NULL, NULL);
+				ZuiControlCall(Proc_OnSize, p, p->m_rcItem.right - p->m_rcItem.left, p->m_rcItem.bottom - p->m_rcItem.top, NULL);
 				p->m_bSetPos = FALSE;
 			}
 

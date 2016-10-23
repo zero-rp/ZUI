@@ -352,71 +352,78 @@ ZAPI(ZuiVoid) ZuiPaintManagerSetFocusNeeded(ZuiPaintManager p, ZuiControl pContr
 //-------------------------------------------------------------------------------------------------
 
 //创建时钟
-ZAPI(ZuiBool) ZuiPaintManagerSetTimer(ZuiPaintManager p, ZuiControl pControl, UINT nTimerID, UINT uElapse)
+ZAPI(ZuiBool) ZuiPaintManagerSetTimer(ZuiControl pControl, UINT nTimerID, UINT uElapse)
 {
 	ASSERT(pControl != NULL);
 	ASSERT(uElapse > 0);
-	for (int i = 0; i < darray_len(p->m_aTimers); i++) {
-		TIMERINFO* pTimer = (TIMERINFO*)(p->m_aTimers->data[i]);
-		if (pTimer->pSender == pControl
-			&& pTimer->hWnd == p->m_hWndPaint
-			&& pTimer->nLocalID == nTimerID) {
-			if (pTimer->bKilled == TRUE) {
-				if (SetTimer(p->m_hWndPaint, pTimer->uWinTimer, uElapse, NULL)) {
-					pTimer->bKilled = FALSE;
-					return TRUE;
+	if (pControl->m_pManager) {
+		for (int i = 0; i < darray_len(pControl->m_pManager->m_aTimers); i++) {
+			TIMERINFO* pTimer = (TIMERINFO*)(pControl->m_pManager->m_aTimers->data[i]);
+			if (pTimer->pSender == pControl
+				&& pTimer->hWnd == pControl->m_pManager->m_hWndPaint
+				&& pTimer->nLocalID == nTimerID) {
+				if (pTimer->bKilled == TRUE) {
+					if (SetTimer(pControl->m_pManager->m_hWndPaint, pTimer->uWinTimer, uElapse, NULL)) {
+						pTimer->bKilled = FALSE;
+						return TRUE;
+					}
+					return FALSE;
 				}
 				return FALSE;
 			}
-			return FALSE;
 		}
-	}
 
-	p->m_uTimerID = (++p->m_uTimerID) % 0xFF;
-	if (!SetTimer(p->m_hWndPaint, p->m_uTimerID, uElapse, NULL)) return FALSE;
-	TIMERINFO* pTimer = malloc(sizeof(TIMERINFO));
-	memset(pTimer, 0, sizeof(TIMERINFO));
-	if (pTimer == NULL) return FALSE;
-	pTimer->hWnd = p->m_hWndPaint;
-	pTimer->pSender = pControl;
-	pTimer->nLocalID = nTimerID;
-	pTimer->uWinTimer = p->m_uTimerID;
-	pTimer->bKilled = FALSE;
-	return darray_append(p->m_aTimers,pTimer);
+		pControl->m_pManager->m_uTimerID = (++pControl->m_pManager->m_uTimerID) % 0xFF;
+		if (!SetTimer(pControl->m_pManager->m_hWndPaint, pControl->m_pManager->m_uTimerID, uElapse, NULL)) return FALSE;
+		TIMERINFO* pTimer = malloc(sizeof(TIMERINFO));
+		memset(pTimer, 0, sizeof(TIMERINFO));
+		if (pTimer == NULL) return FALSE;
+		pTimer->hWnd = pControl->m_pManager->m_hWndPaint;
+		pTimer->pSender = pControl;
+		pTimer->nLocalID = nTimerID;
+		pTimer->uWinTimer = pControl->m_pManager->m_uTimerID;
+		pTimer->bKilled = FALSE;
+		return darray_append(pControl->m_pManager->m_aTimers, pTimer);
+	}
+	return FALSE;
 }
 //销毁时钟
-ZAPI(ZuiBool) ZuiPaintManagerKillTimer_Id(ZuiPaintManager p, ZuiControl pControl, UINT nTimerID)
+ZAPI(ZuiBool) ZuiPaintManagerKillTimer_Id(ZuiControl pControl, UINT nTimerID)
 {
 	ASSERT(pControl != NULL);
-	for (int i = 0; i < darray_len(p->m_aTimers); i++) {
-		TIMERINFO* pTimer = (TIMERINFO*)(p->m_aTimers->data[i]);
-		if (pTimer->pSender == pControl
-			&& pTimer->hWnd == p->m_hWndPaint
-			&& pTimer->nLocalID == nTimerID)
-		{
-			if (pTimer->bKilled == FALSE) {
-				if (IsWindow(p->m_hWndPaint))
-					KillTimer(pTimer->hWnd, pTimer->uWinTimer);
-				pTimer->bKilled = TRUE;
-				return TRUE;
+	if (pControl->m_pManager) {
+		for (int i = 0; i < darray_len(pControl->m_pManager->m_aTimers); i++) {
+			TIMERINFO* pTimer = (TIMERINFO*)(pControl->m_pManager->m_aTimers->data[i]);
+			if (pTimer->pSender == pControl
+				&& pTimer->hWnd == pControl->m_pManager->m_hWndPaint
+				&& pTimer->nLocalID == nTimerID)
+			{
+				if (pTimer->bKilled == FALSE) {
+					if (IsWindow(pControl->m_pManager->m_hWndPaint))
+						KillTimer(pTimer->hWnd, pTimer->uWinTimer);
+					pTimer->bKilled = TRUE;
+					return TRUE;
+				}
 			}
 		}
 	}
 	return FALSE;
 }
 //销毁时钟
-ZAPI(ZuiVoid) ZuiPaintManagerKillTimer(ZuiPaintManager p, ZuiControl pControl)
+ZAPI(ZuiVoid) ZuiPaintManagerKillTimer(ZuiControl pControl)
 {
 	ASSERT(pControl != NULL);
-	int count = darray_len(p->m_aTimers);
-	for (int i = 0, j = 0; i < count; i++) {
-		TIMERINFO* pTimer = (TIMERINFO*)(p->m_aTimers->data[i - j]);
-		if (pTimer->pSender == pControl && pTimer->hWnd == p->m_hWndPaint) {
-			if (pTimer->bKilled == FALSE)
-				KillTimer(pTimer->hWnd, pTimer->uWinTimer);
-			free(pTimer);
-			darray_delete(p->m_aTimers,i - j);
-			j++;
+	if (pControl->m_pManager) {
+		int count = darray_len(pControl->m_pManager->m_aTimers);
+		for (int i = 0, j = 0; i < count; i++) {
+			TIMERINFO* pTimer = (TIMERINFO*)(pControl->m_pManager->m_aTimers->data[i - j]);
+			if (pTimer->pSender == pControl && pTimer->hWnd == pControl->m_pManager->m_hWndPaint) {
+				if (pTimer->bKilled == FALSE)
+					KillTimer(pTimer->hWnd, pTimer->uWinTimer);
+				free(pTimer);
+				darray_delete(pControl->m_pManager->m_aTimers, i - j);
+				j++;
+			}
 		}
 	}
 }

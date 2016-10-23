@@ -159,9 +159,9 @@ ZAPI(ZuiVoid) ZuiPaintManagerReapObjects(ZuiPaintManager p, ZuiControl pControl)
 ZAPI(ZuiVoid) ZuiPaintManagerSetFocus(ZuiPaintManager p, ZuiControl pControl, BOOL bFocusWnd /*默认TRUE*/);//设置焦点控件
 ZAPI(ZuiVoid) ZuiPaintManagerSetFocusNeeded(ZuiPaintManager p, ZuiControl pControl);
 
-ZAPI(ZuiBool) ZuiPaintManagerSetTimer(ZuiPaintManager p, ZuiControl pControl, UINT nTimerID, UINT uElapse);//创建时钟
-ZAPI(ZuiBool) ZuiPaintManagerKillTimer_Id(ZuiPaintManager p, ZuiControl pControl, UINT nTimerID);//销毁时钟
-ZAPI(ZuiVoid) ZuiPaintManagerKillTimer(ZuiPaintManager p, ZuiControl pControl);//销毁时钟
+ZAPI(ZuiBool) ZuiPaintManagerSetTimer(ZuiControl pControl, UINT nTimerID, UINT uElapse);//创建时钟
+ZAPI(ZuiBool) ZuiPaintManagerKillTimer_Id(ZuiControl pControl, UINT nTimerID);//销毁时钟
+ZAPI(ZuiVoid) ZuiPaintManagerKillTimer(ZuiControl pControl);//销毁时钟
 ZAPI(ZuiVoid) ZuiPaintManagerRemoveAllTimers(ZuiPaintManager p);//销毁全部时钟
 
 ZAPI(ZuiVoid) ZuiPaintManagerSetCapture(ZuiPaintManager p);//俘获输入
