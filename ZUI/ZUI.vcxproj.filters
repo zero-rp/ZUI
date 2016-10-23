@@ -13,15 +13,186 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="源文件\zlib">
+      <UniqueIdentifier>{967023e6-8536-4252-a8a4-817c3825fd11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\zlib">
+      <UniqueIdentifier>{58d9feae-40ec-49f7-ba9c-49a08e79bf55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\core">
+      <UniqueIdentifier>{4cc4b7e4-3873-458c-9c94-55880b4d9d7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\core">
+      <UniqueIdentifier>{9a255cb2-1369-4899-89a6-5e6c33caa6d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\layout">
+      <UniqueIdentifier>{44e2db9c-3e8b-4dc9-8410-1f194a3cc1e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\layout">
+      <UniqueIdentifier>{197418c8-ebb8-48b0-8930-eafb2742cbbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\control">
+      <UniqueIdentifier>{9d532de3-8ad7-4c94-a703-e208913ea29b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\control">
+      <UniqueIdentifier>{001350cb-58cc-48cf-9b30-e8316f91daa3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="zlib\adler32.c">
+      <Filter>源文件\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\crc32.c">
+      <Filter>源文件\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\inffast.c">
+      <Filter>源文件\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\inflate.c">
+      <Filter>源文件\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\inftrees.c">
+      <Filter>源文件\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\unzip.c">
+      <Filter>源文件\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\zutil.c">
+      <Filter>源文件\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="core\carray.c">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\function.c">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\gdi.c">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\mxml.c">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\unzip.c">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="control\Register.c">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\UIButton.c">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\window.c">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
+    <ClCompile Include="core\global.c">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\tree.c">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\manager.c">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\control.c">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\Layout.c">
+      <Filter>源文件\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\HorizontalLayout.c">
+      <Filter>源文件\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\TabLayout.c">
+      <Filter>源文件\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\VerticalLayout.c">
+      <Filter>源文件\layout</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZUI.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\crc32.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inffast.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inffixed.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inflate.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inftrees.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\unzip.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zconf.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zlib.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zutil.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="core\carray.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\function.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\gdi.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\mxml.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\unzip.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="control\Register.h">
+      <Filter>头文件\control</Filter>
+    </ClInclude>
+    <ClInclude Include="control\UIButton.h">
+      <Filter>头文件\control</Filter>
+    </ClInclude>
+    <ClInclude Include="control\window.h">
+      <Filter>头文件\control</Filter>
+    </ClInclude>
+    <ClInclude Include="core\manager.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\tree.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\control.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\global.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\Layout.h">
+      <Filter>头文件\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\HorizontalLayout.h">
+      <Filter>头文件\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\TabLayout.h">
+      <Filter>头文件\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\TileLayout.h">
+      <Filter>头文件\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\VerticalLayout.h">
+      <Filter>头文件\layout</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

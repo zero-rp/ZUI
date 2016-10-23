@@ -34,7 +34,7 @@ ZAPI(BOOL) ZuiInit() {
 		return FALSE;
 	}
 	/*初始化绘制管理器*/
-	if (!ZuiPaintManagerInit()) {
+	if (!ZuiPaintManagerInitialize()) {
 		return FALSE;
 	}
 	/*注册全局控件*/
