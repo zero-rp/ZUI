@@ -84,8 +84,8 @@ typedef struct _ZControl
 	TPercentInfo m_piFloatPercent;
 	BOOL m_bSetPos;					// 防止SetPos循环调用
 
-	LPCTSTR m_sText;				//
-	LPCTSTR m_sToolTip;				//提示文本
+	ZuiText m_sText;				//
+	ZuiText m_sToolTip;				//提示文本
 	TCHAR m_chShortcut;				//快捷键
 	void *m_sUserData;				//
 

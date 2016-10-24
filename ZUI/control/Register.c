@@ -8,25 +8,25 @@ BOOL ZuiControlRegister()
 {
 	Global_ControlClass = rb_new();
 	/*核心组件 不可卸载*/
-	ZuiControlRegisterAdd("layout", (ZCtlProc)&ZuiLayoutProc);
-	ZuiControlRegisterAdd("verticallayout", (ZCtlProc)&ZuiVerticalLayoutProc);
-	ZuiControlRegisterAdd("horizontallayout", (ZCtlProc)&ZuiHorizontalLayoutProc);
-	ZuiControlRegisterAdd("tablayout", (ZCtlProc)&ZuiTabLayoutProc);
-	ZuiControlRegisterAdd("tilelayout", (ZCtlProc)&ZuiTileLayoutProc);
+	ZuiControlRegisterAdd(L"layout", (ZCtlProc)&ZuiLayoutProc);
+	ZuiControlRegisterAdd(L"verticallayout", (ZCtlProc)&ZuiVerticalLayoutProc);
+	ZuiControlRegisterAdd(L"horizontallayout", (ZCtlProc)&ZuiHorizontalLayoutProc);
+	ZuiControlRegisterAdd(L"tablayout", (ZCtlProc)&ZuiTabLayoutProc);
+	ZuiControlRegisterAdd(L"tilelayout", (ZCtlProc)&ZuiTileLayoutProc);
 
-	ZuiControlRegisterAdd("window", (ZCtlProc)&ZuiWindowProc);
-	ZuiControlRegisterAdd("button", (ZCtlProc)&ZuiButtonProc);
-	ZuiControlRegisterAdd("browser", (ZCtlProc)&ZuiBrowserProc);
+	ZuiControlRegisterAdd(L"window", (ZCtlProc)&ZuiWindowProc);
+	ZuiControlRegisterAdd(L"button", (ZCtlProc)&ZuiButtonProc);
+	ZuiControlRegisterAdd(L"browser", (ZCtlProc)&ZuiBrowserProc);
 
 	/*初始化全部控件*/
 	rb_foreach(Global_ControlClass, ZuiCoreInit);
 	return TRUE;
 }
-ZAPI(BOOL) ZuiControlRegisterAdd(char *name, ZCtlProc Proc)
+ZAPI(BOOL) ZuiControlRegisterAdd(ZuiText *name, ZCtlProc Proc)
 {
 	return rb_insert((key_t)Zui_Hash(name), Proc, Global_ControlClass);
 }
-ZAPI(BOOL) ZuiControlRegisterDel(char *name)
+ZAPI(BOOL) ZuiControlRegisterDel(ZuiText *name)
 {
 	rb_delete((key_t)Zui_Hash(name), Global_ControlClass);
 	return 0;

@@ -33,13 +33,13 @@ ZuiControl NewZuiControl(ZuiText classname, void* Param1, void* Param2, void* Pa
 		//通知重载的对象开始创建
 		//没有重载的
 		/*查找类名*/
-		char name[256];
-		int l = strlen(classname);
+		wchar_t name[256];
+		int l = wcslen(classname);
 		if (l > 255)
 			return p;
-		memset(name, 0, 256);
-		memcpy(name, classname, l);
-		strlwr(name);
+		memset(name, 0, 256 * sizeof(wchar_t));
+		memcpy(name, classname, l*sizeof(wchar_t));
+		wcslwr(name);
 		rb_node * node = rb_search((key_t)Zui_Hash(name), Global_ControlClass);
 		if (node) {
 			p->m_sUserData = ((ZCtlProc)node->data)(Proc_OnCreate, p, 0, Param1, Param2, Param3);
@@ -56,6 +56,8 @@ void FreeCControlUI(ZuiControl p)
 	ZuiControlCall(Proc_OnDestroy, p, NULL, NULL, NULL);
 	if (p->m_pManager != NULL)
 		ZuiPaintManagerReapObjects(p->m_pManager, p);
+	if (p->m_sText)
+		free(p->m_sText);
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -86,9 +88,9 @@ ZAPI(ZuiAny) ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny UserData,
 							  break;
 	}
 	case Proc_SetText:{
-						  if (p->m_sText == (LPCTSTR)Param1)
+						  if (p->m_sText == (ZuiText)Param1)
 							  return 0;
-						  p->m_sText = (LPCTSTR)Param1;
+						  p->m_sText = _wcsdup((ZuiText)Param1);
 						  ZuiControlInvalidate(p);
 						  break;
 	}

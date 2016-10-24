@@ -7,16 +7,18 @@ void Rect_Join(RECT *rc, RECT *rc1)
 	if (rc1->bottom > rc->bottom) rc->bottom = rc1->bottom;
 }
 
-void * ZCALL Zui_Hash(char* str){
+void * ZCALL Zui_Hash(wchar_t* str){
 	__asm{
 		mov esi, str
 			xor edx, edx
 		hash_loop :
 		movsx eax, byte ptr ds : [esi]
+		movsx eax, byte ptr ds : [esi]
 			cmp al, ah
 			je compare_hash
 			ror edx, 0x7
 			add edx, eax
+			inc esi
 			inc esi
 			jmp hash_loop
 		compare_hash :
