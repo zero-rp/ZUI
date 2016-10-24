@@ -58,6 +58,8 @@ void FreeCControlUI(ZuiControl p)
 		ZuiPaintManagerReapObjects(p->m_pManager, p);
 	if (p->m_sText)
 		free(p->m_sText);
+	if (p->m_sToolTip)
+		free(p->m_sToolTip);
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -88,11 +90,21 @@ ZAPI(ZuiAny) ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny UserData,
 							  break;
 	}
 	case Proc_SetText:{
-						  if (p->m_sText == (ZuiText)Param1)
-							  return 0;
-						  p->m_sText = _wcsdup((ZuiText)Param1);
-						  ZuiControlInvalidate(p);
-						  break;
+		if(!p->m_sText)
+			p->m_sText = _wcsdup((ZuiText)Param1);
+		if (wcscmp(p->m_sText, (ZuiText)Param1) == 0)
+			return 0;
+		p->m_sText = _wcsdup((ZuiText)Param1);
+		ZuiControlInvalidate(p);
+		break;
+	}
+	case Proc_SetTooltip: {
+		if(!p->m_sToolTip)
+			p->m_sToolTip = _wcsdup((ZuiText)Param1);
+		if (wcscmp(p->m_sToolTip, (ZuiText)Param1) == 0)
+			return 0;
+		p->m_sToolTip = _wcsdup((ZuiText)Param1);
+		break;
 	}
 	case Proc_GetPos:{
 						 return (void *)&p->m_rcItem;
@@ -345,11 +357,14 @@ ZAPI(ZuiAny) ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny UserData,
 		RECT *rc = &p->m_rcItem;
 	}
 	case Proc_SetAttribute: {
-		if (wcscmp(Param1, L"text") == 0) {
-			ZuiControlCall(Proc_SetText, p, Param2, NULL, NULL);
-		}else if (wcscmp(Param1, L"pos") == 0) {
-
-		}
+		if (wcscmp(Param1, L"text") == 0) ZuiControlCall(Proc_SetText, p, Param2, NULL, NULL);
+		else if (wcscmp(Param1, L"tooltip") == 0) ZuiControlCall(Proc_SetTooltip, p, Param2, NULL, NULL);
+		else if (wcscmp(Param1, L"width") == 0) ZuiControlCall(Proc_SetFixedWidth, p, _wtoi(Param2), NULL, NULL);
+		else if (wcscmp(Param1, L"height") == 0) ZuiControlCall(Proc_SetFixedHeight, p, _wtoi(Param2), NULL, NULL);
+		else if (wcscmp(Param1, L"minwidth") == 0) ZuiControlCall(Proc_SetMinWidth, p, _wtoi(Param2), NULL, NULL);
+		else if (wcscmp(Param1, L"minheight") == 0) ZuiControlCall(Proc_SetMinHeight, p, _wtoi(Param2), NULL, NULL);
+		else if (wcscmp(Param1, L"maxwidth") == 0) ZuiControlCall(Proc_SetMaxWidth, p, _wtoi(Param2), NULL, NULL);
+		else if (wcscmp(Param1, L"maxheight") == 0) ZuiControlCall(Proc_SetMaxHeight, p, _wtoi(Param2), NULL, NULL);
 		
 	}
 		break;
