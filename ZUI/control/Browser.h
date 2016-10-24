@@ -1,8 +1,11 @@
 #ifndef __BROWSER_H__
 #define __BROWSER_H__
 #include "wke.h"
+
+#define	Proc_Browser_LoadUrl	1001
 typedef struct _ZuiBrowser
 {
+	ZuiText url;
 	wkeWebView view;
 	ZuiControl cp;
 	ZuiBool init;

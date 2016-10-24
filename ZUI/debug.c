@@ -25,37 +25,37 @@
 
 
 
-	ZuiControl pRoot = NewZuiControl(L"window", NULL, NULL, NULL);
-	//-------------------------------------------------------------------------
-	ZuiControl tabhead = NewZuiControl(L"HorizontalLayout", NULL, NULL, NULL);
-	ZuiControlCall(Proc_SetFixedHeight, tabhead, 32, 0, 0);
-	//-------------------------------------------------------------------------
-	ZuiControl head = NewZuiControl(L"HorizontalLayout", NULL, NULL, NULL);
-	ZuiControlCall(Proc_SetFixedHeight, head, 40, 0, 0);
+	//ZuiControl pRoot = NewZuiControl(L"window", NULL, NULL, NULL);
+	////-------------------------------------------------------------------------
+	//ZuiControl tabhead = NewZuiControl(L"HorizontalLayout", NULL, NULL, NULL);
+	//ZuiControlCall(Proc_SetFixedHeight, tabhead, 32, 0, 0);
+	////-------------------------------------------------------------------------
+	//ZuiControl head = NewZuiControl(L"HorizontalLayout", NULL, NULL, NULL);
+	//ZuiControlCall(Proc_SetFixedHeight, head, 40, 0, 0);
 
-	
+	//
 
-	ZuiControl back = NewZuiControl(L"button", NULL, NULL, NULL);
-	ZuiControl next = NewZuiControl(L"button", NULL, NULL, NULL);
-	ZuiControl reload = NewZuiControl(L"button", NULL, NULL, NULL);
-	ZuiControlCall(Proc_SetFixedWidth, back, 40, 0, 0);
-	ZuiControlCall(Proc_SetFixedWidth, next, 40, 0, 0);
-	ZuiControlCall(Proc_SetFixedWidth, reload, 40, 0, 0);
+	//ZuiControl back = NewZuiControl(L"button", NULL, NULL, NULL);
+	//ZuiControl next = NewZuiControl(L"button", NULL, NULL, NULL);
+	//ZuiControl reload = NewZuiControl(L"button", NULL, NULL, NULL);
+	//ZuiControlCall(Proc_SetFixedWidth, back, 40, 0, 0);
+	//ZuiControlCall(Proc_SetFixedWidth, next, 40, 0, 0);
+	//ZuiControlCall(Proc_SetFixedWidth, reload, 40, 0, 0);
 
-	ZuiControlCall(Proc_Layout_Add, head, back, NULL, NULL);
-	ZuiControlCall(Proc_Layout_Add, head, next, NULL, NULL);
-	ZuiControlCall(Proc_Layout_Add, head, reload, NULL, NULL);
+	//ZuiControlCall(Proc_Layout_Add, head, back, NULL, NULL);
+	//ZuiControlCall(Proc_Layout_Add, head, next, NULL, NULL);
+	//ZuiControlCall(Proc_Layout_Add, head, reload, NULL, NULL);
 
-	//-------------------------------------------------------------------------
-	ZuiControl tab = NewZuiControl(L"TabLayout", NULL, NULL, NULL);
-	ZuiControl defbr = NewZuiControl(L"Browser", NULL, NULL, NULL);
+	////-------------------------------------------------------------------------
+	//ZuiControl tab = NewZuiControl(L"TabLayout", NULL, NULL, NULL);
+	//ZuiControl defbr = NewZuiControl(L"Browser", NULL, NULL, NULL);
 
-	ZuiControlCall(Proc_Layout_Add, tab, defbr, NULL, NULL);
+	//ZuiControlCall(Proc_Layout_Add, tab, defbr, NULL, NULL);
 
 
-	ZuiControlCall(Proc_Layout_Add, pRoot, tabhead, NULL, NULL);
-	ZuiControlCall(Proc_Layout_Add, pRoot, head, NULL, NULL);
-	ZuiControlCall(Proc_Layout_Add, pRoot, tab, NULL, NULL);
+	//ZuiControlCall(Proc_Layout_Add, pRoot, tabhead, NULL, NULL);
+	//ZuiControlCall(Proc_Layout_Add, pRoot, head, NULL, NULL);
+	//ZuiControlCall(Proc_Layout_Add, pRoot, tab, NULL, NULL);
 
 	ZuiMsgLoop();
 

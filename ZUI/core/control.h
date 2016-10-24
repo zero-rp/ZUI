@@ -49,6 +49,8 @@ typedef ZuiAny (ZCALL *ZCtlProc)(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, Z
 #define	Proc_SetEnabled			32	//设置可用状态
 #define	Proc_SetFocus			33	//设置焦点
 
+#define	Proc_SetBkColor		45	//设置背景色
+
 #define	Proc_EstimateSize		34	//获取自适应大小
 #define	Proc_FindControl		35	//查找控件
 

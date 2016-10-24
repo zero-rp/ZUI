@@ -279,7 +279,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 		ZuiGraphicsSetClipRegion((ZuiGraphics)Param1, OldRgn, 0);
 		ZuiDestroyRegion(OldRgn);
 		ZuiDestroyRegion(rgn);
-		break;
+		return 0;//绘图完毕,不需要默认
 	}
 	case Proc_SetManager: {
 		for (int it = 0; it < darray_len(p->m_items); it++) {

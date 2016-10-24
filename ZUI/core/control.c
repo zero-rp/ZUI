@@ -352,9 +352,17 @@ ZAPI(ZuiAny) ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny UserData,
 		return ((FINDCONTROLPROC)Param1)(p, Param2);
 		break;
 	}
+	case Proc_SetBkColor: {
+		p->m_BkgColor = Param1;
+		ZuiControlInvalidate(p);
+		break;
+	}
 	case Proc_OnPaint: {
 		ZuiGraphics gp = (ZuiGraphics)Param1;
 		RECT *rc = &p->m_rcItem;
+		if (p->m_BkgColor)
+			ZuiDrawFillRect(gp, p->m_BkgColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+		break;
 	}
 	case Proc_SetAttribute: {
 		if (wcscmp(Param1, L"text") == 0) ZuiControlCall(Proc_SetText, p, Param2, NULL, NULL);
@@ -365,7 +373,13 @@ ZAPI(ZuiAny) ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny UserData,
 		else if (wcscmp(Param1, L"minheight") == 0) ZuiControlCall(Proc_SetMinHeight, p, _wtoi(Param2), NULL, NULL);
 		else if (wcscmp(Param1, L"maxwidth") == 0) ZuiControlCall(Proc_SetMaxWidth, p, _wtoi(Param2), NULL, NULL);
 		else if (wcscmp(Param1, L"maxheight") == 0) ZuiControlCall(Proc_SetMaxHeight, p, _wtoi(Param2), NULL, NULL);
-		
+		else if (wcscmp(Param1, L"bkcolor") == 0) {
+			while (*(wchar_t *)Param2 > L'\0' && *(wchar_t *)Param2 <= L' ') (wchar_t *)Param2 = CharNext((wchar_t *)Param2);
+			if (*(wchar_t *)Param2 == L'#') (wchar_t *)Param2 = CharNext((wchar_t *)Param2);
+			LPTSTR pstr = NULL;
+			DWORD clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);
+			ZuiControlCall(Proc_SetBkColor, p, clrColor, NULL, NULL);
+		}
 	}
 		break;
 	default:

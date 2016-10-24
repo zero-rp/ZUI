@@ -65,7 +65,7 @@ ZAPI(ZuiAny) ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, ZuiAny Par
 		MAKEZRECT(r, rc->left + 5, rc->top + 5, rc->right - rc->left - 10, rc->bottom - rc->top - 10);
 		ZuiDrawString(gp, Global_StringFormat, cp->m_sText, &r);
 	}
-		break;
+		return 0;
 	case Proc_OnInit:{
 
 	}

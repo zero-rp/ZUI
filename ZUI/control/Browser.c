@@ -21,9 +21,7 @@ ZAPI(ZuiAny) ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, ZuiAny P
 		p->old_call = cp->call;
 		p->cp = cp;
 		p->view = wkeCreateWebView();
-		wkeOnPaintUpdated(p->view, _staticOnPaintUpdated, p);
-		wkeLoadURL(p->view, "http://127.0.0.1");
-		
+		wkeOnPaintUpdated(p->view, _staticOnPaintUpdated, p);		
 		return p;
 	}
 		break;
@@ -168,6 +166,14 @@ ZAPI(ZuiAny) ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, ZuiAny P
 		break;
 	case Proc_SetPos:{
 		OutputDebugString(L"a");
+	}
+		break;
+	case Proc_Browser_LoadUrl: {
+		wkeLoadURLW(p->view, Param1);
+	}
+		break;
+	case Proc_SetAttribute: {
+		if (wcscmp(Param1, L"url") == 0) ZuiControlCall(Proc_Browser_LoadUrl, cp, Param2, NULL, NULL);
 	}
 		break;
 	case Proc_OnInit:{
