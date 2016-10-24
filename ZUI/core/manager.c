@@ -602,7 +602,7 @@ ZAPI(ZuiBool) ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg, WPARAM
 							ZuiControlEvent(p->m_pEventHover, &event);
 						}
 						if (p->m_pEventClick != NULL) {
-							event.Type = ZEVENT_BUTTONUP;
+							event.Type = ZEVENT_LBUTTONUP;
 							event.pSender = p->m_pEventClick;
 							ZuiControlEvent(p->m_pEventClick, &event);
 						}
@@ -1009,7 +1009,7 @@ ZAPI(ZuiBool) ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg, WPARAM
 							ZuiControlCall(Proc_SetFocus, pControl, 0, 0, 0);
 							ZuiPaintManagerSetCapture(p);
 							TEventUI event = { 0 };
-							event.Type = ZEVENT_BUTTONDOWN;
+							event.Type = ZEVENT_LBUTTONDOWN;
 							event.pSender = pControl;
 							event.wParam = wParam;
 							event.lParam = lParam;
@@ -1029,7 +1029,7 @@ ZAPI(ZuiBool) ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg, WPARAM
 							  if (pControl->m_pManager != p) break;
 							  ZuiPaintManagerSetCapture(p);
 							  TEventUI event = { 0 };
-							  event.Type = ZEVENT_DBLCLICK;
+							  event.Type = ZEVENT_LDBLCLICK;
 							  event.pSender = pControl;
 							  event.ptMouse = pt;
 							  event.wKeyState = (WORD)wParam;
@@ -1045,7 +1045,7 @@ ZAPI(ZuiBool) ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg, WPARAM
 						  if (p->m_pEventClick == NULL) break;
 						  ZuiPaintManagerReleaseCapture(p);
 						  TEventUI event = { 0 };
-						  event.Type = ZEVENT_BUTTONUP;
+						  event.Type = ZEVENT_LBUTTONUP;
 						  event.pSender = p->m_pEventClick;
 						  event.wParam = wParam;
 						  event.lParam = lParam;

@@ -117,6 +117,9 @@
     <ClCompile Include="control\Browser.c">
       <Filter>源文件\control</Filter>
     </ClCompile>
+    <ClCompile Include="core\builder.c">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZUI.h">
@@ -202,6 +205,9 @@
     </ClInclude>
     <ClInclude Include="control\Browser.h">
       <Filter>头文件\control</Filter>
+    </ClInclude>
+    <ClInclude Include="core\builder.h">
+      <Filter>头文件\core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

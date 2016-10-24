@@ -112,17 +112,22 @@ typedef struct _ZPointR
 	r->Width = W;\
 	r->Height = H;
 
+
+#define	DEBUG_BORDER	1
+
+
 /*基础辅助函数*/
 #include "Core/carray.h"
 #include "Core/function.h"
 #include "Core/tree.h"
 #include "Core/unzip.h"
+#include "Core/mxml.h"
 #include "Core/gdi.h"
 #include "Core/global.h"
 /*内核*/
 #include "Core/manager.h"		//绘制管理器
 #include "Core/control.h"		//控件基类
-
+#include "Core/builder.h"
 
 /*控件*/
 #include "Control/Register.h"

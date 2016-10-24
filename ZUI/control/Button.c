@@ -30,16 +30,14 @@ ZAPI(ZuiAny) ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, ZuiAny Par
 			ZuiControlInvalidate(cp);
 		}
 			break;
-		case ZEVENT_BUTTONDOWN: {
+		case ZEVENT_LBUTTONDOWN: {
 			p->type = 2;
 			ZuiControlInvalidate(cp);
 		}
 			break;
-		case ZEVENT_BUTTONUP: {
+		case ZEVENT_LBUTTONUP: {
 			p->type = 1;
 			ZuiControlInvalidate(cp);
-			ZuiControl pBut1 = NewCControlUI("button", NULL, NULL, NULL);
-			ZuiControlCall(Proc_Layout_Add, cp->m_pParent, pBut1, NULL, NULL);
 		}
 			 break;
 		default:
@@ -66,10 +64,6 @@ ZAPI(ZuiAny) ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, ZuiAny Par
 		ZRect r;
 		MAKEZRECT(r, rc->left + 5, rc->top + 5, rc->right - rc->left - 10, rc->bottom - rc->top - 10);
 		ZuiDrawString(gp, Global_StringFormat, cp->m_sText, &r);
-	}
-		break;
-	case Proc_SetPos:{
-		OutputDebugString(L"a");
 	}
 		break;
 	case Proc_OnInit:{

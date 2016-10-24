@@ -48,17 +48,52 @@ ZAPI(ZuiAny) ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, ZuiAny P
 			if (p->view) wkeSetFocus(p->view); break;
 		case ZEVENT_KILLFOCUS:
 			if (p->view) wkeKillFocus(p->view); break;
-		case ZEVENT_BUTTONDOWN:
-		case ZEVENT_BUTTONUP:
+		case ZEVENT_CHAR: {
+			unsigned int charCode = event->wParam;
+			unsigned int flags = 0;
+			if (HIWORD(event->lParam) & KF_REPEAT)
+				flags |= WKE_REPEAT;
+			if (HIWORD(event->lParam) & KF_EXTENDED)
+				flags |= WKE_EXTENDED;
+
+			if (wkeFireKeyPressEvent(p->view, charCode, flags, false))
+				return 0;
+		}
+			break;
+		case ZEVENT_KEYUP: {
+			unsigned int virtualKeyCode = event->wParam;
+			unsigned int flags = 0;
+			if (HIWORD(event->lParam) & KF_REPEAT)
+				flags |= WKE_REPEAT;
+			if (HIWORD(event->lParam) & KF_EXTENDED)
+				flags |= WKE_EXTENDED;
+
+			if (wkeFireKeyUpEvent(p->view, virtualKeyCode, flags, false))
+				return 0;
+		}
+		   break;
+		case ZEVENT_KEYDOWN: {
+			unsigned int virtualKeyCode = event->wParam;
+			unsigned int flags = 0;
+			if (HIWORD(event->lParam) & KF_REPEAT)
+				flags |= WKE_REPEAT;
+			if (HIWORD(event->lParam) & KF_EXTENDED)
+				flags |= WKE_EXTENDED;
+
+			if (wkeFireKeyDownEvent(p->view, virtualKeyCode, flags, false))
+				return 0;
+		}
+			break;
+		case ZEVENT_LBUTTONDOWN:
+		case ZEVENT_LBUTTONUP:
 		case ZEVENT_RBUTTONDOWN:
-		case ZEVENT_DBLCLICK:
-		case ZEVENT_MOUSEMOVE:
-		{
-			if (event->Type == ZEVENT_BUTTONDOWN)
+		case ZEVENT_LDBLCLICK:
+		case ZEVENT_MOUSEMOVE:{
+			if (event->Type == ZEVENT_LBUTTONDOWN)
 			{
 				ZuiPaintManagerSetCapture(cp->m_pManager);
 			}
-			else if (event->Type == ZEVENT_BUTTONUP)
+			else if (event->Type == ZEVENT_LBUTTONUP)
 				ZuiPaintManagerReleaseCapture(cp->m_pManager);
 
 			unsigned int flags = 0;
@@ -78,10 +113,10 @@ ZAPI(ZuiAny) ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, ZuiAny P
 			UINT uMsg = 0;
 			switch (event->Type)
 			{
-			case ZEVENT_BUTTONDOWN:    uMsg = WM_LBUTTONDOWN; break;
-			case ZEVENT_BUTTONUP:      uMsg = WM_LBUTTONUP; break;
+			case ZEVENT_LBUTTONDOWN:    uMsg = WM_LBUTTONDOWN; break;
+			case ZEVENT_LBUTTONUP:      uMsg = WM_LBUTTONUP; break;
 			case ZEVENT_RBUTTONDOWN:   uMsg = WM_RBUTTONDOWN; break;
-			case ZEVENT_DBLCLICK:      uMsg = WM_LBUTTONDBLCLK; break;
+			case ZEVENT_LDBLCLICK:      uMsg = WM_LBUTTONDBLCLK; break;
 			case ZEVENT_MOUSEMOVE:     uMsg = WM_MOUSEMOVE; break;
 			}
 			if (wkeFireMouseEvent(p->view, uMsg, event->ptMouse.x - cp->m_rcItem.left, event->ptMouse.y - cp->m_rcItem.top, flags))

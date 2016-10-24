@@ -98,11 +98,11 @@ ZAPI(ZuiAny) ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, ZuiAny Par
 
 		}
 								 break;
-		case ZEVENT_BUTTONDOWN: {
+		case ZEVENT_LBUTTONDOWN: {
 
 		}
 								 break;
-		case ZEVENT_BUTTONUP: {
+		case ZEVENT_LBUTTONUP: {
 
 		}
 							   break;

@@ -10,20 +10,54 @@
 	HRESULT Hr = CoInitialize(NULL);
 	if (FAILED(Hr)) return;
 
-	ZuiControl pRoot = NewCControlUI("window", NULL, NULL, NULL);
-	
-	ZuiControl head = NewCControlUI("HorizontalLayout", NULL, NULL, NULL);
-	ZuiControlCall(Proc_SetFixedHeight, head, 50, 0, 0);
+	FILE*fp;
+	long flen;
+	void *p;
 
-	ZuiControl tab = NewCControlUI("TabLayout", NULL, NULL, NULL);
-	ZuiControl defbr = NewCControlUI("Browser", NULL, NULL, NULL);
+	fp = fopen("test.xml", "rb");
+	fseek(fp, 0L, SEEK_END);
+	flen = ftell(fp); /* 得到文件大小 */
+	p = malloc(flen); /* 根据文件大小动态分配内存空间 */
+	fseek(fp, 0L, SEEK_SET); /* 定位到文件开头 */
+	fread(p, flen, 1, fp); /* 一次性读取全部文件内容 */
+	fclose(fp);
+	ZuiLayoutLoad(p,flen);
+
+
+
+	ZuiControl pRoot = NewZuiControl("window", NULL, NULL, NULL);
+	//-------------------------------------------------------------------------
+	ZuiControl tabhead = NewZuiControl("HorizontalLayout", NULL, NULL, NULL);
+	ZuiControlCall(Proc_SetFixedHeight, tabhead, 32, 0, 0);
+	//-------------------------------------------------------------------------
+	ZuiControl head = NewZuiControl("HorizontalLayout", NULL, NULL, NULL);
+	ZuiControlCall(Proc_SetFixedHeight, head, 40, 0, 0);
+
+	
+
+	ZuiControl back = NewZuiControl("button", NULL, NULL, NULL);
+	ZuiControl next = NewZuiControl("button", NULL, NULL, NULL);
+	ZuiControl reload = NewZuiControl("button", NULL, NULL, NULL);
+	ZuiControlCall(Proc_SetFixedWidth, back, 40, 0, 0);
+	ZuiControlCall(Proc_SetFixedWidth, next, 40, 0, 0);
+	ZuiControlCall(Proc_SetFixedWidth, reload, 40, 0, 0);
+
+	ZuiControlCall(Proc_Layout_Add, head, back, NULL, NULL);
+	ZuiControlCall(Proc_Layout_Add, head, next, NULL, NULL);
+	ZuiControlCall(Proc_Layout_Add, head, reload, NULL, NULL);
+
+	//-------------------------------------------------------------------------
+	ZuiControl tab = NewZuiControl("TabLayout", NULL, NULL, NULL);
+	ZuiControl defbr = NewZuiControl("Browser", NULL, NULL, NULL);
 
 	ZuiControlCall(Proc_Layout_Add, tab, defbr, NULL, NULL);
 
+
+	ZuiControlCall(Proc_Layout_Add, pRoot, tabhead, NULL, NULL);
 	ZuiControlCall(Proc_Layout_Add, pRoot, head, NULL, NULL);
 	ZuiControlCall(Proc_Layout_Add, pRoot, tab, NULL, NULL);
 
-
+	ZuiMsgLoop();
 
 	//
 	////ZuiControlCall(Proc_SetFixedWidth, playout1, (void *)100, 0, 0);

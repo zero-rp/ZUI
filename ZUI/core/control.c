@@ -2,7 +2,7 @@
 
 extern rb_root *Global_ControlClass;
 //创建控件
-ZuiControl NewCControlUI(char *classname, void* Param1, void* Param2, void* Param3){
+ZuiControl NewZuiControl(char *classname, void* Param1, void* Param2, void* Param3){
 	ZuiControl p = (ZuiControl)malloc(sizeof(ZControl));
 	if (p){
 		memset(p, 0, sizeof(ZControl));
@@ -338,6 +338,14 @@ ZAPI(ZuiAny) ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny UserData,
 		return ((FINDCONTROLPROC)Param1)(p, Param2);
 		break;
 	}
+	case Proc_OnPaint: {
+		ZuiGraphics gp = (ZuiGraphics)Param1;
+		RECT *rc = &p->m_rcItem;
+	}
+	case Proc_Builder: {
+
+	}
+		break;
 	default:
 		break;
 	}
