@@ -120,6 +120,9 @@
     <ClCompile Include="core\builder.c">
       <Filter>源文件\core</Filter>
     </ClCompile>
+    <ClCompile Include="core\string.c">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZUI.h">
@@ -207,6 +210,9 @@
       <Filter>头文件\control</Filter>
     </ClInclude>
     <ClInclude Include="core\builder.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\string.h">
       <Filter>头文件\core</Filter>
     </ClInclude>
   </ItemGroup>

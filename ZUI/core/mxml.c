@@ -1,15 +1,15 @@
-﻿#include "mxml.h"
+﻿#include <ZUI.h>
 
-#define mxml_bad_char(ch) ((ch) < ' ' && (ch) != '\n' && (ch) != '\r' && (ch) != '\t')
+#define mxml_bad_char(ch) ((ch) < L' ' && (ch) != L'\n' && (ch) != L'\r' && (ch) != L'\t')
 
 /*判断字符是否为空白字符*/
 static int	mxml_isspace(int ch)
 {
-	return (ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n');
+	return (ch == L' ' || ch == L'\t' || ch == L'\r' || ch == L'\n');
 }
 
 //--------ATTR操作
-static int mxml_set_attr(mxml_node_t *node, const char  *name, char *value)
+static int mxml_set_attr(mxml_node_t *node, const wchar_t  *name, wchar_t *value)
 {
 	int		i;			/* Looping var */
 	mxml_attr_t	*attr;			/* New attribute */
@@ -17,7 +17,7 @@ static int mxml_set_attr(mxml_node_t *node, const char  *name, char *value)
 	for (i = node->value.num_attrs, attr = node->value.attrs;
 		i > 0;
 		i--, attr++)
-		if (!strcmp(attr->name, name))
+		if (!wcscmp(attr->name, name))
 		{
 			/*
 			* Free the old value as needed...
@@ -57,7 +57,7 @@ static int mxml_set_attr(mxml_node_t *node, const char  *name, char *value)
 	return (0);
 }
 
-const char *mxmlElementGetAttr(mxml_node_t *node, const char  *name)
+const char *mxmlElementGetAttr(mxml_node_t *node, const wchar_t  *name)
 {
 	int		i;			/* Looping var */
 	mxml_attr_t	*attr;			/* Cirrent attribute */
@@ -71,7 +71,7 @@ const char *mxmlElementGetAttr(mxml_node_t *node, const char  *name)
 		i--, attr++)
 	{
 
-		if (!strcmp(attr->name, name))
+		if (!wcscmp(attr->name, name))
 		{
 			return (attr->value);
 		}
@@ -79,9 +79,9 @@ const char *mxmlElementGetAttr(mxml_node_t *node, const char  *name)
 	return (NULL);
 }
 
-void mxmlElementSetAttr(mxml_node_t *node, const char  *name, const char  *value)
+void mxmlElementSetAttr(mxml_node_t *node, const wchar_t  *name, const wchar_t  *value)
 {
-	char	*valuec;			/* Copy of value */
+	wchar_t	*valuec;			/* Copy of value */
 
 	if (!node || !name)
 		return;
@@ -256,7 +256,7 @@ void mxmlDelete(mxml_node_t *node)
 	free(node);
 }
 
-mxml_node_t *mxmlNewElement(mxml_node_t *parent, const char  *name)
+mxml_node_t *mxmlNewElement(mxml_node_t *parent, const wchar_t  *name)
 {
 	mxml_node_t	*node;			/* New node */
 
@@ -284,110 +284,38 @@ int mxmlRelease(mxml_node_t *node)
 		return (-1);
 }
 //--------XML树解析
-//取字符
-static int mxml_string_getc(void *p)
+typedef int(*mxml_getc)(void *p);
+//取字符A
+static wchar_t mxml_string_getc(mxml_buf_t *p)
 {
-	int		ch;			/* Character */
-	const char	**s;			/* Pointer to string pointer */
-	s = (const char **)p;
-	if ((ch = (*s)[0] & 255) != 0)
+	wchar_t		ch=0;			/* Character */
+	const wchar_t	**s;			/* Pointer to string pointer */
+	s = (const wchar_t **)p;
+	if (p->pos < p->len)
 	{
-		(*s)++;
-		if (!(ch & 0x80))
+		ch = p->buf[p->pos];
+		
+
+		p->pos++;
+		if (ch != 0)
 		{
-			if (mxml_bad_char(ch))
-			{
-				return (EOF);
-			}
-			return (ch);
-		}
-		if (*(*s)-- < 0)
-		{
-			char buf[4];
-			buf[0] = *(*s);
-			*(*s)++;
-			buf[1] = *(*s);
-			buf[2] = 0;
-			buf[3] = 0;
-			char *a = buf;
-			(*s)++;
-			ch = *(int*)a;
-			return (ch);
-		}
-		else if ((ch & 0xe0) == 0xc0)
-		{
-			/*
-			* Two-byte value...
-			*/
-			if (((*s)[0] & 0xc0) != 0x80)
-				return (EOF);
-
-			ch = ((ch & 0x1f) << 6) | ((*s)[0] & 0x3f);
-
-			(*s)++;
-
-			if (ch < 0x80)
-			{
-				return (EOF);
-			}
-			return (ch);
-		}
-		else if ((ch & 0xf0) == 0xe0)
-		{
-			/*
-			* Three-byte value...
-			*/
-			if (((*s)[0] & 0xc0) != 0x80 ||
-				((*s)[1] & 0xc0) != 0x80)
-				return (EOF);
-
-			ch = ((((ch & 0x0f) << 6) | ((*s)[0] & 0x3f)) << 6) | ((*s)[1] & 0x3f);
-
-			(*s) += 2;
-
-			if (ch < 0x800)
-			{
-				return (EOF);
-			}
-			/*
-			* Ignore (strip) Byte Order Mark (BOM)...
-			*/
 			if (ch == 0xfeff)
 				return (mxml_string_getc(p));
-			return (ch);
-		}
-		else if ((ch & 0xf8) == 0xf0)
-		{
-			/*
-			* Four-byte value...
-			*/
-
-			if (((*s)[0] & 0xc0) != 0x80 ||
-				((*s)[1] & 0xc0) != 0x80 ||
-				((*s)[2] & 0xc0) != 0x80)
-				return (EOF);
-
-			ch = ((((((ch & 0x07) << 6) | ((*s)[0] & 0x3f)) << 6) |
-				((*s)[1] & 0x3f)) << 6) | ((*s)[2] & 0x3f);
-
-			(*s) += 3;
-
-			if (ch < 0x10000)
+			if (ch == 65535)
+				return (mxml_string_getc(p));
+			if (mxml_bad_char(ch))
 			{
-				return (EOF);
+				return (WEOF);
 			}
 			return (ch);
 		}
-		else
-			return (EOF);
 	}
-
-	return (EOF);
+	return WEOF;
 }
 
-static int mxml_add_char(int ch, char **bufptr, char **buffer, int  *bufsize)
+static int mxml_add_char(wchar_t ch, wchar_t **bufptr, wchar_t **buffer, int  *bufsize)
 {
-	char	*newbuffer;			/* New buffer value */
+	wchar_t	*newbuffer;			/* New buffer value */
 
 
 	if (*bufptr >= (*buffer + *bufsize - 4))
@@ -401,7 +329,7 @@ static int mxml_add_char(int ch, char **bufptr, char **buffer, int  *bufsize)
 		else
 			(*bufsize) += 1024;
 
-		if ((newbuffer = (char *)realloc(*buffer, *bufsize)) == NULL)
+		if ((newbuffer = (wchar_t *)realloc(*buffer, *bufsize)) == NULL)
 		{
 			free(*buffer);
 			return (-1);
@@ -411,35 +339,11 @@ static int mxml_add_char(int ch, char **bufptr, char **buffer, int  *bufsize)
 		*buffer = newbuffer;
 	}
 
-	if (ch < 0x80)
-	{
-		/*
-		 * Single byte ASCII...
-		 */
-		*(*bufptr)++ = ch;
-	}
-	else if (ch < 0x800)
-	{
-		/*
-		 * Two-byte UTF-8...
-		 */
-
-		*(*bufptr)++ = 0xc0 | (ch >> 6);
-		*(*bufptr)++ = 0x80 | (ch & 0x3f);
-	}
-	else if (((char *)&ch)[0] < 0)
-	{
-		/*
-		 * 中文
-		 */
-		*(*bufptr)++ = ((char *)&ch)[0];
-		*(*bufptr)++ = ((char *)&ch)[1];
-	}
-
+	*(*bufptr)++ = ch;
 	return (0);
 }
 //查找转义符
-static int mxmlEntityGetValue(const char *name)
+static int mxmlEntityGetValue(const wchar_t *name)
 {
 	int	diff,				/* Difference between names */
 		current,			/* Current entity in search */
@@ -448,38 +352,38 @@ static int mxmlEntityGetValue(const char *name)
 
 	static const struct
 	{
-		const char	*name;			/* Entity name */
+		const wchar_t	*name;			/* Entity name */
 		int		val;			/* Character value */
 	}	entities[] =
 	{
-		{ "AElig", 198 },
-		{ "Aacute", 193 },
-		{ "Acirc", 194 },
-		{ "Agrave", 192 },
-		{ "Alpha", 913 },
-		{ "Aring", 197 },
-		{ "Atilde", 195 },
-		{ "Auml", 196 },
-		{ "Beta", 914 },
-		{ "Ccedil", 199 },
-		{ "Chi", 935 },
-		{ "Dagger", 8225 },
-		{ "Delta", 916 },
-		{ "Dstrok", 208 },
-		{ "ETH", 208 },
-		{ "Eacute", 201 },
-		{ "Ecirc", 202 },
-		{ "Egrave", 200 },
-		{ "Epsilon", 917 },
-		{ "Eta", 919 },
-		{ "Euml", 203 },
-		{ "Gamma", 915 },
-		{ "Iacute", 205 },
-		{ "Icirc", 206 },
-		{ "Igrave", 204 },
-		{ "Iota", 921 },
-		{ "Iuml", 207 },
-		{ "Kappa", 922 },
+		{ L"AElig", 198 },
+		{ L"Aacute", 193 },
+		{ L"Acirc", 194 },
+		{ L"Agrave", 192 },
+		{ L"Alpha", 913 },
+		{ L"Aring", 197 },
+		{ L"Atilde", 195 },
+		{ L"Auml", 196 },
+		{ L"Beta", 914 },
+		{ L"Ccedil", 199 },
+		{ L"Chi", 935 },
+		{ L"Dagger", 8225 },
+		{ L"Delta", 916 },
+		{ L"Dstrok", 208 },
+		{ L"ETH", 208 },
+		{ L"Eacute", 201 },
+		{ L"Ecirc", 202 },
+		{ L"Egrave", 200 },
+		{ L"Epsilon", 917 },
+		{ L"Eta", 919 },
+		{ L"Euml", 203 },
+		{ L"Gamma", 915 },
+		{ L"Iacute", 205 },
+		{ L"Icirc", 206 },
+		{ L"Igrave", 204 },
+		{ L"Iota", 921 },
+		{ L"Iuml", 207 },
+		{ L"Kappa", 922 },
 		{ "Lambda", 923 },
 		{ "Mu", 924 },
 		{ "Ntilde", 209 },
@@ -723,7 +627,7 @@ static int mxmlEntityGetValue(const char *name)
 	{
 		current = (first + last) / 2;
 
-		if ((diff = strcmp(name, entities[current].name)) == 0)
+		if ((diff = wcscmp(name, entities[current].name)) == 0)
 			return (entities[current].val);
 		else if (diff < 0)
 			last = current;
@@ -736,24 +640,24 @@ static int mxmlEntityGetValue(const char *name)
 	* a match; check first and last...
 	*/
 
-	if (!strcmp(name, entities[first].name))
+	if (!wcscmp(name, entities[first].name))
 		return (entities[first].val);
-	else if (!strcmp(name, entities[last].name))
+	else if (!wcscmp(name, entities[last].name))
 		return (entities[last].val);
 	else
 		return (-1);
 }
 //处理转义符号
-static int mxml_get_entity(mxml_node_t *parent,	void *p)
+static int mxml_get_entity(mxml_node_t *parent,	void *p, mxml_getc mxml_string_getc)
 {
 	int		ch;					/* Current character */
-	char	entity[64],			/* Entity string */
+	wchar_t	entity[64],			/* Entity string */
 			*entptr;			/* Pointer into entity */
 
 	entptr = entity;
 
-	while ((ch = mxml_string_getc(p)) != EOF)
-		if (ch > 126 || (!isalnum(ch) && ch != '#'))
+	while ((ch = mxml_string_getc(p)) != WEOF)
+		if (ch > 126 || (!iswalnum(ch) && ch != L'#'))
 			break;
 		else if (entptr < (entity + sizeof(entity) - 1))
 			*entptr++ = ch;
@@ -762,36 +666,36 @@ static int mxml_get_entity(mxml_node_t *parent,	void *p)
 			break;
 		}
 
-		*entptr = '\0';
+		*entptr = L'\0';
 
-		if (ch != ';')
+		if (ch != L';')
 		{
-			return (EOF);
+			return (WEOF);
 		}
 
-		if (entity[0] == '#')
+		if (entity[0] == L'#')
 		{
-			if (entity[1] == 'x')
-				ch = strtol(entity + 2, NULL, 16);
+			if (entity[1] == L'x')
+				ch = wcstol(entity + 2, NULL, 16);
 			else
-				ch = strtol(entity + 1, NULL, 10);
+				ch = wcstol(entity + 1, NULL, 10);
 		}
 		else
 			ch = mxmlEntityGetValue(entity);
 
 		if (mxml_bad_char(ch))
 		{
-			return (EOF);
+			return (WEOF);
 		}
 
 		return (ch);
 }
 
-static int mxml_parse_element(mxml_node_t *node, void *p)
+static int mxml_parse_element(mxml_node_t *node, void *p, mxml_getc mxml_string_getc)
 {
-	int	ch,				/* Current character in file */
+	wchar_t	ch,				/* Current character in file */
 		quote;				/* Quoting character */
-	char	*name,				/* Attribute name */
+	wchar_t	*name,				/* Attribute name */
 		*value,				/* Attribute value */
 		*ptr;				/* Pointer into name/value */
 	int	namesize,			/* Size of name string */
@@ -802,26 +706,26 @@ static int mxml_parse_element(mxml_node_t *node, void *p)
 	* Initialize the name and value buffers...
 	*/
 
-	if ((name = (char *)malloc(64)) == NULL)
+	if ((name = (wchar_t *)malloc(64*sizeof(wchar_t))) == NULL)
 	{
-		return (EOF);
+		return (WEOF);
 	}
 
-	namesize = 64;
+	namesize = 64 * sizeof(wchar_t);
 
-	if ((value = (char *)malloc(64)) == NULL)
+	if ((value = (wchar_t *)malloc(64*sizeof(wchar_t))) == NULL)
 	{
 		free(name);
-		return (EOF);
+		return (WEOF);
 	}
 
-	valsize = 64;
+	valsize = 64 * sizeof(wchar_t);
 
 	/*
 	* Loop until we hit a >, /, ?, or EOF...
 	*/
 
-	while ((ch = mxml_string_getc(p)) != EOF)
+	while ((ch = mxml_string_getc(p)) != WEOF)
 	{
 		if (mxml_isspace(ch))
 			continue;
@@ -830,7 +734,7 @@ static int mxml_parse_element(mxml_node_t *node, void *p)
 		* Stop at /, ?, or >...
 		*/
 
-		if (ch == '/' || ch == '?')
+		if (ch == L'/' || ch == L'?')
 		{
 			/*
 			* Grab the > character and print an error if it isn't there...
@@ -838,18 +742,18 @@ static int mxml_parse_element(mxml_node_t *node, void *p)
 
 			quote = mxml_string_getc(p);
 
-			if (quote != '>')
+			if (quote != L'>')
 			{
 				goto error;
 			}
 
 			break;
 		}
-		else if (ch == '<')
+		else if (ch == L'<')
 		{
 			goto error;
 		}
-		else if (ch == '>')
+		else if (ch == L'>')
 			break;
 
 		/*
@@ -859,7 +763,7 @@ static int mxml_parse_element(mxml_node_t *node, void *p)
 		name[0] = ch;
 		ptr = name + 1;
 
-		if (ch == '\"' || ch == '\'')
+		if (ch == L'\"' || ch == L'\'')
 		{
 			/*
 			* Name is in quotes, so get a quoted string...
@@ -867,12 +771,12 @@ static int mxml_parse_element(mxml_node_t *node, void *p)
 
 			quote = ch;
 
-			while ((ch = mxml_string_getc(p)) != EOF)
+			while ((ch = mxml_string_getc(p)) != WEOF)
 			{
-				if (ch == '&'){
-					if ((ch = mxml_get_entity(node, p)) == EOF)
+				if (ch == L'&'){
+					if ((ch = mxml_get_entity(node, p, mxml_string_getc)) == WEOF)
 						goto error;
-					if (ch == ';')
+					if (ch == L';')
 						continue;//跳过分号
 				}
 				if (mxml_add_char(ch, &ptr, &name, &namesize))
@@ -888,14 +792,14 @@ static int mxml_parse_element(mxml_node_t *node, void *p)
 			* Grab an normal, non-quoted name...
 			*/
 
-			while ((ch = mxml_string_getc(p)) != EOF)
-				if (mxml_isspace(ch) || ch == '=' || ch == '/' || ch == '>' ||
-					ch == '?')
+			while ((ch = mxml_string_getc(p)) != WEOF)
+				if (mxml_isspace(ch) || ch == L'=' || ch == L'/' || ch == L'>' ||
+					ch == L'?')
 					break;
 				else
 				{
-					if (ch == '&'){
-						if ((ch = mxml_get_entity(node, p)) == EOF)
+					if (ch == L'&'){
+						if ((ch = mxml_get_entity(node, p, mxml_string_getc)) == WEOF)
 							goto error;
 						if (ch == ';')
 							continue;//跳过分号
@@ -905,28 +809,28 @@ static int mxml_parse_element(mxml_node_t *node, void *p)
 				}
 		}
 
-		*ptr = '\0';
+		*ptr = L'\0';
 
 		if (mxmlElementGetAttr(node, name))
 			goto error;
 
-		while (ch != EOF && mxml_isspace(ch))
+		while (ch != WEOF && mxml_isspace(ch))
 			ch = mxml_string_getc(p);
 
-		if (ch == '=')
+		if (ch == L'=')
 		{
 			/*
 			* Read the attribute value...
 			*/
 
-			while ((ch = mxml_string_getc(p)) != EOF && mxml_isspace(ch));
+			while ((ch = mxml_string_getc(p)) != WEOF && mxml_isspace(ch));
 
-			if (ch == EOF)
+			if (ch == WEOF)
 			{
 				goto error;
 			}
 
-			if (ch == '\'' || ch == '\"')
+			if (ch == L'\'' || ch == L'\"')
 			{
 				/*
 				* Read quoted value...
@@ -935,22 +839,22 @@ static int mxml_parse_element(mxml_node_t *node, void *p)
 				quote = ch;
 				ptr = value;
 
-				while ((ch = mxml_string_getc(p)) != EOF)
+				while ((ch = mxml_string_getc(p)) != WEOF)
 					if (ch == quote)
 						break;
 					else
 					{
-						if (ch == '&'){
-							if ((ch = mxml_get_entity(node, p)) == EOF)
+						if (ch == L'&'){
+							if ((ch = mxml_get_entity(node, p, mxml_string_getc)) == WEOF)
 								goto error;
-							if (ch == ';')
+							if (ch == L';')
 								continue;//跳过分号
 						}
 						if (mxml_add_char(ch, &ptr, &value, &valsize))
 							goto error;
 					}
 
-				*ptr = '\0';
+				*ptr = L'\0';
 			}
 			else
 			{
@@ -961,22 +865,22 @@ static int mxml_parse_element(mxml_node_t *node, void *p)
 				value[0] = ch;
 				ptr = value + 1;
 
-				while ((ch = mxml_string_getc(p)) != EOF)
-					if (mxml_isspace(ch) || ch == '=' || ch == '/' || ch == '>')
+				while ((ch = mxml_string_getc(p)) != WEOF)
+					if (mxml_isspace(ch) || ch == L'=' || ch == L'/' || ch == L'>')
 						break;
 					else
 					{
-						if (ch == '&'){
-							if ((ch = mxml_get_entity(node, p)) == EOF)
+						if (ch == L'&'){
+							if ((ch = mxml_get_entity(node, p, mxml_string_getc)) == WEOF)
 								goto error;
-							if (ch == ';')
+							if (ch == L';')
 								continue;//跳过分号
 						}
 						if (mxml_add_char(ch, &ptr, &value, &valsize))
 							goto error;
 					}
 
-				*ptr = '\0';
+				*ptr = L'\0';
 			}
 
 			/*
@@ -994,7 +898,7 @@ static int mxml_parse_element(mxml_node_t *node, void *p)
 		* Check the end character...
 		*/
 
-		if (ch == '/' || ch == '?')
+		if (ch == L'/' || ch == L'?')
 		{
 			/*
 			* Grab the > character and print an error if it isn't there...
@@ -1002,14 +906,14 @@ static int mxml_parse_element(mxml_node_t *node, void *p)
 
 			quote = mxml_string_getc(p);
 
-			if (quote != '>')
+			if (quote != L'>')
 			{
-				ch = EOF;
+				ch = WEOF;
 			}
 
 			break;
 		}
-		else if (ch == '>')
+		else if (ch == L'>')
 			break;
 	}
 
@@ -1027,48 +931,55 @@ error:
 	free(name);
 	free(value);
 
-	return (EOF);
+	return (WEOF);
 }
 //加载XML字符串 返回XML树
-mxml_node_t *mxmlLoadString(mxml_node_t *top, const char *s)
+mxml_node_t *mxmlLoadString(mxml_node_t *top, const char *s ,int len)
 {
 	mxml_node_t	*node,		/* Current node */
 			*first,			/* First node added */
 			*parent;		/* Current parent node */
-	int		ch;				/* Non-zero if whitespace seen */
-	char	*buffer,		/* String buffer */
+	wchar_t	ch;				/* Non-zero if whitespace seen */
+	wchar_t	*buffer,		/* String buffer */
 			*bufptr;		/* Pointer into buffer */
-	int		bufsize;		/* Size of buffer */
-	void	*p = (void *)&s;
-	if ((buffer = (char *)malloc(64)) == NULL)
+	int		bufsize=0;		/* Size of buffer */
+	wchar_t *txtbuf = 0;
+	if (ZuiStingIsUtf8(s, len))
 	{
-		return (NULL);
+		bufsize = ZuiUtf8ToUnicode(s, -1, 0, 0)*sizeof(wchar_t);
+		txtbuf = malloc(bufsize);
+		bufsize = ZuiUtf8ToUnicode(s, len, txtbuf, bufsize);
+		txtbuf[bufsize] = 0;
 	}
-
-	bufsize = 64;
+	else
+	{
+		bufsize = ZuiAsciiToUnicode(s, -1, 0, 0)*sizeof(wchar_t);
+		txtbuf = malloc(bufsize);
+		bufsize = ZuiAsciiToUnicode(s, len, txtbuf, bufsize);
+		txtbuf[bufsize] = 0;
+	}
+	mxml_buf_t buf;
+	buf.buf = txtbuf;
+	buf.len = bufsize;
+	buf.pos = 0;
+	mxml_buf_t	*p = &buf;
+	if ((buffer = (wchar_t *)malloc(64*sizeof(wchar_t))) == NULL)
+		return (NULL);
+	bufsize = 64*sizeof(wchar_t);
 	bufptr = buffer;
 	parent = top;
 	first = NULL;
 
-
-	while ((ch = mxml_string_getc(p)) != EOF)
+	while ((ch = mxml_string_getc(p)) != WEOF)
 	{
-		if ((ch == '<' || mxml_isspace(ch)) &&
-			bufptr > buffer)
+		if ((ch == L'<' || mxml_isspace(ch)) && bufptr > buffer)
 		{
-			/*
-			 * Add a new value node...
-			 */
-
-			*bufptr = '\0';
+			*bufptr = L'\0';
 
 			node = mxmlNewElement(parent, buffer);
 
 			if (*bufptr)
 			{
-				/*
-				 * Bad integer/real number value...
-				 */
 				break;
 			}
 
@@ -1078,131 +989,79 @@ mxml_node_t *mxmlLoadString(mxml_node_t *top, const char *s)
 				first = node;
 		}
 
-
-		if (ch == '<')
+		if (ch == L'<')
 		{
-			/*
-			 * Start of open/close tag...
-			 */
-
 			bufptr = buffer;
 
-			while ((ch = mxml_string_getc(p)) != EOF)
-				if (mxml_isspace(ch) || ch == '>' || (ch == '/' && bufptr > buffer))
+			while ((ch = mxml_string_getc(p)) != WEOF)
+				if (mxml_isspace(ch) || ch == L'>' || (ch == L'/' && bufptr > buffer))
 					break;
-				else if (ch == '<')
+				else if (ch == L'<')
 				{
 					goto error;
 				}
-				else if (ch == '&')
+				else if (ch == L'&')
 				{
-					if ((ch = mxml_get_entity(parent, p)) == EOF)
+					if ((ch = mxml_get_entity(parent, p, mxml_string_getc)) == WEOF)
 						goto error;
-					if (ch == ';')
+					if (ch == L';')
 						continue;//跳过分号
 					if (mxml_add_char(ch, &bufptr, &buffer, &bufsize))
 						goto error;
 				}
 				else if (mxml_add_char(ch, &bufptr, &buffer, &bufsize))
 					goto error;
-				else if (((bufptr - buffer) == 1 && buffer[0] == '?') ||
-					((bufptr - buffer) == 3 && !strncmp(buffer, "!--", 3)) ||
-					((bufptr - buffer) == 8 && !strncmp(buffer, "![CDATA[", 8)))
+				else if (((bufptr - buffer) == 1 && buffer[0] == L'?') ||
+					((bufptr - buffer) == 3 && !wcsncmp(buffer, L"!--", 3)) ||
+					((bufptr - buffer) == 8 && !wcsncmp(buffer, L"![CDATA[", 8)))
 					break;
 
-				*bufptr = '\0';
+				*bufptr = L'\0';
 
-				if (!strcmp(buffer, "!--"))
+				if (!wcscmp(buffer, L"!--"))
 				{
-					/*
-					 * Gather rest of comment...
-					 */
-
-					while ((ch = mxml_string_getc(p)) != EOF)
+					while ((ch = mxml_string_getc(p)) != WEOF)
 					{
-						if (ch == '>' && bufptr > (buffer + 4) &&
-							bufptr[-3] != '-' && bufptr[-2] == '-' && bufptr[-1] == '-')
+						if (ch == L'>' && bufptr > (buffer + 4) &&
+							bufptr[-3] != L'-' && bufptr[-2] == L'-' && bufptr[-1] == L'-')
 							break;
 						else if (mxml_add_char(ch, &bufptr, &buffer, &bufsize))
 							goto error;
 					}
 
-					/*
-					 * Error out if we didn't get the whole comment...
-					 */
-
-					if (ch != '>')
+					if (ch != L'>')
 					{
-						/*
-						 * Print error and return...
-						 */
 						goto error;
 					}
 
-
-					/*
-					 * Otherwise add this as an element under the current parent...
-					 */
-
-					*bufptr = '\0';
+					*bufptr = L'\0';
 
 					if (!parent && first)
 					{
-						/*
-						 * There can only be one root element!
-						 */
 						goto error;
 					}
 					//不解析跳过注释
 					node = NULL;
-					/*
-					if ((node = mxmlNewElement(parent, buffer)) == NULL)
-					{
-						break;
-					}
-
-					if (node && !first)
-						first = node;
-					*/
 				}
-				else if (!strcmp(buffer, "![CDATA["))
+				else if (!wcscmp(buffer, L"![CDATA["))
 				{
-					/*
-					 * Gather CDATA section...
-					 */
-
-					while ((ch = mxml_string_getc(p)) != EOF)
+					while ((ch = mxml_string_getc(p)) != WEOF)
 					{
-						if (ch == '>' && !strncmp(bufptr - 2, "]]", 2))
+						if (ch == L'>' && !strncmp(bufptr - 2, L"]]", 2))
 							break;
 						else if (mxml_add_char(ch, &bufptr, &buffer, &bufsize))
 							goto error;
 					}
 
-					/*
-					 * Error out if we didn't get the whole comment...
-					 */
-
-					if (ch != '>')
+					if (ch != L'>')
 					{
-						/*
-						 * Print error and return...
-						 */
 						goto error;
 					}
-
-
-					/*
-					 * Otherwise add this as an element under the current parent...
-					 */
 
 					*bufptr = '\0';
 
 					if (!parent && first)
 					{
-						/*
-						 * There can only be one root element!
-						 */
 						goto error;
 					}
 
@@ -1214,51 +1073,29 @@ mxml_node_t *mxmlLoadString(mxml_node_t *top, const char *s)
 					if (node && !first)
 						first = node;
 				}
-				else if (buffer[0] == '?')
+				else if (buffer[0] == L'?')
 				{
-					/*
-					 * Gather rest of processing instruction...
-					 */
-
-					while ((ch = mxml_string_getc(p)) != EOF)
+					while ((ch = mxml_string_getc(p)) != WEOF)
 					{
-						if (ch == '>' && bufptr > buffer && bufptr[-1] == '?')
+						if (ch == L'>' && bufptr > buffer && bufptr[-1] == L'?')
 							break;
 						else if (mxml_add_char(ch, &bufptr, &buffer, &bufsize))
 							goto error;
 					}
-
-					/*
-					 * Error out if we didn't get the whole processing instruction...
-					 */
-
-					if (ch != '>')
+					if (ch != L'>')
 					{
-						/*
-						 * Print error and return...
-						 */
 						goto error;
 					}
 
-					/*
-					 * Otherwise add this as an element under the current parent...
-					 */
-
-					*bufptr = '\0';
+					*bufptr = L'\0';
 
 					if (!parent && first)
 					{
-						/*
-						 * There can only be one root element!
-						 */
 						goto error;
 					}
 
 					if ((node = mxmlNewElement(parent, buffer)) == NULL)
 					{
-						/*
-						 * Print error and return...
-						 */
 						goto error;
 					}
 
@@ -1273,52 +1110,34 @@ mxml_node_t *mxmlLoadString(mxml_node_t *top, const char *s)
 						}
 					}
 				}
-				else if (buffer[0] == '!')
+				else if (buffer[0] == L'!')
 				{
-					/*
-					 * Gather rest of declaration...
-					 */
-
 					do
 					{
-						if (ch == '>')
+						if (ch == L'>')
 							break;
 						else
 						{
-							if (ch == '&'){
-								if ((ch = mxml_get_entity(parent, p)) == EOF)
+							if (ch == L'&'){
+								if ((ch = mxml_get_entity(parent, p, mxml_string_getc)) == WEOF)
 									goto error;
-								if (ch == ';')
+								if (ch == L';')
 									continue;//跳过分号
 							}
 							if (mxml_add_char(ch, &bufptr, &buffer, &bufsize))
 								goto error;
 						}
-					} while ((ch = mxml_string_getc(p)) != EOF);
+					} while ((ch = mxml_string_getc(p)) != WEOF);
 
-					/*
-					 * Error out if we didn't get the whole declaration...
-					 */
-
-					if (ch != '>')
+					if (ch != L'>')
 					{
-						/*
-						 * Print error and return...
-						 */
 						goto error;
 					}
 
-					/*
-					 * Otherwise add this as an element under the current parent...
-					 */
-
-					*bufptr = '\0';
+					*bufptr = L'\0';
 
 					if (!parent && first)
 					{
-						/*
-						 * There can only be one root element!
-						 */
 						goto error;
 					}
 
@@ -1338,119 +1157,80 @@ mxml_node_t *mxmlLoadString(mxml_node_t *top, const char *s)
 						}
 					}
 				}
-				else if (buffer[0] == '/')
+				else if (buffer[0] == L'/')
 				{
-					/*
-					 * Handle close tag...
-					 */
-
-					if (!parent || strcmp(buffer + 1, parent->value.name))
+					if (!parent || wcscmp(buffer + 1, parent->value.name))
 					{
-						/*
-						 * Close tag doesn't match tree; print an error for now...
-						 */
 						goto error;
 					}
 
-					/*
-					 * Keep reading until we see >...
-					 */
-
-					while (ch != '>' && ch != EOF)
+					while (ch != L'>' && ch != WEOF)
 						ch = mxml_string_getc(p);
 
 					node = parent;
 					parent = parent->parent;
-
-					/*
-				 * Ascend into the parent and set the value type as needed...
-				 */
-
 				}
 				else
 				{
-					/*
-					 * Handle open tag...
-					 */
-
 					if (!parent && first)
 					{
-						/*
-						 * There can only be one root element!
-						 */
 						goto error;
 					}
 
 					if ((node = mxmlNewElement(parent, buffer)) == NULL)
 					{
-						/*
-						 * Just print error for now...
-						 */
 						goto error;
 					}
 
 					if (mxml_isspace(ch))
 					{
-						if ((ch = mxml_parse_element(node, p)) == EOF)
+						if ((ch = mxml_parse_element(node, p , mxml_string_getc)) == WEOF)
 							goto error;
 					}
-					else if (ch == '/')
+					else if (ch == L'/')
 					{
-						if ((ch = mxml_string_getc(p)) != '>')
+						if ((ch = mxml_string_getc(p)) != L'>')
 						{
 							mxmlDelete(node);
 							goto error;
 						}
 
-						ch = '/';
+						ch = L'/';
 					}
-
 
 					if (!first)
 						first = node;
 
-					if (ch == EOF)
+					if (ch == WEOF)
 						break;
 
-					if (ch != '/')
+					if (ch != L'/')
 					{
-						/*
-						 * Descend into this node, setting the value type as needed...
-						 */
-
 						parent = node;
-
 					}
 				}
 
 				bufptr = buffer;
 		}
-		else if (ch == '&')
+		else if (ch == L'&')
 		{
-			/*
-			 * Add character entity to current buffer...
-			 */
-
-			if ((ch = mxml_get_entity(parent, p)) == EOF)
+			if ((ch = mxml_get_entity(parent, p, mxml_string_getc)) == WEOF)
 				goto error;
-			if (ch == ';')
+			if (ch == L';')
 				continue;//跳过分号
 			if (mxml_add_char(ch, &bufptr, &buffer, &bufsize))
 				goto error;
 		}
 		else if (!mxml_isspace(ch))
 		{
-			/*
-			 * Add character to current buffer...
-			 */
-
 			if (mxml_add_char(ch, &bufptr, &buffer, &bufsize))
 				goto error;
 		}
 	}
 
 	free(buffer);
-
+	if (txtbuf)
+		free(txtbuf);
 	if (parent)
 	{
 		node = parent;
@@ -1461,11 +1241,9 @@ mxml_node_t *mxmlLoadString(mxml_node_t *top, const char *s)
 		if (node != parent)
 		{
 			mxmlDelete(first);
-
 			return (NULL);
 		}
 	}
-
 	if (parent)
 		return (parent);
 	else
@@ -1473,9 +1251,7 @@ mxml_node_t *mxmlLoadString(mxml_node_t *top, const char *s)
 error:
 
 	mxmlDelete(first);
-
 	free(buffer);
-
 	return (NULL);
 }
 //-------节点查找
@@ -1508,7 +1284,7 @@ mxml_node_t *mxmlFindElement(mxml_node_t *node, mxml_node_t *top, const char *na
 		*/
 
 		if (node->value.name &&
-			(!name || !strcmp(node->value.name, name)))
+			(!name || !wcscmp(node->value.name, name)))
 		{
 			/*
 			* See if we need to check for an attribute...
@@ -1527,7 +1303,7 @@ mxml_node_t *mxmlFindElement(mxml_node_t *node, mxml_node_t *top, const char *na
 				* OK, we have the attribute, does it match?
 				*/
 
-				if (!value || !strcmp(value, temp))
+				if (!value || !wcscmp(value, temp))
 					return (node);		/* Yes, return it... */
 			}
 		}

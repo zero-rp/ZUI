@@ -118,6 +118,7 @@ typedef struct _ZPointR
 
 /*基础辅助函数*/
 #include "Core/carray.h"
+#include "Core/string.h"
 #include "Core/function.h"
 #include "Core/tree.h"
 #include "Core/unzip.h"

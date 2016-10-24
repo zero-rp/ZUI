@@ -11,8 +11,8 @@ typedef ZuiAny (ZCALL *ZCtlProc)(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, Z
 #define ZTYLE_BOX				1	//单线边框
 #define ZTYLE_BKGColor			2	//具有背景色
 
-#define	Proc_CoreInit			1//用于控件内核初始化
-#define	Proc_Builder			2	//解析属性
+#define	Proc_CoreInit			1	//用于控件内核初始化
+#define	Proc_SetAttribute		2	//解析属性
 #define	Proc_GetControlFlags	3	//
 #define	Proc_Activate			4	//活动
 #define	Proc_SetVisible			5	//设置是否可视
@@ -102,7 +102,7 @@ typedef struct _ZControl
 ZAPI(ZuiAny) ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 
 //创建控件
-ZuiControl NewZuiControl(char *classname, void* Param1, void* Param2, void* Param3);
+ZuiControl NewZuiControl(ZuiText classname, void* Param1, void* Param2, void* Param3);
 //销毁控件
 void FreeCControlUI(ZuiControl p);
 

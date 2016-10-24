@@ -7,7 +7,7 @@
 #include <ctype.h>
 #include <errno.h>
 
-#define strdup		_strdup
+#define strdup		_wcsdup
 
 #  define MXML_DESCEND		1	/* Descend when finding/walking */
 #  define MXML_NO_DESCEND	0	/* Don't descend when finding/walking */
@@ -19,14 +19,14 @@
 
 typedef struct mxml_attr_s		/**** XML元素节点的属性值 ****/
 {
-	char			*name;		/* 属性名 */
-	char			*value;		/* 属性值 */
+	ZuiText			name;		/* 属性名 */
+	ZuiText			value;		/* 属性值 */
 } mxml_attr_t;
 
 typedef struct mxml_value_u		/**** XML元素值 ****/
 {
-	char			*name;		/* Name of element */
-	int			num_attrs;	/* Number of attributes */
+	ZuiText			name;		/* Name of element */
+	ZuiInt			num_attrs;	/* Number of attributes */
 	mxml_attr_t		*attrs;		/* Attributes */
 } mxml_value_t;
 
@@ -41,7 +41,14 @@ typedef struct mxml_node_s			/**** XML 节点 ****/
 	void				*user_data;		/* 用户关联数据 */
 }mxml_node_t ;
 
-mxml_node_t *mxmlLoadString(mxml_node_t *top, const char *s);
+typedef struct mxml_buf			/**** XML 节点 ****/
+{
+	wchar_t *buf;
+	int len;
+	int pos;
+}mxml_buf_t;
+
+mxml_node_t *mxmlLoadString(mxml_node_t *top, ZuiAny s, ZuiInt len);
 
 mxml_node_t *mxmlFindElement(mxml_node_t *node, mxml_node_t *top, const char *name, const char *attr, const char *value, int descend);
 mxml_node_t *mxmlFindPath(mxml_node_t *top, const char  *path);

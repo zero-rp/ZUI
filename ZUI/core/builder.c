@@ -2,17 +2,20 @@
 
 
 ZAPI(ZuiVoid) ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
-	mxml_node_t *tree = mxmlLoadString(NULL, xml);
+	mxml_node_t *tree;
 	mxml_node_t *node;
 	ZuiText ClassName = NULL;
 	ZuiStringFormat StringFormat = NULL;
 	ZuiBool Visible = FALSE, Enabled = TRUE;
 	ZuiControl Control;
+	
+	tree = mxmlLoadString(NULL, xml, len);
+
 	for (node = mxmlFindElement(tree, tree, NULL, NULL, NULL, MXML_DESCEND); node != NULL; node = mxmlWalkNext(node, NULL, MXML_DESCEND)/*node = mxmlFindElement(node, tree, NULL,NULL,NULL,MXML_DESCEND)*/) {
 		{
 			ClassName = node->value.name;
 #if (defined DEBUG_BORDER) && (DEBUG_BORDER == 1)
-			printf("layout创建控件: 类名:%s\r\n", (char *)ClassName);
+			printf("layout创建控件: 类名:%ls\r\n", ClassName);
 #endif
 			if (!node->user_data) {//当前节点还未创建
 				Control = NewZuiControl(ClassName, NULL, NULL, NULL);
@@ -21,7 +24,10 @@ ZAPI(ZuiVoid) ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
 					if (Control) {
 						node->user_data = Control;//保存控件到节点
 						/*解析属性*/
-						ZuiControlCall(Proc_Builder, Control, node, NULL, NULL);
+						for (size_t i = 0; i < node->value.num_attrs; i++)
+						{
+							ZuiControlCall(Proc_SetAttribute, Control, node->value.attrs[i].name, node->value.attrs[i].value, NULL);
+						}
 						/*添加到容器*/
 						ZuiControlCall(Proc_Layout_Add, node->parent->user_data, Control, NULL, NULL);
 					}
