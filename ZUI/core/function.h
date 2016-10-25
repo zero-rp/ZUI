@@ -1,4 +1,17 @@
-﻿#ifndef __ZUI_CORE_FUNCTION_H__
+﻿/**
+* @file		function.h
+* @brief	公共函数接口.
+* @author	[Zero](22249030)
+* @version	1.0
+* @date		$date
+* @par History:
+*
+* [2016-10-25] <Zero> v1.0
+*
+* + v1.0版发布.
+*
+*/
+#ifndef __ZUI_CORE_FUNCTION_H__
 #define __ZUI_CORE_FUNCTION_H__
 
 void Rect_Join(RECT *rc, RECT *rc1);
@@ -6,18 +19,18 @@ void Rect_Join(RECT *rc, RECT *rc1);
 void * ZCALL Zui_Hash(char* str);
 /**
 * 此函数用作初始化zui.
-* @此函数没有返回值.
+* @return 此函数没有返回值.
 */
-ZAPI(BOOL) ZuiInit();
+ZEXPORT ZuiBool ZCALL ZuiInit();
 
 /**
 * 此函数用作Zui消息循环.
-* @param Returns int.
+* @return int.
 */
-ZAPI(ZuiInt) ZuiMsgLoop();
+ZEXPORT ZuiInt ZCALL ZuiMsgLoop();
 /**
 * 此函数用作退出Zui消息循环.
-* @param Returns int.
+* @return int.
 */
-ZAPI(ZuiVoid) ZuiMsgLoop_exit();
+ZEXPORT ZuiVoid ZCALL ZuiMsgLoop_exit();
 #endif //__ZUI_CORE_FUNCTION_H__

@@ -70,14 +70,14 @@ ZuiBool ZuiGraphInitialize(){
 	return TRUE;
 }
 /*填充矩形*/
-ZAPI(ZuiVoid) ZuiDrawFillRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt Left, ZuiInt Top, ZuiInt Width, ZuiInt Height) {
+ZEXPORT ZuiVoid ZCALL ZuiDrawFillRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt Left, ZuiInt Top, ZuiInt Width, ZuiInt Height) {
 	void *Brush;
 	GdipCreateSolidFill(Color, &Brush);
 	GdipFillRectangleI(Graphics->graphics, Brush, Left, Top, Width, Height);
 	GdipDeleteBrush(Brush);
 }
 /*画矩形*/
-ZAPI(ZuiVoid) ZuiDrawRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt Left, ZuiInt Top, ZuiInt Width, ZuiInt Height, ZuiInt LineWidth) {
+ZEXPORT ZuiVoid ZCALL ZuiDrawRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt Left, ZuiInt Top, ZuiInt Width, ZuiInt Height, ZuiInt LineWidth) {
 	if (Graphics){
 		void *pen;
 		GdipCreatePen1(Color, (ZuiReal)LineWidth, 2, &pen);
@@ -86,14 +86,14 @@ ZAPI(ZuiVoid) ZuiDrawRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt Left, Zui
 	}
 }
 /*画多边形*/
-ZAPI(ZuiVoid) ZuiDrawPolygon(ZuiGraphics Graphics, ZuiColor Color, ZuiPoint *point, ZuiInt count, ZuiInt LineWidth){
+ZEXPORT ZuiVoid ZCALL ZuiDrawPolygon(ZuiGraphics Graphics, ZuiColor Color, ZuiPoint *point, ZuiInt count, ZuiInt LineWidth){
 	void *pen;
 	GdipCreatePen1(Color, (ZuiReal)LineWidth, 2, &pen);
 	GdipDrawPolygonI(Graphics->graphics, pen, point, count);
 	GdipDeletePen(pen);
 }
 /*画直线*/
-ZAPI(ZuiVoid) ZuiDrawLine(ZuiGraphics Graphics, ZuiColor Color, ZuiInt x1, ZuiInt y1, ZuiInt x2, ZuiInt y2, ZuiInt LineWidth)
+ZEXPORT ZuiVoid ZCALL ZuiDrawLine(ZuiGraphics Graphics, ZuiColor Color, ZuiInt x1, ZuiInt y1, ZuiInt x2, ZuiInt y2, ZuiInt LineWidth)
 {
 	void *pen;
 	GdipCreatePen1(Color, (ZuiReal)LineWidth, 2, &pen);
@@ -101,7 +101,7 @@ ZAPI(ZuiVoid) ZuiDrawLine(ZuiGraphics Graphics, ZuiColor Color, ZuiInt x1, ZuiIn
 	GdipDeletePen(pen);
 }
 /*画文本*/
-ZAPI(ZuiVoid) ZuiDrawString(ZuiGraphics Graphics, ZuiStringFormat StringFormat, ZuiText String, ZuiRect Rect) {
+ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiStringFormat StringFormat, ZuiText String, ZuiRect Rect) {
 	if (String){
 		if (!StringFormat){StringFormat = Global_StringFormat;}//使用默认字体
 		ZRectR r;
@@ -115,7 +115,7 @@ ZAPI(ZuiVoid) ZuiDrawString(ZuiGraphics Graphics, ZuiStringFormat StringFormat, 
 	}
 }
 /*测量文本矩形*/
-ZAPI(ZuiVoid) ZuiMeasureStringRect(ZuiGraphics Graphics, ZuiStringFormat StringFormat, ZuiText String, ZuiRectR Rect,ZuiRectR LRect)
+ZEXPORT ZuiVoid ZCALL ZuiMeasureStringRect(ZuiGraphics Graphics, ZuiStringFormat StringFormat, ZuiText String, ZuiRectR Rect,ZuiRectR LRect)
 {
 	if (String && Graphics){
 		if (!StringFormat){ StringFormat = Global_StringFormat; }//使用默认字体
@@ -128,11 +128,11 @@ ZAPI(ZuiVoid) ZuiMeasureStringRect(ZuiGraphics Graphics, ZuiStringFormat StringF
 	}
 }
 /*填充圆角矩形*/
-ZAPI(ZuiVoid) ZuiDrawFilledRoundRect(ZuiGraphics Graphics, ZuiColor Color, ZuiColor BorderColor, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiInt LineWidth, ZuiReal Round) {
+ZEXPORT ZuiVoid ZCALL ZuiDrawFilledRoundRect(ZuiGraphics Graphics, ZuiColor Color, ZuiColor BorderColor, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiInt LineWidth, ZuiReal Round) {
 
 }
 /*画圆角矩形*/
-ZAPI(ZuiVoid) ZuiDrawRoundRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiInt LineWidth, ZuiReal Round) {
+ZEXPORT ZuiVoid ZCALL ZuiDrawRoundRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiInt LineWidth, ZuiReal Round) {
 	if (Round <= 0){
 		ZuiDrawRect(Graphics, Color, x, y, Width, Height, LineWidth);
 		return;
@@ -140,14 +140,14 @@ ZAPI(ZuiVoid) ZuiDrawRoundRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt x, Z
 
 }
 /*画图像*/
-ZAPI(ZuiVoid) ZuiDrawImage(ZuiGraphics Graphics, ZuiImage Image, ZuiInt x, ZuiInt y) {
+ZEXPORT ZuiVoid ZCALL ZuiDrawImage(ZuiGraphics Graphics, ZuiImage Image, ZuiInt x, ZuiInt y) {
 	if (!(Graphics && Image)) {
 		return;
 	}
 	GdipDrawImageI(Graphics->graphics, Image->image, x, y);
 }
 /*画图像缩放*/
-ZAPI(ZuiVoid) ZuiDrawImageEx(ZuiGraphics Graphics, ZuiImage Image, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiInt xSrc, ZuiInt ySrc, ZuiInt WidthSrc, ZuiInt HeightSrc, ZuiByte Alpha) {
+ZEXPORT ZuiVoid ZCALL ZuiDrawImageEx(ZuiGraphics Graphics, ZuiImage Image, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiInt xSrc, ZuiInt ySrc, ZuiInt WidthSrc, ZuiInt HeightSrc, ZuiByte Alpha) {
 	if (!(Graphics && Image)) {
 		return;
 	}
@@ -169,7 +169,7 @@ ZAPI(ZuiVoid) ZuiDrawImageEx(ZuiGraphics Graphics, ZuiImage Image, ZuiInt x, Zui
 	GdipDrawImageRectRectI(Graphics->graphics, Image->image, x, y, Width, Height, xSrc, ySrc, WidthSrc, HeightSrc, 2, NULL, NULL, NULL);
 }
 /*复制位图扩展*/
-ZAPI(ZuiVoid) ZuiAlphaBlendEx(ZuiGraphics Dest, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiGraphics Src, ZuiInt xSrc, ZuiInt ySrc, ZuiInt WidthSrc, ZuiInt HeightSrc, ZuiByte Alpha) {
+ZEXPORT ZuiVoid ZCALL ZuiAlphaBlendEx(ZuiGraphics Dest, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiGraphics Src, ZuiInt xSrc, ZuiInt ySrc, ZuiInt WidthSrc, ZuiInt HeightSrc, ZuiByte Alpha) {
 	BLENDFUNCTION bf;
 	bf.BlendOp = AC_SRC_OVER;
 	bf.BlendFlags = 0;
@@ -178,7 +178,7 @@ ZAPI(ZuiVoid) ZuiAlphaBlendEx(ZuiGraphics Dest, ZuiInt x, ZuiInt y, ZuiInt Width
 	int a = AlphaBlend(Dest->hdc, x, y, Width, Height, Src->hdc, xSrc, ySrc, WidthSrc, HeightSrc, bf);
 }
 /*复制位图*/
-ZAPI(ZuiVoid) ZuiAlphaBlend(ZuiGraphics Dest, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiGraphics Src, ZuiInt xSrc, ZuiInt ySrc, ZuiByte Alpha) {
+ZEXPORT ZuiVoid ZCALL ZuiAlphaBlend(ZuiGraphics Dest, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiGraphics Src, ZuiInt xSrc, ZuiInt ySrc, ZuiByte Alpha) {
 	if (Dest && Src){
 		BLENDFUNCTION bf;
 		bf.BlendOp = AC_SRC_OVER;
@@ -189,14 +189,14 @@ ZAPI(ZuiVoid) ZuiAlphaBlend(ZuiGraphics Dest, ZuiInt x, ZuiInt y, ZuiInt Width, 
 	}
 }
 /*清除图形*/
-ZAPI(ZuiVoid) ZuiGraphicsClear(ZuiGraphics Graphics, ZuiColor Color) {
+ZEXPORT ZuiVoid ZCALL ZuiGraphicsClear(ZuiGraphics Graphics, ZuiColor Color) {
 	if (Graphics)
 	{
 		GdipGraphicsClear(Graphics->graphics, Color);
 	}
 }
 /*创建字体格式*/
-ZAPI(ZuiStringFormat) ZuiCreateStringFormat(ZuiText FontName, ZuiReal FontSize, ZuiColor TextColor, ZuiColor ShadowColor, ZuiInt StringStyle) {
+ZEXPORT ZuiStringFormat ZCALL ZuiCreateStringFormat(ZuiText FontName, ZuiReal FontSize, ZuiColor TextColor, ZuiColor ShadowColor, ZuiInt StringStyle) {
 	int i = 0;
 	ZuiStringFormat StringFormat = (ZuiStringFormat)malloc(sizeof(ZStringFromat));
 	if (!StringFormat){ return NULL; }
@@ -246,7 +246,7 @@ ZAPI(ZuiStringFormat) ZuiCreateStringFormat(ZuiText FontName, ZuiReal FontSize, 
 	return StringFormat;
 }
 /*销毁字体格式*/
-ZAPI(ZuiVoid) ZuiDestroyStringFormat(ZuiStringFormat StringFormat) {
+ZEXPORT ZuiVoid ZCALL ZuiDestroyStringFormat(ZuiStringFormat StringFormat) {
 	if (StringFormat){
 		GdipDeleteFontFamily(StringFormat->FontFamily);
 		GdipDeleteFont(StringFormat->font);
@@ -255,7 +255,7 @@ ZAPI(ZuiVoid) ZuiDestroyStringFormat(ZuiStringFormat StringFormat) {
 	}
 }
 /*创建图形*/
-ZAPI(ZuiGraphics) ZuiCreateGraphicsInMemory(ZuiInt Width, ZuiInt Height) {
+ZEXPORT ZuiGraphics ZCALL ZuiCreateGraphicsInMemory(ZuiInt Width, ZuiInt Height) {
 	ZuiGraphics Graphics = (ZuiGraphics)malloc(sizeof(ZGraphics));
 	if (!Graphics){ return NULL; }
 	memset(Graphics, 0, sizeof(ZGraphics));
@@ -282,7 +282,7 @@ ZAPI(ZuiGraphics) ZuiCreateGraphicsInMemory(ZuiInt Width, ZuiInt Height) {
 	return Graphics;
 }
 /*销毁图形*/
-ZAPI(ZuiVoid) ZuiDestroyGraphics(ZuiGraphics Graphics) {
+ZEXPORT ZuiVoid ZCALL ZuiDestroyGraphics(ZuiGraphics Graphics) {
 	if (Graphics){
 		GdipDeleteGraphics(Graphics->graphics);
 		DeleteDC(Graphics->hdc);
@@ -291,59 +291,59 @@ ZAPI(ZuiVoid) ZuiDestroyGraphics(ZuiGraphics Graphics) {
 	}
 }
 /*创建区域*/
-ZAPI(ZuiRegion) ZuiCreateRegion() {
+ZEXPORT ZuiRegion ZCALL ZuiCreateRegion() {
 	ZuiRegion region = (ZuiRegion)malloc(sizeof(ZRegion));
 	if (!region){ return NULL; }
 	memset(region, 0, sizeof(ZRegion));
 	GdipCreateRegion(&region->region);
 	return region;
 }
-ZAPI(ZuiRegion) ZuiCreateRegionRect(ZuiRect layoutRect) {
+ZEXPORT ZuiRegion ZCALL ZuiCreateRegionRect(ZuiRect layoutRect) {
 	ZuiRegion region = (ZuiRegion)malloc(sizeof(ZRegion));
 	if (!region){ return NULL; }
 	GdipCreateRegionRectI(layoutRect, &region->region);
 	return region;
 }
-ZAPI(ZuiVoid) ZuiDestroyRegion(ZuiRegion region) {
+ZEXPORT ZuiVoid ZCALL ZuiDestroyRegion(ZuiRegion region) {
 	if (region){
 		GdipDeleteRegion(region->region);
 		free(region);
 	}
 }
 /*区域求余*/
-ZAPI(ZuiVoid) ZuiRegionCombineExclude(ZuiRegion region, ZuiRegion region1) {
+ZEXPORT ZuiVoid ZCALL ZuiRegionCombineExclude(ZuiRegion region, ZuiRegion region1) {
 	if (region && region1){
 		GdipCombineRegionRegion(region->region, region1->region,4);
 	}
 }
-ZAPI(ZuiVoid) ZuiRegionCombineAnd(ZuiRegion region, ZuiRegion region1) {
+ZEXPORT ZuiVoid ZCALL ZuiRegionCombineAnd(ZuiRegion region, ZuiRegion region1) {
 	if (region && region1) {
 		GdipCombineRegionRegion(region->region, region1->region, 4);
 	}
 }
 /*区域平移*/
-ZAPI(ZuiVoid) ZuiRegionTranslate(ZuiRegion region, ZuiInt x, ZuiInt y) {
+ZEXPORT ZuiVoid ZCALL ZuiRegionTranslate(ZuiRegion region, ZuiInt x, ZuiInt y) {
 	if (region){
 		GdipTranslateRegionI(region->region, x, y);
 	}
 }
-ZAPI(ZuiBool) ZuiGraphicsSetClipRegion(ZuiGraphics Graphics, ZuiRegion region, ZuiInt mod){
+ZEXPORT ZuiBool ZCALL ZuiGraphicsSetClipRegion(ZuiGraphics Graphics, ZuiRegion region, ZuiInt mod){
 	if (Graphics && region){
 		GdipSetClipRegion(Graphics->graphics, region->region, mod);
 	}
 }
-ZAPI(ZuiBool) ZuiGraphicsGetClipRegion(ZuiGraphics Graphics, ZuiRegion region) {
+ZEXPORT ZuiBool ZCALL ZuiGraphicsGetClipRegion(ZuiGraphics Graphics, ZuiRegion region) {
 	if (Graphics && region) {
 		GdipGetClip(Graphics->graphics, region->region);
 	}
 }
-ZAPI(ZuiBool) ZuiGraphicsResetClip(ZuiGraphics Graphics){
+ZEXPORT ZuiBool ZCALL ZuiGraphicsResetClip(ZuiGraphics Graphics){
 	if (Graphics){
 		GdipResetClip(Graphics->graphics);
 	}
 }
 
-ZAPI(ZuiBool) ZuiRegionIsVisiblePoint(ZuiRegion region, ZuiInt x, ZuiInt y){
+ZEXPORT ZuiBool ZCALL ZuiRegionIsVisiblePoint(ZuiRegion region, ZuiInt x, ZuiInt y){
 	int b = 0;
 	if (region){
 		GdipIsVisibleRegionPointI(region->region, x, y, NULL, &b);
@@ -352,7 +352,7 @@ ZAPI(ZuiBool) ZuiRegionIsVisiblePoint(ZuiRegion region, ZuiInt x, ZuiInt y){
 }
 
 /*加载图像自文件*/
-ZAPI(ZuiImage) ZuiLoadImageFromFile(ZuiText FileName) {
+ZEXPORT ZuiImage ZCALL ZuiLoadImageFromFile(ZuiText FileName) {
 	ZuiImage Image = (ZuiImage)malloc(sizeof(ZImage));
 	if (!Image){ return NULL; }
 	memset(Image, 0, sizeof(ZImage));
@@ -362,7 +362,7 @@ ZAPI(ZuiImage) ZuiLoadImageFromFile(ZuiText FileName) {
 	return Image;
 }
 /*加载图像自内存*/
-ZAPI(ZuiImage) ZuiLoadImageFromBinary(ZuiAny buf, ZuiInt len) {
+ZEXPORT ZuiImage ZCALL ZuiLoadImageFromBinary(ZuiAny buf, ZuiInt len) {
 		ZuiImage Image = (ZuiImage)malloc(sizeof(ZImage));
 		if (!Image){ return NULL; }
 		memset(Image, 0, sizeof(ZImage));
@@ -378,7 +378,7 @@ ZAPI(ZuiImage) ZuiLoadImageFromBinary(ZuiAny buf, ZuiInt len) {
 		return Image;
 }
 /*取图像帧数*/
-ZAPI(ZuiInt) ZuiImageGetFrameCount(ZuiImage Image){
+ZEXPORT ZuiInt ZCALL ZuiImageGetFrameCount(ZuiImage Image){
 	char guid[16];
 	int cunt = 0;
 	CLSIDFromString((ZuiText *)L"{6AEDBD6D-3FB5-418A-83A6-7F45229DC872}", guid);
@@ -386,7 +386,7 @@ ZAPI(ZuiInt) ZuiImageGetFrameCount(ZuiImage Image){
 	return cunt;
 }
 /*设置图像当前帧*/
-ZAPI(ZuiInt) ZuiImageSetFrame(ZuiImage Image,ZuiInt index){
+ZEXPORT ZuiInt ZCALL ZuiImageSetFrame(ZuiImage Image,ZuiInt index){
 	char guid[16];
 	int cunt = 0;
 	CLSIDFromString((ZuiText *)L"{6AEDBD6D-3FB5-418A-83A6-7F45229DC872}", guid);
@@ -400,7 +400,7 @@ typedef struct
 	WORD type;
 	VOID *	value;
 }PropertyItem;
-ZAPI(ZuiInt) ZuiImageGetFrameIniDly(ZuiImage Image,ZuiInt *arry){
+ZEXPORT ZuiInt ZCALL ZuiImageGetFrameIniDly(ZuiImage Image,ZuiInt *arry){
 	int size;
 	GdipGetPropertyItemSize(Image->image, 20736, &size);
 	char *buf = malloc(size);
@@ -410,7 +410,7 @@ ZAPI(ZuiInt) ZuiImageGetFrameIniDly(ZuiImage Image,ZuiInt *arry){
 	free(buf);
 }
 /*销毁图像*/
-ZAPI(ZuiVoid) ZuiDestroyImage(ZuiImage Image) {
+ZEXPORT ZuiVoid ZCALL ZuiDestroyImage(ZuiImage Image) {
 	GdipDisposeImage(Image->image);
 	free(Image);
 }

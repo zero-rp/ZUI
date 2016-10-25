@@ -1,4 +1,17 @@
-﻿#ifndef _unz64_H
+﻿/**
+* @file		unzip.h
+* @brief	Zip解压实现.
+* @author	[Zero](22249030)
+* @version	1.0
+* @date		$date
+* @par History:
+*
+* [2016-10-25] <Zero> v1.0
+*
+* + v1.0版发布.
+*
+*/
+#ifndef _unz64_H
 #define _unz64_H
 
 #ifdef __cplusplus

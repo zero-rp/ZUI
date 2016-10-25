@@ -1,7 +1,7 @@
 ﻿#ifndef __HORIZONTALLAYOUT_H__
 #define __HORIZONTALLAYOUT_H__
 
-//横向布局
+/**横向布局结构*/
 typedef struct _ZuiHorizontalLayout
 {
 	ZCtlProc old_call;

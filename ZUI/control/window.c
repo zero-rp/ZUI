@@ -31,6 +31,59 @@ LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			else if (uMsg == WM_DESTROY) {
 				PostQuitMessage(0L);
 			}
+			else if (uMsg == WM_NCHITTEST)
+			{
+				if (pThis->m_nobox)
+				{
+					int x = LOWORD(lParam);
+					int	y = HIWORD(lParam);
+					if (x <= pThis->m_rect.Left + 3 && y <= pThis->m_rect.Top + 3) {
+						return HTTOPLEFT;
+					}
+					else if (x <= pThis->m_rect.Left + 3 && y >= pThis->m_rect.Top + pThis->m_rect.Height - 3)
+					{
+						return HTBOTTOMLEFT;
+					}
+					else if (x >= pThis->m_rect.Left + pThis->m_rect.Width - 3 && y <= pThis->m_rect.Top + 3)
+					{
+						return HTTOPRIGHT;
+					}
+					else if (x >= pThis->m_rect.Left + pThis->m_rect.Width - 3 && y >= pThis->m_rect.Top + pThis->m_rect.Height - 3)
+					{
+						return HTBOTTOMRIGHT;
+					}
+					else if (x <= pThis->m_rect.Left + 2)
+					{
+						return HTLEFT;
+					}
+					else if (y <= pThis->m_rect.Top + 2)
+					{
+						return HTTOP;
+					}
+					else if (x >= pThis->m_rect.Left + pThis->m_rect.Width - 2)
+					{
+						return HTRIGHT;
+					}
+					else if (y >= pThis->m_rect.Top + pThis->m_rect.Height - 2)
+					{
+						return HTBOTTOM;
+					}
+					else
+					{
+						return HTCLIENT;
+					}
+					return HTCLIENT;
+				}
+			}
+			else if(uMsg == WM_MOVE){
+				pThis->m_rect.Left = LOWORD(lParam);
+				pThis->m_rect.Top = HIWORD(lParam);
+			}
+			else if(uMsg == WM_SIZE)
+			{
+				pThis->m_rect.Width = LOWORD(lParam);
+				pThis->m_rect.Height = HIWORD(lParam);
+			}
 		}
 		if (pThis->m_pm)
 			if (ZuiPaintManagerMessageHandler(pThis->m_pm, uMsg, wParam, lParam, &lRes))
@@ -43,7 +96,7 @@ LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 
 
-ZAPI(ZuiAny) ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 	switch (ProcId)
 	{
 	case Proc_CoreInit: {
@@ -120,6 +173,31 @@ ZAPI(ZuiAny) ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, ZuiAny Par
 					   break;
 	case Proc_SetPos: {
 		OutputDebugString(L"a");
+	}
+					  break;
+	case Proc_Window_SetNoBox: {
+		if (p->m_nobox == Param1)
+			break;
+		p->m_nobox = Param1;
+		if (Param1)
+		{
+			SetWindowLong(p->m_hWnd, GWL_STYLE, -1811937280);
+		}
+		else {
+			SetWindowLong(p->m_hWnd, GWL_STYLE, WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN);
+		}
+		RECT r;
+		GetWindowRect(p->m_hWnd, &r);
+		p->m_rect.Left = r.left;
+		p->m_rect.Top = r.top;
+		p->m_rect.Height = r.bottom - r.top;
+		p->m_rect.Width = r.right - r.left;
+		ZuiControlInvalidate(cp);
+		
+	}
+							   break;
+	case Proc_SetAttribute: {
+		if (wcscmp(Param1, L"nobox") == 0) ZuiControlCall(Proc_Window_SetNoBox, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
 	}
 					  break;
 	case Proc_OnInit: {

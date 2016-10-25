@@ -64,7 +64,7 @@ void FreeCControlUI(ZuiControl p)
 //-------------------------------------------------------------------------------------------------
 
 //控件默认处理函数
-ZAPI(ZuiAny) ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 
 	switch (ProcId)
 	{
@@ -389,7 +389,7 @@ ZAPI(ZuiAny) ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny UserData,
 }
 
 //调用控件函数
-ZAPI(ZuiAny) ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 	if (p->call)
 	{
 		return p->call(ProcId, p, p->m_sUserData, Param1, Param2, Param3);
@@ -399,7 +399,7 @@ ZAPI(ZuiAny) ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny P
 //-------------------------------------------------------------------------------------------------
 
 
-ZAPI(ZuiVoid) ZuiControlInvalidate(ZuiControl p)
+ZEXPORT ZuiVoid ZCALL ZuiControlInvalidate(ZuiControl p)
 {
 	if (!p->m_bVisible) return;
 
@@ -421,7 +421,7 @@ ZAPI(ZuiVoid) ZuiControlInvalidate(ZuiControl p)
 	if (p->m_pManager != NULL) ZuiPaintManagerInvalidateRect(p->m_pManager, &invalidateRc);
 }
 
-ZAPI(ZuiVoid) ZuiControlNeedUpdate(ZuiControl p)
+ZEXPORT ZuiVoid ZCALL ZuiControlNeedUpdate(ZuiControl p)
 {
 	if (!p->m_bVisible) return;
 	p->m_bUpdateNeeded = TRUE;
@@ -431,7 +431,7 @@ ZAPI(ZuiVoid) ZuiControlNeedUpdate(ZuiControl p)
 		p->m_pManager->m_bUpdateNeeded = TRUE;
 }
 
-ZAPI(ZuiVoid) ZuiControlNeedParentUpdate(ZuiControl p)
+ZEXPORT ZuiVoid ZCALL ZuiControlNeedParentUpdate(ZuiControl p)
 {
 	if (p->m_pParent) {
 		ZuiControlNeedUpdate(p->m_pParent);
@@ -445,12 +445,12 @@ ZAPI(ZuiVoid) ZuiControlNeedParentUpdate(ZuiControl p)
 		p->m_pManager->m_bUpdateNeeded = TRUE;
 }
 
-ZAPI(ZuiVoid) ZuiControlEvent(ZuiControl p, TEventUI *event)
+ZEXPORT ZuiVoid ZCALL ZuiControlEvent(ZuiControl p, TEventUI *event)
 {
 	ZuiControlCall(Proc_OnEvent, p, event, NULL, NULL);
 }
 
-ZAPI(ZuiVoid) ZuiControlMove(ZuiControl p, SIZE szOffset, BOOL bNeedInvalidate)
+ZEXPORT ZuiVoid ZCALL ZuiControlMove(ZuiControl p, SIZE szOffset, BOOL bNeedInvalidate)
 {
 	RECT invalidateRc = p->m_rcItem;
 	p->m_rcItem.left += szOffset.cx;

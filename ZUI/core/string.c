@@ -1,6 +1,6 @@
 ﻿#include <ZUI.h>
 
-ZAPI(ZuiBool) ZuiStingIsUtf8(ZuiAny str, ZuiInt length)
+ZEXPORT ZuiBool ZCALL ZuiStingIsUtf8(ZuiAny str, ZuiInt length)
 {
 	int i;
 	//UFT8可用1-6个字节编码,ASCII用一个字节
@@ -72,12 +72,12 @@ ZAPI(ZuiBool) ZuiStingIsUtf8(ZuiAny str, ZuiInt length)
 }
 
 
-ZAPI(ZuiInt) ZuiUtf8ToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen)
+ZEXPORT ZuiInt ZCALL ZuiUtf8ToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen)
 {
 	return MultiByteToWideChar(CP_UTF8, 0, str, slen, out, olen);
 }
 
-ZAPI(ZuiInt) ZuiAsciiToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen)
+ZEXPORT ZuiInt ZCALL ZuiAsciiToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen)
 {
 	return MultiByteToWideChar(CP_ACP, 0, str, slen, out, olen);
 }

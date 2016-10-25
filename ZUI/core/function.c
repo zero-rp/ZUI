@@ -26,7 +26,7 @@ void * ZCALL Zui_Hash(wchar_t* str){
 	}
 }
 
-ZAPI(BOOL) ZuiInit() {
+ZEXPORT ZuiBool ZCALL ZuiInit() {
 	/*初始化图形层*/
 	if (!ZuiGraphInitialize()) {
 		return FALSE;
@@ -46,7 +46,7 @@ ZAPI(BOOL) ZuiInit() {
 	}
 	return TRUE;
 }
-ZAPI(ZuiInt) ZuiMsgLoop() {
+ZEXPORT ZuiInt ZCALL ZuiMsgLoop() {
 	MSG Msg;
 	while (GetMessage(&Msg, NULL, 0, 0))
 	{
@@ -55,6 +55,6 @@ ZAPI(ZuiInt) ZuiMsgLoop() {
 	}
 	return Msg.wParam;
 }
-ZAPI(ZuiVoid) ZuiMsgLoop_exit() {
+ZEXPORT ZuiVoid ZCALL ZuiMsgLoop_exit() {
 	PostQuitMessage(0);
 }

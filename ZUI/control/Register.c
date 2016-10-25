@@ -22,11 +22,11 @@ BOOL ZuiControlRegister()
 	rb_foreach(Global_ControlClass, ZuiCoreInit);
 	return TRUE;
 }
-ZAPI(BOOL) ZuiControlRegisterAdd(ZuiText *name, ZCtlProc Proc)
+ZEXPORT ZuiBool ZCALL ZuiControlRegisterAdd(ZuiText *name, ZCtlProc Proc)
 {
 	return rb_insert((key_t)Zui_Hash(name), Proc, Global_ControlClass);
 }
-ZAPI(BOOL) ZuiControlRegisterDel(ZuiText *name)
+ZEXPORT ZuiBool ZCALL ZuiControlRegisterDel(ZuiText *name)
 {
 	rb_delete((key_t)Zui_Hash(name), Global_ControlClass);
 	return 0;

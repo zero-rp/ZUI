@@ -1,7 +1,7 @@
 ﻿#ifndef __TILELAYOUT_H__
 #define __TILELAYOUT_H__
 
-//横向布局
+/**瓦片布局结构*/
 typedef struct _ZuiTileLayout
 {
 	SIZE m_szItem;

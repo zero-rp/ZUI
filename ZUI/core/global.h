@@ -1,4 +1,17 @@
-﻿#ifndef __ZUI_CORE_GLOBAL_H__
+﻿/**
+* @file		global.h
+* @brief	全局对象.
+* @author	[Zero](22249030)
+* @version	1.0
+* @date		$date
+* @par History:
+*
+* [2016-10-25] <Zero> v1.0
+*
+* + v1.0版发布.
+*
+*/
+#ifndef __ZUI_CORE_GLOBAL_H__
 #define __ZUI_CORE_GLOBAL_H__
 
 extern  ZuiImage Global_Res_Ctl[4][3];		//窗口控制按钮资源
@@ -11,8 +24,7 @@ extern HINSTANCE m_hInstance;		//模块句柄
 extern DArray *m_aPreMessages;	//所有ZuiPaintManager实例数组
 /**
 * 此函数用作初始化全局对象.
-* @param db 包含全局数据的资源包
-* @param Returns 成功返回TRUE.
+* @return 成功返回TRUE.
 */
 ZuiBool ZuiGlobalInit();
 

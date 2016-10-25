@@ -62,7 +62,7 @@ typedef ZuiAny (ZCALL *ZCtlProc)(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, Z
 #define	Proc_OnNotify			41	//
 #define	Proc_OnPaint			42	//
 #define	Proc_OnPostPaint		43	//
-
+/**控件基类结构*/
 typedef struct _ZControl
 {
 	//消息处理函数指针
@@ -102,7 +102,7 @@ typedef struct _ZControl
 }*ZuiControl, ZControl;
 
 //控件默认处理函数
-ZAPI(ZuiAny) ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 
 //创建控件
 ZuiControl NewZuiControl(ZuiText classname, void* Param1, void* Param2, void* Param3);
@@ -110,14 +110,14 @@ ZuiControl NewZuiControl(ZuiText classname, void* Param1, void* Param2, void* Pa
 void FreeCControlUI(ZuiControl p);
 
 //调用控件处理函数
-ZAPI(ZuiAny) ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 
 
-ZAPI(ZuiVoid) ZuiControlInvalidate(ZuiControl p);				//刷新显示
-ZAPI(ZuiVoid) ZuiControlNeedUpdate(ZuiControl p);				//更新布局
-ZAPI(ZuiVoid) ZuiControlNeedParentUpdate(ZuiControl p);			//更新父控件布局
-ZAPI(ZuiVoid) ZuiControlEvent(ZuiControl p, TEventUI *event);	//发送事件
-ZAPI(ZuiVoid) ZuiControlMove(ZuiControl p, SIZE szOffset, BOOL bNeedInvalidate); //移动位置
+ZEXPORT ZuiVoid ZCALL ZuiControlInvalidate(ZuiControl p);				//刷新显示
+ZEXPORT ZuiVoid ZCALL ZuiControlNeedUpdate(ZuiControl p);				//更新布局
+ZEXPORT ZuiVoid ZCALL ZuiControlNeedParentUpdate(ZuiControl p);			//更新父控件布局
+ZEXPORT ZuiVoid ZCALL ZuiControlEvent(ZuiControl p, TEventUI *event);	//发送事件
+ZEXPORT ZuiVoid ZCALL ZuiControlMove(ZuiControl p, SIZE szOffset, BOOL bNeedInvalidate); //移动位置
 
 
 #endif // __CONTROL_H__

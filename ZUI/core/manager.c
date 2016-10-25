@@ -131,7 +131,7 @@ void FreeCPaintManagerUI(ZuiPaintManager p){
 //-------------------------------------------------------------------------------------------------
 
 // 绘图管理器的初始化(m_hWndPaint,m_hDcPaint赋值，在预处理消息中加入管理器)
-ZAPI(ZuiVoid) ZuiPaintManagerInit(ZuiPaintManager p, HWND hWnd)
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerInit(ZuiPaintManager p, HWND hWnd)
 {
 	ZuiPaintManagerRemoveAllTimers(p);
 
@@ -142,7 +142,7 @@ ZAPI(ZuiVoid) ZuiPaintManagerInit(ZuiPaintManager p, HWND hWnd)
 	}
 }
 //指定区域失效
-ZAPI(ZuiVoid) ZuiPaintManagerInvalidate(ZuiPaintManager p)
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerInvalidate(ZuiPaintManager p)
 {
 	if (!p->m_bLayered)
 		InvalidateRect(p->m_hWndPaint, NULL, FALSE);
@@ -153,7 +153,7 @@ ZAPI(ZuiVoid) ZuiPaintManagerInvalidate(ZuiPaintManager p)
 	}
 }
 //指定区域失效
-ZAPI(ZuiVoid) ZuiPaintManagerInvalidateRect(ZuiPaintManager p, RECT *rcItem)
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerInvalidateRect(ZuiPaintManager p, RECT *rcItem)
 {
 	RECT rc;
 	rc.bottom = rcItem->bottom;
@@ -173,7 +173,7 @@ ZAPI(ZuiVoid) ZuiPaintManagerInvalidateRect(ZuiPaintManager p, RECT *rcItem)
 
 
 //设置窗口透明度 会开启分层窗口
-ZAPI(ZuiVoid) ZuiPaintManagerSetOpacity(ZuiPaintManager p, BYTE nOpacity)
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetOpacity(ZuiPaintManager p, BYTE nOpacity)
 {
 	p->m_nOpacity = nOpacity;
 	if (p->m_hWndPaint != NULL) {
@@ -199,7 +199,7 @@ ZAPI(ZuiVoid) ZuiPaintManagerSetOpacity(ZuiPaintManager p, BYTE nOpacity)
 //-------------------------------------------------------------------------------------------------
 
 //设置分层窗口
-ZAPI(ZuiVoid) ZuiPaintManagerSetLayered(ZuiPaintManager p, BOOL bLayered)
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetLayered(ZuiPaintManager p, BOOL bLayered)
 {
 	if (p->m_hWndPaint != NULL && bLayered != p->m_bLayered) {
 		UINT uStyle = GetWindowStyle(p->m_hWndPaint);
@@ -231,7 +231,7 @@ ZAPI(ZuiVoid) ZuiPaintManagerSetLayered(ZuiPaintManager p, BOOL bLayered)
 }
 
 
-ZAPI(ZuiVoid) ZuiPaintManagerSetLayeredInset(ZuiPaintManager p, RECT *rcLayeredInset)
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetLayeredInset(ZuiPaintManager p, RECT *rcLayeredInset)
 {
 	
 	p->m_rcLayeredInset.bottom = rcLayeredInset->bottom;
@@ -243,7 +243,7 @@ ZAPI(ZuiVoid) ZuiPaintManagerSetLayeredInset(ZuiPaintManager p, RECT *rcLayeredI
 }
 
 //设置分层窗口透明度
-ZAPI(ZuiVoid) ZuiPaintManagerSetLayeredOpacity(ZuiPaintManager p, BYTE nOpacity)
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetLayeredOpacity(ZuiPaintManager p, BYTE nOpacity)
 {
 	p->m_nOpacity = nOpacity;
 	p->m_bLayeredChanged = TRUE;
@@ -252,7 +252,7 @@ ZAPI(ZuiVoid) ZuiPaintManagerSetLayeredOpacity(ZuiPaintManager p, BYTE nOpacity)
 //-------------------------------------------------------------------------------------------------
 
 //附加控件树 将控件树关联到管理器
-ZAPI(ZuiBool) ZuiPaintManagerAttachDialog(ZuiPaintManager p, ZuiControl pControl)
+ZEXPORT ZuiBool ZCALL ZuiPaintManagerAttachDialog(ZuiPaintManager p, ZuiControl pControl)
 {
 	ASSERT(IsWindow(p->m_hWndPaint));
 	// Reset any previous attachment
@@ -276,7 +276,7 @@ ZAPI(ZuiBool) ZuiPaintManagerAttachDialog(ZuiPaintManager p, ZuiControl pControl
 	return ZuiPaintManagerInitControls(p, pControl, NULL);
 }
 //初始化控件
-ZAPI(ZuiBool) ZuiPaintManagerInitControls(ZuiPaintManager p, ZuiControl pControl, ZuiControl pParent)
+ZEXPORT ZuiBool ZCALL ZuiPaintManagerInitControls(ZuiPaintManager p, ZuiControl pControl, ZuiControl pParent)
 {
 	ASSERT(pControl);
 	if (pControl == NULL) return FALSE;
@@ -284,7 +284,7 @@ ZAPI(ZuiBool) ZuiPaintManagerInitControls(ZuiPaintManager p, ZuiControl pControl
 	return TRUE;
 }
 
-ZAPI(ZuiVoid) ZuiPaintManagerReapObjects(ZuiPaintManager p, ZuiControl pControl)
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerReapObjects(ZuiPaintManager p, ZuiControl pControl)
 {
 	if (pControl == NULL) return;
 	if (pControl == p->m_pEventKey) p->m_pEventKey = NULL;
@@ -296,7 +296,7 @@ ZAPI(ZuiVoid) ZuiPaintManagerReapObjects(ZuiPaintManager p, ZuiControl pControl)
 //-------------------------------------------------------------------------------------------------
 
 //设置焦点控件
-ZAPI(ZuiVoid) ZuiPaintManagerSetFocus(ZuiPaintManager p, ZuiControl pControl, BOOL bFocusWnd)
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetFocus(ZuiPaintManager p, ZuiControl pControl, BOOL bFocusWnd)
 {
 	// Paint manager window has focus?
 	HWND hFocusWnd = GetFocus();
@@ -329,7 +329,7 @@ ZAPI(ZuiVoid) ZuiPaintManagerSetFocus(ZuiPaintManager p, ZuiControl pControl, BO
 	}
 }
 
-ZAPI(ZuiVoid) ZuiPaintManagerSetFocusNeeded(ZuiPaintManager p, ZuiControl pControl)
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetFocusNeeded(ZuiPaintManager p, ZuiControl pControl)
 {
 	SetFocus(p->m_hWndPaint);
 	if (pControl == NULL) return;
@@ -352,7 +352,7 @@ ZAPI(ZuiVoid) ZuiPaintManagerSetFocusNeeded(ZuiPaintManager p, ZuiControl pContr
 //-------------------------------------------------------------------------------------------------
 
 //创建时钟
-ZAPI(ZuiBool) ZuiPaintManagerSetTimer(ZuiControl pControl, UINT nTimerID, UINT uElapse)
+ZEXPORT ZuiBool ZCALL ZuiPaintManagerSetTimer(ZuiControl pControl, UINT nTimerID, UINT uElapse)
 {
 	ASSERT(pControl != NULL);
 	ASSERT(uElapse > 0);
@@ -388,7 +388,7 @@ ZAPI(ZuiBool) ZuiPaintManagerSetTimer(ZuiControl pControl, UINT nTimerID, UINT u
 	return FALSE;
 }
 //销毁时钟
-ZAPI(ZuiBool) ZuiPaintManagerKillTimer_Id(ZuiControl pControl, UINT nTimerID)
+ZEXPORT ZuiBool ZCALL ZuiPaintManagerKillTimer_Id(ZuiControl pControl, UINT nTimerID)
 {
 	ASSERT(pControl != NULL);
 	if (pControl->m_pManager) {
@@ -410,7 +410,7 @@ ZAPI(ZuiBool) ZuiPaintManagerKillTimer_Id(ZuiControl pControl, UINT nTimerID)
 	return FALSE;
 }
 //销毁时钟
-ZAPI(ZuiVoid) ZuiPaintManagerKillTimer(ZuiControl pControl)
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerKillTimer(ZuiControl pControl)
 {
 	ASSERT(pControl != NULL);
 	if (pControl->m_pManager) {
@@ -428,7 +428,7 @@ ZAPI(ZuiVoid) ZuiPaintManagerKillTimer(ZuiControl pControl)
 	}
 }
 //销毁全部时钟
-ZAPI(ZuiVoid) ZuiPaintManagerRemoveAllTimers(ZuiPaintManager p)
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerRemoveAllTimers(ZuiPaintManager p)
 {
 	for (int i = 0; i < darray_len(p->m_aTimers); i++) {
 		TIMERINFO* pTimer = (TIMERINFO*)(p->m_aTimers->data[i]);
@@ -445,13 +445,13 @@ ZAPI(ZuiVoid) ZuiPaintManagerRemoveAllTimers(ZuiPaintManager p)
 //-------------------------------------------------------------------------------------------------
 
 //俘获输入
-ZAPI(ZuiVoid) ZuiPaintManagerSetCapture(ZuiPaintManager p)
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetCapture(ZuiPaintManager p)
 {
 	SetCapture(p->m_hWndPaint);
 	p->m_bMouseCapture = TRUE;
 }
 //释放俘获
-ZAPI(ZuiVoid) ZuiPaintManagerReleaseCapture(ZuiPaintManager p)
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerReleaseCapture(ZuiPaintManager p)
 {
 	ReleaseCapture();
 	p->m_bMouseCapture = FALSE;
@@ -459,7 +459,7 @@ ZAPI(ZuiVoid) ZuiPaintManagerReleaseCapture(ZuiPaintManager p)
 
 //-------------------------------------------------------------------------------------------------
 
-ZAPI(ZuiBool) ZuiPaintManagerSetNextTabControl(ZuiPaintManager p, BOOL bForward)
+ZEXPORT ZuiBool ZCALL ZuiPaintManagerSetNextTabControl(ZuiPaintManager p, BOOL bForward)
 {
 	// If we're in the process of restructuring the layout we can delay the
 	// focus calulation until the next repaint.
@@ -497,13 +497,13 @@ int CPaintManagerUI_GetPostPaintCount(ZuiPaintManager p)
 	return darray_len(p->m_aPostPaintControls);
 }
 //添加
-ZAPI(ZuiBool) ZuiPaintManagerAddPostPaint(ZuiPaintManager p, ZuiControl pControl)
+ZEXPORT ZuiBool ZCALL ZuiPaintManagerAddPostPaint(ZuiPaintManager p, ZuiControl pControl)
 {
 	ASSERT(darray_find(p->m_aPostPaintControls,pControl) < 0);
 	return darray_append(p->m_aPostPaintControls,pControl);
 }
 
-ZAPI(ZuiBool) ZuiPaintManagerRemovePostPaint(ZuiPaintManager p, ZuiControl pControl)
+ZEXPORT ZuiBool ZCALL ZuiPaintManagerRemovePostPaint(ZuiPaintManager p, ZuiControl pControl)
 {
 	for (int i = 0; i < darray_len(p->m_aPostPaintControls); i++) {
 		if ((ZuiControl)(p->m_aPostPaintControls->data[i]) == pControl) {
@@ -513,20 +513,20 @@ ZAPI(ZuiBool) ZuiPaintManagerRemovePostPaint(ZuiPaintManager p, ZuiControl pCont
 	return FALSE;
 }
 
-ZAPI(ZuiBool) ZuiPaintManagerSetPostPaintIndex(ZuiPaintManager p, ZuiControl pControl, int iIndex)
+ZEXPORT ZuiBool ZCALL ZuiPaintManagerSetPostPaintIndex(ZuiPaintManager p, ZuiControl pControl, int iIndex)
 {
 	ZuiPaintManagerRemovePostPaint(p, pControl);
 	return darray_insert(p->m_aPostPaintControls,iIndex, pControl);
 }
 
 
-ZAPI(ZuiControl) ZuiPaintManagerFindControl(ZuiPaintManager p, POINT pt)
+ZEXPORT ZuiControl ZCALL ZuiPaintManagerFindControl(ZuiPaintManager p, POINT pt)
 {
 	return (ZuiControl)ZuiControlCall(Proc_FindControl, p->m_pRoot, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_HITTEST | ZFIND_TOP_FIRST));
 }
 
 
-ZAPI(ZuiControl) ZuiPaintManagerFindSubControlByPoint(ZuiPaintManager p, ZuiControl pParent, POINT pt)
+ZEXPORT ZuiControl ZCALL ZuiPaintManagerFindSubControlByPoint(ZuiPaintManager p, ZuiControl pParent, POINT pt)
 {
 	if (pParent == NULL) pParent = p->m_pRoot;
 	ASSERT(pParent);
@@ -583,7 +583,7 @@ ZuiControl CALLBACK __FindControlsFromUpdate(ZuiControl pThis, LPVOID pData)
 
 
 //消息处理函数
-ZAPI(ZuiBool) ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT *lRes)
+ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT *lRes)
 {
 	if (p->m_hWndPaint == NULL) return FALSE;
 

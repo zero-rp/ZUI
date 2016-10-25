@@ -1,4 +1,17 @@
-﻿#ifndef __ZUI_H__
+﻿/**
+* @file		ZUI.h
+* @brief	公共头文件.
+* @author	[Zero](22249030)
+* @version	1.0
+* @date		$date
+* @par History:
+*
+* [2016-10-25] <Zero> v1.0
+*
+* + v1.0版发布.
+*
+*/
+#ifndef __ZUI_H__
 #define __ZUI_H__
 
 /*系统头文件*/
@@ -30,9 +43,9 @@
 #ifdef WIN32
 
 #ifdef __cplusplus
-#define ZAPI(Type) extern "C" __declspec(dllexport) Type __stdcall
+#define ZEXPORT extern "C" __declspec(dllexport)
 #else
-#define ZAPI(Type) __declspec(dllexport) Type __stdcall
+#define ZEXPORT __declspec(dllexport)
 #endif
 
 #define ZCALL __stdcall
@@ -70,31 +83,35 @@ typedef void		ZuiVoid;
 typedef void*		ZuiAny;
 typedef uint32_t	ZuiColor;
 typedef unsigned	ZuiByte;
-
+/**矩形*/
 typedef struct _ZRect
 {
-	ZuiInt Left;	//左边
-	ZuiInt Top;		//顶边
-	ZuiInt Width;	//宽度
-	ZuiInt Height;	//高度
+	ZuiInt Left;	///左边
+	ZuiInt Top;		///顶边
+	ZuiInt Width;	///宽度
+	ZuiInt Height;	///高度
 } *ZuiRect, ZRect;
+/**矩形(浮点)*/
 typedef struct _ZRectR
 {
-	ZuiReal Left;//左边
-	ZuiReal Top;//顶边
-	ZuiReal Width;//宽度
-	ZuiReal Height;//高度
+	ZuiReal Left;///左边
+	ZuiReal Top;///顶边
+	ZuiReal Width;///宽度
+	ZuiReal Height;///高度
 } *ZuiRectR, ZRectR;
+/**点*/
 typedef struct _ZPoint
 {
 	ZuiInt x;
 	ZuiInt y;
 } *ZuiPoint, ZPoint;
+/**大小*/
 typedef struct _ZSize
 {
-	ZuiInt Width;	//宽度
-	ZuiInt Height;	//高度
+	ZuiInt Width;	///宽度
+	ZuiInt Height;	///高度
 } *ZuiSize, ZSize;
+/**点(浮点)*/
 typedef struct _ZPointR
 {
 	ZuiReal x;

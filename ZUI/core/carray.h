@@ -1,7 +1,20 @@
+ï»¿/**
+* @file		carray.h
+* @brief	åŠ¨æ€æ•°ç»„å®ç°.
+* @author	[Zero](22249030)
+* @version	1.0
+* @date		$date
+* @par History:
+*
+* [2016-10-25] <Zero> v1.0
+*
+* + v1.0ç‰ˆå‘å¸ƒ.
+*
+*/
 #ifndef __CARRAY_H__
 #define __CARRAY_H__
 
-//¶¯Ì¬Êı×éÊµÏÖ
+//åŠ¨æ€æ•°ç»„å®ç°
 #include <Windows.h>
 
 #ifdef __cplusplus
@@ -10,7 +23,7 @@ extern "C" {
 
 #define DEFAULT_A_SIZE 10
 
-
+	/**åŠ¨æ€æ•°ç»„ç»“æ„*/
 	typedef struct _DArray
 	{
 		int size;
@@ -22,21 +35,21 @@ extern "C" {
 
 	typedef void(*VisitFunc)(void *ctx, void *data);
 
-	DArray *darray_create();		//´´½¨¶¯Ì¬Êı×é
-	static BOOL darray_expand(DArray *darray, int needone);	//Ôö¼ÓÖ¸¶¨Êı×éµÄÈİÁ¿
-	BOOL darray_shrink(DArray *darray);	//Ëõ¼õÖ¸¶¨Êı×éµÄÈİÁ¿
-	BOOL darray_preapppend(DArray *darray, void * data);//Ìí¼Ó£¨Í·£©ÔªËØ
-	BOOL darray_append(DArray *darray, void * data);	//Ìí¼Ó£¨Î²£©ÔªËØ
-	BOOL darray_insert(DArray *darray, int index, void * data);	//²åÈëÔªËØ
-	BOOL darray_delete(DArray *darray, int index);	//É¾³ıÔªËØ
-	int darray_len(DArray * darray);			//Êı×é³¤¶È
-	int darray_find(DArray * darray, void * data);			//²éÕÒ³ÉÔ±µÚÒ»´Î³öÏÖµÄË÷Òı
-	BOOL darray_isempty(DArray * darray);		//Êı×éÊÇ·ñÎª¿Õ
-	void darray_empty(DArray * darray);		//Çå¿ÕÊı×é
-	void *darray_getat(DArray * darray, int index);		//È¡Ö¸¶¨ÏÂ±êÊı¾İ
-	BOOL darray_set_by_index(DArray *darray, int index, void *data);//Ìæ»»Êı×éÖ¸¶¨Î»ÖÃµÄÖµ
-	BOOL darray_foreach(DArray *darray, VisitFunc visitfunc, void *ctx);//±éÀúÊı×é
-	BOOL darray_destroy(DArray *darray);//ÊÍ·ÅÖ¸¶¨Êı×éÄÚ´æ
+	DArray *darray_create();		//åˆ›å»ºåŠ¨æ€æ•°ç»„
+	static BOOL darray_expand(DArray *darray, int needone);	//å¢åŠ æŒ‡å®šæ•°ç»„çš„å®¹é‡
+	BOOL darray_shrink(DArray *darray);	//ç¼©å‡æŒ‡å®šæ•°ç»„çš„å®¹é‡
+	BOOL darray_preapppend(DArray *darray, void * data);//æ·»åŠ ï¼ˆå¤´ï¼‰å…ƒç´ 
+	BOOL darray_append(DArray *darray, void * data);	//æ·»åŠ ï¼ˆå°¾ï¼‰å…ƒç´ 
+	BOOL darray_insert(DArray *darray, int index, void * data);	//æ’å…¥å…ƒç´ 
+	BOOL darray_delete(DArray *darray, int index);	//åˆ é™¤å…ƒç´ 
+	int darray_len(DArray * darray);			//æ•°ç»„é•¿åº¦
+	int darray_find(DArray * darray, void * data);			//æŸ¥æ‰¾æˆå‘˜ç¬¬ä¸€æ¬¡å‡ºç°çš„ç´¢å¼•
+	BOOL darray_isempty(DArray * darray);		//æ•°ç»„æ˜¯å¦ä¸ºç©º
+	void darray_empty(DArray * darray);		//æ¸…ç©ºæ•°ç»„
+	void *darray_getat(DArray * darray, int index);		//å–æŒ‡å®šä¸‹æ ‡æ•°æ®
+	BOOL darray_set_by_index(DArray *darray, int index, void *data);//æ›¿æ¢æ•°ç»„æŒ‡å®šä½ç½®çš„å€¼
+	BOOL darray_foreach(DArray *darray, VisitFunc visitfunc, void *ctx);//éå†æ•°ç»„
+	BOOL darray_destroy(DArray *darray);//é‡Šæ”¾æŒ‡å®šæ•°ç»„å†…å­˜
 
 #ifdef __cplusplus
 	}

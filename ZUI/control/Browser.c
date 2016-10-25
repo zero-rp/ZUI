@@ -7,7 +7,7 @@ void _staticOnPaintUpdated(wkeWebView webView, void* param, const HDC hdc, int x
 	ZuiControlInvalidate(pthis->cp);
 }
 
-ZAPI(ZuiAny) ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 	switch (ProcId)
 	{
 	case Proc_CoreInit: {

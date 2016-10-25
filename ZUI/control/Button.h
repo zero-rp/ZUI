@@ -1,12 +1,12 @@
-#ifndef __BUTTON_H__
+﻿#ifndef __BUTTON_H__
 #define __BUTTON_H__
-
-typedef struct ZButton
+/**按钮控件结构*/
+typedef struct _ZButton
 {
 	int type;
 	ZCtlProc old_call;
 }*ZuiButton, ZButton;
-ZAPI(ZuiAny) ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 
 
 #endif	//__BUTTON_H__
