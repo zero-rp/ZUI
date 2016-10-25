@@ -1,7 +1,7 @@
 ﻿#ifndef __BUTTON_H__
 #define __BUTTON_H__
 #define	Proc_Button_SetResNormal	1001	//
-#define	Proc_Button_SetResHot		1002		//高亮状态
+#define	Proc_Button_SetResHot		1002	//高亮状态
 #define	Proc_Button_SetResPushed	1003	//按下状态
 #define	Proc_Button_SetResFocused	1004	//焦点图片
 #define	Proc_Button_SetResDisabled	1005	//非激活状态

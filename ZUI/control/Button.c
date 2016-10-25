@@ -63,10 +63,22 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
 			}
 		}
 		else if(p->type==1) {
-			ZuiDrawRect(gp, ARGB(200, 0, 255, 255), rc->left + 5, rc->top+5, rc->right - rc->left-10, rc->bottom - rc->top - 10,10);
+			if (p->m_ResHot) {
+				img = p->m_ResHot->p;
+				ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
+			}
+			else {
+				ZuiDrawRect(gp, ARGB(200, 0, 255, 255), rc->left + 5, rc->top + 5, rc->right - rc->left - 10, rc->bottom - rc->top - 10, 10);
+			}
 		}
 		else if (p->type == 2) {
-			ZuiDrawRect(gp, ARGB(200, 255, 255, 255), rc->left + 5, rc->top+5, rc->right - rc->left-10, rc->bottom - rc->top - 10,10);
+			if (p->m_ResPushed) {
+				img = p->m_ResPushed->p;
+				ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
+			}
+			else {
+				ZuiDrawRect(gp, ARGB(200, 255, 255, 255), rc->left + 5, rc->top + 5, rc->right - rc->left - 10, rc->bottom - rc->top - 10, 10);
+			}
 		}
 		ZRect r;
 		MAKEZRECT(r, rc->left + 5, rc->top + 5, rc->right - rc->left - 10, rc->bottom - rc->top - 10);
@@ -80,15 +92,27 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
 		break;
 	}
 	case Proc_Button_SetResHot: {
+		if (p->m_ResHot)
+			ZuiResDBDelRes(p->m_ResHot);
+		p->m_ResHot = Param1;
 		break;
 	}
 	case Proc_Button_SetResPushed: {
+		if (p->m_ResPushed)
+			ZuiResDBDelRes(p->m_ResPushed);
+		p->m_ResPushed = Param1;
 		break;
 	}
 	case Proc_Button_SetResFocused: {
+		if (p->m_ResFocused)
+			ZuiResDBDelRes(p->m_ResFocused);
+		p->m_ResFocused = Param1;
 		break;
 	}
 	case Proc_Button_SetResDisabled: {
+		if (p->m_ResDisabled)
+			ZuiResDBDelRes(p->m_ResDisabled);
+		p->m_ResDisabled = Param1;
 		break;
 	}
 	case Proc_SetAttribute: {
