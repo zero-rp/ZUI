@@ -14,6 +14,8 @@
 	long flen;
 	void *p;
 
+	ZuiResDBCreateFromFile(L"res/res.zip", NULL);
+
 	fp = fopen("test.xml", "rb");
 	fseek(fp, 0L, SEEK_END);
 	flen = ftell(fp); /* 得到文件大小 */

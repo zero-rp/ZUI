@@ -336,6 +336,13 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 			ZuiPaintManagerSetFocus(p->m_pManager, p, FALSE);
 		break;
 	}
+	case Proc_SetDrag: {
+		if (p->m_drag == Param1)
+			return 0;
+
+		p->m_drag = Param1;
+		break;
+	}
 	case Proc_EstimateSize: {
 		return (void *)&p->m_cxyFixed;
 		break;
@@ -380,6 +387,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 			DWORD clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);
 			ZuiControlCall(Proc_SetBkColor, p, clrColor, NULL, NULL);
 		}
+		else if (wcscmp(Param1, L"drag") == 0) ZuiControlCall(Proc_SetDrag, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
 	}
 		break;
 	default:

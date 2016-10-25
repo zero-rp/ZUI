@@ -141,6 +141,7 @@ typedef struct _ZPointR
 #include "Core/unzip.h"
 #include "Core/mxml.h"
 #include "Core/gdi.h"
+#include "Core/resdb.h"
 #include "Core/global.h"
 /*内核*/
 #include "Core/manager.h"		//绘制管理器

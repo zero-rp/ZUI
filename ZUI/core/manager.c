@@ -1005,6 +1005,8 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 							ZuiControl pControl = ZuiPaintManagerFindControl(p, pt);
 							if (pControl == NULL) break;
 							if (pControl->m_pManager != p) break;
+							if(pControl->m_drag)
+								return SendMessage(pControl->m_pManager->m_hWndPaint, WM_NCLBUTTONDOWN, HTCAPTION, 0);
 							p->m_pEventClick = pControl;
 							ZuiControlCall(Proc_SetFocus, pControl, 0, 0, 0);
 							ZuiPaintManagerSetCapture(p);

@@ -48,8 +48,9 @@ typedef ZuiAny (ZCALL *ZCtlProc)(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, Z
 #define	Proc_SetFloat			31	//设置为浮动控件
 #define	Proc_SetEnabled			32	//设置可用状态
 #define	Proc_SetFocus			33	//设置焦点
+#define	Proc_SetDrag			46	//设置拖拽控件
 
-#define	Proc_SetBkColor		45	//设置背景色
+#define	Proc_SetBkColor			45	//设置背景色
 
 #define	Proc_EstimateSize		34	//获取自适应大小
 #define	Proc_FindControl		35	//查找控件
@@ -70,26 +71,27 @@ typedef struct _ZControl
 
 	ZuiPaintManager m_pManager;		//关联的管理器
 	struct _ZControl* m_pParent;	//父控件
-	BOOL m_bUpdateNeeded;			//是否需要更新布局
-	BOOL m_bMenuUsed;				//
+	ZuiBool m_bUpdateNeeded;		//是否需要更新布局
+	ZuiBool m_bMenuUsed;			//
 	RECT m_rcItem;					//
 	RECT m_rcPadding;				//
 	SIZE m_cXY;						//预设的左上角坐标
 	SIZE m_cxyFixed;				//预设的控件大小
 	SIZE m_cxyMin;					//控件最小大小
 	SIZE m_cxyMax;					//控件最大大小
-	BOOL m_bVisible;				//可视
-	BOOL m_bEnabled;				//激活
-	BOOL m_bMouseEnabled;			//鼠标激活
-	BOOL m_bKeyboardEnabled;		//键盘激活
-	BOOL m_bFocused;				//焦点
-	BOOL m_bFloat;					//浮动控件
+	ZuiBool m_bVisible;				//可视
+	ZuiBool m_bEnabled;				//激活
+	ZuiBool m_bMouseEnabled;		//鼠标激活
+	ZuiBool m_bKeyboardEnabled;		//键盘激活
+	ZuiBool m_bFocused;				//焦点
+	ZuiBool m_bFloat;				//浮动控件
 	TPercentInfo m_piFloatPercent;
-	BOOL m_bSetPos;					// 防止SetPos循环调用
-
+	ZuiBool m_bSetPos;				// 防止SetPos循环调用
+	ZuiBool m_drag;					//用于窗口拖拽
 	ZuiText m_sText;				//
+	ZuiText m_sName;				//控件名 主要用于查找xml对象
 	ZuiText m_sToolTip;				//提示文本
-	TCHAR m_chShortcut;				//快捷键
+	_ZuiText m_chShortcut;				//快捷键
 	void *m_sUserData;				//
 
 	//控件默认样式-------------------

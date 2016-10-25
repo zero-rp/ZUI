@@ -52,8 +52,15 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
 		ZuiGraphics gp = (ZuiGraphics)Param1;
 		RECT *rc = &cp->m_rcItem;
 		HPEN hPen=0;
+		ZuiImage img;
 		if (p->type == 0) {
-			ZuiDrawRect(gp, ARGB(200, 0, 3, 255), rc->left + 5, rc->top+5, rc->right - rc->left-10, rc->bottom - rc->top - 10, 10);
+			if(p->m_ResNormal){
+				img = p->m_ResNormal->p;
+				ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
+			}
+			else {
+				ZuiDrawRect(gp, ARGB(200, 0, 3, 255), rc->left + 5, rc->top + 5, rc->right - rc->left - 10, rc->bottom - rc->top - 10, 10);
+			}
 		}
 		else if(p->type==1) {
 			ZuiDrawRect(gp, ARGB(200, 0, 255, 255), rc->left + 5, rc->top+5, rc->right - rc->left-10, rc->bottom - rc->top - 10,10);
@@ -66,6 +73,32 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
 		ZuiDrawString(gp, Global_StringFormat, cp->m_sText, &r);
 	}
 		return 0;
+	case Proc_Button_SetResNormal: {
+		if (p->m_ResNormal)
+			ZuiResDBDelRes(p->m_ResNormal);
+		p->m_ResNormal = Param1;
+		break;
+	}
+	case Proc_Button_SetResHot: {
+		break;
+	}
+	case Proc_Button_SetResPushed: {
+		break;
+	}
+	case Proc_Button_SetResFocused: {
+		break;
+	}
+	case Proc_Button_SetResDisabled: {
+		break;
+	}
+	case Proc_SetAttribute: {
+		if (wcscmp(Param1, L"normalimage") == 0) ZuiControlCall(Proc_Button_SetResNormal, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+		else if (_tcscmp(Param1, L"hotimage") == 0) ZuiControlCall(Proc_Button_SetResHot, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+		else if (_tcscmp(Param1, L"pushedimage") == 0) ZuiControlCall(Proc_Button_SetResPushed, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+		else if (_tcscmp(Param1, L"focusedimage") == 0) ZuiControlCall(Proc_Button_SetResFocused, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+		else if (_tcscmp(Param1, L"disabledimage") == 0) ZuiControlCall(Proc_Button_SetResDisabled, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+		break;
+	}
 	case Proc_OnInit:{
 
 	}

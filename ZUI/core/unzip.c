@@ -84,16 +84,16 @@ static voidpf ZCALLBACK fopen64_file_func(voidpf opaque, const void* filename, i
 	FILE* file = NULL;
 	const char* mode_fopen = NULL;
 	if ((mode & ZLIB_FILEFUNC_MODE_READWRITEFILTER) == ZLIB_FILEFUNC_MODE_READ)
-		mode_fopen = "rb";
+		mode_fopen = L"rb";
 	else
 		if (mode & ZLIB_FILEFUNC_MODE_EXISTING)
-			mode_fopen = "r+b";
+			mode_fopen = L"r+b";
 		else
 			if (mode & ZLIB_FILEFUNC_MODE_CREATE)
-				mode_fopen = "wb";
+				mode_fopen = L"wb";
 
 	if ((filename != NULL) && (mode_fopen != NULL))
-		file = fopen64((const char*)filename, mode_fopen);
+		file = fopen64((const wchar_t*)filename, mode_fopen);
 	return file;
 }
 
@@ -687,7 +687,7 @@ unzFile unzOpenInternal(const void *path, zlib_filefunc64_def* pzlib_filefunc64_
 	return (unzFile)s;
 }
 
-unzFile unzOpen (const char *path)
+unzFile unzOpen (const wchar_t *path, void *buf, int len)
 {
     return unzOpenInternal(path, NULL, 1);
 }

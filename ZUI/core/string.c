@@ -82,3 +82,8 @@ ZEXPORT ZuiInt ZCALL ZuiAsciiToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, Zui
 	return MultiByteToWideChar(CP_ACP, 0, str, slen, out, olen);
 }
 
+ZEXPORT ZuiInt ZCALL ZuiUnicodeToAscii(ZuiText str, ZuiInt slen, ZuiAny out, ZuiInt olen)
+{
+	return WideCharToMultiByte(CP_ACP, 0, str, slen, out, olen, NULL, NULL);
+}
+

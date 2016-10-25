@@ -1,8 +1,19 @@
 ﻿#ifndef __BUTTON_H__
 #define __BUTTON_H__
+#define	Proc_Button_SetResNormal	1001	//
+#define	Proc_Button_SetResHot		1002		//高亮状态
+#define	Proc_Button_SetResPushed	1003	//按下状态
+#define	Proc_Button_SetResFocused	1004	//焦点图片
+#define	Proc_Button_SetResDisabled	1005	//非激活状态
 /**按钮控件结构*/
 typedef struct _ZButton
 {
+	ZuiRes m_ResNormal;	//正常状态
+	ZuiRes m_ResHot;		//高亮状态
+	ZuiRes m_ResPushed;	//按下状态
+	ZuiRes m_ResFocused;	//焦点图片
+	ZuiRes m_ResDisabled;//非激活状态
+
 	int type;
 	ZCtlProc old_call;
 }*ZuiButton, ZButton;

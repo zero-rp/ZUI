@@ -16,7 +16,7 @@
 
 void Rect_Join(RECT *rc, RECT *rc1);
 /*字符串HASH函数*/
-void * ZCALL Zui_Hash(char* str);
+void * ZCALL Zui_Hash(wchar_t* str);
 /**
 * 此函数用作初始化zui.
 * @return 此函数没有返回值.

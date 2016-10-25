@@ -44,6 +44,10 @@ ZEXPORT ZuiBool ZCALL ZuiInit() {
 	{
 		return FALSE;
 	}
+	/*初始化资源池*/
+	if (!ZuiResDBInit()) {
+		return FALSE;
+	}
 	return TRUE;
 }
 ZEXPORT ZuiInt ZCALL ZuiMsgLoop() {

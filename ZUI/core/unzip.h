@@ -33,7 +33,7 @@ typedef voidp unzFile;
 #endif
 
 #ifdef _MSC_VER
-#define fopen64 fopen
+#define fopen64 _wfopen
 #if (_MSC_VER >= 1400) && (!(defined(NO_MSCVER_FILE64_FUNC)))
 #define ftello64 _ftelli64
 #define fseeko64 _fseeki64
@@ -179,7 +179,7 @@ typedef struct zlib_filefunc64_def_s
 
 int unzStringFileNameCompare OF ((const char* fileName1, const char* fileName2, int iCaseSensitivity));
 /*打开压缩文件*/
-unzFile unzOpen (const char *path);
+unzFile unzOpen (const wchar_t *path,void * buf, int len);
 /*关闭压缩文件*/
 int unzClose(unzFile file);
 /*取全局信息*/
