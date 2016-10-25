@@ -364,10 +364,20 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		ZuiControlInvalidate(p);
 		break;
 	}
+	case Proc_SetBkImage: {
+		if (p->m_BkgImg)
+			ZuiResDBDelRes(p->m_BkgImg);
+		p->m_BkgImg = Param1;
+		break;
+	}
 	case Proc_OnPaint: {
 		ZuiGraphics gp = (ZuiGraphics)Param1;
 		RECT *rc = &p->m_rcItem;
-		if (p->m_BkgColor)
+		if (p->m_BkgImg) {
+			ZuiImage img = p->m_BkgImg->p;
+			ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
+		}
+		else if (p->m_BkgColor)
 			ZuiDrawFillRect(gp, p->m_BkgColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
 		break;
 	}
@@ -388,6 +398,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 			ZuiControlCall(Proc_SetBkColor, p, clrColor, NULL, NULL);
 		}
 		else if (wcscmp(Param1, L"drag") == 0) ZuiControlCall(Proc_SetDrag, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
+		else if (wcscmp(Param1, L"bkimage") == 0) ZuiControlCall(Proc_SetBkImage, p, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
 	}
 		break;
 	default:

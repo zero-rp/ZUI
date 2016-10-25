@@ -51,6 +51,7 @@ typedef ZuiAny (ZCALL *ZCtlProc)(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, Z
 #define	Proc_SetDrag			46	//设置拖拽控件
 
 #define	Proc_SetBkColor			45	//设置背景色
+#define	Proc_SetBkImage			47	//设置背景图片
 
 #define	Proc_EstimateSize		34	//获取自适应大小
 #define	Proc_FindControl		35	//查找控件
@@ -97,6 +98,7 @@ typedef struct _ZControl
 	//控件默认样式-------------------
 	ZuiInt m_tyle;					//控件风格
 	ZuiColor m_BkgColor;			//背景颜色
+	ZuiRes m_BkgImg;				//背景图片
 	//控件默认样式-------------------
 
 	int m_nTooltipWidth;			//多行ToolTip单行最长宽度
