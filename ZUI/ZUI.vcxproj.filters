@@ -127,6 +127,9 @@
       <Filter>源文件\core</Filter>
     </ClCompile>
     <ClCompile Include="control\Edit.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="control\Option.c">
       <Filter>源文件\control</Filter>
     </ClCompile>
   </ItemGroup>
@@ -225,6 +228,9 @@
       <Filter>头文件\core</Filter>
     </ClInclude>
     <ClInclude Include="control\Edit.h">
+      <Filter>头文件\control</Filter>
+    </ClInclude>
+    <ClInclude Include="control\Option.h">
       <Filter>头文件\control</Filter>
     </ClInclude>
   </ItemGroup>

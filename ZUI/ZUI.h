@@ -152,17 +152,17 @@ typedef struct _ZPointR
 #include "Control/Register.h"
 #include "Control/window.h"
 
-
 #include "Control/Button.h"
 #include "control/Browser.h"
 #include "control/Edit.h"
+#include "control/Option.h"
 
 /*布局*/
-#include "Layout/Layout.h"			//容器基类
-#include "Layout/VerticalLayout.h"	//纵向布局
+#include "Layout/Layout.h"				//容器基类
+#include "Layout/VerticalLayout.h"		//纵向布局
 #include "Layout/HorizontalLayout.h"	//横向布局
-#include "Layout/TileLayout.h"		//列表布局
-#include "Layout/TabLayout.h"		//选择夹布局
+#include "Layout/TileLayout.h"			//列表布局
+#include "Layout/TabLayout.h"			//选择夹布局
 
 
 
