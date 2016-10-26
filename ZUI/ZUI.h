@@ -155,6 +155,7 @@ typedef struct _ZPointR
 
 #include "Control/Button.h"
 #include "control/Browser.h"
+#include "control/Edit.h"
 
 /*布局*/
 #include "Layout/Layout.h"			//容器基类

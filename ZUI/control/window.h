@@ -1,4 +1,17 @@
-﻿#ifndef __UIWINDOW_H__
+﻿/**
+* @file		Windows.h
+* @brief	窗体控件实现.
+* @author	[Zero](22249030)
+* @version	1.0
+* @date		$date
+* @par History:
+*
+* [2016-10-25] <Zero> v1.0
+*
+* + v1.0版发布.
+*
+*/
+#ifndef __UIWINDOW_H__
 #define __UIWINDOW_H__
 
 #define	Proc_Window_SetNoBox	1001	//设置为无边框窗体

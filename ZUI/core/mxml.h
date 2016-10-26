@@ -1,4 +1,17 @@
-﻿#ifndef _mxml_h_
+﻿/**
+* @file		mxml.h
+* @brief	xml解析器.
+* @author	[Zero](22249030)
+* @version	1.0
+* @date		$date
+* @par History:
+*
+* [2016-10-25] <Zero> v1.0
+*
+* + v1.0版发布.
+*
+*/
+#ifndef _mxml_h_
 #define _mxml_h_
 
 #include <stdio.h>

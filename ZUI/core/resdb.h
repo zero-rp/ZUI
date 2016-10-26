@@ -1,6 +1,6 @@
 ﻿/**
-* @file		manager.h
-* @brief	绘制管理器.
+* @file		resdb.h
+* @brief	资源包实现.
 * @author	[Zero](22249030)
 * @version	1.0
 * @date		$date

@@ -1,4 +1,17 @@
-﻿#ifndef __BUTTON_H__
+﻿/**
+* @file		Button.h
+* @brief	按钮控件实现.
+* @author	[Zero](22249030)
+* @version	1.0
+* @date		$date
+* @par History:
+*
+* [2016-10-25] <Zero> v1.0
+*
+* + v1.0版发布.
+*
+*/
+#ifndef __BUTTON_H__
 #define __BUTTON_H__
 #define	Proc_Button_SetResNormal	1001	//
 #define	Proc_Button_SetResHot		1002	//高亮状态

@@ -1,4 +1,17 @@
-﻿#ifndef __CONTROL_H__
+﻿/**
+* @file		control.h
+* @brief	控件基类.
+* @author	[Zero](22249030)
+* @version	1.0
+* @date		$date
+* @par History:
+*
+* [2016-10-25] <Zero> v1.0
+*
+* + v1.0版发布.
+*
+*/
+#ifndef __CONTROL_H__
 #define __CONTROL_H__
 
 /////////////////////////////////////////////////////////////////////////////////////

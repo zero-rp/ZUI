@@ -399,6 +399,15 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		}
 		else if (wcscmp(Param1, L"drag") == 0) ZuiControlCall(Proc_SetDrag, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
 		else if (wcscmp(Param1, L"bkimage") == 0) ZuiControlCall(Proc_SetBkImage, p, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+		else if (wcscmp(Param1, L"padding") == 0) {
+			RECT rcPadding = { 0 };
+			LPTSTR pstr = NULL;
+			rcPadding.left = _tcstol(Param2, &pstr, 10);  ASSERT(pstr);
+			rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+			rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+			rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+			ZuiControlCall(Proc_SetPadding, p, &rcPadding, NULL, NULL);
+		}
 	}
 		break;
 	default:

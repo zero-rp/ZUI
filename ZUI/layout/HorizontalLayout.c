@@ -37,6 +37,7 @@ void* CALLBACK ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalL
 		int nAdjustables = 0;
 		int cxFixed = 0;
 		int nEstimateNum = 0;
+		//第一轮计算得到各种信息，不做实际布局处理 
 		for (int it1 = 0; it1 < darray_len(op->m_items); it1++) {
 			ZuiControl pControl = (ZuiControl)(op->m_items->data[it1]);
 			if (!pControl->m_bVisible) continue;
@@ -46,6 +47,7 @@ void* CALLBACK ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalL
 			sz.cx = psz->cx;
 			sz.cy = psz->cy;
 			if (sz.cx == 0) {
+				//记录需要自动计算宽度的子控件的数量
 				nAdjustables++;
 			}
 			else {
@@ -53,19 +55,24 @@ void* CALLBACK ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalL
 				if (sz.cx >(LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0)) sz.cx = (LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0);
 			}
 			cxFixed += sz.cx + ((RECT *)(ZuiControlCall(Proc_GetPadding, pControl, 0, 0, 0)))->left + ((RECT *)(ZuiControlCall(Proc_GetPadding, pControl, 0, 0, 0)))->right;
+			//记录需要做相对布局的子控件的数量 
 			nEstimateNum++;
 		}
+		//cxFixed保存了所有相对布局的控件占用的宽度（包括了padding属性好childpadding属性占用的宽度）
 		cxFixed += (nEstimateNum - 1) * op->m_iChildPadding;
 
 		// Place elements
 		int cxNeeded = 0;
 		int cxExpand = 0;
+		//cxExpand保存需要自动计算宽度的子控件的宽度
 		if (nAdjustables > 0) cxExpand = MAX(0, (szAvailable.cx - cxFixed) / nAdjustables);
 		// Position the elements
+		//szRemaining保存除已被布局的子控件以外的剩余空间
 		SIZE szRemaining = szAvailable;
 
 		int iPosX = rc.left;
 		int iAdjustable = 0;
+		//cxFixedRemaining记录当前还未被布局过的所有子控件的总宽度
 		int cxFixedRemaining = cxFixed;
 		for (int it2 = 0; it2 < darray_len(op->m_items); it2++) {
 			ZuiControl pControl = (ZuiControl)(op->m_items->data[it2]);
@@ -84,7 +91,7 @@ void* CALLBACK ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalL
 			if (sz.cx == 0) {
 				iAdjustable++;
 				sz.cx = cxExpand;
-				// Distribute remaining to last element (usually round-off left-overs)
+				// 这里判断如果是最后一个需要自动计算宽度的元素则做出不同的处理
 				if (iAdjustable == nAdjustables) {
 					sz.cx = MAX(0, szRemaining.cx - rcPadding->right - cxFixedRemaining);
 				}

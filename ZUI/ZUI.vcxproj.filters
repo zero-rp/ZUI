@@ -126,6 +126,9 @@
     <ClCompile Include="core\resdb.c">
       <Filter>源文件\core</Filter>
     </ClCompile>
+    <ClCompile Include="control\Edit.c">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZUI.h">
@@ -220,6 +223,9 @@
     </ClInclude>
     <ClInclude Include="core\resdb.h">
       <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="control\Edit.h">
+      <Filter>头文件\control</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

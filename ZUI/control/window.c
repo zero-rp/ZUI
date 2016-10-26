@@ -26,7 +26,6 @@ LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			if (uMsg == WM_CREATE) {
 
-				return 0;
 			}
 			else if (uMsg == WM_DESTROY) {
 				PostQuitMessage(0L);
@@ -35,8 +34,8 @@ LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			{
 				if (pThis->m_nobox)
 				{
-					int x = LOWORD(lParam);
-					int	y = HIWORD(lParam);
+					int x = GET_X_LPARAM(lParam);
+					int	y = GET_Y_LPARAM(lParam);
 					if (x <= pThis->m_rect.Left + 3 && y <= pThis->m_rect.Top + 3) {
 						return HTTOPLEFT;
 					}
@@ -76,13 +75,13 @@ LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				}
 			}
 			else if(uMsg == WM_MOVE){
-				pThis->m_rect.Left = LOWORD(lParam);
-				pThis->m_rect.Top = HIWORD(lParam);
+				pThis->m_rect.Left = GET_X_LPARAM(lParam);
+				pThis->m_rect.Top = GET_Y_LPARAM(lParam);
 			}
 			else if(uMsg == WM_SIZE)
 			{
-				pThis->m_rect.Width = LOWORD(lParam);
-				pThis->m_rect.Height = HIWORD(lParam);
+				pThis->m_rect.Width = GET_X_LPARAM(lParam);
+				pThis->m_rect.Height = GET_Y_LPARAM(lParam);
 			}
 		}
 		if (pThis->m_pm)
