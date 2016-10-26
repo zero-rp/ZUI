@@ -364,6 +364,11 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		ZuiControlInvalidate(p);
 		break;
 	}
+	case Proc_SetBorderColor: {
+		p->m_dwBorderColor = Param1;
+		ZuiControlInvalidate(p);
+		break;
+	}
 	case Proc_SetBkImage: {
 		if (p->m_BkgImg)
 			ZuiResDBDelRes(p->m_BkgImg);
@@ -379,6 +384,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		}
 		else if (p->m_BkgColor)
 			ZuiDrawFillRect(gp, p->m_BkgColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+		if (p->m_dwBorderColor)
+			ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 1);
 		break;
 	}
 	case Proc_SetAttribute: {
@@ -408,6 +415,31 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 			rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
 			ZuiControlCall(Proc_SetPadding, p, &rcPadding, NULL, NULL);
 		}
+		else if (wcscmp(Param1, L"bordercolor") == 0) {
+			while (*(wchar_t *)Param2 > L'\0' && *(wchar_t *)Param2 <= L' ') (wchar_t *)Param2 = CharNext((wchar_t *)Param2);
+			if (*(wchar_t *)Param2 == L'#') (wchar_t *)Param2 = CharNext((wchar_t *)Param2);
+			LPTSTR pstr = NULL;
+			DWORD clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);
+			ZuiControlCall(Proc_SetBorderColor, p, clrColor, NULL, NULL);
+		}
+		//else if (wcscmp(Param1, L"name") == 0) SetName(pstrValue);
+		else if (wcscmp(Param1, L"float") == 0) {
+			//CDuiString nValue = Param2;
+			//if (nValue.Find(',') < 0) {
+			//	SetFloat(_tcscmp(Param2, L"true") == 0);
+			//}
+			//else {
+				TPercentInfo piFloatPercent = { 0 };
+				LPTSTR pstr = NULL;
+				piFloatPercent.left = _tcstod(Param2, &pstr);  ASSERT(pstr);
+				piFloatPercent.top = _tcstod(pstr + 1, &pstr);    ASSERT(pstr);
+				piFloatPercent.right = _tcstod(pstr + 1, &pstr);  ASSERT(pstr);
+				piFloatPercent.bottom = _tcstod(pstr + 1, &pstr); ASSERT(pstr);
+				//SetFloatPercent(piFloatPercent);
+				//SetFloat(true);
+			//}
+		}
+		else if (wcscmp(Param1, L"visible") == 0) ZuiControlCall(Proc_SetVisible, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
 	}
 		break;
 	default:

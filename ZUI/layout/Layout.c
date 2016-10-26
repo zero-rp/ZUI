@@ -281,6 +281,23 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 		ZuiDestroyRegion(rgn);
 		return 0;//绘图完毕,不需要默认
 	}
+	case Proc_Layout_SetInset: {
+		memcpy(&p->m_rcInset, Param1, sizeof(RECT));
+		ZuiControlNeedParentUpdate(cp);
+		break;
+	}
+	case Proc_SetAttribute: {
+		if (wcscmp(Param1, _T("inset")) == 0) {
+			RECT rcInset = { 0 };
+			LPTSTR pstr = NULL;
+			rcInset.left = _tcstol(Param2, &pstr, 10);  ASSERT(pstr);
+			rcInset.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+			rcInset.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+			rcInset.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+			ZuiControlCall(Proc_Layout_SetInset, cp, &rcInset, NULL, NULL);
+		}
+		break;
+	}
 	case Proc_SetManager: {
 		for (int it = 0; it < darray_len(p->m_items); it++) {
 			ZuiControlCall(Proc_SetManager, (ZuiControl)(p->m_items->data[it]),Param1, cp, Param3);

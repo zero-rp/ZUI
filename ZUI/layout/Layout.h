@@ -24,12 +24,12 @@
 #define	Proc_Layout_SetItemIndex	1108	///设置控件所在位置
 #define	Proc_Layout_GetItemAt		1109	///索引取控件
 #define	Proc_Layout_SetFloatPos		1110	///设置浮动控件位置
-
+#define	Proc_Layout_SetInset		1112	///设置内边距
 /**容器基类结构*/
 typedef struct _ZuiLayout
 {
 	DArray *m_items;			///控件数组
-	RECT m_rcInset;
+	RECT m_rcInset;				///
 	BOOL m_bMouseChildEnabled;
 	int m_iChildPadding;
 	ZCtlProc old_call;

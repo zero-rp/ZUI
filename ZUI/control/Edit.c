@@ -21,51 +21,66 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 		switch (event->Type)
 		{
 		case ZEVENT_MOUSELEAVE: {
-
+			p->MouseType = 0;
 			ZuiControlInvalidate(cp);
-		}
 			break;
+		}
 		case ZEVENT_MOUSEENTER: {
-
+			p->MouseType = 1;
 			ZuiControlInvalidate(cp);
-		}
 			break;
+		}
 		case ZEVENT_LBUTTONDOWN: {
 
 			ZuiControlInvalidate(cp);
-		}
 			break;
+		}
 		case ZEVENT_LBUTTONUP: {
 
 			ZuiControlInvalidate(cp);
+			break;
 		}
-			 break;
+		case ZEVENT_KILLFOCUS: {
+			ZuiControlInvalidate(cp);
+			break;
+		}
+		case ZEVENT_SETFOCUS: {
+			ZuiControlInvalidate(cp);
+			break;
+		}
 		default:
 			break;
 		}
-
-
-		
-	}
 		break;
+	}
 	case Proc_OnPaint:{
 		ZuiGraphics gp = (ZuiGraphics)Param1;
 		RECT *rc = &cp->m_rcItem;
-		HPEN hPen=0;
-		ZuiImage img;
-	
+
+		if (p->MouseType==1)
+		{
+			ZuiDrawRect(gp, ARGB(200, 0, 0, 0), rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1, 1);//鼠标悬停
+		}
+		else if (cp->m_bFocused)
+		{
+			ZuiDrawRect(gp, ARGB(200, 34, 255, 255), rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1, 1);//焦点
+		}
+		else
+		{
+			ZuiDrawRect(gp, ARGB(200, 0, 30, 255), rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1, 1);//通常
+		}
 		ZRect r;
 		MAKEZRECT(r, rc->left + 5, rc->top + 5, rc->right - rc->left - 10, rc->bottom - rc->top - 10);
 		ZuiDrawString(gp, Global_StringFormat, cp->m_sText, &r);
-	}
 		return 0;
+		break;
+	}
 	case Proc_SetAttribute: {
 		break;
 	}
 	case Proc_OnInit:{
-
-	}
 		break;
+	}
 	default:
 		break;
 	}

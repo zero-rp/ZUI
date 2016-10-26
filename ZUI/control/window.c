@@ -138,38 +138,18 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 		return p;
 	}
 						break;
-	case Proc_OnEvent: {
-		TEventUI *event = (TEventUI *)Param1;
-		switch (event->Type)
-		{
-		case ZEVENT_MOUSELEAVE: {
-
-		}
-								 break;
-		case ZEVENT_MOUSEENTER: {
-
-		}
-								 break;
-		case ZEVENT_LBUTTONDOWN: {
-
-		}
-								 break;
-		case ZEVENT_LBUTTONUP: {
-
-		}
-							   break;
-		default:
-			break;
-		}
-
-
-
-	}
-					   break;
 	case Proc_OnPaint: {
 
 	}
 					   break;
+	case Proc_SetBorderColor: {
+		((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.left = 1;
+		((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.bottom = 1;
+		((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.right = 1;
+		((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.top = 1;
+		return 0;
+		break;
+	}
 	case Proc_SetPos: {
 		OutputDebugString(L"a");
 	}

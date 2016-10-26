@@ -65,6 +65,7 @@ typedef ZuiAny (ZCALL *ZCtlProc)(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, Z
 
 #define	Proc_SetBkColor			45	//设置背景色
 #define	Proc_SetBkImage			47	//设置背景图片
+#define	Proc_SetBorderColor		48	//设置边框颜色
 
 #define	Proc_EstimateSize		34	//获取自适应大小
 #define	Proc_FindControl		35	//查找控件
@@ -87,8 +88,8 @@ typedef struct _ZControl
 	struct _ZControl* m_pParent;	//父控件
 	ZuiBool m_bUpdateNeeded;		//是否需要更新布局
 	ZuiBool m_bMenuUsed;			//
-	RECT m_rcItem;					//
-	RECT m_rcPadding;				//
+	RECT m_rcItem;					//控件矩形
+	RECT m_rcPadding;				//控件
 	SIZE m_cXY;						//预设的左上角坐标
 	SIZE m_cxyFixed;				//预设的控件大小
 	SIZE m_cxyMin;					//控件最小大小
@@ -105,13 +106,14 @@ typedef struct _ZControl
 	ZuiText m_sText;				//
 	ZuiText m_sName;				//控件名 主要用于查找xml对象
 	ZuiText m_sToolTip;				//提示文本
-	_ZuiText m_chShortcut;				//快捷键
+	_ZuiText m_chShortcut;			//快捷键
 	void *m_sUserData;				//
 
 	//控件默认样式-------------------
 	ZuiInt m_tyle;					//控件风格
 	ZuiColor m_BkgColor;			//背景颜色
 	ZuiRes m_BkgImg;				//背景图片
+	ZuiColor m_dwBorderColor;				//边框颜色
 	//控件默认样式-------------------
 
 	int m_nTooltipWidth;			//多行ToolTip单行最长宽度

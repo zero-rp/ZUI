@@ -21,6 +21,10 @@
 /**按钮控件结构*/
 typedef struct _ZEdit
 {
+	ZuiColor FrameColor;	//边框颜色
+	ZuiColor FireColor;		//点燃颜色
+	ZuiColor FocusColor;	//焦点颜色
+	ZuiInt MouseType;
 	ZCtlProc old_call;
 }*ZuiEdit, ZEdit;
 ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);

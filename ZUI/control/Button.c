@@ -43,9 +43,6 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
 		default:
 			break;
 		}
-
-
-		
 	}
 		break;
 	case Proc_OnPaint:{
@@ -83,8 +80,9 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
 		ZRect r;
 		MAKEZRECT(r, rc->left + 5, rc->top + 5, rc->right - rc->left - 10, rc->bottom - rc->top - 10);
 		ZuiDrawString(gp, Global_StringFormat, cp->m_sText, &r);
-	}
 		return 0;
+		break;
+	}
 	case Proc_Button_SetResNormal: {
 		if (p->m_ResNormal)
 			ZuiResDBDelRes(p->m_ResNormal);
