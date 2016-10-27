@@ -202,6 +202,7 @@ ZuiControl CALLBACK __FindControlFromCount(ZuiControl pThis, LPVOID pData);//计
 ZuiControl CALLBACK __FindControlFromPoint(ZuiControl pThis, LPVOID pData);//根据点是否在区域中，查询控件
 ZuiControl CALLBACK __FindControlFromTab(ZuiControl pThis, LPVOID pData);//通过Tab信息查询控件
 ZuiControl CALLBACK __FindControlFromShortcut(ZuiControl pThis, LPVOID pData);//从快捷键查询控件
+ZuiControl CALLBACK __FindControlFromName(ZuiControl pThis, LPVOID pData);// 通过名称比较查询控件
 ZuiControl CALLBACK __FindControlsFromUpdate(ZuiControl pThis, LPVOID pData);
 
 

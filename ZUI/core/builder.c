@@ -1,14 +1,14 @@
 ﻿#include <ZUI.h>
 
 
-ZEXPORT ZuiVoid ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
+ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
 	mxml_node_t *tree;
 	mxml_node_t *node;
 	ZuiText ClassName = NULL;
 	ZuiStringFormat StringFormat = NULL;
 	ZuiBool Visible = FALSE, Enabled = TRUE;
 	ZuiControl Control;
-	
+	ZuiControl win = NULL;//本xml对应的窗口
 	tree = mxmlLoadString(NULL, xml, len);
 
 	for (node = mxmlFindElement(tree, tree, NULL, NULL, NULL, MXML_DESCEND); node != NULL; node = mxmlWalkNext(node, NULL, MXML_DESCEND)/*node = mxmlFindElement(node, tree, NULL,NULL,NULL,MXML_DESCEND)*/) {
@@ -38,6 +38,7 @@ ZEXPORT ZuiVoid ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
 					//上级控件已存在且当前欲创建的子窗口不为窗口对象
 					if (Control) {
 						node->user_data = Control;//保存控件到节点
+						win = Control;
 					}
 					else
 						break;//窗口创建失败就没必要继续下去了
@@ -52,5 +53,6 @@ ZEXPORT ZuiVoid ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
 	}
 	/*解析完成后释放xml树*/
 	mxmlDelete(tree);
+	return win;
 }
 

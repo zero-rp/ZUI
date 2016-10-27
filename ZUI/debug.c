@@ -23,9 +23,11 @@
 	fseek(fp, 0L, SEEK_SET); /* 定位到文件开头 */
 	fread(p, flen, 1, fp); /* 一次性读取全部文件内容 */
 	fclose(fp);
-	ZuiLayoutLoad(p,flen);
+	
+	
+	ZuiControl win = ZuiLayoutLoad(p,flen);
 
-
+	ZuiControl clos = ZuiControlFindName(win, L"clos");
 
 	//ZuiControl pRoot = NewZuiControl(L"window", NULL, NULL, NULL);
 	////-------------------------------------------------------------------------

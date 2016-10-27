@@ -94,8 +94,18 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 			p->m_sText = _wcsdup((ZuiText)Param1);
 		if (wcscmp(p->m_sText, (ZuiText)Param1) == 0)
 			return 0;
+		free(p->m_sText);
 		p->m_sText = _wcsdup((ZuiText)Param1);
 		ZuiControlInvalidate(p);
+		break;
+	}
+	case Proc_SetName: {
+		if (!p->m_sName)
+			p->m_sName = _wcsdup((ZuiText)Param1);
+		if (wcscmp(p->m_sName, (ZuiText)Param1) == 0)
+			return 0;
+		free(p->m_sName);
+		p->m_sName = _wcsdup((ZuiText)Param1);
 		break;
 	}
 	case Proc_SetTooltip: {
@@ -107,8 +117,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		break;
 	}
 	case Proc_GetPos:{
-						 return (void *)&p->m_rcItem;
-						 break;
+		 return (void *)&p->m_rcItem;
+		 break;
 	}
 	case Proc_SetPos: {// 只有控件为float的时候，外部调用SetPos和Move才是有效的，位置参数是相对父控件的位置
 		RECT *rc=(RECT *)Param1;
@@ -422,7 +432,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 			DWORD clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);
 			ZuiControlCall(Proc_SetBorderColor, p, clrColor, NULL, NULL);
 		}
-		//else if (wcscmp(Param1, L"name") == 0) SetName(pstrValue);
+		else if (wcscmp(Param1, L"name") == 0) ZuiControlCall(Proc_SetName, p, Param2, NULL, NULL);
 		else if (wcscmp(Param1, L"float") == 0) {
 			//CDuiString nValue = Param2;
 			//if (nValue.Find(',') < 0) {
@@ -458,6 +468,15 @@ ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, 
 }
 //-------------------------------------------------------------------------------------------------
 
+ZEXPORT ZuiControl ZCALL ZuiControlFindName(ZuiControl p, ZuiText Name) {
+	if (!p)
+		return NULL;
+	if (!p->m_pManager)
+		return NULL;
+	if (!p->m_pManager->m_pRoot)
+		return NULL;
+	return (ZuiControl)ZuiControlCall(Proc_FindControl, p->m_pManager->m_pRoot, __FindControlFromName, Name, (void *)(ZFIND_ALL));
+}
 
 ZEXPORT ZuiVoid ZCALL ZuiControlInvalidate(ZuiControl p)
 {

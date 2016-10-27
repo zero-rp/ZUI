@@ -581,6 +581,12 @@ ZuiControl CALLBACK __FindControlsFromUpdate(ZuiControl pThis, LPVOID pData)
 	return NULL;
 }
 
+ZuiControl CALLBACK __FindControlFromName(ZuiControl pThis, LPVOID pData)
+{
+	char* pstrName = (char *)(pData);
+	if (!pThis->m_sName) return NULL;
+	return (_stricmp(pThis->m_sName, pstrName) == 0) ? pThis : NULL;
+}
 
 //消息处理函数
 ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT *lRes)

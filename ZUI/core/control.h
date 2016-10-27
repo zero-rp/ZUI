@@ -30,6 +30,7 @@ typedef ZuiAny (ZCALL *ZCtlProc)(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, Z
 #define	Proc_Activate			4	//活动
 #define	Proc_SetVisible			5	//设置是否可视
 #define	Proc_SetText			6	//设置文本
+#define	Proc_SetName			49	//设置名字
 #define	Proc_SetTooltip			44	//设置提示文本
 #define	Proc_GetPos				7	//得到控件位置
 #define	Proc_SetPos				8	//设置控件位置并重绘
@@ -131,6 +132,7 @@ void FreeCControlUI(ZuiControl p);
 //调用控件处理函数
 ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 
+ZEXPORT ZuiControl ZCALL ZuiControlFindName(ZuiControl p, ZuiText Name);
 
 ZEXPORT ZuiVoid ZCALL ZuiControlInvalidate(ZuiControl p);				//刷新显示
 ZEXPORT ZuiVoid ZCALL ZuiControlNeedUpdate(ZuiControl p);				//更新布局
