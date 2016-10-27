@@ -126,10 +126,10 @@
     <ClCompile Include="core\resdb.c">
       <Filter>源文件\core</Filter>
     </ClCompile>
-    <ClCompile Include="control\Edit.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="control\Option.c">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\Edit.c">
       <Filter>源文件\control</Filter>
     </ClCompile>
   </ItemGroup>

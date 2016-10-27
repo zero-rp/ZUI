@@ -385,7 +385,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		else if (p->m_BkgColor)
 			ZuiDrawFillRect(gp, p->m_BkgColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
 		if (p->m_dwBorderColor)
-			ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 1);
+			ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - rc->left-1, rc->bottom - rc->top-1, 1);
 		break;
 	}
 	case Proc_SetAttribute: {

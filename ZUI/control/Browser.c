@@ -13,6 +13,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
 	case Proc_CoreInit: {
 		wkeInitialize();
 		return 0;
+		break;
 	}
 	case Proc_OnCreate: {
 		p = (ZuiBrowser)malloc(sizeof(ZBrowser));
@@ -45,7 +46,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
 		case ZEVENT_SETFOCUS:
 			if (p->view) wkeSetFocus(p->view); break;
 		case ZEVENT_KILLFOCUS:
-			if (p->view) wkeKillFocus(p->view); break;
+ 			if (p->view) wkeKillFocus(p->view); break;
 		case ZEVENT_CHAR: {
 			unsigned int charCode = event->wParam;
 			unsigned int flags = 0;
@@ -160,24 +161,37 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
 		ZuiGraphics gp = (ZuiGraphics)Param1;
 		RECT *rc = &cp->m_rcItem;
 		if (p->init) {
+			//ZGraphics sp;
+			//sp.hdc = wkeGetViewDC(p->view);
+			//sp.Width = rc->right - rc->left;
+			//sp.Height = rc->bottom - rc->top;
+			//ZuiAlphaBlend(gp, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, &sp, 0, 0, 255);
 			BitBlt(gp->hdc, rc->left, rc->top, rc->right-rc->left, rc->bottom-rc->top, wkeGetViewDC(p->view), 0, 0, SRCCOPY);
 		}
 	}
 		break;
 	case Proc_SetPos:{
+		wkeSetHandleOffset(p->view, ((RECT*)Param1)->left, ((RECT*)Param1)->top);
 		OutputDebugString(L"a");
 	}
 		break;
 	case Proc_Browser_LoadUrl: {
 		wkeLoadURLW(p->view, Param1);
-	}
 		break;
+	}
+	case Proc_Browser_LoadHtml: {
+		wkeLoadHTMLW(p->view, ((ZuiRes)Param1)->p);
+		ZuiResDBDelRes((ZuiRes)Param1);
+		break;
+	}
 	case Proc_SetAttribute: {
 		if (wcscmp(Param1, L"url") == 0) ZuiControlCall(Proc_Browser_LoadUrl, cp, Param2, NULL, NULL);
+		if (wcscmp(Param1, L"html") == 0)
+			ZuiControlCall(Proc_Browser_LoadHtml, cp, ZuiResDBGetRes(Param2, ZREST_TXT), NULL, NULL);
 	}
 		break;
 	case Proc_OnInit:{
-		
+		wkeSetHandle(p->view, cp->m_pManager->m_hWndPaint);
 		ZuiPaintManagerSetTimer(cp, 1000, 20);
 	}
 		break;

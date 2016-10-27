@@ -1204,6 +1204,15 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 		return TRUE;
 	case WM_KILLFOCUS://失去焦点
 	{
+		if (p->m_pFocus) {
+			TEventUI event = { 0 };
+			event.Type = ZEVENT_KILLFOCUS;
+			event.pSender = p->m_pFocus;
+			event.dwTimestamp = GetTickCount();
+			ZuiControlEvent(p->m_pFocus, &event);
+			p->m_pFocus = NULL;
+		}
+
 	}
 		break;
 	case WM_NOTIFY:

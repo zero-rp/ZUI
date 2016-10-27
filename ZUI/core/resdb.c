@@ -126,7 +126,13 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 			free(n);
 		}
 		else if (db->type == ZRESDBT_FILE) {
-
+			FILE*f = _wfopen(pp, L"rb");
+			fseek(f, 0L, SEEK_END);
+			buflen = ftell(f); /* 得到文件大小 */
+			buf = malloc(buflen); /* 根据文件大小动态分配内存空间 */
+			fseek(f, 0L, SEEK_SET); /* 定位到文件开头 */
+			fread(buf, buflen, 1, f); /* 一次性读取全部文件内容 */
+			fclose(f);
 		}
 		else if (db->type == ZRESDBT_STREAM) {
 
@@ -141,12 +147,29 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 		res->type = type;
 		if (type == ZREST_IMG) {
 			res->p = ZuiLoadImageFromBinary(buf, buflen);
+			//释放缓冲
+			free(buf);
 		}
 		else if (type == ZREST_TXT) {
-
+			int bufsize;
+			wchar_t *txtbuf;
+			if (ZuiStingIsUtf8(buf, buflen))
+			{
+				bufsize = ZuiUtf8ToUnicode(buf, -1, 0, 0)*sizeof(wchar_t);
+				txtbuf = malloc(bufsize + 2);
+				bufsize = ZuiUtf8ToUnicode(buf, buflen, txtbuf, bufsize);
+				txtbuf[bufsize] = 0;
+			}
+			else
+			{
+				bufsize = ZuiAsciiToUnicode(buf, -1, 0, 0)*sizeof(wchar_t);
+				txtbuf = malloc(bufsize + 2);
+				bufsize = ZuiAsciiToUnicode(buf, buflen, txtbuf, bufsize);
+				txtbuf[bufsize] = 0;
+			}
+			free(buf);
+			res->p = txtbuf;
 		}
-		//释放缓冲
-		free(buf);
 		if (!res->p) {
 			free(res);
 			return NULL;
@@ -169,7 +192,7 @@ ZEXPORT ZuiVoid ZCALL ZuiResDBDelRes(ZuiRes res) {
 				ZuiDestroyImage(res->p);
 			}
 			else if (res->type == ZREST_TXT) {
-
+				free(res->p);
 			}
 			free(res);
 		}
