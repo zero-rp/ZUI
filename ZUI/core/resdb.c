@@ -17,6 +17,14 @@ ZuiBool ZuiResDBInit() {
 	memset(p, 0, sizeof(ZResDB));
 	p->type = ZRESDBT_STREAM;
 	rb_insert(Zui_Hash(L"stream"), p, Global_ResDB->resdb);
+	p = (ZuiResDB)malloc(sizeof(ZResDB));
+	memset(p, 0, sizeof(ZResDB));
+	p->type = ZRESDBT_URL;
+	rb_insert(Zui_Hash(L"url"), p, Global_ResDB->resdb);
+	p = (ZuiResDB)malloc(sizeof(ZResDB));
+	memset(p, 0, sizeof(ZResDB));
+	p->type = ZRESDBT_PE;
+	rb_insert(Zui_Hash(L"pe"), p, Global_ResDB->resdb);
 	return TRUE;
 }
 ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromBuf(ZuiAny data, ZuiInt len, ZuiText Pass)
