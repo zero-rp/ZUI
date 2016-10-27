@@ -4,3 +4,5 @@
 https://zero-ui.github.io/ZUI/
 # 论坛地址
 http://zerotoken.com/
+# QQ群
+325903849
