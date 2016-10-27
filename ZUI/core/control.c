@@ -466,6 +466,21 @@ ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, 
 	}
 	return NULL;
 }
+
+ZEXPORT ZuiAny ZCALL ZuiControlNotify(ZuiText msg, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+	if (p->m_pNotify)
+	{
+		return p->m_pNotify(msg, p, p->m_sUserData, Param1, Param2, Param3);
+	}
+	return NULL;
+}
+
+ZEXPORT ZuiVoid ZCALL ZuiControlRegNotify(ZuiControl p, ZNotifyProc pNotify) {
+	if (p)
+	{
+		p->m_pNotify = pNotify;
+	}
+}
 //-------------------------------------------------------------------------------------------------
 
 ZEXPORT ZuiControl ZCALL ZuiControlFindName(ZuiControl p, ZuiText Name) {

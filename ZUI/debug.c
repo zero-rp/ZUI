@@ -1,6 +1,11 @@
 ﻿ #include <stdio.h>
 #include <ZUI.h>
 
+ZuiAny ZCALL Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+
+	printf("%ls,%ls\r\n", p->m_sName, msg);
+	return 0;
+}
 
  __declspec(dllexport) void __stdcall DLLDebug(){
 
@@ -28,7 +33,11 @@
 	ZuiControl win = ZuiLayoutLoad(p,flen);
 
 	ZuiControl clos = ZuiControlFindName(win, L"clos");
-
+	ZuiControlRegNotify(clos, Notify_ctl);
+	ZuiControl min = ZuiControlFindName(win, L"min");
+	ZuiControlRegNotify(min, Notify_ctl);
+	ZuiControl max = ZuiControlFindName(win, L"max");
+	ZuiControlRegNotify(max, Notify_ctl);
 	//ZuiControl pRoot = NewZuiControl(L"window", NULL, NULL, NULL);
 	////-------------------------------------------------------------------------
 	//ZuiControl tabhead = NewZuiControl(L"HorizontalLayout", NULL, NULL, NULL);

@@ -19,7 +19,8 @@
 typedef struct _ZControl *ZuiControl, ZControl;
 
 typedef ZuiControl(ZCALL* FINDCONTROLPROC)(ZuiControl, LPVOID);
-typedef ZuiAny (ZCALL *ZCtlProc)(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+typedef ZuiAny(ZCALL *ZCtlProc)(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 
 #define ZTYLE_BOX				1	//单线边框
 #define ZTYLE_BKGColor			2	//具有背景色
@@ -84,6 +85,8 @@ typedef struct _ZControl
 {
 	//消息处理函数指针
 	ZCtlProc call;
+	//通知接口地址
+	ZNotifyProc m_pNotify;
 
 	ZuiPaintManager m_pManager;		//关联的管理器
 	struct _ZControl* m_pParent;	//父控件
@@ -131,6 +134,11 @@ void FreeCControlUI(ZuiControl p);
 
 //调用控件处理函数
 ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+//发送用户通知
+ZEXPORT ZuiAny ZCALL ZuiControlNotify(ZuiText msg, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+//注册通知函数
+ZEXPORT ZuiVoid ZCALL ZuiControlRegNotify(ZuiControl p, ZNotifyProc pNotify);
+
 
 ZEXPORT ZuiControl ZCALL ZuiControlFindName(ZuiControl p, ZuiText Name);
 

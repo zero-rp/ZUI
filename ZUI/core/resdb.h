@@ -30,6 +30,7 @@ typedef enum ZRESDBT
 	ZRESDBT_ZIP_STREAM,		///压缩文件,来着字节流
 	ZRESDBT_FILE,			///文件
 	ZRESDBT_STREAM,			///字节流
+	ZRESDBT_URL,			///网络资源
 };
 
 #define ZRDB_TYPE_FILE		1

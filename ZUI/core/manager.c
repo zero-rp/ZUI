@@ -583,9 +583,9 @@ ZuiControl CALLBACK __FindControlsFromUpdate(ZuiControl pThis, LPVOID pData)
 
 ZuiControl CALLBACK __FindControlFromName(ZuiControl pThis, LPVOID pData)
 {
-	char* pstrName = (char *)(pData);
+	wchar_t* pstrName = (wchar_t *)(pData);
 	if (!pThis->m_sName) return NULL;
-	return (_stricmp(pThis->m_sName, pstrName) == 0) ? pThis : NULL;
+	return (wcscmp(pThis->m_sName, pstrName) == 0) ? pThis : NULL;
 }
 
 //消息处理函数
@@ -1027,7 +1027,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 							ZuiControlEvent(pControl, &event);
 	}
 		break;
-	case WM_LBUTTONDBLCLK://鼠标左键单击
+	case WM_LBUTTONDBLCLK://鼠标左键双击
 	{
 							  SetFocus(p->m_hWndPaint);
 							  POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
@@ -1060,13 +1060,6 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 						  event.ptMouse = pt;
 						  event.wKeyState = (WORD)wParam;
 						  event.dwTimestamp = GetTickCount();
-						  // By daviyang35 at 2015-6-5 16:10:13
-						  // 在Click事件中弹出了模态对话框，退出阶段窗口实例可能已经删除
-						  // this成员属性赋值将会导致heap错误
-						  // this成员函数调用将会导致野指针异常
-						  // 使用栈上的成员来调用响应，提前清空成员
-						  // 当阻塞的模态窗口返回时，回栈阶段不访问任何类实例方法或属性
-						  // 将不会触发异常
 						  ZuiControl pClick = p->m_pEventClick;
 						  p->m_pEventClick = NULL;
 						  ZuiControlEvent(pClick, &event);
