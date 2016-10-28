@@ -64,7 +64,18 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
 		//return 0;
 		break;
 	}
+	case Proc_Option_SetSelected: {
+		if (p->m_bSelected == Param1) return;
+		p->m_bSelected = Param1;
+
+
+		break;
+	}
 	case Proc_SetAttribute: {
+		if (_tcscmp(Param1, _T("selected")) == 0) ZuiControlCall(Proc_Option_SetSelected, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
+		else if (_tcscmp(Param1, _T("selectedimage")) == 0) ZuiControlCall(Proc_Button_SetResNormal, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+		else if (_tcscmp(Param1, _T("selectedhotimage")) == 0) ZuiControlCall(Proc_Button_SetResNormal, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+		else if (_tcscmp(Param1, _T("selectedpushedimage")) == 0) ZuiControlCall(Proc_Button_SetResNormal, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
 		break;
 	}
 	case Proc_OnInit:{

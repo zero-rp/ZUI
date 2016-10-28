@@ -14,9 +14,16 @@
 #ifndef __OPTION_H__
 #define __OPTION_H__
 
+#define	Proc_Option_SetSelected		1001	//
+
 /**按钮控件结构*/
 typedef struct _ZOption
 {
+	ZuiBool m_bSelected;//是否选择
+	//控件继承自按钮控件
+	ZuiRes		m_ResSelected;			//选中的普通状态
+	ZuiRes		m_ResSelectedHot;		//选中的点燃状态
+	ZuiRes		m_ResSelectedPushed;	//选中的按下状态
 
 	ZCtlProc old_call;
 }*ZuiOption, ZOption;

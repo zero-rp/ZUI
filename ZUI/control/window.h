@@ -14,7 +14,13 @@
 #ifndef __UIWINDOW_H__
 #define __UIWINDOW_H__
 
-#define	Proc_Window_SetNoBox	1001	//设置为无边框窗体
+#define	Proc_Window_SetNoBox		1001	//设置为无边框窗体
+#define	Proc_Window_SetWindowMin	1002	//
+#define	Proc_Window_SetWindowMax	1003
+#define	Proc_Window_SetWindowRestor	1004
+#define	Proc_Window_SetMinInfo		1005
+#define	Proc_Window_SetMaxInfo		1006
+#define	Proc_Window_SetSize			1007
 /**窗口控件结构*/
 typedef struct _ZWindow
 {

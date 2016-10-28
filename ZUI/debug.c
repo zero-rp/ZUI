@@ -1,8 +1,14 @@
 ﻿ #include <stdio.h>
 #include <ZUI.h>
+ZuiControl win;
 
 ZuiAny ZCALL Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
-
+	if (wcscmp(p->m_sName, L"clos") == 0) {
+		ZuiMsgLoop_exit();
+		exit(0);
+	}else if (wcscmp(p->m_sName, L"min") == 0) {
+		ZuiControlCall(Proc_Window_SetWindowMin, win, NULL, NULL, NULL);
+	}
 	printf("%ls,%ls\r\n", p->m_sName, msg);
 	return 0;
 }
@@ -30,7 +36,7 @@ ZuiAny ZCALL Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param
 	fclose(fp);
 	
 	
-	ZuiControl win = ZuiLayoutLoad(p,flen);
+	win = ZuiLayoutLoad(p,flen);
 
 	ZuiControl clos = ZuiControlFindName(win, L"clos");
 	ZuiControlRegNotify(clos, Notify_ctl);

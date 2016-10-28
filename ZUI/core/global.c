@@ -1,11 +1,12 @@
 ﻿#include <ZUI.h>
 
 
-ZuiImage Global_Res_Ctl[4][3];	//窗口控制按钮资源
+ZuiImage Global_Res_Ctl[4][3];			//窗口控制按钮资源
 ZuiStringFormat Global_StringFormat;	//默认字体风格
-HINSTANCE m_hInstance = NULL;	//模块句柄
-DArray *m_aPreMessages;	//所有ZuiPaintManager实例数组
-
+HINSTANCE m_hInstance = NULL;			//模块句柄
+DArray *m_aPreMessages;					//所有ZuiPaintManager实例数组
+ZuiReal	Global_DPI_X = 0;				//DPI
+ZuiReal	Global_DPI_Y = 0;				//DPI
 ZuiBool ZuiGlobalInit(){
 
 

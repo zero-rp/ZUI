@@ -21,11 +21,11 @@
 /**按钮控件结构*/
 typedef struct _ZButton
 {
-	ZuiRes m_ResNormal;	//正常状态
+	ZuiRes m_ResNormal;		//正常状态
 	ZuiRes m_ResHot;		//高亮状态
-	ZuiRes m_ResPushed;	//按下状态
+	ZuiRes m_ResPushed;		//按下状态
 	ZuiRes m_ResFocused;	//焦点图片
-	ZuiRes m_ResDisabled;//非激活状态
+	ZuiRes m_ResDisabled;	//非激活状态
 
 	int type;
 	ZCtlProc old_call;

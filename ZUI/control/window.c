@@ -27,9 +27,6 @@ LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			if (uMsg == WM_CREATE) {
 
 			}
-			else if (uMsg == WM_DESTROY) {
-				PostQuitMessage(0L);
-			}
 			else if (uMsg == WM_NCHITTEST)
 			{
 				if (pThis->m_nobox)
@@ -138,10 +135,6 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 		return p;
 	}
 						break;
-	case Proc_OnPaint: {
-
-	}
-					   break;
 	case Proc_SetBorderColor: {
 		((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.left = 1;
 		((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.bottom = 1;
@@ -153,6 +146,32 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 		OutputDebugString(L"a");
 	}
 					  break;
+	case Proc_Window_SetWindowMin: {
+		ShowWindow(p->m_hWnd, SW_MINIMIZE);
+		break;
+	}
+	case Proc_Window_SetWindowMax: {
+		ShowWindow(p->m_hWnd, SW_MAXIMIZE);
+		break;
+	}
+	case Proc_Window_SetWindowRestor: {
+		ShowWindow(p->m_hWnd, SW_RESTORE);
+		break;
+	}
+	case Proc_Window_SetMinInfo: {
+		cp->m_pManager->m_szMinWindow.cx = Param1;
+		cp->m_pManager->m_szMinWindow.cy = Param2;
+		break;
+	}
+	case Proc_Window_SetMaxInfo: {
+		cp->m_pManager->m_szMaxWindow.cx = Param1;
+		cp->m_pManager->m_szMaxWindow.cy = Param2;
+		break;
+	}
+	case Proc_Window_SetSize: {
+		SetWindowPos(p->m_hWnd, NULL, 0, 0, Param1, Param2, SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
+		break;
+	}
 	case Proc_Window_SetNoBox: {
 		if (p->m_nobox == Param1)
 			break;
@@ -176,6 +195,24 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 							   break;
 	case Proc_SetAttribute: {
 		if (wcscmp(Param1, L"nobox") == 0) ZuiControlCall(Proc_Window_SetNoBox, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
+		else if (wcscmp(Param1, L"mininfo") == 0) {
+			LPTSTR pstr = NULL;
+			int cx = wcstol(Param2, &pstr, 10);  ASSERT(pstr);
+			int cy = wcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+			ZuiControlCall(Proc_Window_SetMinInfo, cp, cx, cy, NULL);
+		}
+		else if (wcscmp(Param1, L"maxinfo") == 0){
+			LPTSTR pstr = NULL;
+			int cx = wcstol(Param2, &pstr, 10);  ASSERT(pstr);
+			int cy = wcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+			ZuiControlCall(Proc_Window_SetMaxInfo, cp, cx, cy, NULL);
+		}
+		else if (wcscmp(Param1, L"size") == 0) {
+			LPTSTR pstr = NULL;
+			int cx = wcstol(Param2, &pstr, 10);  ASSERT(pstr);
+			int cy = wcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+			ZuiControlCall(Proc_Window_SetSize, cp, cx, cy, NULL);
+		}
 	}
 					  break;
 	case Proc_OnInit: {

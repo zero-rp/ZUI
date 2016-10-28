@@ -74,6 +74,31 @@ HPEN m_hUpdateRectPen = NULL;
 ZuiBool ZuiPaintManagerInitialize() {
 	m_aPreMessages = darray_create();
 	m_hInstance = (HINSTANCE)GetModuleHandleA(NULL);
+	//初始化DPI
+
+	static int dpi_x = 0;
+	static int dpi_y = 0;
+	static bool should_initialize = true;
+
+	FARPROC pSetProcessDpiAwareness = GetProcAddress(LoadLibrary(L"SHCORE.DLL"), "SetProcessDpiAwareness");
+	if (pSetProcessDpiAwareness)
+		pSetProcessDpiAwareness(2);//自己实现DPI缩放
+	if (should_initialize) {
+		should_initialize = false;
+		HDC screen_dc = GetDC(NULL);
+		if (NULL != screen_dc) {
+			dpi_x = GetDeviceCaps(screen_dc, LOGPIXELSX);
+			dpi_y = GetDeviceCaps(screen_dc, LOGPIXELSY);
+			ReleaseDC(NULL, screen_dc);
+		}
+		else {
+			dpi_x = 120;
+			dpi_y = 120;
+		}
+	}
+	Global_DPI_X = dpi_x / 96;
+	Global_DPI_Y = dpi_y / 96;
+
 	return TRUE;
 }
 
