@@ -1,4 +1,4 @@
-#include <stdio.h>
+ï»¿#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -51,8 +51,8 @@ typedef struct
 
 typedef struct
 {
-	zlib_filefunc64_def z_filefunc;/*ioº¯Êı*/
-    voidpf filestream;        /* ioÁ÷¾ä±ú */
+	zlib_filefunc64_def z_filefunc;/*ioå‡½æ•°*/
+    voidpf filestream;        /* ioæµå¥æŸ„ */
     unz_global_info64 gi;       /* public global information */
     ZPOS64_T byte_before_the_zipfile;/* byte before the zipfile, (>0 for sfx)*/
     ZPOS64_T num_file;             /* number of the current file in the zipfile*/
@@ -81,15 +81,15 @@ typedef struct
 static voidpf ZCALLBACK fopen64_file_func(const void* filename, int mode)
 {
 	FILE* file = NULL;
-	const char* mode_fopen = NULL;
+	const wchar_t* mode_fopen = NULL;
 	if ((mode & ZLIB_FILEFUNC_MODE_READWRITEFILTER) == ZLIB_FILEFUNC_MODE_READ)
-		mode_fopen = "rb";
+		mode_fopen = L"rb";
 	else
 		if (mode & ZLIB_FILEFUNC_MODE_EXISTING)
-			mode_fopen = "r+b";
+			mode_fopen = L"r+b";
 		else
 			if (mode & ZLIB_FILEFUNC_MODE_CREATE)
-				mode_fopen = "wb";
+				mode_fopen = L"wb";
 
 	if ((filename != NULL) && (mode_fopen != NULL))
 		file = fopen64((const char*)filename, mode_fopen);
@@ -148,7 +148,7 @@ static int ZCALLBACK ferror_file_func(voidpf stream)
 	ret = ferror((FILE *)stream);
 	return ret;
 }
-//--------------------------ÄÚ´æÁ÷
+//--------------------------å†…å­˜æµ
 typedef struct
 {
 	char *buff;
@@ -173,20 +173,20 @@ static ZPOS64_T ZCALLBACK ftell64_stream_func(unz64_stream *stream)
 
 static long ZCALLBACK fseek64_stream_func(unz64_stream *stream, ZPOS64_T offset, int origin)
 {
-	//³É¹¦·µ»Ø0 Ê§°Ü·µ»Ø-1
+	//æˆåŠŸè¿”å›0 å¤±è´¥è¿”å›-1
 	switch (origin)
 	{
-	case ZLIB_FILEFUNC_SEEK_CUR://µ±Ç°Î»ÖÃ
+	case ZLIB_FILEFUNC_SEEK_CUR://å½“å‰ä½ç½®
 		if (stream->p + offset > stream->len || stream->p + offset<0)
 			return -1;
 		stream->p += offset;
 		break;
-	case ZLIB_FILEFUNC_SEEK_END://ÎÄ¼şÎ²
+	case ZLIB_FILEFUNC_SEEK_END://æ–‡ä»¶å°¾
 		if (stream->len - offset > stream->len || stream->len - offset < 0)
 			return -1;
 		stream->p = stream->len - offset;
 		break;
-	case ZLIB_FILEFUNC_SEEK_SET://ÎÄ¼şÍ·
+	case ZLIB_FILEFUNC_SEEK_SET://æ–‡ä»¶å¤´
 		if (offset > stream->len || offset < 0)
 			return -1;
 		stream->p = offset;
@@ -198,6 +198,7 @@ static long ZCALLBACK fseek64_stream_func(unz64_stream *stream, ZPOS64_T offset,
 
 static int ZCALLBACK fclose_stream_func(unz64_stream *stream)
 {
+	free(stream->buff);
 	return 0;
 }
 
@@ -548,11 +549,11 @@ ZPOS64_T unz64local_SearchCentralDir64(const zlib_filefunc64_def* pzlib_filefunc
 	return relativeOffset;
 }
 /*
-* ´ò¿ªÑ¹ËõÎÄ¼ş
-* ²ÎÊıÒ»Â·¾¶
-* ²ÎÊı¶şÄÚ´æÁ÷
+* æ‰“å¼€å‹ç¼©æ–‡ä»¶
+* å‚æ•°ä¸€è·¯å¾„
+* å‚æ•°äºŒå†…å­˜æµ
 */
-unzFile unzOpen(const void *path, void *buff, int len)
+unzFile unzOpen(const wchar_t *path, void *buff, int len)
 {
 	unz64_s us;
 	unz64_s *s;
@@ -578,7 +579,7 @@ unzFile unzOpen(const void *path, void *buff, int len)
 		us.z_filefunc.zclose_file = fclose_file_func;
 		us.z_filefunc.zerror_file = ferror_file_func;
 
-		/*´ò¿ªÎÄ¼ş*/
+		/*æ‰“å¼€æ–‡ä»¶*/
 		us.filestream = ZOPEN64(us.z_filefunc, path, ZLIB_FILEFUNC_MODE_READ | ZLIB_FILEFUNC_MODE_EXISTING);
 		if (us.filestream == NULL)
 			return NULL;

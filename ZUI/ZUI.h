@@ -138,7 +138,7 @@ typedef struct _ZPointR
 #include "Core/string.h"
 #include "Core/function.h"
 #include "Core/tree.h"
-#include "Core/unzip.h"
+#include "zlib/unzip.h"
 #include "Core/mxml.h"
 #include "Core/gdi.h"
 #include "Core/resdb.h"

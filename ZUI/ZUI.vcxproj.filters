@@ -57,9 +57,6 @@
     <ClCompile Include="zlib\inftrees.c">
       <Filter>源文件\zlib</Filter>
     </ClCompile>
-    <ClCompile Include="zlib\unzip.c">
-      <Filter>源文件\zlib</Filter>
-    </ClCompile>
     <ClCompile Include="zlib\zutil.c">
       <Filter>源文件\zlib</Filter>
     </ClCompile>
@@ -73,9 +70,6 @@
       <Filter>源文件\core</Filter>
     </ClCompile>
     <ClCompile Include="core\mxml.c">
-      <Filter>源文件\core</Filter>
-    </ClCompile>
-    <ClCompile Include="core\unzip.c">
       <Filter>源文件\core</Filter>
     </ClCompile>
     <ClCompile Include="control\Register.c">
@@ -132,6 +126,9 @@
     <ClCompile Include="control\Edit.c">
       <Filter>源文件\control</Filter>
     </ClCompile>
+    <ClCompile Include="zlib\unzip.c">
+      <Filter>源文件\zlib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZUI.h">
@@ -150,9 +147,6 @@
       <Filter>头文件\zlib</Filter>
     </ClInclude>
     <ClInclude Include="zlib\inftrees.h">
-      <Filter>头文件\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="zlib\unzip.h">
       <Filter>头文件\zlib</Filter>
     </ClInclude>
     <ClInclude Include="zlib\zconf.h">
@@ -174,9 +168,6 @@
       <Filter>头文件\core</Filter>
     </ClInclude>
     <ClInclude Include="core\mxml.h">
-      <Filter>头文件\core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\unzip.h">
       <Filter>头文件\core</Filter>
     </ClInclude>
     <ClInclude Include="control\Register.h">
@@ -232,6 +223,9 @@
     </ClInclude>
     <ClInclude Include="control\Option.h">
       <Filter>头文件\control</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\unzip.h">
+      <Filter>头文件\zlib</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-#ifndef _unz64_H
+ï»¿#ifndef _unz64_H
 #define _unz64_H
 
 #ifdef __cplusplus
@@ -20,7 +20,7 @@ typedef voidp unzFile;
 #endif
 
 #ifdef _MSC_VER
-#define fopen64 fopen
+#define fopen64 _wfopen
 #if (_MSC_VER >= 1400) && (!(defined(NO_MSCVER_FILE64_FUNC)))
 #define ftello64 _ftelli64
 #define fseeko64 _fseeki64
@@ -162,29 +162,29 @@ typedef struct zlib_filefunc64_def_s
 #define ZSEEK64(filefunc,filestream,pos,mode)   ((*((filefunc).zseek64_file)) ((filestream),(pos),(mode)))
 
 int unzStringFileNameCompare OF ((const char* fileName1, const char* fileName2, int iCaseSensitivity));
-/*´ò¿ªÑ¹ËõÎÄ¼ş*/
-unzFile unzOpen(const char *path, void *buff, int len);
-/*¹Ø±ÕÑ¹ËõÎÄ¼ş*/
+/*æ‰“å¼€å‹ç¼©æ–‡ä»¶*/
+unzFile unzOpen(const wchar_t *path, void *buff, int len);
+/*å…³é—­å‹ç¼©æ–‡ä»¶*/
 int unzClose(unzFile file);
-/*È¡È«¾ÖĞÅÏ¢*/
+/*å–å…¨å±€ä¿¡æ¯*/
 int unzGetGlobalInfo64(unzFile file, unz_global_info64 *pglobal_info);
-/*È¡×¢ÊÍ*/
+/*å–æ³¨é‡Š*/
 int unzGetGlobalComment(unzFile file, char * szComment, uLong uSizeBuf);
-/*µ½µÚÒ»¸öÎÄ¼ş*/
+/*åˆ°ç¬¬ä¸€ä¸ªæ–‡ä»¶*/
 int unzGoToFirstFile(unzFile file);
-/*µ½ÏÂÒ»¸öÎÄ¼ş*/
+/*åˆ°ä¸‹ä¸€ä¸ªæ–‡ä»¶*/
 int unzGoToNextFile(unzFile file);
-/*¶¨Î»ÎÄ¼ş*/
+/*å®šä½æ–‡ä»¶*/
 int unzLocateFile(unzFile file, const char *szFileName, int iCaseSensitivity);
-/*È¡µ±Ç°ÎÄ¼şĞÅÏ¢*/
+/*å–å½“å‰æ–‡ä»¶ä¿¡æ¯*/
 int unzGetCurrentFileInfo64(unzFile file, unz_file_info64 *pfile_info, char *szFileName, uLong fileNameBufferSize, void *extraField, uLong extraFieldBufferSize, char *szComment, uLong commentBufferSize);
-/*´ò¿ªµ±Ç°ÎÄ¼ş ´øÃÜÂë*/
+/*æ‰“å¼€å½“å‰æ–‡ä»¶ å¸¦å¯†ç */
 int unzOpenCurrentFilePassword(unzFile file, const char* password);
-/*´ò¿ªµ±Ç°ÎÄ¼ş*/
+/*æ‰“å¼€å½“å‰æ–‡ä»¶*/
 int unzOpenCurrentFile3(unzFile file, int* method, int* level, int raw, const char* password);
-/*¹Ø±Õµ±Ç°ÎÄ¼ş*/
+/*å…³é—­å½“å‰æ–‡ä»¶*/
 int unzCloseCurrentFile(unzFile file);
-/*¶Áµ±Ç°ÎÄ¼ş*/
+/*è¯»å½“å‰æ–‡ä»¶*/
 int unzReadCurrentFile(unzFile file, voidp buf, unsigned len);
 
 #ifdef __cplusplus
