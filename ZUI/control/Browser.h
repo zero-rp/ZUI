@@ -17,7 +17,7 @@
 
 #define	Proc_Browser_LoadUrl	1001
 #define	Proc_Browser_LoadHtml	1002
-
+#define	Proc_Browser_GetView	1003
 /**游览器控件结构*/
 typedef struct _ZuiBrowser
 {

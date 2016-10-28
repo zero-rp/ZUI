@@ -90,13 +90,13 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 							  break;
 	}
 	case Proc_SetText:{
+		ZuiControlInvalidate(p);
 		if(!p->m_sText)
 			p->m_sText = _wcsdup((ZuiText)Param1);
 		if (wcscmp(p->m_sText, (ZuiText)Param1) == 0)
 			return 0;
 		free(p->m_sText);
 		p->m_sText = _wcsdup((ZuiText)Param1);
-		ZuiControlInvalidate(p);
 		break;
 	}
 	case Proc_SetName: {

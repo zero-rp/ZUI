@@ -15,7 +15,7 @@
 #define __TABLAYOUT_H__
 
 
-#define	Proc_Layout_Tab_SelectItem			1001	//添加控件
+#define	Proc_Layout_Tab_SelectItem			1001	//当前Tab
 
 
 /**选择夹布局结构*/

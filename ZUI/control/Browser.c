@@ -4,9 +4,28 @@ void _staticOnPaintUpdated(wkeWebView webView, void* param, const HDC hdc, int x
 {
 	ZuiBrowser pthis = (ZuiBrowser)param;
 	pthis->init = TRUE;
-	ZuiControlInvalidate(pthis->cp);
+	if (pthis->cp->m_bVisible)
+	{
+		ZuiControlInvalidate(pthis->cp);
+	}
+}
+// 回调：页面标题改变
+void _staticOnTitleChanged(wkeWebView webWindow, void* param, const wkeString title)
+{
+	//wkeSetWindowTitleW(webWindow, wkeGetStringW(title));
+	ZuiControlNotify(L"titlechanged", ((ZuiBrowser)param)->cp, wkeGetStringW(title), NULL, NULL);
 }
 
+// 回调：创建新的页面，比如说调用了 window.open 或者点击了 <a target="_blank" .../>
+wkeWebView _staticOnCreateView(wkeWebView webWindow, void* param, wkeNavigationType navType, const wkeString url, const wkeWindowFeatures* features)
+{
+	//wkeWebView newWindow = wkeCreateWebWindow(WKE_WINDOW_TYPE_POPUP, NULL, features->x, features->y, features->width, features->height);
+	//wkeShowWindow(newWindow, true);
+	ZuiBrowser bro = ZuiControlNotify(L"newwindow", ((ZuiBrowser)param)->cp, (void *)navType, wkeGetStringW(url), features);
+	if (bro)
+		return ZuiControlCall(Proc_Browser_GetView, bro, NULL, NULL, NULL);
+	return 0;
+}
 ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 	switch (ProcId)
 	{
@@ -22,7 +41,9 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
 		p->old_call = cp->call;
 		p->cp = cp;
 		p->view = wkeCreateWebView();
-		wkeOnPaintUpdated(p->view, _staticOnPaintUpdated, p);		
+		wkeOnPaintUpdated(p->view, _staticOnPaintUpdated, p);//界面刷新
+		wkeOnTitleChanged(p->view, _staticOnTitleChanged, p);
+		wkeOnCreateView(p->view, _staticOnCreateView, p);
 		return p;
 	}
 		break;
@@ -182,6 +203,10 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
 	case Proc_Browser_LoadHtml: {
 		wkeLoadHTMLW(p->view, ((ZuiRes)Param1)->p);
 		ZuiResDBDelRes((ZuiRes)Param1);
+		break;
+	}
+	case Proc_Browser_GetView: {
+		return p->view;
 		break;
 	}
 	case Proc_SetAttribute: {

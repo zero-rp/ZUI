@@ -31,7 +31,7 @@ typedef struct _ZWindow
 	ZuiControl root;
 	ZuiPaintManager m_pm;
 	ZCtlProc old_call;
-	void *old_udata;
+	ZuiAny old_udata;
 }*ZuiWindow, ZWindow;
 ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 
