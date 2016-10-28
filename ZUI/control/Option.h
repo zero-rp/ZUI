@@ -19,10 +19,12 @@
 #define	Proc_Option_SetResSelected			1033			//选中的普通状态
 #define	Proc_Option_SetResSelectedHot		1034		//选中的点燃状态
 #define	Proc_Option_SetResSelectedPushed	1035	//选中的按下状态
+#define	Proc_Option_SetGroup				1036
 /**按钮控件结构*/
 typedef struct _ZOption
 {
 	ZuiBool m_bSelected;//是否选择
+	ZuiBool m_bGroup;	//
 	//控件继承自按钮控件
 	ZuiRes		m_ResSelected;			//选中的普通状态
 	ZuiRes		m_ResSelectedHot;		//选中的点燃状态

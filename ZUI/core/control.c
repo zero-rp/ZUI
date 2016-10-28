@@ -460,6 +460,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 
 //调用控件函数
 ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+	if(!p)
+		return NULL;
 	if (p->call)
 	{
 		return p->call(ProcId, p, p->m_sUserData, Param1, Param2, Param3);

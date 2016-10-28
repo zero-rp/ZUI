@@ -5,7 +5,21 @@ ZuiControl BrowserTab;
 ZuiControl BrowserTabHead;
 ZuiControl AddBrowserTab(ZuiText url);
 
-
+//重载HorizontalLayout实现定制化效果---------------------------------------------
+ZEXPORT ZuiAny ZCALL ZuiHorizontalLayoutProcEx(ZuiInt ProcId, ZuiControl cp, ZuiOption p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+	switch (ProcId)
+	{
+	case Proc_OnPaint: {
+		ZuiGraphics gp = (ZuiGraphics)Param1;
+		RECT *rc = &cp->m_rcItem;
+		ZuiDrawLine(gp, ARGB(255, 50, 255, 0), rc->left, rc->bottom-1, rc->right, rc->bottom-1, 1);
+		break;
+	}
+	default:
+		break;
+	}
+	return ZuiHorizontalLayoutProc(ProcId, cp, p, Param1, Param2, Param3);
+}
 //重载option实现定制化效果---------------------------------------------
 ZEXPORT ZuiAny ZCALL ZuiOptionProcEx(ZuiInt ProcId, ZuiControl cp, ZuiOption p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 	switch (ProcId)
@@ -13,45 +27,68 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProcEx(ZuiInt ProcId, ZuiControl cp, ZuiOption p, 
 	case Proc_OnPaint: {
 		ZuiGraphics gp = (ZuiGraphics)Param1;
 		RECT *rc = &cp->m_rcItem;
-		if (p->m_bSelected) {
-			ZuiImage img;
+		if (p->m_bSelected) {//选中
+			ZuiDrawFillRect(gp, ARGB(255, 255, 255, 255), rc->left + 1, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top);
+			 //画激活边线
+			ZuiDrawLine(gp, ARGB(255, 50, 255, 0), rc->left, rc->top, rc->left, rc->bottom - 1, 1);
+			ZuiDrawLine(gp, ARGB(255, 50, 255, 0), rc->right-1, rc->top, rc->right-1, rc->bottom - 1, 1);
+
+		}
+		else {//非选中项
 			if (((ZuiButton)p->old_udata)->type == 0) {
-				if (p->m_ResSelected) {
-					img = p->m_ResSelected->p;
-					ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
-				}
-				else {
-					ZuiDrawFillRect(gp, ARGB(200, 0, 3, 255), rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1);
-				}
+				ZuiDrawFillRect(gp, ARGB(255, 255, 255, 255), rc->left, rc->top + 3, rc->right - rc->left, rc->bottom - rc->top - 4);
 			}
 			else if (((ZuiButton)p->old_udata)->type == 1) {
-				if (p->m_ResSelectedHot) {
-					img = p->m_ResSelectedHot->p;
-					ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
-				}
-				else {
-					ZuiDrawFillRect(gp, ARGB(200, 0, 255, 255), rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1);
-				}
+				ZuiDrawFillRect(gp, ARGB(255, 0, 255, 255), rc->left, rc->top + 3, rc->right - rc->left, rc->bottom - rc->top - 4);
 			}
 			else if (((ZuiButton)p->old_udata)->type == 2) {
-				if (p->m_ResSelectedPushed) {
-					img = p->m_ResSelectedPushed->p;
-					ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
-				}
-				else {
-					ZuiDrawFillRect(gp, ARGB(200, 255, 255, 255), rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1);
-				}
+				ZuiDrawFillRect(gp, ARGB(255, 255, 255, 255), rc->left, rc->top + 3, rc->right - rc->left, rc->bottom - rc->top - 4);
 			}
-			return 0;//选择状态下不由按钮控件绘制
+
+			int index = ZuiControlCall(Proc_Layout_GetItemIndex, cp->m_pParent, cp, NULL, NULL);
+			ZuiControl pControl = ZuiControlCall(Proc_Layout_GetItemAt, cp->m_pParent, index + 1, NULL, NULL);
+			if(!pControl)
+				ZuiDrawLine(gp, ARGB(255, 50, 255, 0), rc->right - 1, rc->top + 3, rc->right - 1, rc->bottom - 1, 1);//右边
+			pControl = ZuiControlCall(Proc_Layout_GetItemAt, cp->m_pParent, index - 1, NULL, NULL);
+			if(!ZuiControlCall(Proc_Option_GetSelected, pControl, NULL, NULL, NULL) || !index)
+				ZuiDrawLine(gp, ARGB(255, 50, 255, 0), rc->left, rc->top + 3, rc->left, rc->bottom, 1);//左边
+
+
+			  
+			ZuiDrawLine(gp, ARGB(255, 50, 255, 0), rc->left, rc->top+3, rc->right, rc->top + 3, 1);
 		}
+		//画文本
+		ZRect r;
+		MAKEZRECT(r, rc->left + 5, rc->top + 5, rc->right - rc->left - 10, rc->bottom - rc->top - 10);
+		ZuiDrawString(gp, Global_StringFormat, cp->m_sText, &r);
+		return 0;//重载全部默认绘制
 		break;
+	}
+	case Proc_Option_SetSelected: {
+		if (!Param1)
+		{
+			ZuiBool noret=FALSE;
+			for (size_t i = 0; i < ZuiControlCall(Proc_Layout_GetCount, cp->m_pParent, NULL, NULL, NULL); i++)
+			{
+				ZuiControl pControl;
+				if ((pControl = ZuiControlCall(Proc_Layout_GetItemAt, cp->m_pParent, i, NULL, NULL)) != cp)
+				{
+					if (ZuiControlCall(Proc_Option_GetSelected, pControl, NULL, NULL, NULL))
+					{
+						noret = TRUE;
+					}
+				}
+
+			}
+			if (!noret)
+				return;
+		}
 	}
 	default:
 		break;
 	}
 	return ZuiOptionProc(ProcId, cp, p, Param1, Param2, Param3);
 }
-
 //---------------------------------------------
 
 ZuiAny ZCALL Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
@@ -82,7 +119,7 @@ ZuiAny ZCALL Notify_browser(ZuiText msg, ZuiControl cp, ZuiBrowser p, ZuiAny Par
 	return 0;
 }
 ZuiAny ZCALL Notify_tabhead(ZuiText msg, ZuiControl cp, ZuiOption p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
-	if (wcscmp(msg, L"selectchanged") == 0) {
+	if (wcscmp(msg, L"selectchanged") == 0 && Param1) {
 		int index = ZuiControlCall(Proc_Layout_GetItemIndex, BrowserTabHead, cp, NULL, NULL);
 		ZuiControlCall(Proc_Layout_Tab_SelectItem, BrowserTab, index, NULL, NULL);
 	}
@@ -91,10 +128,12 @@ ZuiAny ZCALL Notify_tabhead(ZuiText msg, ZuiControl cp, ZuiOption p, ZuiAny Para
 ZuiControl AddBrowserTab(ZuiText url) {
 	ZuiControl TabHead = NewZuiControl(L"Option", NULL, NULL, NULL);
 	ZuiControlCall(Proc_SetMinWidth, TabHead, 60, NULL, NULL);
-	ZuiControlCall(Proc_SetMaxWidth, TabHead, 100, NULL, NULL);
+	ZuiControlCall(Proc_SetMaxWidth, TabHead, 130, NULL, NULL);
+	ZuiControlCall(Proc_Option_SetGroup, TabHead, TRUE, NULL, NULL);
 	ZuiControlRegNotify(TabHead, Notify_tabhead);
 	TabHead->call = ZuiOptionProcEx;
 	ZuiControlCall(Proc_Layout_Add, BrowserTabHead, TabHead, NULL, NULL);
+	ZuiControlCall(Proc_Option_SetSelected, TabHead, TRUE, NULL, NULL);
 
 	ZuiControl Browser = NewZuiControl(L"Browser", NULL, NULL, NULL);
 	ZuiControlCall(Proc_Browser_LoadUrl, Browser, url, NULL, NULL);
@@ -142,7 +181,11 @@ ZuiControl AddBrowserTab(ZuiText url) {
 
 	BrowserTab = ZuiControlFindName(win, L"BrowserTab");
 	BrowserTabHead = ZuiControlFindName(win, L"BrowserTabHead");
+	ZuiControlFindName(win, L"head")->call = ZuiHorizontalLayoutProcEx;
 	//添加默认页面
+	AddBrowserTab(L"http://www.baidu.com/");
+	AddBrowserTab(L"http://www.baidu.com/");
+	AddBrowserTab(L"http://www.baidu.com/");
 	AddBrowserTab(L"http://www.baidu.com/");
 
 	//ZuiControl pRoot = NewZuiControl(L"window", NULL, NULL, NULL);
