@@ -1,6 +1,6 @@
 ﻿#include <ZUI.h>
-
-
+#include <wininet.h>
+#pragma comment(lib, "wininet.lib") 
 
 ZuiResDBPool Global_ResDB;					//全局资源包
 ZuiBool ZuiResDBInit() {
@@ -40,7 +40,15 @@ ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromBuf(ZuiAny data, ZuiInt len, ZuiText Pa
 		}
 		p->uf = unzOpen(0, data, len);
 		if (p->uf) {
-			p->type = ZRDB_TYPE_FILE;
+			char name[255];
+			p->type = ZRESDBT_ZIP_STREAM;
+			unzGetGlobalComment(p->uf, &name, 255);
+			int bufsize = ZuiAsciiToUnicode(&name, -1, 0, 0)*sizeof(wchar_t);
+			wchar_t *txtbuf = malloc(bufsize);
+			bufsize = ZuiAsciiToUnicode(&name, bufsize / sizeof(wchar_t), txtbuf, bufsize);
+			//添加到资源池
+			rb_insert(Zui_Hash(txtbuf), p, Global_ResDB->resdb);
+			free(txtbuf);
 			return p;
 		}
 	}
@@ -60,7 +68,7 @@ ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromFile(ZuiText FileName, ZuiText Pass)
 		p->uf = unzOpen(FileName, 0, 0);
 		if (p->uf) {
 			char name[255];
-			p->type = ZRDB_TYPE_FILE;
+			p->type = ZRESDBT_ZIP_FILE;
 			unzGetGlobalComment(p->uf, &name, 255);
 			int bufsize = ZuiAsciiToUnicode(&name, -1, 0, 0)*sizeof(wchar_t);
 			wchar_t *txtbuf = malloc(bufsize);
@@ -109,9 +117,9 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 		}
 		//找到对应的资源包并提取资源
 		ZuiResDB db = (ZuiResDB)node->data;
-		ZuiAny buf=0;
-		ZuiInt buflen=0;
-		if (db->type == ZRESDBT_ZIP_FILE || db->type == ZRESDBT_ZIP_STREAM)
+		ZuiAny buf = 0;
+		ZuiInt buflen = 0;
+		/*压缩*/if (db->type == ZRESDBT_ZIP_FILE || db->type == ZRESDBT_ZIP_STREAM)
 		{
 			//转换路径编码
 			ZuiInt len = ZuiUnicodeToAscii(pp, -1, 0, 0);
@@ -133,7 +141,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 			}
 			free(n);
 		}
-		else if (db->type == ZRESDBT_FILE) {
+		/*文件*/else if (db->type == ZRESDBT_FILE) {
 			FILE*f = _wfopen(pp, L"rb");
 			fseek(f, 0L, SEEK_END);
 			buflen = ftell(f); /* 得到文件大小 */
@@ -142,8 +150,81 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 			fread(buf, buflen, 1, f); /* 一次性读取全部文件内容 */
 			fclose(f);
 		}
-		else if (db->type == ZRESDBT_STREAM) {
+		/*字节*/else if (db->type == ZRESDBT_STREAM) {
 
+		}
+		/*网络*/else if (db->type == ZRESDBT_URL) {
+			const wchar_t *parseptr1;
+			const wchar_t *parseptr2;
+			wchar_t host[256];
+			wchar_t prot[20];
+			int len;
+			int i;
+			parseptr2 = pp;
+			parseptr1 = wcschr(parseptr2, ':');
+			if (NULL != parseptr1) {
+				len = parseptr1 - parseptr2;
+				for (i = 0; i < len; i++) {
+					if (!iswalpha(parseptr2[i])) {
+						goto url_erro;
+					}
+				}
+				parseptr1++;
+				parseptr2 = parseptr1;
+				for (i = 0; i < 2; i++) {
+					if (L'/' != *parseptr2) {
+						goto url_erro;
+					}
+					parseptr2++;
+				}
+				parseptr1 = wcschr(parseptr2, L':');
+				if (NULL == parseptr1)//判断有无端口号
+				{
+					parseptr1 = wcschr(parseptr2, L'/');
+					if (NULL == parseptr1) {
+						goto url_erro;
+					}
+					len = parseptr1 - parseptr2;
+					//解析主机
+					memcpy(&host, parseptr2, len*sizeof(wchar_t));
+					host[len] = 0;
+				}
+				else {
+					len = parseptr1 - parseptr2;
+					//解析主机
+					memcpy(&host, parseptr2, len*sizeof(wchar_t));
+					host[len] = 0;
+					parseptr1++;
+					parseptr2 = parseptr1;
+					parseptr1 = wcschr(parseptr2, L'/');
+					if (NULL == parseptr1) {
+						goto url_erro;
+					}
+					len = parseptr1 - parseptr2;
+					memcpy(&prot, parseptr2, len*sizeof(wchar_t));
+					prot[len] = 0;
+					//解析端口
+				}
+				HINTERNET hInet = InternetOpen(L"ZuiHttp", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, NULL);
+				if (hInet)
+				{
+					HINTERNET  hConnect = InternetConnect(hInet, host, INTERNET_DEFAULT_HTTPS_PORT, NULL, NULL, INTERNET_SERVICE_HTTP, 0, NULL);
+					if (hConnect)
+					{
+						HINTERNET hOpenRequest = HttpOpenRequestW(hConnect, L"GET", parseptr1, HTTP_VERSION, "",NULL, INTERNET_FLAG_SECURE, 0); //创建http请求
+						BOOL bRequest = HttpSendRequestA(hOpenRequest, NULL, 0, NULL, 0); //发送http请求
+						len = 20;
+						HttpQueryInfo(hOpenRequest, HTTP_QUERY_CONTENT_LENGTH, prot, &len, 0);
+						prot[len] = 0;
+						buflen = _wtoi(prot);
+						buf = malloc(buflen);
+						InternetReadFile(hOpenRequest, buf, buflen, &buflen);
+
+					}
+
+				}
+			url_erro:;
+			}
 		}
 		if (buf == 0 || buflen == 0)
 			return NULL;
