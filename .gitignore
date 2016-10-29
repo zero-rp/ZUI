@@ -79,3 +79,8 @@ $RECYCLE.BIN/
 *.suo
 .vs/
 build/
+*.ilk
+*.exp
+*.bak
+*.pdb
+*.dat
