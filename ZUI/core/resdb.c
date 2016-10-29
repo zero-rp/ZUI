@@ -159,6 +159,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 			wchar_t host[256];
 			wchar_t prot[20];
 			WORD wport = INTERNET_DEFAULT_HTTP_PORT;
+			ZuiBool https = FALSE;
 			int len;
 			int i;
 			parseptr2 = pp;
@@ -170,8 +171,10 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 						goto url_erro;
 					}
 				}
-				if (len == 5)
+				if (len == 5) {
 					wport = INTERNET_DEFAULT_HTTPS_PORT;
+					https = TRUE;
+				}
 				parseptr1++;
 				parseptr2 = parseptr1;
 				for (i = 0; i < 2; i++) {
@@ -215,18 +218,27 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 					HINTERNET  hConnect = InternetConnect(hInet, host, wport, NULL, NULL, INTERNET_SERVICE_HTTP, 0, NULL);
 					if (hConnect)
 					{
-						HINTERNET hOpenRequest = HttpOpenRequest(hConnect, L"GET", parseptr1, HTTP_VERSION, "",NULL, INTERNET_FLAG_SECURE, 0); //创建http请求
-						if (HttpSendRequestA(hOpenRequest, NULL, 0, NULL, 0))
+						HINTERNET hOpenRequest = 0;
+						if(https)
+							hOpenRequest = HttpOpenRequest(hConnect, L"GET", parseptr1, HTTP_VERSION, NULL, 0, INTERNET_FLAG_SECURE, 0); //创建https请求
+						else
+							hOpenRequest = HttpOpenRequest(hConnect, L"GET", parseptr1, HTTP_VERSION, NULL, 0, INTERNET_FLAG_DONT_CACHE, 1); //创建http请求
+						if (hOpenRequest)
 						{
-							len = 20;
-							HttpQueryInfo(hOpenRequest, HTTP_QUERY_CONTENT_LENGTH, prot, &len, 0);
-							prot[len] = 0;
-							buflen = _wtoi(prot);
-							buf = malloc(buflen);
-							InternetReadFile(hOpenRequest, buf, buflen, &buflen);
+							if (HttpSendRequestA(hOpenRequest, NULL, 0, NULL, 0))
+							{
+								len = 20;
+								HttpQueryInfo(hOpenRequest, HTTP_QUERY_CONTENT_LENGTH, &prot, &len, 0);
+								prot[len] = 0;
+								buflen = _wtoi(prot);
+								buf = malloc(buflen);
+								if (!InternetReadFile(hOpenRequest, buf, buflen, &buflen)) {
+									free(buf);
+								}
+							}
+							InternetCloseHandle(hOpenRequest);
 						}
-
-
+						InternetCloseHandle(hConnect);
 					}
 					InternetCloseHandle(hInet);
 				}
@@ -245,6 +257,10 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 			res->p = ZuiLoadImageFromBinary(buf, buflen);
 			//释放缓冲
 			free(buf);
+			if (!res->p) {
+				free(res);
+				return NULL;
+			}
 		}
 		else if (type == ZREST_TXT) {
 			int bufsize;
