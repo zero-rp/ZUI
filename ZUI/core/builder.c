@@ -14,7 +14,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
 	for (node = mxmlFindElement(tree, tree, NULL, NULL, NULL, MXML_DESCEND); node != NULL; node = mxmlWalkNext(node, NULL, MXML_DESCEND)/*node = mxmlFindElement(node, tree, NULL,NULL,NULL,MXML_DESCEND)*/) {
 		{
 			ClassName = node->value.name;
-#if (defined DEBUG_BORDER) && (DEBUG_BORDER == 1)
+#if !(defined NDEBUG)
 			printf("layout创建控件: 类名:%ls\r\n", ClassName);
 #endif
 			if (!node->user_data) {//当前节点还未创建

@@ -103,7 +103,9 @@ ZuiAny ZCALL Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param
 		else 
 			ZuiControlCall(Proc_Window_SetWindowRestor, win, NULL, NULL, NULL);
 	}
+#if !(defined NDEBUG)
 	printf("%ls,%ls\r\n", p->m_sName, msg);
+#endif
 	return 0;
 }
 ZuiAny ZCALL Notify_browser(ZuiText msg, ZuiControl cp, ZuiBrowser p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
@@ -279,4 +281,22 @@ int _stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 }
 int  main(){
 	DLLDebug();
+}
+#if (defined NDEBUG)
+int __security_cookie = 0;     //比错误提示的名称少一个下划线
+#endif
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
+{
+	switch (fdwReason)
+	{
+	case DLL_PROCESS_ATTACH:
+		break;
+	case DLL_THREAD_ATTACH:
+		break;
+	case DLL_THREAD_DETACH:
+		break;
+	case DLL_PROCESS_DETACH:
+		break;
+	}
+	return TRUE;
 }

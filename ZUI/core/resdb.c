@@ -158,6 +158,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 			const wchar_t *parseptr2;
 			wchar_t host[256];
 			wchar_t prot[20];
+			WORD wport = INTERNET_DEFAULT_HTTP_PORT;
 			int len;
 			int i;
 			parseptr2 = pp;
@@ -169,6 +170,8 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 						goto url_erro;
 					}
 				}
+				if (len == 5)
+					wport = INTERNET_DEFAULT_HTTPS_PORT;
 				parseptr1++;
 				parseptr2 = parseptr1;
 				for (i = 0; i < 2; i++) {
@@ -203,25 +206,29 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 					len = parseptr1 - parseptr2;
 					memcpy(&prot, parseptr2, len*sizeof(wchar_t));
 					prot[len] = 0;
+					wport = _wtoi(prot);
 					//解析端口
 				}
 				HINTERNET hInet = InternetOpen(L"ZuiHttp", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, NULL);
 				if (hInet)
 				{
-					HINTERNET  hConnect = InternetConnect(hInet, host, INTERNET_DEFAULT_HTTPS_PORT, NULL, NULL, INTERNET_SERVICE_HTTP, 0, NULL);
+					HINTERNET  hConnect = InternetConnect(hInet, host, wport, NULL, NULL, INTERNET_SERVICE_HTTP, 0, NULL);
 					if (hConnect)
 					{
-						HINTERNET hOpenRequest = HttpOpenRequestW(hConnect, L"GET", parseptr1, HTTP_VERSION, "",NULL, INTERNET_FLAG_SECURE, 0); //创建http请求
-						BOOL bRequest = HttpSendRequestA(hOpenRequest, NULL, 0, NULL, 0); //发送http请求
-						len = 20;
-						HttpQueryInfo(hOpenRequest, HTTP_QUERY_CONTENT_LENGTH, prot, &len, 0);
-						prot[len] = 0;
-						buflen = _wtoi(prot);
-						buf = malloc(buflen);
-						InternetReadFile(hOpenRequest, buf, buflen, &buflen);
+						HINTERNET hOpenRequest = HttpOpenRequest(hConnect, L"GET", parseptr1, HTTP_VERSION, "",NULL, INTERNET_FLAG_SECURE, 0); //创建http请求
+						if (HttpSendRequestA(hOpenRequest, NULL, 0, NULL, 0))
+						{
+							len = 20;
+							HttpQueryInfo(hOpenRequest, HTTP_QUERY_CONTENT_LENGTH, prot, &len, 0);
+							prot[len] = 0;
+							buflen = _wtoi(prot);
+							buf = malloc(buflen);
+							InternetReadFile(hOpenRequest, buf, buflen, &buflen);
+						}
+
 
 					}
-
+					InternetCloseHandle(hInet);
 				}
 			url_erro:;
 			}
