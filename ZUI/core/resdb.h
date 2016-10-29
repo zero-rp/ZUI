@@ -19,11 +19,13 @@
 
 
 */
+/*资源类型*/
 typedef enum ZREST
 {
 	ZREST_IMG = 1,
 	ZREST_TXT,
 };
+/*资源包类型*/
 typedef enum ZRESDBT
 {
 	ZRESDBT_ZIP_FILE = 1,	///压缩文件,来自文件
@@ -56,10 +58,42 @@ typedef struct _ZResDBPool
 	rb_root	*res;	//所有已经加载过的资源
 } *ZuiResDBPool, ZResDBPool;
 ZuiBool ZuiResDBInit();
+/** 此函数用作从字节流中加载一个Zip型的资源包.
+* @param data 流指针
+* @param len 流长度
+* @param Pass 包密码
+* @return 资源包结构.
+*/
 ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromBuf(ZuiAny data, ZuiInt len, ZuiText Pass);
-ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromFile(ZuiText FileName, ZuiText Pass);
+/** 此函数用作从文件加载一个Zip型的资源包.
+* @param Path 文件路径
+* @param Pass 包密码
+* @return 资源包结构.
+*/
+ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromFile(ZuiText Path, ZuiText Pass);
+/** 此函数用作绘制文本.
+* @param Graphics ZuiGraphics对象
+* @param StringFormat 文本格式
+* @param String 文本
+* @param Rect 矩形区域
+* @return 此函数没有返回值.
+*/
 ZEXPORT ZuiVoid ZCALL ZuiResDBDestroy(ZuiResDB db);
+/** 此函数用作绘制文本.
+* @param Graphics ZuiGraphics对象
+* @param StringFormat 文本格式
+* @param String 文本
+* @param Rect 矩形区域
+* @return 此函数没有返回值.
+*/
 ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type);//获取一个资源
+/** 此函数用作绘制文本.
+* @param Graphics ZuiGraphics对象
+* @param StringFormat 文本格式
+* @param String 文本
+* @param Rect 矩形区域
+* @return 此函数没有返回值.
+*/
 ZEXPORT ZuiVoid ZCALL ZuiResDBDelRes(ZuiRes res);//释放一个资源
 
 

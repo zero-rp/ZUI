@@ -1,5 +1,7 @@
-﻿ #include <stdio.h>
+﻿#include <stdio.h>
 #include <ZUI.h>
+#if !(defined NDEBUG)
+
 ZuiControl win;
 ZuiControl BrowserTab;
 ZuiControl BrowserTabHead;
@@ -282,6 +284,9 @@ int _stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 int  main(){
 	DLLDebug();
 }
+
+#endif
+
 #if (defined NDEBUG)
 int __security_cookie = 0;     //比错误提示的名称少一个下划线
 #endif

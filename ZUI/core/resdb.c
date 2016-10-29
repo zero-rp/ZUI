@@ -233,6 +233,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 								buflen = _wtoi(prot);
 								buf = malloc(buflen);
 								if (!InternetReadFile(hOpenRequest, buf, buflen, &buflen)) {
+									buflen = 0;
 									free(buf);
 								}
 							}
