@@ -228,4 +228,9 @@
       <Filter>头文件\zlib</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Zui.def">
+      <Filter>源文件</Filter>
+    </None>
+  </ItemGroup>
 </Project>
