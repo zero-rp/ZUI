@@ -879,6 +879,11 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 						if (p->m_bLayered) ZuiPaintManagerInvalidate(p);
 	}
 		return TRUE;
+	case WM_MOVE: {
+		p->m_ptWin.x = GET_X_LPARAM(lParam);
+		p->m_ptWin.y = GET_Y_LPARAM(lParam);
+		break;
+	}
 	case WM_TIMER:	//时钟事件
 	{
 						if (LOWORD(wParam) == LAYEREDUPDATE_TIMERID) {
@@ -1265,6 +1270,19 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 							  return TRUE;
 	}
 		break;
+	case WM_IME_STARTCOMPOSITION: {
+		if (p->m_pFocus == NULL) break;
+		ZuiPoint pt = ZuiControlCall(Proc_GetImePoint, p->m_pFocus, 0, 0, 0);
+		COMPOSITIONFORM COMPOSITIONFORM;
+		COMPOSITIONFORM.dwStyle = CFS_POINT | CFS_FORCE_POSITION;
+		
+		COMPOSITIONFORM.ptCurrentPos.x = pt->x + p->m_pFocus->m_rcItem.left;
+		COMPOSITIONFORM.ptCurrentPos.y = pt->y + p->m_pFocus->m_rcItem.top;
+
+		HIMC hIMC = ImmGetContext(p->m_hWndPaint);
+		ImmSetCompositionWindow(hIMC, &COMPOSITIONFORM);
+		ImmReleaseContext(p->m_hWndPaint, hIMC);
+	}
 	default:
 		break;
 	}

@@ -215,6 +215,14 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
 			ZuiControlCall(Proc_Browser_LoadHtml, cp, ZuiResDBGetRes(Param2, ZREST_TXT), NULL, NULL);
 	}
 		break;
+	case Proc_GetImePoint: {
+		wkeRect caret = wkeGetCaretRect(p->view);
+		ZPoint pt;
+		pt.x = caret.x;
+		pt.y = caret.y;
+		return &pt;
+		break;
+	}
 	case Proc_OnInit:{
 		wkeSetHandle(p->view, cp->m_pManager->m_hWndPaint);
 		ZuiPaintManagerSetTimer(cp, 1000, 20);

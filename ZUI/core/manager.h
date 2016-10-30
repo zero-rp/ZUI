@@ -117,6 +117,7 @@ typedef struct _ZuiPaintManager
 	ZuiControl m_pEventClick;		///被鼠标点击的控件
 	ZuiControl m_pEventKey;			///接收键盘输入的控件
 	//
+	POINT m_ptWin;					///窗口左上角位置
 	POINT m_ptLastMousePos;
 	SIZE m_szMinWindow;				///窗口最小大小
 	SIZE m_szMaxWindow;				///窗口最大大小

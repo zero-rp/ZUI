@@ -59,7 +59,7 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define	Proc_GetFixedHeight		28	// 实际大小位置使用GetPos获取，这里得到的是预设的参考值
 #define	Proc_SetFixedHeight		29	// 预设的参考值
 #define	Proc_GetRelativePos		30	// 相对(父控件)位置
-
+#define Proc_GetImePoint		50	
 #define	Proc_SetFloat			31	//设置为浮动控件
 #define	Proc_SetEnabled			32	//设置可用状态
 #define	Proc_SetFocus			33	//设置焦点
