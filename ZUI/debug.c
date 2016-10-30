@@ -30,7 +30,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProcEx(ZuiInt ProcId, ZuiControl cp, ZuiOption p, 
 		ZuiGraphics gp = (ZuiGraphics)Param1;
 		RECT *rc = &cp->m_rcItem;
 		if (p->m_bSelected) {//选中
-			ZuiDrawFillRect(gp, ARGB(255, 255, 255, 255), rc->left + 1, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top);
+			ZuiDrawFillRect(gp, ARGB(255, 242, 242, 242), rc->left + 1, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top);
 			 //画激活边线
 			ZuiDrawLine(gp, ARGB(255, 50, 255, 0), rc->left, rc->top, rc->left, rc->bottom - 1, 1);
 			ZuiDrawLine(gp, ARGB(255, 50, 255, 0), rc->right-1, rc->top, rc->right-1, rc->bottom - 1, 1);
@@ -38,7 +38,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProcEx(ZuiInt ProcId, ZuiControl cp, ZuiOption p, 
 		}
 		else {//非选中项
 			if (((ZuiButton)p->old_udata)->type == 0) {
-				ZuiDrawFillRect(gp, ARGB(255, 255, 255, 255), rc->left, rc->top + 3, rc->right - rc->left, rc->bottom - rc->top - 4);
+				ZuiDrawFillRect(gp, ARGB(255, 204, 204, 204), rc->left, rc->top + 3, rc->right - rc->left, rc->bottom - rc->top - 4);
 			}
 			else if (((ZuiButton)p->old_udata)->type == 1) {
 				ZuiDrawFillRect(gp, ARGB(255, 0, 255, 255), rc->left, rc->top + 3, rc->right - rc->left, rc->bottom - rc->top - 4);
@@ -188,9 +188,9 @@ ZuiControl AddBrowserTab(ZuiText url) {
 	ZuiControlFindName(win, L"head")->call = ZuiHorizontalLayoutProcEx;
 	//添加默认页面
 	AddBrowserTab(L"http://www.baidu.com/");
-	AddBrowserTab(L"http://www.baidu.com/");
-	AddBrowserTab(L"http://www.baidu.com/");
-	AddBrowserTab(L"http://www.baidu.com/");
+	//AddBrowserTab(L"http://www.baidu.com/");
+	//AddBrowserTab(L"http://www.baidu.com/");
+	//AddBrowserTab(L"http://www.baidu.com/");
 
 	//ZuiControl pRoot = NewZuiControl(L"window", NULL, NULL, NULL);
 	////-------------------------------------------------------------------------

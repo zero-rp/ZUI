@@ -100,6 +100,7 @@ typedef struct tagTEventUI
 typedef struct _ZuiPaintManager
 {
 	HWND m_hWndPaint;				///要ZuiPaintManager进行Direct绘图操作的窗体句柄
+	HIMC m_hIMC;					///输入法句柄
 	HDC m_hDcPaint;					///直接绘制到窗体的DC(为窗体的整个区域包括费客户区)
 	ZuiGraphics m_hDcOffscreen;		///内存缓冲区绘图DC
 
@@ -181,6 +182,7 @@ ZEXPORT ZuiVoid ZCALL ZuiPaintManagerRemoveAllTimers(ZuiPaintManager p);//销毁
 ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetCapture(ZuiPaintManager p);//俘获输入
 ZEXPORT ZuiVoid ZCALL ZuiPaintManagerReleaseCapture(ZuiPaintManager p);//释放俘获
 
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetImeStatus(ZuiPaintManager p, ZuiBool Status);
 
 ZEXPORT ZuiBool ZCALL ZuiPaintManagerSetNextTabControl(ZuiPaintManager p, BOOL bForward /*默认TRUE*/);
 

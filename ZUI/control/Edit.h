@@ -21,6 +21,11 @@ typedef struct _ZEdit
 	ZuiColor FireColor;		//点燃颜色
 	ZuiColor FocusColor;	//焦点颜色
 	ZuiInt MouseType;
+	ZuiInt StrBufLen;		//文本缓冲长度
+	ZuiBool type;			//光标状态
+	ZuiInt x;				//光标位置
+	ZuiInt pos;				//写入偏移
+	ZuiInt StrLen;			//文本长度
 	ZCtlProc old_call;
 }*ZuiEdit, ZEdit;
 ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);

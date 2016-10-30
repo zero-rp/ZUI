@@ -62,9 +62,13 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
 			break;
 		}
 		case ZEVENT_SETFOCUS:
-			if (p->view) wkeSetFocus(p->view); break;
+			ZuiPaintManagerSetImeStatus(cp->m_pManager, TRUE);
+			if (p->view) wkeSetFocus(p->view); 
+			break;
 		case ZEVENT_KILLFOCUS:
- 			if (p->view) wkeKillFocus(p->view); break;
+			ZuiPaintManagerSetImeStatus(cp->m_pManager, FALSE);
+ 			if (p->view) wkeKillFocus(p->view); 
+			break;
 		case ZEVENT_CHAR: {
 			unsigned int charCode = event->wParam;
 			unsigned int flags = 0;

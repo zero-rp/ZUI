@@ -13,6 +13,9 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 		memset(p, 0, sizeof(ZEdit));
 		//保存原来的回调地址,创建成功后回调地址指向当前函数
 		p->old_call = cp->call;
+		cp->m_sText = malloc(sizeof(_ZuiText) * 1024);
+		p->StrBufLen = 1024;
+		cp->m_sText[0] = L'\0';
 		return p;
 	}
 		break;
@@ -20,6 +23,11 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 		TEventUI *event= (TEventUI *)Param1;
 		switch (event->Type)
 		{
+		case ZEVENT_TIMER: {
+			p->type = !p->type;
+			ZuiControlInvalidate(cp);
+			break;
+		}
 		case ZEVENT_MOUSELEAVE: {
 			p->MouseType = 0;
 			ZuiControlInvalidate(cp);
@@ -28,10 +36,15 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 		case ZEVENT_MOUSEENTER: {
 			p->MouseType = 1;
 			ZuiControlInvalidate(cp);
+			return;
+			break;
+		}
+		case ZEVENT_SETCURSOR: {
+			SetCursor(LoadCursor(NULL, MAKEINTRESOURCE(IDC_IBEAM)));
+			return;
 			break;
 		}
 		case ZEVENT_LBUTTONDOWN: {
-
 			ZuiControlInvalidate(cp);
 			break;
 		}
@@ -41,10 +54,38 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 			break;
 		}
 		case ZEVENT_KILLFOCUS: {
+			ZuiPaintManagerKillTimer_Id(cp, 1000);
+			ZuiPaintManagerSetImeStatus(cp->m_pManager, FALSE);
+			p->type = FALSE;
 			ZuiControlInvalidate(cp);
 			break;
 		}
 		case ZEVENT_SETFOCUS: {
+			ZuiPaintManagerSetTimer(cp, 1000, 600);
+			ZuiPaintManagerSetImeStatus(cp->m_pManager, TRUE);
+			ZuiControlInvalidate(cp);
+			break;
+		}
+		case ZEVENT_CHAR: {
+			if (event->wParam == L'\b' && p->pos == 0) {
+				break;
+			}
+			if (event->wParam == L'\b') {
+				p->pos--;
+				p->StrLen--;
+				cp->m_sText[p->pos] = L'\0';
+			}
+			else
+			{
+				cp->m_sText[p->pos] = (_ZuiText)event->wParam;
+				p->pos++;
+				p->StrLen++;
+				if (p->StrLen == p->pos)
+					cp->m_sText[p->pos] = L'\0';
+			}
+			ZRectR r = {0};
+			ZuiMeasureStringRect(cp->m_pManager->m_hDcOffscreen, ZuiCreateStringFormat(L"微软雅黑", 12, ARGB(255, 255, 0, 0), ARGB(255, 255, 255, 255), ZTS_VALIGN_MIDDLE | ZTS_SHADOW), cp->m_sText, &r, 0);
+			p->x=r.Width;
 			ZuiControlInvalidate(cp);
 			break;
 		}
@@ -69,16 +110,31 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 		{
 			ZuiDrawRect(gp, ARGB(200, 0, 30, 255), rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1, 1);//通常
 		}
+		//画文本
 		ZRect r;
 		MAKEZRECT(r, rc->left + 5, rc->top + 5, rc->right - rc->left - 10, rc->bottom - rc->top - 10);
-		ZuiDrawString(gp, Global_StringFormat, cp->m_sText, &r);
+		ZuiDrawString(gp, ZuiCreateStringFormat(L"微软雅黑", 12, ARGB(255, 255, 0, 0), ARGB(255, 255, 255, 255), ZTS_VALIGN_MIDDLE | ZTS_SHADOW), cp->m_sText, &r);
+
+		//画光标
+		if (p->type)
+			ZuiDrawLine(gp, ARGB(255, 0, 0, 0), rc->left+p->x + 5, rc->top+2, rc->left+p->x + 5, rc->bottom-4, 1);
 		return 0;
 		break;
 	}
 	case Proc_SetAttribute: {
 		break;
 	}
+	case Proc_GetImePoint: {
+		ZPoint pt;
+		pt.x = p->x+7;
+		pt.y = 5;
+		return &pt;
+	}
 	case Proc_OnInit:{
+		break;
+	}
+	case Proc_GetControlFlags: {
+		return ZFLAG_SETCURSOR;
 		break;
 	}
 	default:

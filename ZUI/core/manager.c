@@ -163,6 +163,9 @@ ZEXPORT ZuiVoid ZCALL ZuiPaintManagerInit(ZuiPaintManager p, HWND hWnd)
 	if (p->m_hWndPaint != hWnd) {
 		p->m_hWndPaint = hWnd;
 		p->m_hDcPaint = GetDC(hWnd);
+		p->m_hIMC = ImmGetContext(hWnd);//获取系统的输入法
+		/*屏蔽输入法*/
+		ImmAssociateContext(hWnd, NULL);
 		darray_append(m_aPreMessages, p);
 	}
 }
@@ -482,6 +485,14 @@ ZEXPORT ZuiVoid ZCALL ZuiPaintManagerReleaseCapture(ZuiPaintManager p)
 	p->m_bMouseCapture = FALSE;
 }
 
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetImeStatus(ZuiPaintManager p, ZuiBool Status) {
+	if (Status) {//打开
+		ImmAssociateContext(p->m_hWndPaint, p->m_hIMC);
+	}
+	else {//关闭
+		ImmAssociateContext(p->m_hWndPaint, NULL);
+	}
+}
 //-------------------------------------------------------------------------------------------------
 
 ZEXPORT ZuiBool ZCALL ZuiPaintManagerSetNextTabControl(ZuiPaintManager p, BOOL bForward)
@@ -878,8 +889,9 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 						}
 						if (p->m_pRoot != NULL) ZuiControlNeedUpdate(p->m_pRoot);
 						if (p->m_bLayered) ZuiPaintManagerInvalidate(p);
+						return TRUE;
 	}
-		return TRUE;
+		break;
 	case WM_MOVE: {
 		p->m_ptWin.x = GET_X_LPARAM(lParam);
 		p->m_ptWin.y = GET_Y_LPARAM(lParam);
@@ -1042,8 +1054,15 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 							ZuiControl pControl = ZuiPaintManagerFindControl(p, pt);
 							if (pControl == NULL) break;
 							if (pControl->m_pManager != p) break;
-							if(pControl->m_drag)
+							if (pControl->m_drag) {
+								TEventUI event = { 0 };
+								event.Type = ZEVENT_KILLFOCUS;
+								event.pSender = pControl;
+								event.dwTimestamp = GetTickCount();
+								ZuiControlEvent(p->m_pFocus, &event);
+								p->m_pFocus = NULL;
 								return SendMessage(pControl->m_pManager->m_hWndPaint, WM_NCLBUTTONDOWN, HTCAPTION, 0);
+							}
 							p->m_pEventClick = pControl;
 							ZuiControlCall(Proc_SetFocus, pControl, 0, 0, 0);
 							ZuiPaintManagerSetCapture(p);
@@ -1276,13 +1295,13 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 		ZuiPoint pt = ZuiControlCall(Proc_GetImePoint, p->m_pFocus, 0, 0, 0);
 		COMPOSITIONFORM COMPOSITIONFORM;
 		COMPOSITIONFORM.dwStyle = CFS_POINT | CFS_FORCE_POSITION;
-		
-		COMPOSITIONFORM.ptCurrentPos.x = pt->x + p->m_pFocus->m_rcItem.left;
-		COMPOSITIONFORM.ptCurrentPos.y = pt->y + p->m_pFocus->m_rcItem.top;
+		if (pt)
+		{
+			COMPOSITIONFORM.ptCurrentPos.x = pt->x + p->m_pFocus->m_rcItem.left;
+			COMPOSITIONFORM.ptCurrentPos.y = pt->y + p->m_pFocus->m_rcItem.top;
+		}
 
-		HIMC hIMC = ImmGetContext(p->m_hWndPaint);
-		ImmSetCompositionWindow(hIMC, &COMPOSITIONFORM);
-		ImmReleaseContext(p->m_hWndPaint, hIMC);
+		ImmSetCompositionWindow(p->m_hIMC, &COMPOSITIONFORM);
 	}
 	default:
 		break;

@@ -80,7 +80,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 								  return 0;
 							  BOOL v = p->m_bVisible;
 							  p->m_bVisible = (BOOL)Param1;
-							  if (p->m_bFocused) p->m_bFocused = FALSE;
+							  if (p->m_bFocused)
+								  p->m_bFocused = FALSE;
 							  if (!(BOOL)Param1 && p->m_pManager && p->m_pManager->m_pFocus == p) {
 								  ZuiPaintManagerSetFocus(p->m_pManager, NULL, TRUE);
 							  }

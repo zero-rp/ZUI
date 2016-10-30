@@ -28,6 +28,7 @@ extern "C" {
 	int __stdcall GdipGraphicsClear(void *graphics, ZuiColor color);
 	int __stdcall GdipCreateFontFamilyFromName(ZuiText name, void *fontCollection, void **fontFamily);
 	int __stdcall GdipDeleteFontFamily(void *fontFamily);
+	int __stdcall GdipSetStringFormatFlags(void *format, int flags);
 	int __stdcall GdipCreateFont(void *fontFamily, ZuiReal emSize, int style, int unit, void **font);
 	int __stdcall GdipCreateStringFormat(int formatAttributes, int language, void **StringFormat);
 	int __stdcall GdipSetStringFormatAlign(void *format, int align);
@@ -120,11 +121,7 @@ ZEXPORT ZuiVoid ZCALL ZuiMeasureStringRect(ZuiGraphics Graphics, ZuiStringFormat
 	if (String && Graphics){
 		if (!StringFormat){ StringFormat = Global_StringFormat; }//使用默认字体
 		if (!LRect){ LRect = &ZeroRectR; }
-		int len = MultiByteToWideChar(0, 0, String, -1, 0, 0) * 2;
-		void *buf = malloc(len);
-		MultiByteToWideChar(0, 0, String, strlen(String), buf, len);
-		GdipMeasureString(Graphics->graphics, buf, wcslen(buf), StringFormat->font, LRect, StringFormat->StringFormat, Rect, 0, 0);
-		free(buf);
+		GdipMeasureString(Graphics->graphics, String, wcslen(String), StringFormat->font, LRect, StringFormat->StringFormat, Rect, 0, 0);
 	}
 }
 /*填充圆角矩形*/
@@ -278,7 +275,7 @@ ZEXPORT ZuiGraphics ZCALL ZuiCreateGraphicsInMemory(ZuiInt Width, ZuiInt Height)
 	HBITMAP OldBitmap = (HBITMAP)SelectObject(Graphics->hdc, (HGDIOBJ)Graphics->HBitmap);
 
 	GdipCreateFromHDC(Graphics->hdc, &Graphics->graphics);
-	GdipSetTextRenderingHint(Graphics->graphics, 1);//设置抗锯齿模式
+	GdipSetTextRenderingHint(Graphics->graphics, 4);//设置抗锯齿模式
 	return Graphics;
 }
 /*销毁图形*/
