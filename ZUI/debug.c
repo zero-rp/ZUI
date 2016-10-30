@@ -2,7 +2,7 @@
 #include <ZUI.h>
 #if !(defined NDEBUG)
 
-ZuiControl win;
+ZuiControl win,other;
 ZuiControl BrowserTab;
 ZuiControl BrowserTabHead;
 ZuiControl AddBrowserTab(ZuiText url);
@@ -149,6 +149,12 @@ ZuiControl AddBrowserTab(ZuiText url) {
 
 	return Browser;
 }
+ZuiAny ZCALL Notify_other(ZuiText msg, ZuiControl cp, ZuiBrowser p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+	if (wcscmp(msg, L"lclick") == 0) {
+		ZuiControlCall(Proc_SetVisible, other, TRUE, 0, 0);
+	}
+	return 0;
+}
 
 
  __declspec(dllexport) void __stdcall DLLDebug(){
@@ -176,12 +182,22 @@ ZuiControl AddBrowserTab(ZuiText url) {
 	
 	win = ZuiLayoutLoad(p,flen);
 
+	fp = fopen("other.xml", "rb");
+	fseek(fp, 0L, SEEK_END);
+	flen = ftell(fp); /* 得到文件大小 */
+	p = malloc(flen); /* 根据文件大小动态分配内存空间 */
+	fseek(fp, 0L, SEEK_SET); /* 定位到文件开头 */
+	fread(p, flen, 1, fp); /* 一次性读取全部文件内容 */
+	fclose(fp);
+	other = ZuiLayoutLoad(p, flen);
+
 	ZuiControl clos = ZuiControlFindName(win, L"clos");
 	ZuiControlRegNotify(clos, Notify_ctl);
 	ZuiControl min = ZuiControlFindName(win, L"min");
 	ZuiControlRegNotify(min, Notify_ctl);
 	ZuiControl max = ZuiControlFindName(win, L"max");
 	ZuiControlRegNotify(max, Notify_ctl);
+	ZuiControlRegNotify(ZuiControlFindName(win, L"other"), Notify_other);
 
 	BrowserTab = ZuiControlFindName(win, L"BrowserTab");
 	BrowserTabHead = ZuiControlFindName(win, L"BrowserTabHead");

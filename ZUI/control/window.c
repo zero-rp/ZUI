@@ -212,6 +212,15 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 		}
 		break;
 	}
+	case Proc_SetVisible: {
+		if (cp->m_bVisible == (BOOL)Param1)
+			return 0;
+		if (Param1)
+			ShowWindow(p->m_hWnd, SW_SHOWNORMAL);
+		else
+			ShowWindow(p->m_hWnd, SW_HIDE);
+		break;
+	}
 	default:
 		break;
 	}

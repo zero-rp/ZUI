@@ -13,7 +13,8 @@
 */
 #ifndef __TILELAYOUT_H__
 #define __TILELAYOUT_H__
-
+#define	Proc_TileLayout_SetColumns		600
+#define	Proc_TileLayout_SetItemSize		601
 /**瓦片布局结构*/
 typedef struct _ZuiTileLayout
 {

@@ -1,4 +1,4 @@
-#include <ZUI.h>
+ï»¿#include <ZUI.h>
 
 
 void* CALLBACK ZuiTileLayoutProc(int ProcId, ZuiControl cp, ZuiTileLayout p, void* Param1, void* Param2, void* Param3) {
@@ -9,9 +9,9 @@ void* CALLBACK ZuiTileLayoutProc(int ProcId, ZuiControl cp, ZuiTileLayout p, voi
 	case Proc_OnCreate: {
 		p = (ZuiTileLayout)malloc(sizeof(ZTileLayout));
 		memset(p, 0, sizeof(ZTileLayout));
-		//´´½¨¼Ì³ÐµÄ¿Ø¼þ ±£´æÊý¾ÝÖ¸Õë
-		p->old_udata = ZuiTileLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
-		p->old_call = (ZCtlProc)&ZuiTileLayoutProc;
+		//åˆ›å»ºç»§æ‰¿çš„æŽ§ä»¶ ä¿å­˜æ•°æ®æŒ‡é’ˆ
+		p->old_udata = ZuiLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
+		p->old_call = (ZCtlProc)&ZuiLayoutProc;
 
 		return p;
 		break;
@@ -124,6 +124,30 @@ void* CALLBACK ZuiTileLayoutProc(int ProcId, ZuiControl cp, ZuiTileLayout p, voi
 			//if (m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible()) cyNeeded += m_pVerticalScrollBar->GetScrollPos();
 		}
 		return 0;
+		break;
+	}
+	case Proc_TileLayout_SetColumns: {
+		if (Param1 <= 0) return;
+		p->m_nColumns = Param1;
+		ZuiControlNeedUpdate(cp);
+		break;
+	}
+	case Proc_TileLayout_SetItemSize: {
+		if (p->m_szItem.cx != Param1 || p->m_szItem.cy != Param2) {
+			p->m_szItem.cx = Param1;
+			p->m_szItem.cy = Param2;
+			ZuiControlNeedUpdate(cp);
+		}
+		break;
+	}
+	case Proc_SetAttribute: {
+		if (wcscmp(Param1, L"itemsize") == 0) {
+			LPTSTR pstr = NULL;
+			ZuiInt x = _tcstol(Param2, &pstr, 10);  ASSERT(pstr);
+			ZuiInt y = _tcstol(pstr + 1, &pstr, 10);   ASSERT(pstr);
+			ZuiControlCall(Proc_TileLayout_SetItemSize, cp, x, y, NULL);
+		}
+		else if (wcscmp(Param1, L"columns") == 0) ZuiControlCall(Proc_TileLayout_SetColumns, cp, _ttoi(Param2), NULL, NULL);
 		break;
 	}
 	default:
