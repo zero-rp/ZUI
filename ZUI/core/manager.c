@@ -860,6 +860,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 								if (p->m_szMinWindow.cy > 0) lpMMI->ptMinTrackSize.y = p->m_szMinWindow.cy;
 								if (p->m_szMaxWindow.cx > 0) lpMMI->ptMaxTrackSize.x = p->m_szMaxWindow.cx;
 								if (p->m_szMaxWindow.cy > 0) lpMMI->ptMaxTrackSize.y = p->m_szMaxWindow.cy;
+								lpMMI->ptMaxSize.y = GetSystemMetrics(SM_CYFULLSCREEN) + GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYDLGFRAME);
 	}
 		break;
 	case WM_SIZE:	//大小被改变

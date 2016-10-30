@@ -24,52 +24,46 @@ LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	if (pThis != NULL) {
 		LRESULT lRes = 0;
 		{
-			if (uMsg == WM_CREATE) {
-
-			}
-			else if (uMsg == WM_NCHITTEST)
+			if (uMsg == WM_NCHITTEST && pThis->m_nobox)
 			{
-				if (pThis->m_nobox)
+				int x = GET_X_LPARAM(lParam);
+				int	y = GET_Y_LPARAM(lParam);
+				if (x <= pThis->m_rect.Left + 3 && y <= pThis->m_rect.Top + 3) {
+					return HTTOPLEFT;
+				}
+				else if (x <= pThis->m_rect.Left + 3 && y >= pThis->m_rect.Top + pThis->m_rect.Height - 3)
 				{
-					int x = GET_X_LPARAM(lParam);
-					int	y = GET_Y_LPARAM(lParam);
-					if (x <= pThis->m_rect.Left + 3 && y <= pThis->m_rect.Top + 3) {
-						return HTTOPLEFT;
-					}
-					else if (x <= pThis->m_rect.Left + 3 && y >= pThis->m_rect.Top + pThis->m_rect.Height - 3)
-					{
-						return HTBOTTOMLEFT;
-					}
-					else if (x >= pThis->m_rect.Left + pThis->m_rect.Width - 3 && y <= pThis->m_rect.Top + 3)
-					{
-						return HTTOPRIGHT;
-					}
-					else if (x >= pThis->m_rect.Left + pThis->m_rect.Width - 3 && y >= pThis->m_rect.Top + pThis->m_rect.Height - 3)
-					{
-						return HTBOTTOMRIGHT;
-					}
-					else if (x <= pThis->m_rect.Left + 2)
-					{
-						return HTLEFT;
-					}
-					else if (y <= pThis->m_rect.Top + 2)
-					{
-						return HTTOP;
-					}
-					else if (x >= pThis->m_rect.Left + pThis->m_rect.Width - 2)
-					{
-						return HTRIGHT;
-					}
-					else if (y >= pThis->m_rect.Top + pThis->m_rect.Height - 2)
-					{
-						return HTBOTTOM;
-					}
-					else
-					{
-						return HTCLIENT;
-					}
+					return HTBOTTOMLEFT;
+				}
+				else if (x >= pThis->m_rect.Left + pThis->m_rect.Width - 3 && y <= pThis->m_rect.Top + 3)
+				{
+					return HTTOPRIGHT;
+				}
+				else if (x >= pThis->m_rect.Left + pThis->m_rect.Width - 3 && y >= pThis->m_rect.Top + pThis->m_rect.Height - 3)
+				{
+					return HTBOTTOMRIGHT;
+				}
+				else if (x <= pThis->m_rect.Left + 2)
+				{
+					return HTLEFT;
+				}
+				else if (y <= pThis->m_rect.Top + 2)
+				{
+					return HTTOP;
+				}
+				else if (x >= pThis->m_rect.Left + pThis->m_rect.Width - 2)
+				{
+					return HTRIGHT;
+				}
+				else if (y >= pThis->m_rect.Top + pThis->m_rect.Height - 2)
+				{
+					return HTBOTTOM;
+				}
+				else
+				{
 					return HTCLIENT;
 				}
+				return HTCLIENT;
 			}
 			else if(uMsg == WM_MOVE){
 				pThis->m_rect.Left = GET_X_LPARAM(lParam);
@@ -79,6 +73,12 @@ LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			{
 				pThis->m_rect.Width = GET_X_LPARAM(lParam);
 				pThis->m_rect.Height = GET_Y_LPARAM(lParam);
+			}
+			else if (uMsg == WM_NCLBUTTONDOWN) {
+				if (pThis->m_bMax)
+				{
+					return 0;
+				}
 			}
 		}
 		if (pThis->m_pm)
@@ -90,7 +90,6 @@ LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
 }
-
 
 ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 	switch (ProcId)
@@ -109,8 +108,8 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 		wc.lpszClassName = L"AA";
 		RegisterClass(&wc);
 		return 0;
-	}
 		break;
+	}
 	case Proc_OnCreate: {
 		p = (ZuiWindow)malloc(sizeof(ZWindow));
 		memset(p, 0, sizeof(ZWindow));
@@ -125,16 +124,13 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 		p->m_OldWndProc = DefWindowProc;
 		p->root = cp;
 		p->m_hWnd = CreateWindowEx(0, L"AA", L"aa", WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, GetModuleHandleA(NULL), p);
-		
+
 		ZuiPaintManagerInit(p->m_pm, p->m_hWnd);
-
-		ZuiControl pRoot = p->root;
-
-		ZuiPaintManagerAttachDialog(p->m_pm, pRoot);
+		ZuiPaintManagerAttachDialog(p->m_pm, cp);
 		ShowWindow(p->m_hWnd, SW_SHOW);
 		return p;
+		break;
 	}
-						break;
 	case Proc_SetBorderColor: {
 		((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.left = 1;
 		((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.bottom = 1;
@@ -144,18 +140,20 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 	}
 	case Proc_SetPos: {
 		OutputDebugString(L"a");
+		break;
 	}
-					  break;
 	case Proc_Window_SetWindowMin: {
 		ShowWindow(p->m_hWnd, SW_MINIMIZE);
 		break;
 	}
 	case Proc_Window_SetWindowMax: {
 		ShowWindow(p->m_hWnd, SW_MAXIMIZE);
+		p->m_bMax = TRUE;
 		break;
 	}
 	case Proc_Window_SetWindowRestor: {
 		ShowWindow(p->m_hWnd, SW_RESTORE);
+		p->m_bMax = FALSE;
 		break;
 	}
 	case Proc_Window_SetMinInfo: {
@@ -190,9 +188,8 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 		p->m_rect.Height = r.bottom - r.top;
 		p->m_rect.Width = r.right - r.left;
 		ZuiControlInvalidate(cp);
-		
+		break;
 	}
-							   break;
 	case Proc_SetAttribute: {
 		if (wcscmp(Param1, L"nobox") == 0) ZuiControlCall(Proc_Window_SetNoBox, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
 		else if (wcscmp(Param1, L"mininfo") == 0) {
@@ -201,7 +198,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 			int cy = wcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
 			ZuiControlCall(Proc_Window_SetMinInfo, cp, cx, cy, NULL);
 		}
-		else if (wcscmp(Param1, L"maxinfo") == 0){
+		else if (wcscmp(Param1, L"maxinfo") == 0) {
 			LPTSTR pstr = NULL;
 			int cx = wcstol(Param2, &pstr, 10);  ASSERT(pstr);
 			int cy = wcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
@@ -213,12 +210,8 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 			int cy = wcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
 			ZuiControlCall(Proc_Window_SetSize, cp, cx, cy, NULL);
 		}
+		break;
 	}
-					  break;
-	case Proc_OnInit: {
-
-	}
-					  break;
 	default:
 		break;
 	}

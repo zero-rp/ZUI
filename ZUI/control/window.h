@@ -26,6 +26,7 @@ typedef struct _ZWindow
 {
 	ZRect m_rect;
 	ZuiBool m_nobox;
+	ZuiBool m_bMax;	//是否最大化
 	HWND m_hWnd;
 	WNDPROC m_OldWndProc;
 	ZuiControl root;
