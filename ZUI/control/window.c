@@ -80,6 +80,11 @@ LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					return 0;
 				}
 			}
+			else if(uMsg == WM_KILLFOCUS && pThis->m_combo)
+			{
+				pThis->root->m_bVisible = FALSE;
+				ShowWindow(hWnd, SW_HIDE);
+			}
 		}
 		if (pThis->m_pm)
 			if (ZuiPaintManagerMessageHandler(pThis->m_pm, uMsg, wParam, lParam, &lRes))
@@ -190,8 +195,15 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 		ZuiControlInvalidate(cp);
 		break;
 	}
+	case Proc_Window_SetComBo: {
+		if (p->m_combo == Param1)
+			break;
+		p->m_combo = Param1;
+		break;
+	}
 	case Proc_SetAttribute: {
 		if (wcscmp(Param1, L"nobox") == 0) ZuiControlCall(Proc_Window_SetNoBox, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
+		else if (wcscmp(Param1, L"combo") == 0) ZuiControlCall(Proc_Window_SetComBo, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
 		else if (wcscmp(Param1, L"mininfo") == 0) {
 			LPTSTR pstr = NULL;
 			int cx = wcstol(Param2, &pstr, 10);  ASSERT(pstr);
@@ -219,6 +231,16 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 			ShowWindow(p->m_hWnd, SW_SHOWNORMAL);
 		else
 			ShowWindow(p->m_hWnd, SW_HIDE);
+		break;
+	}
+	case Proc_Window_Popup: {
+		cp->m_bVisible = TRUE;
+		if (Param1)
+		{
+
+		}
+
+		ShowWindow(p->m_hWnd, SW_HIDE);
 		break;
 	}
 	default:

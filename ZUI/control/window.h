@@ -21,6 +21,8 @@
 #define	Proc_Window_SetMinInfo		1005
 #define	Proc_Window_SetMaxInfo		1006
 #define	Proc_Window_SetSize			1007
+#define	Proc_Window_SetComBo		1008
+#define	Proc_Window_Popup			1009
 /**窗口控件结构*/
 typedef struct _ZWindow
 {
@@ -33,6 +35,7 @@ typedef struct _ZWindow
 	ZuiPaintManager m_pm;
 	ZCtlProc old_call;
 	ZuiAny old_udata;
+	ZuiBool m_combo;//组合窗口 失焦隐藏
 }*ZuiWindow, ZWindow;
 ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 

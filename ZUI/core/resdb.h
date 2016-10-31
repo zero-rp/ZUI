@@ -24,6 +24,8 @@ typedef enum ZREST
 {
 	ZREST_IMG = 1,
 	ZREST_TXT,
+	ZREST_STREAM,
+	ZREST_ZIP,
 };
 /*资源包类型*/
 typedef enum ZRESDBT

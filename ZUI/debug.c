@@ -151,7 +151,8 @@ ZuiControl AddBrowserTab(ZuiText url) {
 }
 ZuiAny ZCALL Notify_other(ZuiText msg, ZuiControl cp, ZuiBrowser p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 	if (wcscmp(msg, L"lclick") == 0) {
-		ZuiControlCall(Proc_SetVisible, other, TRUE, 0, 0);
+		ZuiMsgBox();
+		//ZuiControlCall(Proc_SetVisible, other, TRUE, 0, 0);
 	}
 	return 0;
 }

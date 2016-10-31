@@ -25,6 +25,8 @@ ZuiBool ZuiResDBInit() {
 	memset(p, 0, sizeof(ZResDB));
 	p->type = ZRESDBT_PE;
 	rb_insert(Zui_Hash(L"pe"), p, Global_ResDB->resdb);
+	//加载默认资源包
+	ZuiResDBGetRes(L"pe:zip,106", ZREST_ZIP);
 	return TRUE;
 }
 ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromBuf(ZuiAny data, ZuiInt len, ZuiText Pass)
@@ -163,7 +165,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 			int len;
 			int i;
 			parseptr2 = pp;
-			parseptr1 = wcschr(parseptr2, ':');
+			parseptr1 = wcschr(parseptr2, L':');
 			if (NULL != parseptr1) {
 				len = parseptr1 - parseptr2;
 				for (i = 0; i < len; i++) {
@@ -246,6 +248,41 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 			url_erro:;
 			}
 		}
+		/*PE*/else if(db->type==ZRESDBT_PE)
+		{
+			wchar_t name[255];
+			p= wcschr(pp, L',');
+			memcpy(name, pp, (p - pp)*sizeof(wchar_t));
+			name[p - pp] = 0;
+			pp += p - pp + 1;
+			//定位我们的自定义资源，这里因为我们是从本模块定位资源，所以将句柄简单地置为NULL即可
+			HRSRC hRsrc = FindResource(NULL, _wtoi(pp), name);
+			if (hRsrc) {
+				//获取资源的大小
+				buflen = SizeofResource(NULL, hRsrc);
+				if (buflen) {
+					//加载资源
+					HGLOBAL hGlobal = LoadResource(NULL, hRsrc);
+					if (hGlobal) {
+						//锁定资源
+						buf = malloc(buflen);
+						if (buf)
+						{
+							void * pbuf = LockResource(hGlobal);
+							if (pbuf)
+							{
+								memcpy(buf, pbuf, buflen);
+							}
+							else
+							{
+								free(buf);
+								buf = 0;
+							}
+						}
+					}
+				}
+			}
+		}
 		if (buf == 0 || buflen == 0)
 			return NULL;
 		//创建对应的资源类型
@@ -282,6 +319,15 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 			}
 			free(buf);
 			res->p = txtbuf;
+		}
+		else if(type == ZREST_ZIP)
+		{
+			res->p = ZuiResDBCreateFromBuf(buf, buflen, 0);
+			free(buf);
+			if (!res->p) {
+				free(res);
+				return NULL;
+			}
 		}
 		if (!res->p) {
 			free(res);

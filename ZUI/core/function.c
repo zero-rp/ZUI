@@ -62,3 +62,28 @@ ZEXPORT ZuiInt ZCALL ZuiMsgLoop() {
 ZEXPORT ZuiVoid ZCALL ZuiMsgLoop_exit() {
 	PostQuitMessage(0);
 }
+ZuiControl MsgBox_pRoot;
+ZuiAny ZCALL MsgBox_Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+	if (wcscmp(p->m_sName, L"clos") == 0) {
+		ZuiMsgLoop_exit();
+	}
+	else if (wcscmp(p->m_sName, L"min") == 0) {
+		ZuiControlCall(Proc_Window_SetWindowMin, MsgBox_pRoot, NULL, NULL, NULL);
+	}
+	return 0;
+}
+
+ZEXPORT ZuiVoid ZCALL ZuiMsgBox() {
+	MsgBox_pRoot = NewZuiControl(L"window", NULL, NULL, NULL);
+	ZuiControlRegNotify(MsgBox_pRoot, MsgBox_Notify_ctl);
+
+
+
+	MSG Msg;
+	while (GetMessage(&Msg, NULL, 0, 0))
+	{
+		TranslateMessage(&Msg);
+		DispatchMessage(&Msg);
+	}
+	return;
+}

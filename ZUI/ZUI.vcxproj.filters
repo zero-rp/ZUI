@@ -227,10 +227,21 @@
     <ClInclude Include="zlib\unzip.h">
       <Filter>头文件\zlib</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Zui.def">
       <Filter>源文件</Filter>
     </None>
+    <None Include="res.zip">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Zui.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

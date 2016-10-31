@@ -33,4 +33,5 @@ ZEXPORT ZuiInt ZCALL ZuiMsgLoop();
 * @return int.
 */
 ZEXPORT ZuiVoid ZCALL ZuiMsgLoop_exit();
+ZEXPORT ZuiVoid ZCALL ZuiMsgBox();
 #endif //__ZUI_CORE_FUNCTION_H__
