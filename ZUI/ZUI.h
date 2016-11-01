@@ -132,7 +132,7 @@ typedef struct _ZPointR
 
 #define	DEBUG_BORDER	1
 
-
+#include "Core/duktape.h"
 /*基础辅助函数*/
 #include "Core/carray.h"
 #include "Core/string.h"

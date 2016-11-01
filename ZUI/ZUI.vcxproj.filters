@@ -129,6 +129,9 @@
     <ClCompile Include="zlib\unzip.c">
       <Filter>源文件\zlib</Filter>
     </ClCompile>
+    <ClCompile Include="core\duktape.c">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZUI.h">
@@ -229,6 +232,12 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="core\duktape.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\duk_config.h">
+      <Filter>头文件\core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
