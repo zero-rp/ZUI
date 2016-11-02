@@ -118,13 +118,13 @@ ZuiPaintManager NewCPaintManagerUI(){
 
 		if (m_hUpdateRectPen == NULL) {
 			m_hUpdateRectPen = CreatePen(PS_SOLID, 1, RGB(220, 0, 0));
-			// Boot Windows Common Controls (for the ToolTip control)
 			InitCommonControls();
 			LoadLibrary(_T("msimg32.dll"));
 		}
 
 		p->m_ptLastMousePos.x = p->m_ptLastMousePos.y = -1;
 
+		p->m_js = duk_create_heap_default();
 
 		p->m_aTimers= darray_create();
 		p->m_aPostPaintControls = darray_create();

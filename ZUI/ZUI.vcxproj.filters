@@ -132,6 +132,9 @@
     <ClCompile Include="core\duktape.c">
       <Filter>源文件\core</Filter>
     </ClCompile>
+    <ClCompile Include="core\obj.c">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZUI.h">
@@ -237,6 +240,9 @@
       <Filter>头文件\core</Filter>
     </ClInclude>
     <ClInclude Include="core\duk_config.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\obj.h">
       <Filter>头文件\core</Filter>
     </ClInclude>
   </ItemGroup>

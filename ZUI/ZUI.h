@@ -146,6 +146,7 @@ typedef struct _ZPointR
 /*内核*/
 #include "Core/manager.h"		//绘制管理器
 #include "Core/control.h"		//控件基类
+#include "Core/obj.h"			//基础对象
 #include "Core/builder.h"
 
 /*控件*/

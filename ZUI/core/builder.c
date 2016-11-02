@@ -17,7 +17,10 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
 #if !(defined NDEBUG)
 			printf("layout创建控件: 类名:%ls\r\n", ClassName);
 #endif
-			if (!node->user_data) {//当前节点还未创建
+			if (wcscmp(ClassName, L"Template")==0) {//模版类
+
+			}
+			else if (!node->user_data) {//当前节点还未创建
 				Control = NewZuiControl(ClassName, NULL, NULL, NULL);
 				if (node->parent->user_data && wcsicmp(ClassName, L"window") != 0) {
 					//上级控件已存在且当前欲创建的子窗口不为窗口对象
