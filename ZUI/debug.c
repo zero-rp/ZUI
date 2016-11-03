@@ -95,8 +95,8 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProcEx(ZuiInt ProcId, ZuiControl cp, ZuiOption p, 
 
 ZuiAny ZCALL Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 	if (wcscmp(p->m_sName, L"clos") == 0) {
-		ZuiMsgLoop_exit();
-		exit(0);
+		//ZuiMsgLoop_exit();
+		//exit(0);
 	}else if (wcscmp(p->m_sName, L"min") == 0) {
 		ZuiControlCall(Proc_Window_SetWindowMin, win, NULL, NULL, NULL);
 	}else if (wcscmp(p->m_sName, L"max") == 0) {
@@ -159,7 +159,6 @@ ZuiAny ZCALL Notify_other(ZuiText msg, ZuiControl cp, ZuiBrowser p, ZuiAny Param
 
 
  __declspec(dllexport) void __stdcall DLLDebug(){
-
 	ZuiInit();
 	
 

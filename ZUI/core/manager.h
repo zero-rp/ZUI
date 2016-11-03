@@ -140,7 +140,7 @@ typedef struct _ZuiPaintManager
 	BOOL m_bIsPainting;				///是否正在绘制
 	BOOL m_bUsedVirtualWnd;
 	//
-	duk_context *m_js;				///
+	js_State *m_js;				///
 	//
 	DArray *m_aTimers;				///时钟句柄数组
 	DArray *m_aPostPaintControls;	///发送绘制请求的控件集合

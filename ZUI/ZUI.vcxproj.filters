@@ -37,6 +37,12 @@
     <Filter Include="源文件\control">
       <UniqueIdentifier>{001350cb-58cc-48cf-9b30-e8316f91daa3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\mujs">
+      <UniqueIdentifier>{b0621af7-5a68-418c-a8c2-1137e5388e1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\mujs">
+      <UniqueIdentifier>{52a5fa0a-b94d-496f-a90d-840159eb8911}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug.c">
@@ -129,11 +135,89 @@
     <ClCompile Include="zlib\unzip.c">
       <Filter>源文件\zlib</Filter>
     </ClCompile>
-    <ClCompile Include="core\duktape.c">
-      <Filter>源文件\core</Filter>
-    </ClCompile>
     <ClCompile Include="core\obj.c">
       <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\template.c">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jsarray.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jsboolean.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jsbuiltin.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jscompile.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jsdate.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jsdtoa.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jsdump.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jserror.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jsfunction.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jsgc.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jsintern.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jslex.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jsmath.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jsnumber.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jsobject.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\json.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jsparse.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jsproperty.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jsregexp.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jsrun.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jsstate.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jsstring.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\jsvalue.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\regexp.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\utftype.c">
+      <Filter>源文件\mujs</Filter>
+    </ClCompile>
+    <ClCompile Include="mujs\utf.c">
+      <Filter>源文件\mujs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -236,14 +320,47 @@
     <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="core\duktape.h">
-      <Filter>头文件\core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\duk_config.h">
-      <Filter>头文件\core</Filter>
-    </ClInclude>
     <ClInclude Include="core\obj.h">
       <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\template.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="mujs\astnames.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="mujs\jsbuiltin.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="mujs\jscompile.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="mujs\jsi.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="mujs\jslex.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="mujs\jsparse.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="mujs\jsrun.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="mujs\jsvalue.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="mujs\mujs.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="mujs\opnames.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="mujs\regexp.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="mujs\utf.h">
+      <Filter>头文件\mujs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

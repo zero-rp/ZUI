@@ -329,6 +329,10 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 				return NULL;
 			}
 		}
+		else if (type == ZREST_STREAM) {
+			res->p = buf;
+			res->plen = buflen;
+		}
 		if (!res->p) {
 			free(res);
 			return NULL;

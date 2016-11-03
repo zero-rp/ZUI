@@ -14,6 +14,9 @@
 #ifndef __ZUI_CORE_OBJ_H__
 #define __ZUI_CORE_OBJ_H__
 
-
+typedef struct _ZObj
+{
+	int a;
+}*ZuiObj, ZObj;
 
 #endif	//__ZUI_CORE_BUILDER_H__

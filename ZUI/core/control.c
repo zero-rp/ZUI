@@ -30,6 +30,8 @@ ZuiControl NewZuiControl(ZuiText classname, void* Param1, void* Param2, void* Pa
 
 		p->call = &ZuiDefaultControlProc;
 
+		p->m_rAttribute = rb_new();
+
 		//通知重载的对象开始创建
 		//没有重载的
 		/*查找类名*/
@@ -451,8 +453,14 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 			//}
 		}
 		else if (wcscmp(Param1, L"visible") == 0) ZuiControlCall(Proc_SetVisible, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
+		else
+			rb_insert((key_t)Zui_Hash(Param1), _wcsdup((ZuiText)Param2), p->m_rAttribute);
 	}
 		break;
+	case Proc_GetAttribute: {
+
+		break;
+	}
 	default:
 		break;
 	}
@@ -473,6 +481,11 @@ ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, 
 ZEXPORT ZuiAny ZCALL ZuiControlNotify(ZuiText msg, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 	if (p->m_pNotify)
 	{
+		//先通知js
+		rb_node * node = rb_search((key_t)Zui_Hash(msg), p->m_rAttribute);
+		if (node) {
+			ZuiBuilderJsLoad(p->m_pManager->m_js, node->data, wcslen(node->data));
+		}
 		return p->m_pNotify(msg, p, p->m_sUserData, Param1, Param2, Param3);
 	}
 	return NULL;

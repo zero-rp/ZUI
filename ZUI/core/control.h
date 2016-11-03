@@ -17,6 +17,7 @@
 /////////////////////////////////////////////////////////////////////////////////////
 //
 typedef struct _ZControl *ZuiControl, ZControl;
+typedef struct _ZObj *ZuiObj, ZObj;
 
 typedef ZuiControl(ZCALL* FINDCONTROLPROC)(ZuiControl, LPVOID);
 typedef ZuiAny(ZCALL *ZCtlProc)(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
@@ -27,6 +28,7 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 
 #define	Proc_CoreInit			1	//用于控件内核初始化
 #define	Proc_SetAttribute		2	//解析属性
+#define	Proc_GetAttribute		51	//取属性
 #define	Proc_GetControlFlags	3	//
 #define	Proc_Activate			4	//活动
 #define	Proc_SetVisible			5	//设置是否可视
@@ -112,6 +114,9 @@ typedef struct _ZControl
 	ZuiText m_sToolTip;				//提示文本
 	_ZuiText m_chShortcut;			//快捷键
 	void *m_sUserData;				//
+
+	ZuiObj m_obj;					//对象树
+	rb_root *m_rAttribute;			//属性map
 
 	//控件默认样式-------------------
 	ZuiInt m_tyle;					//控件风格

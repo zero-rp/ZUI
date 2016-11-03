@@ -132,7 +132,7 @@ typedef struct _ZPointR
 
 #define	DEBUG_BORDER	1
 
-#include "Core/duktape.h"
+#include "mujs/mujs.h"
 /*基础辅助函数*/
 #include "Core/carray.h"
 #include "Core/string.h"
@@ -147,6 +147,7 @@ typedef struct _ZPointR
 #include "Core/manager.h"		//绘制管理器
 #include "Core/control.h"		//控件基类
 #include "Core/obj.h"			//基础对象
+#include "Core/template.h"
 #include "Core/builder.h"
 
 /*控件*/

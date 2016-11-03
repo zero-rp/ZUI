@@ -48,6 +48,7 @@ typedef struct _ZResDB
 typedef struct _ZRes
 {
 	ZuiAny p;		//资源指针
+	ZuiInt plen;	//资源长度
 
 	ZuiInt hash;
 	ZuiInt ref;		//引用计数器

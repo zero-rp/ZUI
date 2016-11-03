@@ -753,9 +753,9 @@ unzFile unzOpen(const wchar_t *path, void *buff, int len)
 
 		unz64_stream *p = malloc(sizeof(unz64_stream));
 		memset(p, 0, sizeof(unz64_stream));
-		p->buff = buff;
+		p->buff = malloc(len);
 		p->len = len;
-
+		memcpy(p->buff, buff, len);
 		us.filestream = (void *)p;
 	}
 

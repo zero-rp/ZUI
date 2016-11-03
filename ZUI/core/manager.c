@@ -124,7 +124,8 @@ ZuiPaintManager NewCPaintManagerUI(){
 
 		p->m_ptLastMousePos.x = p->m_ptLastMousePos.y = -1;
 
-		p->m_js = duk_create_heap_default();
+		p->m_js = js_newstate(NULL, NULL, JS_STRICT);
+		ZuiBuilderJs(p->m_js);
 
 		p->m_aTimers= darray_create();
 		p->m_aPostPaintControls = darray_create();

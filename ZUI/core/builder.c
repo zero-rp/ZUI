@@ -18,7 +18,21 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
 			printf("layout创建控件: 类名:%ls\r\n", ClassName);
 #endif
 			if (wcscmp(ClassName, L"Template")==0) {//模版类
-
+				ZuiAddTemplate(node);
+				node = node->next;
+				ClassName = node->value.name;
+			}
+			if (wcscmp(ClassName, L"LoadScript") == 0) {
+				ZuiText src = NULL;
+				for (size_t i = 0; i < node->value.num_attrs; i++)
+				{
+					if (wcscmp(node->value.attrs[i].name, L"src") == 0) {
+						src = node->value.attrs[i].value;
+					}
+				}
+				ZuiRes res = ZuiResDBGetRes(src, ZREST_TXT);
+				ZuiBuilderJsLoad(win->m_pManager->m_js, res->p, res->plen);
+				ZuiResDBDelRes(res);
 			}
 			else if (!node->user_data) {//当前节点还未创建
 				Control = NewZuiControl(ClassName, NULL, NULL, NULL);
@@ -58,4 +72,26 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
 	mxmlDelete(tree);
 	return win;
 }
+static void ZuiJsBind_Call_exit(js_State *J) {
+	exit(0);
+}
+static void ZuiJsBind_Call_print(js_State *J) {
+	for (size_t i = 0; i < js_gettop(J) - 1; i++)
+	{
+		printf("%ls", js_tostring(J, i+1));
+	}
+	printf("\r\n");
+	js_pushundefined(J);
+}
+ZEXPORT ZuiControl ZCALL ZuiBuilderJs(js_State *J) {
+	js_newcfunction(J, ZuiJsBind_Call_exit,L"exit", 0);
+	js_setglobal(J, L"exit");
 
+	js_newcfunction(J, ZuiJsBind_Call_print, L"a", 0);
+	js_setglobal(J, L"a");
+}
+
+
+ZEXPORT ZuiBool ZCALL ZuiBuilderJsLoad(js_State *J, ZuiText str, ZuiInt len) {
+	js_dostring(J, str);
+}
