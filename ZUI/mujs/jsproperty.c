@@ -247,7 +247,7 @@ static void itwalk(js_State *J, js_Object *io, js_Object *top, int own)
 {
 	js_Object *obj = top;
 	js_Iterator *tail = NULL;
-	char buf[32];
+	wchar_t buf[32];
 	int k;
 
 #define ITADD(x) \
@@ -294,7 +294,7 @@ js_Object *jsV_newiterator(js_State *J, js_Object *obj, int own)
 	return io;
 }
 
-const char *jsV_nextiterator(js_State *J, js_Object *io)
+const wchar_t *jsV_nextiterator(js_State *J, js_Object *io)
 {
 	int k;
 	if (io->type != JS_CITERATOR)

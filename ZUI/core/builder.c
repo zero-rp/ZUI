@@ -87,8 +87,10 @@ ZEXPORT ZuiControl ZCALL ZuiBuilderJs(js_State *J) {
 	js_newcfunction(J, ZuiJsBind_Call_exit,L"exit", 0);
 	js_setglobal(J, L"exit");
 
-	js_newcfunction(J, ZuiJsBind_Call_print, L"a", 0);
-	js_setglobal(J, L"a");
+	js_newcfunction(J, ZuiJsBind_Call_print, L"print", 0);
+	js_setglobal(J, L"print");
+
+
 }
 
 

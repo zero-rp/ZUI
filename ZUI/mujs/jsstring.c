@@ -4,18 +4,18 @@
 #include "utf.h"
 #include "regexp.h"
 
-static const char *checkstring(js_State *J, int idx)
+static const wchar_t *checkstring(js_State *J, int idx)
 {
 	if (!js_iscoercible(J, idx))
 		js_typeerror(J, L"string function called on null or undefined");
 	return js_tostring(J, idx);
 }
 
-int js_runeat(js_State *J, const char *s, int i)
+int js_runeat(js_State *J, const wchar_t *s, int i)
 {
 	Rune rune = 0;
 	while (i-- >= 0) {
-		rune = *(unsigned char*)s;
+		rune = *(wchar_t*)s;
 		if (rune < Runeself) {
 			if (rune == 0)
 				return 0;
@@ -26,7 +26,7 @@ int js_runeat(js_State *J, const char *s, int i)
 	return rune;
 }
 
-const char *js_utfidxtoptr(const wchar_t *s, int i)
+const wchar_t *js_utfidxtoptr(const wchar_t *s, int i)
 {
 	Rune rune;
 	while (i-- > 0) {
@@ -57,12 +57,12 @@ int js_utfptrtoidx(const wchar_t *s, const wchar_t *p)
 
 static void jsB_new_String(js_State *J)
 {
-	js_newstring(J, js_gettop(J) > 1 ? js_tostring(J, 1) : "");
+	js_newstring(J, js_gettop(J) > 1 ? js_tostring(J, 1) : L"");
 }
 
 static void jsB_String(js_State *J)
 {
-	js_pushstring(J, js_gettop(J) > 1 ? js_tostring(J, 1) : "");
+	js_pushstring(J, js_gettop(J) > 1 ? js_tostring(J, 1) : L"");
 }
 
 static void Sp_toString(js_State *J)
@@ -89,7 +89,7 @@ static void Sp_charAt(js_State *J)
 		buf[runetochar(buf, &rune)] = 0;
 		js_pushstring(J, buf);
 	} else {
-		js_pushliteral(J, "");
+		js_pushliteral(J, L"");
 	}
 }
 
@@ -159,8 +159,8 @@ static void Sp_lastIndexOf(js_State *J)
 {
 	const wchar_t *haystack = checkstring(J, 0);
 	const wchar_t *needle = js_tostring(J, 1);
-	int pos = js_isdefined(J, 2) ? js_tointeger(J, 2) : strlen(haystack);
-	int len = strlen(needle);
+	int pos = js_isdefined(J, 2) ? js_tointeger(J, 2) : wcslen(haystack);
+	int len = wcslen(needle);
 	int k = 0, last = -1;
 	Rune rune;
 	while (*haystack && k <= pos) {
@@ -176,7 +176,7 @@ static void Sp_localeCompare(js_State *J)
 {
 	const wchar_t *a = checkstring(J, 0);
 	const wchar_t *b = js_tostring(J, 1);
-	js_pushnumber(J, strcmp(a, b));
+	js_pushnumber(J, wcscmp(a, b));
 }
 
 static void Sp_slice(js_State *J)
@@ -228,9 +228,9 @@ static void Sp_substring(js_State *J)
 
 static void Sp_toLowerCase(js_State *J)
 {
-	const char *src = checkstring(J, 0);
-	char *dst = js_malloc(J, UTFmax * strlen(src) + 1);
-	const char *s = src;
+	const wchar_t *src = checkstring(J, 0);
+	char *dst = js_malloc(J, UTFmax * wcslen(src)*sizeof(wchar_t) + 1);
+	const wchar_t *s = src;
 	char *d = dst;
 	Rune rune;
 	while (*s) {
@@ -251,9 +251,9 @@ static void Sp_toLowerCase(js_State *J)
 static void Sp_toUpperCase(js_State *J)
 {
 	const wchar_t *src = checkstring(J, 0);
-	char *dst = js_malloc(J, UTFmax * strlen(src) + 1);
+	wchar_t *dst = js_malloc(J, UTFmax * strlen(src)*sizeof(wchar_t) + 1);
 	const wchar_t *s = src;
-	char *d = dst;
+	wchar_t *d = dst;
 	Rune rune;
 	while (*s) {
 		s += chartorune(&rune, s);
@@ -317,7 +317,7 @@ static void Sp_match(js_State *J)
 	js_Regexp *re;
 	const wchar_t *text;
 	int len;
-	const char *a, *b, *c, *e;
+	const wchar_t *a, *b, *c, *e;
 	Resub m;
 
 	text = checkstring(J, 0);
@@ -325,7 +325,7 @@ static void Sp_match(js_State *J)
 	if (js_isregexp(J, 1))
 		js_copy(J, 1);
 	else if (js_isundefined(J, 1))
-		js_newregexp(J, "", 0);
+		js_newregexp(J, L"", 0);
 	else
 		js_newregexp(J, js_tostring(J, 1), 0);
 
@@ -491,12 +491,12 @@ static void Sp_replace_string(js_State *J)
 	source = checkstring(J, 0);
 	needle = js_tostring(J, 1);
 
-	s = strstr(source, needle);
+	s = wcsstr(source, needle);
 	if (!s) {
 		js_copy(J, 0);
 		return;
 	}
-	n = strlen(needle);
+	n = wcslen(needle);
 
 	if (js_iscallable(J, 2)) {
 		js_copy(J, 2);
@@ -571,7 +571,7 @@ static void Sp_split_regexp(js_State *J)
 	if (e == text) {
 		if (js_regexec(re->prog, text, &m, 0)) {
 			if (len == limit) return;
-			js_pushliteral(J, "");
+			js_pushliteral(J, L"");
 			js_setindex(J, -2, 0);
 		}
 		return;
@@ -633,7 +633,7 @@ static void Sp_split_string(js_State *J)
 	}
 
 	for (i = 0; str && i < limit; ++i) {
-		const char *s = wcsstr(str, sep);
+		const wchar_t *s = wcsstr(str, sep);
 		if (s) {
 			js_pushlstring(J, str, s-str);
 			js_setindex(J, -2, i);
@@ -661,7 +661,7 @@ static void Sp_split(js_State *J)
 
 void jsB_initstring(js_State *J)
 {
-	J->String_prototype->u.s.string = "";
+	J->String_prototype->u.s.string = L"";
 	J->String_prototype->u.s.length = 0;
 
 	js_pushobject(J, J->String_prototype);

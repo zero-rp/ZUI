@@ -8,8 +8,8 @@
 typedef struct Reprog Reprog;
 typedef struct Resub Resub;
 
-Reprog *regcomp(const char *pattern, int cflags, const char **errorp);
-int regexec(Reprog *prog, const char *string, Resub *sub, int eflags);
+Reprog *regcomp(const wchar_t *pattern, int cflags, const wchar_t **errorp);
+int regexec(Reprog *prog, const wchar_t *string, Resub *sub, int eflags);
 void regfree(Reprog *prog);
 
 enum {
@@ -27,8 +27,8 @@ enum {
 struct Resub {
 	int nsub;
 	struct {
-		const char *sp;
-		const char *ep;
+		const wchar_t *sp;
+		const wchar_t *ep;
 	} sub[REG_MAXSUB];
 };
 

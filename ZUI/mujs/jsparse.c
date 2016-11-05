@@ -23,27 +23,27 @@ static js_Ast *funbody(js_State *J);
 
 JS_NORETURN static void jsP_error(js_State *J, const char *fmt, ...) JS_PRINTFLIKE(2,3);
 
-static void jsP_error(js_State *J, const char *fmt, ...)
+static void jsP_error(js_State *J, const wchar_t *fmt, ...)
 {
 	va_list ap;
-	char buf[512];
-	char msgbuf[256];
+	wchar_t buf[512];
+	wchar_t msgbuf[256];
 
 	va_start(ap, fmt);
 	vsnprintf(msgbuf, 256, fmt, ap);
 	va_end(ap);
 
-	snprintf(buf, 256, "%s:%d: ", J->filename, J->lexline);
+	snprintf(buf, 256, "%ls:%d: ", J->filename, J->lexline);
 	strcat(buf, msgbuf);
 
 	js_newsyntaxerror(J, buf);
 	js_throw(J);
 }
 
-static void jsP_warning(js_State *J, const char *fmt, ...)
+static void jsP_warning(js_State *J, const wchar_t *fmt, ...)
 {
 	va_list ap;
-	fprintf(stderr, "%s:%d: warning: ", J->filename, J->lexline);
+	fprintf(stderr, "%ls:%d: warning: ", J->filename, J->lexline);
 	va_start(ap, fmt);
 	vfprintf(stderr, fmt, ap);
 	va_end(ap);
@@ -89,7 +89,7 @@ static js_Ast *jsP_list(js_Ast *head)
 	return head;
 }
 
-static js_Ast *jsP_newstrnode(js_State *J, enum js_AstType type, const char *s)
+static js_Ast *jsP_newstrnode(js_State *J, enum js_AstType type, const wchar_t *s)
 {
 	js_Ast *node = jsP_newnode(J, type, 0, 0, 0, 0);
 	node->string = s;
@@ -134,7 +134,7 @@ static void jsP_next(js_State *J)
 
 #define jsP_accept(J,x) (J->lookahead == x ? (jsP_next(J), 1) : 0)
 
-#define jsP_expect(J,x) if (!jsP_accept(J, x)) jsP_error(J, "unexpected token: %s (expected %s)", jsY_tokenstring(J->lookahead), jsY_tokenstring(x))
+#define jsP_expect(J,x) if (!jsP_accept(J, x)) jsP_error(J, L"unexpected token: %ls (expected %ls)", jsY_tokenstring(J->lookahead), jsY_tokenstring(x))
 
 static void semicolon(js_State *J)
 {
@@ -144,26 +144,26 @@ static void semicolon(js_State *J)
 	}
 	if (J->newline || J->lookahead == '}' || J->lookahead == 0)
 		return;
-	jsP_error(J, "unexpected token: %s (expected ';')", jsY_tokenstring(J->lookahead));
+	jsP_error(J, L"unexpected token: %ls (expected ';')", jsY_tokenstring(J->lookahead));
 }
 
 /* Literals */
 
-static const char *futurewords[] = {
-	"class", "const", "enum", "export", "extends", "import", "super",
+static const wchar_t *futurewords[] = {
+	L"class", L"const", L"enum", L"export", L"extends", L"import", L"super",
 };
 
-static const char *strictfuturewords[] = {
-	"implements", "interface", "let", "package", "private", "protected",
-	"public", "static", "yield",
+static const wchar_t *strictfuturewords[] = {
+	L"implements", L"interface", L"let", L"package", L"private", L"protected",
+	L"public", L"static", L"yield",
 };
 
-static void checkfutureword(js_State *J, const char *s)
+static void checkfutureword(js_State *J, const wchar_t *s)
 {
 	if (jsY_findword(s, futurewords, nelem(futurewords)) >= 0)
-		jsP_error(J, "'%s' is a future reserved word", s);
+		jsP_error(J, L"'%s' is a future reserved word", s);
 	if (J->strict && jsY_findword(s, strictfuturewords, nelem(strictfuturewords)) >= 0)
-		jsP_error(J, "'%s' is a strict mode future reserved word", s);
+		jsP_error(J, L"'%ls' is a strict mode future reserved word", s);
 }
 
 static js_Ast *identifier(js_State *J)
@@ -175,7 +175,7 @@ static js_Ast *identifier(js_State *J)
 		jsP_next(J);
 		return a;
 	}
-	jsP_error(J, "unexpected token: %s (expected identifier)", jsY_tokenstring(J->lookahead));
+	jsP_error(J, L"unexpected token: %ls (expected identifier)", jsY_tokenstring(J->lookahead));
 }
 
 static js_Ast *identifieropt(js_State *J)
@@ -192,7 +192,7 @@ static js_Ast *identifiername(js_State *J)
 		jsP_next(J);
 		return a;
 	}
-	jsP_error(J, "unexpected token: %s (expected identifier or keyword)", jsY_tokenstring(J->lookahead));
+	jsP_error(J, L"unexpected token: %ls (expected identifier or keyword)", jsY_tokenstring(J->lookahead));
 }
 
 static js_Ast *arrayelement(js_State *J)
@@ -237,14 +237,14 @@ static js_Ast *propassign(js_State *J)
 	name = propname(J);
 
 	if (J->lookahead != ':' && name->type == AST_IDENTIFIER) {
-		if (!strcmp(name->string, "get")) {
+		if (!wcscmp(name->string, L"get")) {
 			name = propname(J);
 			jsP_expect(J, '(');
 			jsP_expect(J, ')');
 			body = funbody(J);
 			return EXP3(PROP_GET, name, NULL, body);
 		}
-		if (!strcmp(name->string, "set")) {
+		if (!wcscmp(name->string, L"set")) {
 			name = propname(J);
 			jsP_expect(J, '(');
 			arg = identifier(J);
@@ -613,7 +613,7 @@ static js_Ast *caseclause(js_State *J)
 		return STM1(DEFAULT, a);
 	}
 
-	jsP_error(J, "unexpected token in switch: %s (expected 'case' or 'default')", jsY_tokenstring(J->lookahead));
+	jsP_error(J, L"unexpected token in switch: %s (expected 'case' or 'default')", jsY_tokenstring(J->lookahead));
 }
 
 static js_Ast *caselist(js_State *J)
@@ -663,7 +663,7 @@ static js_Ast *forstatement(js_State *J)
 			c = statement(J);
 			return STM3(FOR_IN_VAR, a, b, c);
 		}
-		jsP_error(J, "unexpected token in for-var-statement: %s", jsY_tokenstring(J->lookahead));
+		jsP_error(J, L"unexpected token in for-var-statement: %s", jsY_tokenstring(J->lookahead));
 	}
 
 	if (J->lookahead != ';')
@@ -682,7 +682,7 @@ static js_Ast *forstatement(js_State *J)
 		c = statement(J);
 		return STM3(FOR_IN, a, b, c);
 	}
-	jsP_error(J, "unexpected token in for-statement: %s", jsY_tokenstring(J->lookahead));
+	jsP_error(J, L"unexpected token in for-statement: %s", jsY_tokenstring(J->lookahead));
 }
 
 static js_Ast *statement(js_State *J)
@@ -761,7 +761,7 @@ static js_Ast *statement(js_State *J)
 
 	if (jsP_accept(J, TK_WITH)) {
 		if (J->strict)
-			jsP_error(J, "'with' statements are not allowed in strict mode");
+			jsP_error(J, L"'with' statements are not allowed in strict mode");
 		jsP_expect(J, '(');
 		a = expression(J, 0);
 		jsP_expect(J, ')');
@@ -798,7 +798,7 @@ static js_Ast *statement(js_State *J)
 			d = block(J);
 		}
 		if (!b && !d)
-			jsP_error(J, "unexpected token in try: %s (expected 'catch' or 'finally')", jsY_tokenstring(J->lookahead));
+			jsP_error(J, L"unexpected token in try: %s (expected 'catch' or 'finally')", jsY_tokenstring(J->lookahead));
 		return STM4(TRY, a, b, c, d);
 	}
 
@@ -808,7 +808,7 @@ static js_Ast *statement(js_State *J)
 	}
 
 	if (jsP_accept(J, TK_FUNCTION)) {
-		jsP_warning(J, "function statements are not standard");
+		jsP_warning(J, L"function statements are not standard");
 		return funstm(J);
 	}
 

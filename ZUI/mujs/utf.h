@@ -1,5 +1,6 @@
 #ifndef js_utf_h
 #define js_utf_h
+#include <wchar.h>
 
 typedef unsigned short Rune;	/* 16 bits */
 
@@ -25,10 +26,10 @@ enum
 	Runeerror	= 0xFFFD,	/* decoding error in UTF */
 };
 
-int	chartorune(Rune *rune, const char *str);
+int	chartorune(Rune *rune, const wchar_t *str);
 int	runetochar(char *str, const Rune *rune);
 int	runelen(int c);
-int	utflen(const char *s);
+int	utflen(const wchar_t *s);
 
 int		isalpharune(Rune c);
 int		islowerrune(Rune c);

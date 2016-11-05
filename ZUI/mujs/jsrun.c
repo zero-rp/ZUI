@@ -45,7 +45,7 @@ void *js_realloc(js_State *J, void *ptr, int size)
 	return ptr;
 }
 
-char *js_strdup(js_State *J, const wchar_t *s)
+wchar_t *js_strdup(js_State *J, const wchar_t *s)
 {
 	int n = wcslen(s) + 1;
 	wchar_t *p = js_malloc(J, n*sizeof(wchar_t));
@@ -716,7 +716,7 @@ dontconf:
 
 /* Registry, global and object property accessors */
 
-const char *js_ref(js_State *J)
+const wchar_t *js_ref(js_State *J)
 {
 	js_Value *v = stackidx(J, -1);
 	const wchar_t *s;
@@ -1347,7 +1347,7 @@ static void jsR_run(js_State *J, js_Function *F)
 		case OP_GETVAR:
 			str = ST[*pc++];
 			if (!js_hasvar(J, str))
-				js_referenceerror(J, L"'%s' is not defined", str);
+				js_referenceerror(J, L"'%ls' is not defined", str);
 			break;
 
 		case OP_HASVAR:

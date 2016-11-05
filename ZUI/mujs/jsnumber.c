@@ -56,7 +56,7 @@ static void Np_toFixed(js_State *J)
 {
 	js_Object *self = js_toobject(J, 0);
 	int width = js_tointeger(J, 1);
-	if (self->type != JS_CNUMBER) js_typeerror(J, "not a number");
+	if (self->type != JS_CNUMBER) js_typeerror(J, L"not a number");
 	numtostr(J, "%.*f", width, self->u.number);
 }
 
@@ -64,7 +64,7 @@ static void Np_toExponential(js_State *J)
 {
 	js_Object *self = js_toobject(J, 0);
 	int width = js_tointeger(J, 1);
-	if (self->type != JS_CNUMBER) js_typeerror(J, "not a number");
+	if (self->type != JS_CNUMBER) js_typeerror(J, L"not a number");
 	numtostr(J, "%.*e", width, self->u.number);
 }
 

@@ -57,15 +57,15 @@ struct js_Value
 		js_String *memstr;
 		js_Object *object;
 	} u;
-	char pad[7]; /* extra storage for shrstr */
-	char type; /* type tag and zero terminator for shrstr */
+	wchar_t pad[7]; /* extra storage for shrstr */
+	wchar_t type; /* type tag and zero terminator for shrstr */
 };
 
 struct js_String
 {
 	js_String *gcnext;
-	char gcmark;
-	char p[1];
+	wchar_t gcmark;
+	wchar_t p[1];
 };
 
 struct js_Regexp
@@ -176,7 +176,7 @@ js_Property *jsV_nextproperty(js_State *J, js_Object *obj, const wchar_t *name);
 void jsV_delproperty(js_State *J, js_Object *obj, const wchar_t *name);
 
 js_Object *jsV_newiterator(js_State *J, js_Object *obj, int own);
-const char *jsV_nextiterator(js_State *J, js_Object *iter);
+const wchar_t *jsV_nextiterator(js_State *J, js_Object *iter);
 
 void jsV_resizearray(js_State *J, js_Object *obj, int newlen);
 

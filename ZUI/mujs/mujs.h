@@ -30,9 +30,9 @@ typedef void *(*js_Alloc)(void *memctx, void *ptr, int size);
 typedef void (*js_Panic)(js_State *J);
 typedef void (*js_CFunction)(js_State *J);
 typedef void (*js_Finalize)(js_State *J, void *p);
-typedef int (*js_HasProperty)(js_State *J, void *p, const char *name);
-typedef int (*js_Put)(js_State *J, void *p, const char *name);
-typedef int (*js_Delete)(js_State *J, void *p, const char *name);
+typedef int (*js_HasProperty)(js_State *J, void *p, const wchar_t *name);
+typedef int (*js_Put)(js_State *J, void *p, const wchar_t *name);
+typedef int (*js_Delete)(js_State *J, void *p, const wchar_t *name);
 
 /* Basic functions */
 js_State *js_newstate(js_Alloc alloc, void *actx, int flags);
@@ -42,10 +42,10 @@ js_Panic js_atpanic(js_State *J, js_Panic panic);
 void js_freestate(js_State *J);
 void js_gc(js_State *J, int report);
 
-int js_dostring(js_State *J, const char *source);
-int js_dofile(js_State *J, const char *filename);
-int js_ploadstring(js_State *J, const char *filename, const char *source);
-int js_ploadfile(js_State *J, const char *filename);
+int js_dostring(js_State *J, const wchar_t *source);
+int js_dofile(js_State *J, const wchar_t *filename);
+int js_ploadstring(js_State *J, const wchar_t *filename, const wchar_t *source);
+int js_ploadfile(js_State *J, const wchar_t *filename);
 int js_pcall(js_State *J, int n);
 int js_pconstruct(js_State *J, int n);
 
@@ -77,47 +77,47 @@ enum {
 	JS_DONTCONF = 4,
 };
 
-void js_newerror(js_State *J, const char *message);
-void js_newevalerror(js_State *J, const char *message);
-void js_newrangeerror(js_State *J, const char *message);
-void js_newreferenceerror(js_State *J, const char *message);
-void js_newsyntaxerror(js_State *J, const char *message);
-void js_newtypeerror(js_State *J, const char *message);
-void js_newurierror(js_State *J, const char *message);
+void js_newerror(js_State *J, const wchar_t *message);
+void js_newevalerror(js_State *J, const wchar_t *message);
+void js_newrangeerror(js_State *J, const wchar_t *message);
+void js_newreferenceerror(js_State *J, const wchar_t *message);
+void js_newsyntaxerror(js_State *J, const wchar_t *message);
+void js_newtypeerror(js_State *J, const wchar_t *message);
+void js_newurierror(js_State *J, const wchar_t *message);
 
-JS_NORETURN void js_error(js_State *J, const char *fmt, ...) JS_PRINTFLIKE(2,3);
-JS_NORETURN void js_evalerror(js_State *J, const char *fmt, ...) JS_PRINTFLIKE(2,3);
-JS_NORETURN void js_rangeerror(js_State *J, const char *fmt, ...) JS_PRINTFLIKE(2,3);
-JS_NORETURN void js_referenceerror(js_State *J, const char *fmt, ...) JS_PRINTFLIKE(2,3);
-JS_NORETURN void js_syntaxerror(js_State *J, const char *fmt, ...) JS_PRINTFLIKE(2,3);
-JS_NORETURN void js_typeerror(js_State *J, const char *fmt, ...) JS_PRINTFLIKE(2,3);
-JS_NORETURN void js_urierror(js_State *J, const char *fmt, ...) JS_PRINTFLIKE(2,3);
+JS_NORETURN void js_error(js_State *J, const wchar_t *fmt, ...) JS_PRINTFLIKE(2,3);
+JS_NORETURN void js_evalerror(js_State *J, const wchar_t *fmt, ...) JS_PRINTFLIKE(2,3);
+JS_NORETURN void js_rangeerror(js_State *J, const wchar_t *fmt, ...) JS_PRINTFLIKE(2,3);
+JS_NORETURN void js_referenceerror(js_State *J, const wchar_t *fmt, ...) JS_PRINTFLIKE(2,3);
+JS_NORETURN void js_syntaxerror(js_State *J, const wchar_t *fmt, ...) JS_PRINTFLIKE(2,3);
+JS_NORETURN void js_typeerror(js_State *J, const wchar_t *fmt, ...) JS_PRINTFLIKE(2,3);
+JS_NORETURN void js_urierror(js_State *J, const wchar_t *fmt, ...) JS_PRINTFLIKE(2,3);
 JS_NORETURN void js_throw(js_State *J);
 
-void js_loadstring(js_State *J, const char *filename, const char *source);
-void js_loadfile(js_State *J, const char *filename);
+void js_loadstring(js_State *J, const wchar_t *filename, const wchar_t *source);
+void js_loadfile(js_State *J, const wchar_t *filename);
 
 void js_eval(js_State *J);
 void js_call(js_State *J, int n);
 void js_construct(js_State *J, int n);
 
-const char *js_ref(js_State *J);
-void js_unref(js_State *J, const char *ref);
+const wchar_t *js_ref(js_State *J);
+void js_unref(js_State *J, const wchar_t *ref);
 
-void js_getregistry(js_State *J, const char *name);
-void js_setregistry(js_State *J, const char *name);
+void js_getregistry(js_State *J, const wchar_t *name);
+void js_setregistry(js_State *J, const wchar_t *name);
 void js_delregistry(js_State *J, const char *name);
 
-void js_getglobal(js_State *J, const char *name);
-void js_setglobal(js_State *J, const char *name);
-void js_defglobal(js_State *J, const char *name, int atts);
+void js_getglobal(js_State *J, const wchar_t *name);
+void js_setglobal(js_State *J, const wchar_t *name);
+void js_defglobal(js_State *J, const wchar_t *name, int atts);
 
-int js_hasproperty(js_State *J, int idx, const char *name);
-void js_getproperty(js_State *J, int idx, const char *name);
-void js_setproperty(js_State *J, int idx, const char *name);
-void js_defproperty(js_State *J, int idx, const char *name, int atts);
-void js_delproperty(js_State *J, int idx, const char *name);
-void js_defaccessor(js_State *J, int idx, const char *name, int atts);
+int js_hasproperty(js_State *J, int idx, const wchar_t *name);
+void js_getproperty(js_State *J, int idx, const wchar_t *name);
+void js_setproperty(js_State *J, int idx, const wchar_t *name);
+void js_defproperty(js_State *J, int idx, const wchar_t *name, int atts);
+void js_delproperty(js_State *J, int idx, const wchar_t *name);
+void js_defaccessor(js_State *J, int idx, const wchar_t *name, int atts);
 
 int js_getlength(js_State *J, int idx);
 void js_setlength(js_State *J, int idx, int len);
@@ -132,21 +132,21 @@ void js_pushundefined(js_State *J);
 void js_pushnull(js_State *J);
 void js_pushboolean(js_State *J, int v);
 void js_pushnumber(js_State *J, double v);
-void js_pushstring(js_State *J, const char *v);
-void js_pushlstring(js_State *J, const char *v, int n);
-void js_pushliteral(js_State *J, const char *v);
+void js_pushstring(js_State *J, const wchar_t *v);
+void js_pushlstring(js_State *J, const wchar_t *v, int n);
+void js_pushliteral(js_State *J, const wchar_t *v);
 
 void js_newobjectx(js_State *J);
 void js_newobject(js_State *J);
 void js_newarray(js_State *J);
 void js_newboolean(js_State *J, int v);
 void js_newnumber(js_State *J, double v);
-void js_newstring(js_State *J, const char *v);
-void js_newcfunction(js_State *J, js_CFunction fun, const char *name, int length);
-void js_newcconstructor(js_State *J, js_CFunction fun, js_CFunction con, const char *name, int length);
-void js_newuserdata(js_State *J, const char *tag, void *data, js_Finalize finalize);
-void js_newuserdatax(js_State *J, const char *tag, void *data, js_HasProperty has, js_Put put, js_Delete delete, js_Finalize finalize);
-void js_newregexp(js_State *J, const char *pattern, int flags);
+void js_newstring(js_State *J, const wchar_t *v);
+void js_newcfunction(js_State *J, js_CFunction fun, const wchar_t *name, int length);
+void js_newcconstructor(js_State *J, js_CFunction fun, js_CFunction con, const wchar_t *name, int length);
+void js_newuserdata(js_State *J, const wchar_t *tag, void *data, js_Finalize finalize);
+void js_newuserdatax(js_State *J, const wchar_t *tag, void *data, js_HasProperty has, js_Put put, js_Delete delete, js_Finalize finalize);
+void js_newregexp(js_State *J, const wchar_t *pattern, int flags);
 
 void js_pushiterator(js_State *J, int idx, int own);
 const char *js_nextiterator(js_State *J, int idx);
@@ -163,12 +163,12 @@ int js_isarray(js_State *J, int idx);
 int js_isregexp(js_State *J, int idx);
 int js_iscoercible(js_State *J, int idx);
 int js_iscallable(js_State *J, int idx);
-int js_isuserdata(js_State *J, int idx, const char *tag);
+int js_isuserdata(js_State *J, int idx, const wchar_t *tag);
 
 int js_toboolean(js_State *J, int idx);
 double js_tonumber(js_State *J, int idx);
 const wchar_t *js_tostring(js_State *J, int idx);
-void *js_touserdata(js_State *J, int idx, const char *tag);
+void *js_touserdata(js_State *J, int idx, const wchar_t *tag);
 
 int js_tointeger(js_State *J, int idx);
 int js_toint32(js_State *J, int idx);

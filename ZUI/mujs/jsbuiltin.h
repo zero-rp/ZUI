@@ -18,7 +18,7 @@ void jsB_propf(js_State *J, const wchar_t *name, js_CFunction cfun, int n);
 void jsB_propn(js_State *J, const wchar_t *name, double number);
 void jsB_props(js_State *J, const wchar_t *name, const wchar_t *string);
 
-typedef struct js_Buffer { int n, m; char s[64]; } js_Buffer;
+typedef struct js_Buffer { int n, m; wchar_t s[64]; } js_Buffer;
 
 static void js_putc(js_State *J, js_Buffer **sbp, int c)
 {
@@ -35,13 +35,13 @@ static void js_putc(js_State *J, js_Buffer **sbp, int c)
 	sb->s[sb->n++] = c;
 }
 
-static inline void js_puts(js_State *J, js_Buffer **sb, const char *s)
+static inline void js_puts(js_State *J, js_Buffer **sb, const wchar_t *s)
 {
 	while (*s)
 		js_putc(J, sb, *s++);
 }
 
-static inline void js_putm(js_State *J, js_Buffer **sb, const char *s, const char *e)
+static inline void js_putm(js_State *J, js_Buffer **sb, const wchar_t *s, const wchar_t *e)
 {
 	while (s < e)
 		js_putc(J, sb, *s++);

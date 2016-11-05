@@ -34,10 +34,6 @@ chartorune(Rune *rune, const wchar_t *str)
 	}
 	*rune = c;
 	return 1;
-
-bad:
-	*rune = 0xFFFD;
-	return 1;
 }
 
 int

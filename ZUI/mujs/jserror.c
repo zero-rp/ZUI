@@ -81,9 +81,9 @@ static void js_newerrorx(js_State *J, const wchar_t *message, js_Object *prototy
 	} \
 	void js_##name(js_State *J, const wchar_t *fmt, ...) { \
 		va_list ap; \
-		char buf[256]; \
+		wchar_t buf[256]; \
 		va_start(ap, fmt); \
-		vsnprintf(buf, sizeof buf, fmt, ap); \
+		vswprintf(buf, sizeof buf, fmt, ap); \
 		va_end(ap); \
 		js_newerrorx(J, buf, J->Name##_prototype); \
 		js_throw(J); \

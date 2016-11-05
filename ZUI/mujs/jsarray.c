@@ -250,7 +250,7 @@ static void Ap_slice(js_State *J)
 
 static int compare(js_State *J, int x, int y, int *hasx, int *hasy, int hasfn)
 {
-	const char *sx, *sy;
+	const wchar_t *sx, *sy;
 	int c;
 
 	*hasx = js_hasindex(J, 0, x);
@@ -276,7 +276,7 @@ static int compare(js_State *J, int x, int y, int *hasx, int *hasy, int hasfn)
 
 		sx = js_tostring(J, -2);
 		sy = js_tostring(J, -1);
-		return strcmp(sx, sy);
+		return wcscmp(sx, sy);
 	}
 
 	if (*hasx) return -1;

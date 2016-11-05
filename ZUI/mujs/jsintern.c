@@ -96,7 +96,7 @@ void jsS_freestrings(js_State *J)
 		jsS_freestringnode(J, J->strings);
 }
 
-const char *js_intern(js_State *J, const wchar_t *s)
+const wchar_t *js_intern(js_State *J, const wchar_t *s)
 {
 	const wchar_t *result;
 	if (!J->strings)

@@ -79,28 +79,28 @@ typedef unsigned short js_Instruction;
 
 /* String interning */
 
-char *js_strdup(js_State *J, const char *s);
-const char *js_intern(js_State *J, const char *s);
+wchar_t *js_strdup(js_State *J, const wchar_t *s);
+const wchar_t *js_intern(js_State *J, const wchar_t *s);
 void jsS_dumpstrings(js_State *J);
 void jsS_freestrings(js_State *J);
 
 /* Portable strtod and printf float formatting */
 
-void js_fmtexp(char *p, int e);
-void js_dtoa(double f, char *digits, int *exp, int *neg, int *ndigits);
-double js_strtod(const char *as, char **aas);
+void js_fmtexp(wchar_t *p, int e);
+void js_dtoa(double f, wchar_t *digits, int *exp, int *neg, int *ndigits);
+double js_strtod(const wchar_t *as, wchar_t **aas);
 
 /* Private stack functions */
 
 void js_newfunction(js_State *J, js_Function *function, js_Environment *scope);
 void js_newscript(js_State *J, js_Function *function, js_Environment *scope);
-void js_loadeval(js_State *J, const char *filename, const char *source);
+void js_loadeval(js_State *J, const wchar_t *filename, const wchar_t *source);
 
 js_Regexp *js_toregexp(js_State *J, int idx);
-int js_isarrayindex(js_State *J, const char *str, int *idx);
-int js_runeat(js_State *J, const char *s, int i);
-int js_utfptrtoidx(const char *s, const char *p);
-const char *js_utfidxtoptr(const char *s, int i);
+int js_isarrayindex(js_State *J, const wchar_t *str, int *idx);
+int js_runeat(js_State *J, const wchar_t *s, int i);
+int js_utfptrtoidx(const wchar_t *s, const wchar_t *p);
+const wchar_t *js_utfidxtoptr(const wchar_t *s, int i);
 
 void js_dup(js_State *J);
 void js_dup2(js_State *J);
@@ -114,7 +114,7 @@ void js_dup1rot4(js_State *J);
 
 void js_pushundefinedthis(js_State *J); /* push 'global' if non-strict, undefined if strict */
 
-void js_RegExp_prototype_exec(js_State *J, js_Regexp *re, const char *text);
+void js_RegExp_prototype_exec(js_State *J, js_Regexp *re, const wchar_t *text);
 
 void js_trap(js_State *J, int pc); /* dump stack and environment to stdout */
 

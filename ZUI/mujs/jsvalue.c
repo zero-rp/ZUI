@@ -163,7 +163,7 @@ double js_stringtofloat(const wchar_t *s, wchar_t **ep)
 	if (isflt || e - s > 9)
 		n = js_strtod(s, &end);
 	else
-		n = strtol(s, &end, 10);
+		n = wcstol(s, &end, 10);
 	if (end == e) {
 		*ep = (wchar_t*)e;
 		return n;
@@ -179,7 +179,7 @@ double jsV_stringtonumber(js_State *J, const wchar_t *s)
 	double n;
 	while (jsY_iswhite(*s) || jsY_isnewline(*s)) ++s;
 	if (s[0] == '0' && (s[1] == 'x' || s[1] == 'X') && s[2] != 0)
-		n = strtol(s + 2, &e, 16);
+		n = wcstol(s + 2, &e, 16);
 	else if (!wcsncmp(s, L"Infinity", 8))
 		n = INFINITY, e = (wchar_t*)s + 8;
 	else if (!wcsncmp(s, L"+Infinity", 9))
@@ -224,7 +224,7 @@ const wchar_t *jsV_numbertostring(js_State *J, wchar_t buf[32], double f)
 
 	if (isnan(f)) return L"NaN";
 	if (isinf(f)) return f < 0 ? L"-Infinity" : L"Infinity";
-	if (f == 0) return "0";
+	if (f == 0) return L"0";
 
 	js_dtoa(f, digits, &exp, &neg, &ndigits);
 	point = ndigits + exp;
@@ -285,7 +285,7 @@ const wchar_t *jsV_tostring(js_State *J, js_Value *v)
 		if (p == buf) {
 			int n = wcslen(p);
 			if (n <= soffsetof(js_Value, type)) {
-				char *s = v->u.shrstr;
+				wchar_t *s = v->u.shrstr;
 				while (n--) *s++ = *p++;
 				*s = 0;
 				v->type = JS_TSHRSTR;
@@ -370,7 +370,7 @@ void js_newnumber(js_State *J, double v)
 	js_pushobject(J, jsV_newnumber(J, v));
 }
 
-void js_newstring(js_State *J, const char *v)
+void js_newstring(js_State *J, const wchar_t *v)
 {
 	js_pushobject(J, jsV_newstring(J, v));
 }
@@ -422,7 +422,7 @@ void js_newcfunction(js_State *J, js_CFunction cfun, const wchar_t *name, int le
 }
 
 /* prototype -- constructor */
-void js_newcconstructor(js_State *J, js_CFunction cfun, js_CFunction ccon, const char *name, int length)
+void js_newcconstructor(js_State *J, js_CFunction cfun, js_CFunction ccon, const wchar_t *name, int length)
 {
 	js_Object *obj = jsV_newobject(J, JS_CCFUNCTION, J->Function_prototype);
 	obj->u.c.name = name;
@@ -501,7 +501,7 @@ void js_concat(js_State *J)
 		const wchar_t *sa = js_tostring(J, -2);
 		const wchar_t *sb = js_tostring(J, -1);
 		/* TODO: create js_String directly */
-		char *sab = js_malloc(J, wcslen(sa) + wcslen(sb) + 1);
+		wchar_t *sab = js_malloc(J, (wcslen(sa) + wcslen(sb))*sizeof(wchar_t) + 1);
 		wcscpy(sab, sa);
 		wcscat(sab, sb);
 		if (js_try(J)) {

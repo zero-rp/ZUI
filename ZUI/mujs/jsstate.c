@@ -20,7 +20,7 @@ static void *js_defaultalloc(void *actx, void *ptr, int size)
 
 static void js_defaultpanic(js_State *J)
 {
-	fprintf(stderr, "uncaught exception: %s\n", js_tostring(J, -1));
+	fprintf(stderr, L"uncaught exception: %ls\n", js_tostring(J, -1));
 	/* return to javascript to abort */
 }
 
@@ -73,7 +73,7 @@ void js_loadstring(js_State *J, const wchar_t *filename, const wchar_t *source)
 void js_loadfile(js_State *J, const wchar_t *filename)
 {
 	FILE *f;
-	char *s;
+	wchar_t *s;
 	int n, t;
 
 	f = _wfopen(filename, L"rb");
@@ -143,7 +143,7 @@ int js_dostring(js_State *J, const wchar_t *source)
 int js_dofile(js_State *J, const wchar_t *filename)
 {
 	if (js_try(J)) {
-		fprintf(stderr, "%s\n", js_tostring(J, -1));
+		fprintf(stderr, "%ls\n", js_tostring(J, -1));
 		js_pop(J, 1);
 		return 1;
 	}
@@ -176,8 +176,8 @@ js_State *js_newstate(js_Alloc alloc, void *actx, int flags)
 {
 	js_State *J;
 
-	assert(sizeof(js_Value) == 24);
-	assert(soffsetof(js_Value, type) == 23);
+	assert(sizeof(js_Value) == 32);
+	assert(soffsetof(js_Value, type) == 30);
 
 	if (!alloc)
 		alloc = js_defaultalloc;

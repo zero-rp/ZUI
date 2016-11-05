@@ -72,9 +72,9 @@ int jsY_ishex(int c);
 int jsY_tohex(int c);
 
 const wchar_t *jsY_tokenstring(int token);
-int jsY_findword(const char *s, const char **list, int num);
+int jsY_findword(const wchar_t *s, const wchar_t **list, int num);
 
-void jsY_initlex(js_State *J, const char *filename, const char *source);
+void jsY_initlex(js_State *J, const wchar_t *filename, const wchar_t *source);
 int jsY_lex(js_State *J);
 int jsY_lexjson(js_State *J);
 

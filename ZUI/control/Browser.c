@@ -1,5 +1,5 @@
 ﻿#include <ZUI.h>
-#pragma comment(lib, "libcef.lib")
+#pragma comment(lib, "miniblink.lib")
 void _staticOnPaintUpdated(wkeWebView webView, void* param, const HDC hdc, int x, int y, int cx, int cy)
 {
 	ZuiBrowser pthis = (ZuiBrowser)param;
