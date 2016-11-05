@@ -92,11 +92,10 @@ BOOL darray_shrink(DArray *darray)
 		{
 			darray->data = data;
 			darray->size = newallocsize;
-
 		}
-
 		return TRUE;
 	}
+	return FALSE;
 }
 BOOL darray_delete(DArray *darray, int index)
 {

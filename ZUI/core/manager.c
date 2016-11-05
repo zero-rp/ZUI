@@ -557,13 +557,13 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerSetPostPaintIndex(ZuiPaintManager p, ZuiCon
 }
 
 
-ZEXPORT ZuiControl ZCALL ZuiPaintManagerFindControl(ZuiPaintManager p, POINT pt)
+ZEXPORT ZuiControl ZCALL ZuiPaintManagerFindControl(ZuiPaintManager p, ZPoint pt)
 {
 	return (ZuiControl)ZuiControlCall(Proc_FindControl, p->m_pRoot, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_HITTEST | ZFIND_TOP_FIRST));
 }
 
 
-ZEXPORT ZuiControl ZCALL ZuiPaintManagerFindSubControlByPoint(ZuiPaintManager p, ZuiControl pParent, POINT pt)
+ZEXPORT ZuiControl ZCALL ZuiPaintManagerFindSubControlByPoint(ZuiPaintManager p, ZuiControl pParent, ZPoint pt)
 {
 	if (pParent == NULL) pParent = p->m_pRoot;
 	ASSERT(pParent);
@@ -929,7 +929,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 	{
 							if (p->m_pRoot == NULL) break;
 							p->m_bMouseTracking = FALSE;
-							POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+							ZPoint pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
 							ZuiControl pHover = ZuiPaintManagerFindControl(p, pt);
 							if (pHover == NULL) break;
 							// Generate mouse hover event
@@ -1004,7 +1004,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 								p->m_bMouseTracking = TRUE;
 							}
 							// Generate the appropriate mouse messages
-							POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+							ZPoint pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
 							p->m_ptLastMousePos = pt;
 							ZuiControl pNewHover = ZuiPaintManagerFindControl(p, pt);
 							if (pNewHover != NULL && pNewHover->m_pManager != p) break;
@@ -1050,7 +1050,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 							// and we need to remove them on focus change).
 							SetFocus(p->m_hWndPaint);
 							if (p->m_pRoot == NULL) break;
-							POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+							ZPoint pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
 							p->m_ptLastMousePos = pt;
 							ZuiControl pControl = ZuiPaintManagerFindControl(p, pt);
 							if (pControl == NULL) break;
@@ -1081,7 +1081,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 	case WM_LBUTTONDBLCLK://鼠标左键双击
 	{
 							  SetFocus(p->m_hWndPaint);
-							  POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+							  ZPoint pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
 							  p->m_ptLastMousePos = pt;
 							  ZuiControl pControl = ZuiPaintManagerFindControl(p, pt);
 							  if (pControl == NULL) break;
@@ -1099,7 +1099,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 		break;
 	case WM_LBUTTONUP://鼠标左键弹起
 	{
-						  POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+						  ZPoint pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
 						  p->m_ptLastMousePos = pt;
 						  if (p->m_pEventClick == NULL) break;
 						  ZuiPaintManagerReleaseCapture(p);
@@ -1119,7 +1119,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 	case WM_RBUTTONDOWN://鼠标右键按下
 	{
 							SetFocus(p->m_hWndPaint);
-							POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+							ZPoint pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
 							p->m_ptLastMousePos = pt;
 							ZuiControl pControl = ZuiPaintManagerFindControl(p, pt);
 							if (pControl == NULL) break;
@@ -1141,7 +1141,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 	{
 						   if (p->m_pRoot == NULL) break;
 						   if (p->m_bMouseCapture) break;
-						   POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+						   ZPoint pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
 						   ScreenToClient(p->m_hWndPaint, &pt);
 						   p->m_ptLastMousePos = pt;
 						   if (p->m_pEventClick == NULL) break;
@@ -1159,7 +1159,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 	case WM_MOUSEWHEEL:	//鼠标滚动
 	{
 							if (p->m_pRoot == NULL) break;
-							POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+							ZPoint pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
 							ScreenToClient(p->m_hWndPaint, &pt);
 							p->m_ptLastMousePos = pt;
 							ZuiControl pControl = ZuiPaintManagerFindControl(p, pt);
@@ -1235,7 +1235,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 						 if (LOWORD(lParam) != HTCLIENT) break;
 						 if (p->m_bMouseCapture) return TRUE;
 
-						 POINT pt = { 0 };
+						 ZPoint pt = { 0 };
 						 GetCursorPos(&pt);
 						 ScreenToClient(p->m_hWndPaint, &pt);
 						 ZuiControl pControl = ZuiPaintManagerFindControl(p, pt);

@@ -328,16 +328,19 @@ ZEXPORT ZuiBool ZCALL ZuiGraphicsSetClipRegion(ZuiGraphics Graphics, ZuiRegion r
 	if (Graphics && region){
 		GdipSetClipRegion(Graphics->graphics, region->region, mod);
 	}
+	return FALSE;
 }
 ZEXPORT ZuiBool ZCALL ZuiGraphicsGetClipRegion(ZuiGraphics Graphics, ZuiRegion region) {
 	if (Graphics && region) {
 		GdipGetClip(Graphics->graphics, region->region);
 	}
+	return FALSE;
 }
 ZEXPORT ZuiBool ZCALL ZuiGraphicsResetClip(ZuiGraphics Graphics){
 	if (Graphics){
 		GdipResetClip(Graphics->graphics);
 	}
+	return FALSE;
 }
 
 ZEXPORT ZuiBool ZCALL ZuiRegionIsVisiblePoint(ZuiRegion region, ZuiInt x, ZuiInt y){

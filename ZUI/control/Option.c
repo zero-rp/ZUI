@@ -8,6 +8,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
 	{
 	case Proc_CoreInit:
 		return 0;
+		break;
 	case Proc_OnCreate: {
 		p = (ZuiOption)malloc(sizeof(ZOption));
 		memset(p, 0, sizeof(ZOption));

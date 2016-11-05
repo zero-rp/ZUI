@@ -67,5 +67,7 @@ mxml_node_t *mxmlFindElement(mxml_node_t *node, mxml_node_t *top, const char *na
 mxml_node_t *mxmlFindPath(mxml_node_t *top, const char  *path);
 mxml_node_t *mxmlWalkNext(mxml_node_t *node, mxml_node_t *top, int descend);
 mxml_node_t *mxmlWalkPrev(mxml_node_t *node, mxml_node_t *top, int descend);
+mxml_node_t *mxmlClone(mxml_node_t *node, mxml_node_t *parent);
 void		mxmlDelete(mxml_node_t *node);
+
 #endif /* !_mxml_h_ */

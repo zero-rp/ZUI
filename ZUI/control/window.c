@@ -237,10 +237,9 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 		cp->m_bVisible = TRUE;
 		if (Param1)
 		{
-
+			SetWindowPos(p->m_hWnd, NULL, ((ZuiPoint)Param1)->x, ((ZuiPoint)Param1)->y, p->m_rect.Width, p->m_rect.Height, SWP_NOZORDER | SWP_NOACTIVATE);
 		}
-
-		ShowWindow(p->m_hWnd, SW_HIDE);
+		ShowWindow(p->m_hWnd, SW_SHOWNORMAL);
 		break;
 	}
 	default:

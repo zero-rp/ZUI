@@ -46,8 +46,14 @@ ZuiControl NewZuiControl(ZuiText classname, void* Param1, void* Param2, void* Pa
 		if (node) {
 			p->m_sUserData = ((ZCtlProc)node->data)(Proc_OnCreate, p, 0, Param1, Param2, Param3);
 			p->call = ((ZCtlProc)node->data);
+			return p;
 		}
+		//在模版内查找
+		node = rb_search((key_t)Zui_Hash(name), Global_TemplateClass);
+		if (node) {
 
+
+		}
 		return p;
 	}
 	return NULL;

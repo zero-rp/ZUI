@@ -16,6 +16,7 @@
 
 extern  ZuiStringFormat Global_StringFormat;	//默认字体风格
 extern  rb_root *Global_ControlClass;			//全局控件类
+extern  rb_root *Global_TemplateClass;			//全局模版类
 extern  ZuiResDBPool Global_ResDB;				//全局资源池
 extern HINSTANCE m_hInstance;					//模块句柄
 extern DArray *m_aPreMessages;					//所有ZuiPaintManager实例数组

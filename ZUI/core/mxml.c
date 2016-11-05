@@ -255,7 +255,25 @@ void mxmlDelete(mxml_node_t *node)
 	//释放节点内存
 	free(node);
 }
-
+mxml_node_t *mxmlClone(mxml_node_t *node, mxml_node_t *parent) {
+	mxml_node_t *new_node = mxml_new(parent);
+	new_node->parent = parent;
+	new_node->user_data = node->user_data;
+	new_node->value.name = strdup(node->value.name);
+	new_node->value.num_attrs = node->value.num_attrs;
+	new_node->value.attrs = (mxml_attr_t *)malloc((node->value.num_attrs + 1) * sizeof(mxml_attr_t));
+	for (size_t i = 0; i < node->value.num_attrs; i++)
+	{
+		new_node->value.attrs[i].name= strdup(node->value.attrs[i].name);
+		new_node->value.attrs[i].value = strdup(node->value.attrs[i].value);
+	}
+	if (node->child)
+		mxmlClone(node->child, new_node);
+	if (parent)
+		if(node->next)
+			mxmlClone(node->next, parent);
+	return new_node;
+}
 mxml_node_t *mxmlNewElement(mxml_node_t *parent, const wchar_t  *name)
 {
 	mxml_node_t	*node;			/* New node */

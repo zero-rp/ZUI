@@ -86,7 +86,7 @@ typedef struct tagTEventUI
 	int Type;			//事件类型
 	ZuiControl pSender;	//事件对应的控件
 	DWORD dwTimestamp;	//时间戳
-	POINT ptMouse;		//
+	ZPoint ptMouse;		//
 	TCHAR chKey;		//
 	WORD wKeyState;		//
 	WPARAM wParam;		//
@@ -118,8 +118,8 @@ typedef struct _ZuiPaintManager
 	ZuiControl m_pEventClick;		///被鼠标点击的控件
 	ZuiControl m_pEventKey;			///接收键盘输入的控件
 	//
-	POINT m_ptWin;					///窗口左上角位置
-	POINT m_ptLastMousePos;
+	ZPoint m_ptWin;					///窗口左上角位置
+	ZPoint m_ptLastMousePos;
 	SIZE m_szMinWindow;				///窗口最小大小
 	SIZE m_szMaxWindow;				///窗口最大大小
 	SIZE m_szInitWindowSize;		///窗体初始化时的大小
@@ -193,8 +193,8 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerRemovePostPaint(ZuiPaintManager p, ZuiContr
 ZEXPORT ZuiBool ZCALL ZuiPaintManagerSetPostPaintIndex(ZuiPaintManager p, ZuiControl pControl, int iIndex);
 
 
-ZEXPORT ZuiControl ZCALL ZuiPaintManagerFindControl(ZuiPaintManager p, POINT pt);
-ZEXPORT ZuiControl ZCALL ZuiPaintManagerFindSubControlByPoint(ZuiPaintManager p, ZuiControl pParent, POINT pt);
+ZEXPORT ZuiControl ZCALL ZuiPaintManagerFindControl(ZuiPaintManager p, ZPoint pt);
+ZEXPORT ZuiControl ZCALL ZuiPaintManagerFindSubControlByPoint(ZuiPaintManager p, ZuiControl pParent, ZPoint pt);
 
 ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT *lRes);
 

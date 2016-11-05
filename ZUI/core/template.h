@@ -14,13 +14,6 @@
 #ifndef __TEMPLATE_H__
 #define __TEMPLATE_H__
 
-/**Ä£°æ½á¹¹*/
-typedef struct _ZTemplate
-{
-	int type;
-	ZCtlProc old_call;
-}*ZuiTemplate, ZTemplate;
-
-ZEXPORT ZuiAny ZCALL ZuiTemplateProc(ZuiInt ProcId, ZuiControl cp, ZuiTemplate p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+ZuiBool ZuiTemplateInit();
 ZuiVoid ZuiAddTemplate(mxml_node_t *node);
 #endif //__TEMPLATE_H__
