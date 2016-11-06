@@ -60,8 +60,8 @@ void js_free(js_State *J, void *ptr)
 
 js_String *jsV_newmemstring(js_State *J, const wchar_t *s, int n)
 {
-	js_String *v = js_malloc(J, soffsetof(js_String, p) + n*sizeof(wchar_t) + 1);
-	memcpy(v->p, s, n);
+	js_String *v = js_malloc(J, soffsetof(js_String, p) + n*sizeof(wchar_t) + 2);
+	memcpy(v->p, s, n*sizeof(wchar_t));
 	v->p[n] = 0;
 	v->gcmark = 0;
 	v->gcnext = J->gcstr;
@@ -114,7 +114,7 @@ void js_pushstring(js_State *J, const wchar_t *v)
 	int n = wcslen(v);
 	CHECKSTACK(1);
 	if (n <= soffsetof(js_Value, type)) {
-		char *s = STACK[TOP].u.shrstr;
+		wchar_t *s = STACK[TOP].u.shrstr;
 		while (n--) *s++ = *v++;
 		*s = 0;
 		STACK[TOP].type = JS_TSHRSTR;

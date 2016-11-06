@@ -229,9 +229,9 @@ static void Sp_substring(js_State *J)
 static void Sp_toLowerCase(js_State *J)
 {
 	const wchar_t *src = checkstring(J, 0);
-	char *dst = js_malloc(J, UTFmax * wcslen(src)*sizeof(wchar_t) + 1);
+	wchar_t *dst = js_malloc(J, UTFmax * wcslen(src)*sizeof(wchar_t) + 2);
 	const wchar_t *s = src;
-	char *d = dst;
+	wchar_t *d = dst;
 	Rune rune;
 	while (*s) {
 		s += chartorune(&rune, s);
@@ -251,7 +251,7 @@ static void Sp_toLowerCase(js_State *J)
 static void Sp_toUpperCase(js_State *J)
 {
 	const wchar_t *src = checkstring(J, 0);
-	wchar_t *dst = js_malloc(J, UTFmax * strlen(src)*sizeof(wchar_t) + 1);
+	wchar_t *dst = js_malloc(J, UTFmax * strlen(src)*sizeof(wchar_t) + 2);
 	const wchar_t *s = src;
 	wchar_t *d = dst;
 	Rune rune;

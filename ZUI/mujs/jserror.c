@@ -7,7 +7,7 @@
 
 static int jsB_stacktrace(js_State *J, int skip)
 {
-	char buf[256];
+	wchar_t buf[256];
 	int n = J->tracetop - skip;
 	if (n <= 0)
 		return 0;
@@ -17,11 +17,11 @@ static int jsB_stacktrace(js_State *J, int skip)
 		int line = J->trace[n].line;
 		if (line > 0) {
 			if (name[0])
-				snprintf(buf, sizeof buf, "\n\tat %ls (%ls:%d)", name, file, line);
+				swprintf(buf, sizeof buf, L"\n\tat %ls (%ls:%d)", name, file, line);
 			else
-				snprintf(buf, sizeof buf, "\n\tat %ls:%d", file, line);
+				swprintf(buf, sizeof buf, L"\n\tat %ls:%d", file, line);
 		} else
-			snprintf(buf, sizeof buf, "\n\tat %ls (%ls)", name, file);
+			snprintf(buf, sizeof buf, L"\n\tat %ls (%ls)", name, file);
 		js_pushstring(J, buf);
 		if (n < J->tracetop - skip)
 			js_concat(J);
@@ -31,7 +31,7 @@ static int jsB_stacktrace(js_State *J, int skip)
 
 static void Ep_toString(js_State *J)
 {
-	char buf[256];
+	wchar_t buf[256];
 	const wchar_t *name = L"Error";
 	const wchar_t *message = "";
 
@@ -43,7 +43,7 @@ static void Ep_toString(js_State *J)
 	if (js_hasproperty(J, 0, L"message"))
 		message = js_tostring(J, -1);
 
-	snprintf(buf, sizeof buf, "%ls: %ls", name, message);
+	swprintf(buf, sizeof buf, L"%ls: %ls", name, message);
 	js_pushstring(J, buf);
 
 	if (js_hasproperty(J, 0, L"stackTrace"))
@@ -69,7 +69,7 @@ static void js_newerrorx(js_State *J, const wchar_t *message, js_Object *prototy
 	js_pushstring(J, message);
 	js_setproperty(J, -2, L"message");
 	if (jsB_stacktrace(J, 0))
-		js_setproperty(J, -2, "stackTrace");
+		js_setproperty(J, -2, L"stackTrace");
 }
 
 #define DERROR(name, Name) \

@@ -61,7 +61,7 @@ static void Fp_toString(js_State *J)
 		n += wcslen(F->name);
 		for (i = 0; i < F->numparams; ++i)
 			n += wcslen(F->vartab[i]) + 1;
-		s = js_malloc(J, n + 1);
+		s = js_malloc(J, (n + 1)*sizeof(wchar_t));
 		wcscpy(s, L"function ");
 		wcscat(s, F->name);
 		wcscat(s, L"(");

@@ -128,7 +128,7 @@ void js_loadfile(js_State *J, const wchar_t *filename)
 int js_dostring(js_State *J, const wchar_t *source)
 {
 	if (js_try(J)) {
-		fprintf(stderr, "%s\n", js_tostring(J, -1));
+		fprintf(stderr, "%ls\n", js_tostring(J, -1));
 		js_pop(J, 1);
 		return 1;
 	}

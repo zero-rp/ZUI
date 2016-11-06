@@ -2,19 +2,16 @@
 #include "jslex.h"
 #include "utf.h"
 
-JS_NORETURN static void jsY_error(js_State *J, const char *fmt, ...) JS_PRINTFLIKE(2,3);
+JS_NORETURN static void jsY_error(js_State *J);
 
-static void jsY_error(js_State *J, const char *fmt, ...)
+static void jsY_error(js_State *J)
 {
 	va_list ap;
 	char buf[512];
 	char msgbuf[256];
 
-	va_start(ap, fmt);
-	vsnprintf(msgbuf, 256, fmt, ap);
-	va_end(ap);
 
-	snprintf(buf, 256, "%Ls:%d: ", J->filename, J->lexline);
+	snprintf(buf, 256, "%ls:%d: ", J->filename, J->lexline);
 	strcat(buf, msgbuf);
 
 	js_newsyntaxerror(J, buf);

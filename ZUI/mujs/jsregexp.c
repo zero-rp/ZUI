@@ -158,7 +158,7 @@ static void Rp_toString(js_State *J)
 
 	re = js_toregexp(J, 0);
 
-	out = js_malloc(J, strlen(re->source) + 6); /* extra space for //gim */
+	out = js_malloc(J, (wcslen(re->source) + 6)*sizeof(wchar_t)); /* extra space for //gim */
 	wcscpy(out, "/");
 	wcscat(out, re->source);
 	wcscat(out, "/");

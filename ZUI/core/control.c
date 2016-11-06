@@ -2,7 +2,7 @@
 
 extern rb_root *Global_ControlClass;
 //创建控件
-ZuiControl NewZuiControl(ZuiText classname, void* Param1, void* Param2, void* Param3){
+ZuiControl NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3){
 	ZuiControl p = (ZuiControl)malloc(sizeof(ZControl));
 	if (p){
 		memset(p, 0, sizeof(ZControl));
@@ -51,8 +51,7 @@ ZuiControl NewZuiControl(ZuiText classname, void* Param1, void* Param2, void* Pa
 		//在模版内查找
 		node = rb_search((key_t)Zui_Hash(name), Global_TemplateClass);
 		if (node) {
-
-
+			ZuiLoadTemplate(node->data, p);
 		}
 		return p;
 	}

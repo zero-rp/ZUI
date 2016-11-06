@@ -1,6 +1,6 @@
-/**
+ï»¿/**
 * @file		template.h
-* @brief	¿Ø¼şÄ£°æ.
+* @brief	æ§ä»¶æ¨¡ç‰ˆ.
 * @author	[Zero](22249030)
 * @version	1.0
 * @date		$date
@@ -8,7 +8,7 @@
 *
 * [2016-10-25] <Zero> v1.0
 *
-* + v1.0°æ·¢²¼.
+* + v1.0ç‰ˆå‘å¸ƒ.
 *
 */
 #ifndef __TEMPLATE_H__
@@ -16,4 +16,5 @@
 
 ZuiBool ZuiTemplateInit();
 ZuiVoid ZuiAddTemplate(mxml_node_t *node);
+ZuiVoid ZuiLoadTemplate(mxml_node_t *node, ZuiControl p);
 #endif //__TEMPLATE_H__
