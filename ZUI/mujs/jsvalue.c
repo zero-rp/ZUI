@@ -420,7 +420,14 @@ void js_newcfunction(js_State *J, js_CFunction cfun, const wchar_t *name, int le
 		js_defproperty(J, -2, L"prototype", JS_DONTCONF);
 	}
 }
-
+wchar_t *js_getcfunctionname(js_State *J, int idx) {
+	js_Object *obj = js_toobject(J, idx);
+	if (obj)
+	{
+		return obj->u.c.name;
+	}
+	return NULL;
+}
 /* prototype -- constructor */
 void js_newcconstructor(js_State *J, js_CFunction cfun, js_CFunction ccon, const wchar_t *name, int length)
 {

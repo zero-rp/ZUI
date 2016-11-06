@@ -199,4 +199,6 @@ int js_equal(js_State *J);
 int js_strictequal(js_State *J);
 int js_instanceof(js_State *J);
 
+wchar_t *js_getcfunctionname(js_State *J, int idx);
+
 #endif

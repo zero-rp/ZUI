@@ -885,13 +885,13 @@ static void js_setvar(js_State *J, const wchar_t *name)
 			if (!(ref->atts & JS_READONLY))
 				ref->value = *stackidx(J, -1);
 			else if (J->strict)
-				js_typeerror(J, "'%s' is read-only", name);
+				js_typeerror(J, L"'%ls' is read-only", name);
 			return;
 		}
 		E = E->outer;
 	} while (E);
 	if (J->strict)
-		js_referenceerror(J, L"assignment to undeclared variable '%s'", name);
+		js_referenceerror(J, L"assignment to undeclared variable '%ls'", name);
 	jsR_setproperty(J, J->G, name);
 }
 
@@ -903,7 +903,7 @@ static int js_delvar(js_State *J, const wchar_t *name)
 		if (ref) {
 			if (ref->atts & JS_DONTCONF) {
 				if (J->strict)
-					js_typeerror(J, L"'%s' is non-configurable", name);
+					js_typeerror(J, L"'%ls' is non-configurable", name);
 				return 0;
 			}
 			jsV_delproperty(J, E->variables, name);
@@ -1212,7 +1212,7 @@ void js_throw(js_State *J)
 }
 
 /* Main interpreter loop */
-
+#if !(defined NDEBUG)
 static void jsR_dumpstack(js_State *J)
 {
 	int i;
@@ -1263,7 +1263,7 @@ void js_trap(js_State *J, int pc)
 	jsR_dumpenvironment(J, J->E, 0);
 	js_stacktrace(J);
 }
-
+#endif
 static void jsR_run(js_State *J, js_Function *F)
 {
 	js_Function **FT = F->funtab;
@@ -1690,7 +1690,9 @@ static void jsR_run(js_State *J, js_Function *F)
 		/* Branching */
 
 		case OP_DEBUGGER:
+#if !(defined NDEBUG)
 			js_trap(J, (int)(pc - pcstart) - 1);
+#endif
 			break;
 
 		case OP_JUMP:

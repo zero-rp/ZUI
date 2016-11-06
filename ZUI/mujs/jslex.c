@@ -241,7 +241,7 @@ static double lexhex(js_State *J)
 
 static int lexnumber(js_State *J)
 {
-	const char *s = J->source - 1;
+	const wchar_t *s = J->source - 1;
 
 	if (jsY_accept(J, '0')) {
 		if (jsY_accept(J, 'x') || jsY_accept(J, 'X')) {

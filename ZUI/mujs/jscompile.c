@@ -697,7 +697,11 @@ static void cexp(JF, js_Ast *exp)
 		break;
 
 	default:
+#if !(defined NDEBUG)
 		jsC_error(J, exp, L"unknown expression: (%s)", jsP_aststring(exp->type));
+#else
+		jsC_error(J, exp, L"unknown expression: (%d)", exp->type);
+#endif
 	}
 }
 

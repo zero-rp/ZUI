@@ -72,6 +72,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
 	mxmlDelete(tree);
 	return win;
 }
+//----------------------------------------------------------------------------
 static void ZuiJsBind_Call_exit(js_State *J) {
 	exit(0);
 }
@@ -83,14 +84,85 @@ static void ZuiJsBind_Call_print(js_State *J) {
 	printf("\r\n");
 	js_pushundefined(J);
 }
-ZEXPORT ZuiControl ZCALL ZuiBuilderJs(js_State *J) {
+//--------------------------------------------------
+#define TAG L"Control"
+
+//调用函数
+static void Control_prototype_call(js_State *J)
+{
+	ZuiControl p = js_touserdata(J, 0, TAG);
+	ZuiText name = js_getcfunctionname(J, -2);
+	ZuiControlCall(Proc_JsCall, p, name, J, NULL);
+}
+static int Control_has(js_State *J, void *p, const wchar_t *name) {
+	ZuiControlCall(Proc_JsHas, p, name, J, NULL);
+	
+	if (wcscmp(name, L"text") == 0) {
+		js_pushstring(J, L"aaa11");
+	}
+	else {
+		//js_newcfunction(J, Control_prototype_call, name, 0);
+	}
+	return 1;
+}
+//设置参数
+static int Control_put(js_State *J, void *p, const wchar_t *name)
+{
+	ZuiControlCall(Proc_JsPut, p, name, J, NULL);
+	return 1;
+}
+//创建控件
+static void new_Control(js_State *J)
+{
+	ZuiText *classname = js_tostring(J, 1);
+	ZuiControl p = NewZuiControl(classname, NULL, NULL, NULL);
+
+	js_currentfunction(J);
+	js_getproperty(J, -1, L"prototype");
+	js_newuserdatax(J, TAG, p, Control_has, Control_put, NULL, NULL);
+}
+
+void ZuiBuilderJs_Control(js_State *J)
+{
+	js_getglobal(J, L"Object");
+	{
+		//js_newcfunction(J, Control_prototype_call, L"Control.prototype",0);
+		//js_defproperty(J, -2, L"call", JS_DONTENUM);
+	}
+	js_newcconstructor(J, new_Control, new_Control, L"Control",0);
+	js_defglobal(J, L"Control", JS_DONTENUM);
+}
+//查找控件
+static void ZuiJsBind_Call_GetByName(js_State *J) {
+	if (js_isstring(J, 1)) {
+		ZuiPaintManager p = js_getcontext(J);
+		if (p && p->m_pRoot)
+		{
+			ZuiControl cp = ZuiControlFindName(p->m_pRoot, js_tostring(J, 1));
+			if (cp)
+			{
+				js_newobject(J);
+				js_getproperty(J, -1, L"prototype");
+				js_newuserdatax(J, TAG, cp, Control_has, Control_put, NULL, NULL);
+				return;
+			}
+		}
+	}
+	js_pushundefined(J);
+}
+//---------------------------------------------------------
+ZEXPORT ZuiBool ZCALL ZuiBuilderJs(js_State *J) {
 	js_newcfunction(J, ZuiJsBind_Call_exit,L"exit", 0);
 	js_setglobal(J, L"exit");
 
 	js_newcfunction(J, ZuiJsBind_Call_print, L"print", 0);
 	js_setglobal(J, L"print");
 
+	js_newcfunction(J, ZuiJsBind_Call_GetByName, L"GetByName", 0);
+	js_setglobal(J, L"GetByName");
 
+	ZuiBuilderJs_Control(J);
+	return TRUE;
 }
 
 

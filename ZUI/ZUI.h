@@ -81,7 +81,7 @@ typedef int32_t		ZuiInt;
 typedef int			ZuiBool;
 typedef void		ZuiVoid;
 typedef void*		ZuiAny;
-typedef uint32_t	ZuiColor;
+typedef int32_t		ZuiColor;
 typedef unsigned	ZuiByte;
 /**矩形*/
 typedef struct _ZRect

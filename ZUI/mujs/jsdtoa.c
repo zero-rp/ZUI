@@ -396,12 +396,13 @@ struct	Tab
 };
 
 double
-js_strtod(const char *as, char **aas)
+js_strtod(const wchar_t *as, char **aas)
 {
 	int na, ex, dp, bp, c, i, flag, state;
 	ulong low[Prec], hig[Prec], mid[Prec];
 	double d;
-	char *s, a[Ndig];
+	wchar_t *s;
+	char a[Ndig];
 
 	flag = 0;	/* Fsign, Fesign, Fdpoint */
 	na = 0;		/* number of digits of a[] */
@@ -409,7 +410,7 @@ js_strtod(const char *as, char **aas)
 	ex = 0;		/* exonent */
 
 	state = S0;
-	for(s=(char*)as;; s++) {
+	for(s=(wchar_t*)as;; s++) {
 		c = *s;
 		if(c >= '0' && c <= '9') {
 			switch(state) {

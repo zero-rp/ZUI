@@ -1,3 +1,4 @@
+#if !(defined NDEBUG)
 #include "jsi.h"
 #include "jsparse.h"
 #include "jscompile.h"
@@ -717,14 +718,14 @@ void jsC_dumpfunction(js_State *J, js_Function *F)
 	js_Instruction *end = F->code + F->codelen;
 	int i;
 
-	printf("%s(%d)\n", F->name, F->numparams);
+	printf("%ls(%d)\n", F->name, F->numparams);
 	if (F->lightweight) printf("\tlightweight\n");
 	if (F->arguments) printf("\targuments\n");
-	printf("\tsource %s:%d\n", F->filename, F->line);
+	printf("\tsource %ls:%d\n", F->filename, F->line);
 	for (i = 0; i < F->funlen; ++i)
-		printf("\tfunction %d %s\n", i, F->funtab[i]->name);
+		printf("\tfunction %d %ls\n", i, F->funtab[i]->name);
 	for (i = 0; i < F->varlen; ++i)
-		printf("\tlocal %d %s\n", i + 1, F->vartab[i]);
+		printf("\tlocal %d %ls\n", i + 1, F->vartab[i]);
 
 	printf("{\n");
 	while (p < end) {
@@ -801,9 +802,9 @@ void js_dumpvalue(js_State *J, js_Value v)
 	case JS_TNULL: printf("null"); break;
 	case JS_TBOOLEAN: printf(v.u.boolean ? "true" : "false"); break;
 	case JS_TNUMBER: printf("%.9g", v.u.number); break;
-	case JS_TSHRSTR: printf("'%s'", v.u.shrstr); break;
-	case JS_TLITSTR: printf("'%s'", v.u.litstr); break;
-	case JS_TMEMSTR: printf("'%s'", v.u.memstr->p); break;
+	case JS_TSHRSTR: printf("'%ls'", v.u.shrstr); break;
+	case JS_TLITSTR: printf("'%ls'", v.u.litstr); break;
+	case JS_TMEMSTR: printf("'%ls'", v.u.memstr->p); break;
 	case JS_TOBJECT:
 		if (v.u.object == J->G) {
 			printf("[Global]");
@@ -813,21 +814,21 @@ void js_dumpvalue(js_State *J, js_Value v)
 		case JS_COBJECT: printf("[Object %p]", v.u.object); break;
 		case JS_CARRAY: printf("[Array %p]", v.u.object); break;
 		case JS_CFUNCTION:
-			printf("[Function %p, %s, %s:%d]",
+			printf("[Function %p, %ls, %ls:%d]",
 				v.u.object,
 				v.u.object->u.f.function->name,
 				v.u.object->u.f.function->filename,
 				v.u.object->u.f.function->line);
 			break;
-		case JS_CSCRIPT: printf("[Script %s]", v.u.object->u.f.function->filename); break;
+		case JS_CSCRIPT: printf("[Script %ls]", v.u.object->u.f.function->filename); break;
 		case JS_CCFUNCTION: printf("[CFunction %p]", v.u.object->u.c.function); break;
 		case JS_CBOOLEAN: printf("[Boolean %d]", v.u.object->u.boolean); break;
 		case JS_CNUMBER: printf("[Number %g]", v.u.object->u.number); break;
-		case JS_CSTRING: printf("[String'%s']", v.u.object->u.s.string); break;
-		case JS_CERROR: printf("[Error %s]", v.u.object->u.s.string); break;
+		case JS_CSTRING: printf("[String'%ls']", v.u.object->u.s.string); break;
+		case JS_CERROR: printf("[Error %ls]", v.u.object->u.s.string); break;
 		case JS_CITERATOR: printf("[Iterator %p]", v.u.object); break;
 		case JS_CUSERDATA:
-			printf("[Userdata %s %p]", v.u.object->u.user.tag, v.u.object->u.user.data);
+			printf("[Userdata %ls %p]", v.u.object->u.user.tag, v.u.object->u.user.data);
 			break;
 		default: printf("[Object %p]", v.u.object); break;
 		}
@@ -839,7 +840,7 @@ static void js_dumpproperty(js_State *J, js_Property *node)
 {
 	if (node->left->level)
 		js_dumpproperty(J, node->left);
-	printf("\t%s: ", node->name);
+	printf("\t%ls: ", node->name);
 	js_dumpvalue(J, node->value);
 	printf(",\n");
 	if (node->right->level)
@@ -853,3 +854,4 @@ void js_dumpobject(js_State *J, js_Object *obj)
 		js_dumpproperty(J, obj->properties);
 	printf("}\n");
 }
+#endif

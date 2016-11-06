@@ -179,9 +179,10 @@ js_Object *jsV_newiterator(js_State *J, js_Object *obj, int own);
 const wchar_t *jsV_nextiterator(js_State *J, js_Object *iter);
 
 void jsV_resizearray(js_State *J, js_Object *obj, int newlen);
-
+#if !(defined NDEBUG)
 /* jsdump.c */
 void js_dumpobject(js_State *J, js_Object *obj);
 void js_dumpvalue(js_State *J, js_Value v);
+#endif
 
 #endif

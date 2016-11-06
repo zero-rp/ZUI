@@ -138,9 +138,9 @@ struct js_Ast
 js_Ast *jsP_parsefunction(js_State *J, const wchar_t *filename, const wchar_t *params, const wchar_t *body);
 js_Ast *jsP_parse(js_State *J, const wchar_t *filename, const wchar_t *source);
 void jsP_freeparse(js_State *J);
-
+#if !(defined NDEBUG)
 const char *jsP_aststring(enum js_AstType type);
 void jsP_dumpsyntax(js_State *J, js_Ast *prog);
 void jsP_dumplist(js_State *J, js_Ast *prog);
-
+#endif
 #endif

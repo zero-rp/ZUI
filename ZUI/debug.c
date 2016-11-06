@@ -190,7 +190,7 @@ ZuiAny ZCALL Notify_other(ZuiText msg, ZuiControl cp, ZuiBrowser p, ZuiAny Param
 	fseek(fp, 0L, SEEK_SET); /* 定位到文件开头 */
 	fread(p, flen, 1, fp); /* 一次性读取全部文件内容 */
 	fclose(fp);
-	other = ZuiLayoutLoad(p, flen);
+	//other = ZuiLayoutLoad(p, flen);
 
 	ZuiControl clos = ZuiControlFindName(win, L"clos");
 	ZuiControlRegNotify(clos, Notify_ctl);
