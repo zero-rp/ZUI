@@ -482,28 +482,22 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		else if (wcscmp(Param1, L"maxheight") == 0) ZuiControlCall(Proc_SetMaxHeight, p, js_toint32(J, -1), NULL, NULL);
 		else if (wcscmp(Param1, L"bkcolor") == 0) ZuiControlCall(Proc_SetBkColor, p, js_toint32(J, -1), NULL, NULL);
 		else if (wcscmp(Param1, L"drag") == 0) ZuiControlCall(Proc_SetDrag, p, js_toboolean(J, -1), NULL, NULL);
-		else if (wcscmp(Param1, L"bkimage") == 0) ZuiControlCall(Proc_SetBkImage, p, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+		else if (wcscmp(Param1, L"bkimage") == 0) ZuiControlCall(Proc_SetBkImage, p, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
 		else if (wcscmp(Param1, L"padding") == 0) {
 			RECT rcPadding = { 0 };
 			LPTSTR pstr = NULL;
-			rcPadding.left = _tcstol(Param2, &pstr, 10);  ASSERT(pstr);
+			rcPadding.left = _tcstol(js_tostring(J, -1), &pstr, 10);  ASSERT(pstr);
 			rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
 			rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
 			rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
 			ZuiControlCall(Proc_SetPadding, p, &rcPadding, NULL, NULL);
 		}
-		else if (wcscmp(Param1, L"bordercolor") == 0) {
-			while (*(wchar_t *)Param2 > L'\0' && *(wchar_t *)Param2 <= L' ') (wchar_t *)Param2 = CharNext((wchar_t *)Param2);
-			if (*(wchar_t *)Param2 == L'#') (wchar_t *)Param2 = CharNext((wchar_t *)Param2);
-			LPTSTR pstr = NULL;
-			DWORD clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);
-			ZuiControlCall(Proc_SetBorderColor, p, clrColor, NULL, NULL);
-		}
-		else if (wcscmp(Param1, L"name") == 0) ZuiControlCall(Proc_SetName, p, Param2, NULL, NULL);
+		else if (wcscmp(Param1, L"bordercolor") == 0) ZuiControlCall(Proc_SetBorderColor, p, js_toint32(J, -1), NULL, NULL);
+		else if (wcscmp(Param1, L"name") == 0) ZuiControlCall(Proc_SetName, p, js_tostring(J, -1), NULL, NULL);
 		else if (wcscmp(Param1, L"float") == 0) {
 
 		}
-		else if (wcscmp(Param1, L"visible") == 0) ZuiControlCall(Proc_SetVisible, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
+		else if (wcscmp(Param1, L"visible") == 0) ZuiControlCall(Proc_SetVisible, p, js_toboolean(J, -1), NULL, NULL);
 		else
 			rb_insert((key_t)Zui_Hash(Param1), _wcsdup((ZuiText)Param2), p->m_rAttribute);
 		break;

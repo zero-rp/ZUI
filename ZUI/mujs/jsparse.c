@@ -30,11 +30,11 @@ static void jsP_error(js_State *J, const wchar_t *fmt, ...)
 	wchar_t msgbuf[256];
 
 	va_start(ap, fmt);
-	vsnprintf(msgbuf, 256, fmt, ap);
+	vswprintf(msgbuf, 256, fmt, ap);
 	va_end(ap);
 
-	snprintf(buf, 256, "%ls:%d: ", J->filename, J->lexline);
-	strcat(buf, msgbuf);
+	swprintf(buf, 256, L"%ls:%d: ", J->filename, J->lexline);
+	wcscat(buf, msgbuf);
 
 	js_newsyntaxerror(J, buf);
 	js_throw(J);
