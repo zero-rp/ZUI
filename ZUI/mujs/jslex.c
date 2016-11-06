@@ -2,17 +2,19 @@
 #include "jslex.h"
 #include "utf.h"
 
-JS_NORETURN static void jsY_error(js_State *J);
-
-static void jsY_error(js_State *J)
+JS_NORETURN static void jsY_error(js_State *J, const wchar_t *fmt, ...) JS_PRINTFLIKE(2, 3);
+static void jsY_error(js_State *J, const wchar_t *fmt, ...)
 {
 	va_list ap;
-	char buf[512];
-	char msgbuf[256];
+	wchar_t buf[512];
+	wchar_t msgbuf[256];
 
+	va_start(ap, fmt);
+	vswprintf(msgbuf, 256, fmt, ap);
+	va_end(ap);
 
-	snprintf(buf, 256, "%ls:%d: ", J->filename, J->lexline);
-	strcat(buf, msgbuf);
+	swprintf(buf, 256, L"%ls:%d: ", J->filename, J->lexline);
+	wcscat(buf, msgbuf);
 
 	js_newsyntaxerror(J, buf);
 	js_throw(J);
@@ -162,7 +164,7 @@ static void jsY_next(js_State *J)
 
 #define jsY_accept(J, x) (J->lexchar == x ? (jsY_next(J), 1) : 0)
 
-#define jsY_expect(J, x) if (!jsY_accept(J, x)) jsY_error(J, "expected '%c'", x)
+#define jsY_expect(J, x) if (!jsY_accept(J, x)) jsY_error(J, L"expected '%c'", x)
 
 static void jsY_unescape(js_State *J)
 {
@@ -177,7 +179,7 @@ static void jsY_unescape(js_State *J)
 			return;
 		}
 error:
-		jsY_error(J, "unexpected escape sequence");
+		jsY_error(J, L"unexpected escape sequence");
 	}
 }
 
@@ -231,7 +233,7 @@ static double lexhex(js_State *J)
 {
 	double n = 0;
 	if (!jsY_ishex(J->lexchar))
-		jsY_error(J, "malformed hexadecimal number");
+		jsY_error(J, L"malformed hexadecimal number");
 	while (jsY_ishex(J->lexchar)) {
 		n = n * 16 + jsY_tohex(J->lexchar);
 		jsY_next(J);
@@ -249,7 +251,7 @@ static int lexnumber(js_State *J)
 			return TK_NUMBER;
 		}
 		if (jsY_isdec(J->lexchar))
-			jsY_error(J, "number with leading zero");
+			jsY_error(J, L"number with leading zero");
 		if (jsY_accept(J, '.')) {
 			while (jsY_isdec(J->lexchar))
 				jsY_next(J);
@@ -276,7 +278,7 @@ static int lexnumber(js_State *J)
 	}
 
 	if (jsY_isidentifierstart(J->lexchar))
-		jsY_error(J, "number with letter suffix");
+		jsY_error(J, L"number with letter suffix");
 
 	J->number = js_strtod(s, NULL);
 	return TK_NUMBER;
@@ -294,7 +296,7 @@ static int lexescape(js_State *J)
 		return 0;
 
 	switch (J->lexchar) {
-	case 0: jsY_error(J, "unterminated escape sequence");
+	case 0: jsY_error(J, L"unterminated escape sequence");
 	case 'u':
 		jsY_next(J);
 		if (!jsY_ishex(J->lexchar)) return 1; else { x |= jsY_tohex(J->lexchar) << 12; jsY_next(J); }
@@ -335,10 +337,10 @@ static int lexstring(js_State *J)
 
 	while (J->lexchar != q) {
 		if (J->lexchar == 0 || J->lexchar == '\n')
-			jsY_error(J, "string not terminated");
+			jsY_error(J, L"string not terminated");
 		if (jsY_accept(J, '\\')) {
 			if (lexescape(J))
-				jsY_error(J, "malformed escape sequence");
+				jsY_error(J, L"malformed escape sequence");
 		} else {
 			textpush(J, J->lexchar);
 			jsY_next(J);
@@ -385,14 +387,14 @@ static int lexregexp(js_State *J)
 	/* regexp body */
 	while (J->lexchar != '/' || inclass) {
 		if (J->lexchar == 0 || J->lexchar == '\n') {
-			jsY_error(J, "regular expression not terminated");
+			jsY_error(J, L"regular expression not terminated");
 		} else if (jsY_accept(J, '\\')) {
 			if (jsY_accept(J, '/')) {
 				textpush(J, '/');
 			} else {
 				textpush(J, '\\');
 				if (J->lexchar == 0 || J->lexchar == '\n')
-					jsY_error(J, "regular expression not terminated");
+					jsY_error(J, L"regular expression not terminated");
 				textpush(J, J->lexchar);
 				jsY_next(J);
 			}
@@ -416,11 +418,11 @@ static int lexregexp(js_State *J)
 		if (jsY_accept(J, 'g')) ++g;
 		else if (jsY_accept(J, 'i')) ++i;
 		else if (jsY_accept(J, 'm')) ++m;
-		else jsY_error(J, "illegal flag in regular expression: %c", J->lexchar);
+		else jsY_error(J, L"illegal flag in regular expression: %c", J->lexchar);
 	}
 
 	if (g > 1 || i > 1 || m > 1)
-		jsY_error(J, "duplicated flag in regular expression");
+		jsY_error(J, L"duplicated flag in regular expression");
 
 	J->text = js_intern(J, s);
 	J->number = 0;
@@ -467,7 +469,7 @@ static int jsY_lexx(js_State *J)
 				continue;
 			} else if (jsY_accept(J, '*')) {
 				if (lexcomment(J))
-					jsY_error(J, "multi-line comment not terminated");
+					jsY_error(J, L"multi-line comment not terminated");
 				continue;
 			} else if (isregexpcontext(J->lasttoken)) {
 				return lexregexp(J);
@@ -621,8 +623,8 @@ static int jsY_lexx(js_State *J)
 		}
 
 		if (J->lexchar >= 0x20 && J->lexchar <= 0x7E)
-			jsY_error(J, "unexpected character: '%c'", J->lexchar);
-		jsY_error(J, "unexpected character: \\u%04X", J->lexchar);
+			jsY_error(J, L"unexpected character: '%c'", J->lexchar);
+		jsY_error(J, L"unexpected character: \\u%04X", J->lexchar);
 	}
 }
 

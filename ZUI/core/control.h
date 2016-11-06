@@ -85,7 +85,7 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 
 #define	Proc_JsCall				53	//函数调用
 #define	Proc_JsPut				54	//
-#define	Proc_JsHas				55	//处理js对象
+#define	Proc_JsHas				55	//处理js对象 返回0则是变量,返回1则是call
 /**控件基类结构*/
 typedef struct _ZControl
 {

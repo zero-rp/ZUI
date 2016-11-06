@@ -336,7 +336,7 @@ static int mxml_add_char(wchar_t ch, wchar_t **bufptr, wchar_t **buffer, int  *b
 	wchar_t	*newbuffer;			/* New buffer value */
 
 
-	if (*bufptr >= (*buffer + *bufsize - 4))
+	if (*bufptr >= (*buffer + *bufsize))
 	{
 		/*
 		 * Increase the size of the buffer...
@@ -347,7 +347,7 @@ static int mxml_add_char(wchar_t ch, wchar_t **bufptr, wchar_t **buffer, int  *b
 		else
 			(*bufsize) += 1024;
 
-		if ((newbuffer = (wchar_t *)realloc(*buffer, *bufsize)) == NULL)
+		if ((newbuffer = (wchar_t *)realloc(*buffer, (*bufsize)*sizeof(wchar_t))) == NULL)
 		{
 			free(*buffer);
 			return (-1);
@@ -729,7 +729,7 @@ static int mxml_parse_element(mxml_node_t *node, void *p, mxml_getc mxml_string_
 		return (WEOF);
 	}
 
-	namesize = 64 * sizeof(wchar_t);
+	namesize = 64;
 
 	if ((value = (wchar_t *)malloc(64*sizeof(wchar_t))) == NULL)
 	{
@@ -737,7 +737,7 @@ static int mxml_parse_element(mxml_node_t *node, void *p, mxml_getc mxml_string_
 		return (WEOF);
 	}
 
-	valsize = 64 * sizeof(wchar_t);
+	valsize = 64;
 
 	/*
 	* Loop until we hit a >, /, ?, or EOF...

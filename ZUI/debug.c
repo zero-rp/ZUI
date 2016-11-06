@@ -193,11 +193,11 @@ ZuiAny ZCALL Notify_other(ZuiText msg, ZuiControl cp, ZuiBrowser p, ZuiAny Param
 	//other = ZuiLayoutLoad(p, flen);
 
 	ZuiControl clos = ZuiControlFindName(win, L"clos");
-	ZuiControlRegNotify(clos, Notify_ctl);
+	//ZuiControlRegNotify(clos, Notify_ctl);
 	ZuiControl min = ZuiControlFindName(win, L"min");
-	ZuiControlRegNotify(min, Notify_ctl);
+	//ZuiControlRegNotify(min, Notify_ctl);
 	ZuiControl max = ZuiControlFindName(win, L"max");
-	ZuiControlRegNotify(max, Notify_ctl);
+	//ZuiControlRegNotify(max, Notify_ctl);
 	ZuiControlRegNotify(ZuiControlFindName(win, L"other"), Notify_other);
 
 	BrowserTab = ZuiControlFindName(win, L"BrowserTab");

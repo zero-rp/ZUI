@@ -298,6 +298,36 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 		}
 		break;
 	}
+	case Proc_JsPut: {
+		js_State *J = Param2;
+		if (wcscmp(Param1, L"inset") == 0) {
+			RECT rcPadding = { 0 };
+			LPTSTR pstr = NULL;
+			rcPadding.left = _tcstol(js_tostring(J, -1), &pstr, 10);  ASSERT(pstr);
+			rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+			rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+			rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+			ZuiControlCall(Proc_Layout_SetInset, p, &rcPadding, NULL, NULL);
+		}
+
+		break;
+	}
+	case Proc_JsHas: {
+		js_State *J = Param2;
+		if (wcscmp(Param1, L"tex1t") == 0) ZuiControlCall(Proc_SetText, p, js_tostring(J, -1), NULL, NULL);
+		else {
+			for (int it = darray_len(p->m_items) - 1; it >= 0; it--) {
+				if (((ZuiControl)(p->m_items->data[it]))->m_sName)
+				{
+					if (wcscmp(Param1, ((ZuiControl)(p->m_items->data[it]))->m_sName) == 0) {
+						ZuiBuilderJs_pushControl(Param2, p->m_items->data[it]);
+						continue;
+					}
+				}
+			}
+		}
+		break;
+	}
 	case Proc_SetManager: {
 		for (int it = 0; it < darray_len(p->m_items); it++) {
 			ZuiControlCall(Proc_SetManager, (ZuiControl)(p->m_items->data[it]),Param1, cp, Param3);

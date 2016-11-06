@@ -1,6 +1,6 @@
 ﻿#include <ZUI.h>
 
-
+js_State *Global_Js;
 ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
 	mxml_node_t *tree;
 	mxml_node_t *node;
@@ -20,7 +20,10 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
 			if (wcscmp(ClassName, L"Template")==0) {//模版类
 				ZuiAddTemplate(node);
 				node = node->next;
-				ClassName = node->value.name;
+				if(node)
+					ClassName = node->value.name;
+				else
+					continue;
 			}
 			if (wcscmp(ClassName, L"LoadScript") == 0) {
 				ZuiText src = NULL;
@@ -73,6 +76,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
 	return win;
 }
 //----------------------------------------------------------------------------
+
 static void ZuiJsBind_Call_exit(js_State *J) {
 	exit(0);
 }
@@ -84,7 +88,9 @@ static void ZuiJsBind_Call_print(js_State *J) {
 	printf("\r\n");
 	js_pushundefined(J);
 }
-//--------------------------------------------------
+
+
+//--------------------------------------------------Control_Begin
 #define TAG L"Control"
 
 //调用函数
@@ -95,13 +101,8 @@ static void Control_prototype_call(js_State *J)
 	ZuiControlCall(Proc_JsCall, p, name, J, NULL);
 }
 static int Control_has(js_State *J, void *p, const wchar_t *name) {
-	ZuiControlCall(Proc_JsHas, p, name, J, NULL);
-	
-	if (wcscmp(name, L"text") == 0) {
-		js_pushstring(J, L"aaa11");
-	}
-	else {
-		//js_newcfunction(J, Control_prototype_call, name, 0);
+	if (ZuiControlCall(Proc_JsHas, p, name, J, NULL)) {
+		js_newcfunction(J, Control_prototype_call, name, 0);
 	}
 	return 1;
 }
@@ -150,6 +151,32 @@ static void ZuiJsBind_Call_GetByName(js_State *J) {
 	}
 	js_pushundefined(J);
 }
+ZuiVoid ZuiBuilderJs_pushControl(js_State *J, ZuiControl cp) {
+	if (!cp)
+		return;
+	js_newobject(J);
+	js_getproperty(J, -1, L"prototype");
+	js_newuserdatax(J, TAG, cp, Control_has, Control_put, NULL, NULL);
+	return ;
+}
+//--------------------------------------------------Control_End
+static void ZuiJsBind_Call_LayoutLoad(js_State *J) {
+	if (js_isstring(J, 1)) {
+		ZuiRes res = ZuiResDBGetRes(js_tostring(J, 1), ZREST_STREAM);
+		if (res)
+		{
+			ZuiControl p = ZuiLayoutLoad(res->p, res->plen);
+			ZuiResDBDelRes(res);
+			if (p) {
+				js_newobject(J);
+				js_getproperty(J, -1, L"prototype");
+				js_newuserdatax(J, TAG, p, Control_has, Control_put, NULL, NULL);
+				return;
+			}
+		}
+	}
+	js_pushundefined(J);
+}
 //---------------------------------------------------------
 ZEXPORT ZuiBool ZCALL ZuiBuilderJs(js_State *J) {
 	js_newcfunction(J, ZuiJsBind_Call_exit,L"exit", 0);
@@ -161,11 +188,18 @@ ZEXPORT ZuiBool ZCALL ZuiBuilderJs(js_State *J) {
 	js_newcfunction(J, ZuiJsBind_Call_GetByName, L"GetByName", 0);
 	js_setglobal(J, L"GetByName");
 
+	js_newcfunction(J, ZuiJsBind_Call_LayoutLoad, L"LayoutLoad", 0);
+	js_setglobal(J, L"LayoutLoad");
+
 	ZuiBuilderJs_Control(J);
 	return TRUE;
 }
 
-
 ZEXPORT ZuiBool ZCALL ZuiBuilderJsLoad(js_State *J, ZuiText str, ZuiInt len) {
 	js_dostring(J, str);
+}
+ZuiBool ZuiBuilderInit() {
+	Global_Js = js_newstate(NULL, NULL, JS_STRICT);
+	ZuiBuilderJs(Global_Js);
+	return TRUE;
 }

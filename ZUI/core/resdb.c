@@ -29,6 +29,42 @@ ZuiBool ZuiResDBInit() {
 	ZuiResDBGetRes(L"pe:zip,106", ZREST_ZIP);
 	return TRUE;
 }
+//打开压缩文件
+ZuiVoid ZuiResDBCallOnLoad(ZuiResDB db) {
+	unz_file_info64 info;
+	int ret = unzLocateFile(db->uf, "onload.js", 0);
+	if (ret == 0)
+	{
+		unzGetCurrentFileInfo64(db->uf, &info, 0, 0, 0, 0, 0, 0);
+		unzOpenCurrentFilePassword(db->uf, db->pass);
+		char *buf = malloc(info.uncompressed_size);
+		int buflen = (int)info.uncompressed_size;
+		int ret = unzReadCurrentFile(db->uf, buf, info.uncompressed_size);
+		if (ret < 0) {
+			free(buf);
+			return;
+		}
+		int bufsize;
+		wchar_t *txtbuf;
+		if (ZuiStingIsUtf8(buf, buflen))
+		{
+			bufsize = ZuiUtf8ToUnicode(buf, -1, 0, 0)*sizeof(wchar_t);
+			txtbuf = malloc(bufsize + 2);
+			bufsize = ZuiUtf8ToUnicode(buf, buflen, txtbuf, bufsize);
+			txtbuf[bufsize] = 0;
+		}
+		else
+		{
+			bufsize = ZuiAsciiToUnicode(buf, -1, 0, 0)*sizeof(wchar_t);
+			txtbuf = malloc(bufsize + 2);
+			bufsize = ZuiAsciiToUnicode(buf, buflen, txtbuf, bufsize);
+			txtbuf[bufsize] = 0;
+		}
+		free(buf);
+		ZuiBuilderJsLoad(Global_Js, txtbuf, bufsize);
+		free(txtbuf);
+	}
+}
 ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromBuf(ZuiAny data, ZuiInt len, ZuiText Pass)
 {
 	ZuiResDB p = (ZuiResDB)malloc(sizeof(ZResDB));
@@ -50,6 +86,8 @@ ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromBuf(ZuiAny data, ZuiInt len, ZuiText Pa
 			bufsize = ZuiAsciiToUnicode(&name, bufsize / sizeof(wchar_t), txtbuf, bufsize);
 			//添加到资源池
 			rb_insert(Zui_Hash(txtbuf), p, Global_ResDB->resdb);
+			//调用资源包初始化js
+			ZuiResDBCallOnLoad(p);
 			free(txtbuf);
 			return p;
 		}
@@ -77,6 +115,8 @@ ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromFile(ZuiText FileName, ZuiText Pass)
 			bufsize = ZuiAsciiToUnicode(&name, bufsize / sizeof(wchar_t), txtbuf, bufsize);
 			//添加到资源池
 			rb_insert(Zui_Hash(txtbuf), p, Global_ResDB->resdb);
+			//调用资源包初始化js
+			ZuiResDBCallOnLoad(p);
 			free(txtbuf);
 			return p;
 		}
@@ -84,6 +124,8 @@ ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromFile(ZuiText FileName, ZuiText Pass)
 	free(p);
 	return 0;
 }
+
+//资源操作
 ZEXPORT ZuiVoid ZCALL ZuiResDBDestroy(ZuiResDB db)
 {
 	if (db)

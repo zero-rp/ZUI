@@ -467,7 +467,18 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		break;
 	}
 	case Proc_JsHas: {
-
+		if (wcscmp(Param1, L"root") == 0) ZuiBuilderJs_pushControl(Param2, p->m_pManager->m_pRoot);
+		else if (wcscmp(Param1, L"parent") == 0)  ZuiBuilderJs_pushControl(Param2, p->m_pParent);
+		else if (wcscmp(Param1, L"text") == 0) js_pushstring(Param2, p->m_sText);
+		else if (wcscmp(Param1, L"tooltip") == 0) js_pushstring(Param2, p->m_sToolTip);
+		else if (wcscmp(Param1, L"width") == 0) js_pushnumber(Param2, p->m_cxyFixed.cx);
+		else if (wcscmp(Param1, L"height") == 0) js_pushnumber(Param2, p->m_cxyFixed.cy);
+		else if (wcscmp(Param1, L"minwidth") == 0) js_pushnumber(Param2, p->m_cxyMin.cx);
+		else if (wcscmp(Param1, L"minheight") == 0) js_pushnumber(Param2, p->m_cxyMin.cy);
+		else if (wcscmp(Param1, L"maxwidth") == 0) js_pushnumber(Param2, p->m_cxyMax.cx);
+		else if (wcscmp(Param1, L"maxheight") == 0) js_pushnumber(Param2, p->m_cxyMax.cy);
+		else if (wcscmp(Param1, L"bkcolor") == 0) js_pushnumber(Param2, p->m_BkgColor);
+		else if (wcscmp(Param1, L"drag") == 0) js_pushboolean(Param2, p->m_drag);
 		break;
 	}
 	case Proc_JsPut: {
@@ -498,8 +509,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 
 		}
 		else if (wcscmp(Param1, L"visible") == 0) ZuiControlCall(Proc_SetVisible, p, js_toboolean(J, -1), NULL, NULL);
-		else
-			rb_insert((key_t)Zui_Hash(Param1), _wcsdup((ZuiText)Param2), p->m_rAttribute);
+		
 		break;
 	}
 	case Proc_JsCall: {
@@ -524,13 +534,13 @@ ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, 
 }
 
 ZEXPORT ZuiAny ZCALL ZuiControlNotify(ZuiText msg, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+	//先通知js
+	rb_node * node = rb_search((key_t)Zui_Hash(msg), p->m_rAttribute);
+	if (node) {
+		ZuiBuilderJsLoad(p->m_pManager->m_js, node->data, wcslen(node->data));
+	}
 	if (p->m_pNotify)
 	{
-		//先通知js
-		rb_node * node = rb_search((key_t)Zui_Hash(msg), p->m_rAttribute);
-		if (node) {
-			ZuiBuilderJsLoad(p->m_pManager->m_js, node->data, wcslen(node->data));
-		}
 		return p->m_pNotify(msg, p, p->m_sUserData, Param1, Param2, Param3);
 	}
 	return NULL;

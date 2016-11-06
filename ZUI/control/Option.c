@@ -124,6 +124,11 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
 		else if (_tcscmp(Param1, _T("selectedpushedimage")) == 0) ZuiControlCall(Proc_Option_SetResSelectedPushed, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
 		break;
 	}
+	case Proc_JsHas: {
+		js_State *J = Param2;
+		if (wcscmp(Param1, L"selected") == 0) js_pushboolean(Param2, p->m_bSelected);
+		break;
+	}
 	case Proc_OnInit:{
 		break;
 	}
