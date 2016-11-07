@@ -78,7 +78,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
 //----------------------------------------------------------------------------
 
 static void ZuiJsBind_Call_exit(js_State *J) {
-	exit(0);
+	ZuiMsgLoop_exit();
 }
 static void ZuiJsBind_Call_print(js_State *J) {
 	for (size_t i = 0; i < js_gettop(J) - 1; i++)
@@ -97,7 +97,7 @@ static void ZuiJsBind_Call_print(js_State *J) {
 static void Control_prototype_call(js_State *J)
 {
 	ZuiControl p = js_touserdata(J, 0, TAG);
-	ZuiText name = js_getcfunctionname(J, -2);
+	ZuiText name = js_getcfunctionname(J, -(js_gettop(J)+1));
 	ZuiControlCall(Proc_JsCall, p, name, J, NULL);
 }
 static int Control_has(js_State *J, void *p, const wchar_t *name) {
@@ -158,6 +158,11 @@ ZuiVoid ZuiBuilderJs_pushControl(js_State *J, ZuiControl cp) {
 	js_getproperty(J, -1, L"prototype");
 	js_newuserdatax(J, TAG, cp, Control_has, Control_put, NULL, NULL);
 	return ;
+}
+ZuiControl ZuiBuilderJs_toControl(js_State *J, ZuiInt idx) {
+	if (!J)
+		return;
+	return js_touserdata(J, idx, TAG);;
 }
 //--------------------------------------------------Control_End
 static void ZuiJsBind_Call_LayoutLoad(js_State *J) {

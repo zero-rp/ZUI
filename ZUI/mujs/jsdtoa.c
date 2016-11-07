@@ -86,9 +86,9 @@ pow10(int n)
  * to move the virtual decimal point.
  */
 static int
-xadd1(char *a, int n)
+xadd1(wchar_t *a, int n)
 {
-	char *b;
+	wchar_t *b;
 	int c;
 
 	if(n < 0 || n > NSIGNIF)
@@ -118,9 +118,9 @@ xadd1(char *a, int n)
  * decimal point. this way, xsub1 is inverse of xadd1.
  */
 static int
-xsub1(char *a, int n)
+xsub1(wchar_t *a, int n)
 {
-	char *b;
+	wchar_t *b;
 	int c;
 
 	if(n < 0 || n > NSIGNIF)
@@ -153,9 +153,9 @@ xsub1(char *a, int n)
  * format exponent like sprintf(p, "e%+d", e)
  */
 void
-js_fmtexp(char *p, int e)
+js_fmtexp(wchar_t *p, int e)
 {
-	char se[9];
+	wchar_t se[9];
 	int i;
 
 	*p++ = 'e';
@@ -183,10 +183,10 @@ js_fmtexp(char *p, int e)
  * assumes special cases (NaN, +Inf, -Inf) have been handled.
  */
 void
-js_dtoa(double f, char *s, int *exp, int *neg, int *ns)
+js_dtoa(double f, wchar_t *s, int *exp, int *neg, int *ns)
 {
 	int c, d, e2, e, ee, i, ndigit, oerrno;
-	char tmp[NSIGNIF+10];
+	wchar_t tmp[NSIGNIF+10];
 	double g;
 
 	oerrno = errno; /* in case strtod smashes errno */
@@ -290,7 +290,7 @@ js_dtoa(double f, char *s, int *exp, int *neg, int *ns)
 	 * add 1 in hopes of turning 9s to 0s
 	 */
 	if(s[NSIGNIF-1] == '9') {
-		strcpy(tmp, s);
+		wcscpy(tmp, s);
 		ee = e;
 		if(xadd1(tmp, NSIGNIF)) {
 			ee--;
@@ -298,7 +298,7 @@ js_dtoa(double f, char *s, int *exp, int *neg, int *ns)
 		}
 		g = js_strtod(tmp, NULL);
 		if(g == f) {
-			strcpy(s, tmp);
+			wcscpy(s, tmp);
 			e = ee;
 		}
 	}

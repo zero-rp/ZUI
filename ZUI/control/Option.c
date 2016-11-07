@@ -129,6 +129,14 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
 		if (wcscmp(Param1, L"selected") == 0) js_pushboolean(Param2, p->m_bSelected);
 		break;
 	}
+	case Proc_JsPut: {
+		js_State *J = Param2;
+		if (wcscmp(Param1, L"group") == 0)
+			ZuiControlCall(Proc_Option_SetGroup, cp, js_toboolean(J, -1), NULL, NULL);
+		else if (wcscmp(Param1, L"selected") == 0)
+			ZuiControlCall(Proc_Option_SetSelected, cp, js_toboolean(J, -1), NULL, NULL);
+		break;
+	}
 	case Proc_OnInit:{
 		break;
 	}

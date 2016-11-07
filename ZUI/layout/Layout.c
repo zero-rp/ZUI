@@ -314,7 +314,13 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 	}
 	case Proc_JsHas: {
 		js_State *J = Param2;
-		if (wcscmp(Param1, L"tex1t") == 0) ZuiControlCall(Proc_SetText, p, js_tostring(J, -1), NULL, NULL);
+		if (wcscmp(Param1, L"Add") == 0)
+			return 1;
+		else if (wcscmp(Param1, L"AddAt") == 0)
+			return 1;
+		else if (wcscmp(Param1, L"GetItemIndex") == 0)
+			return 1;
+		else if (wcscmp(Param1, L"count") == 0) js_pushnumber(J, (int)ZuiControlCall(Proc_Layout_GetCount, cp, NULL, NULL, NULL));
 		else {
 			for (int it = darray_len(p->m_items) - 1; it >= 0; it--) {
 				if (((ZuiControl)(p->m_items->data[it]))->m_sName)
@@ -325,6 +331,22 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 					}
 				}
 			}
+		}
+		break;
+	}
+	case Proc_JsCall: {
+		if (wcscmp(Param1, L"Add") == 0) {
+			ZuiControl ite = ZuiBuilderJs_toControl(Param2, -1);
+			ZuiControlCall(Proc_Layout_Add, cp, ite, NULL, NULL);
+		}
+		else if (wcscmp(Param1, L"AddAt") == 0) {
+			ZuiControl ite = ZuiBuilderJs_toControl(Param2, 1);
+			ZuiControlCall(Proc_Layout_AddAt, cp, ite, js_toint32(Param2, 2), NULL);
+		}
+		else if (wcscmp(Param1, L"GetItemIndex") == 0) {
+			ZuiControl ite = ZuiBuilderJs_toControl(Param2, -1);
+			ZuiInt index = ZuiControlCall(Proc_Layout_GetItemIndex, cp, ite, NULL, NULL);
+			js_pushnumber(Param2, index);
 		}
 		break;
 	}

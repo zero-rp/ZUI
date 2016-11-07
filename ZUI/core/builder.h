@@ -17,6 +17,7 @@
 ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len);
 //绑定js对象
 ZuiVoid ZuiBuilderJs_pushControl(js_State *J, ZuiControl cp);
+ZuiControl ZuiBuilderJs_toControl(js_State *J, ZuiInt idx);
 ZEXPORT ZuiBool ZCALL ZuiBuilderJs(js_State *J);
 ZEXPORT ZuiBool ZCALL ZuiBuilderJsLoad(js_State *J, ZuiText str, ZuiInt len);
 ZuiBool ZuiBuilderInit();

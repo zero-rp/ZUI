@@ -212,6 +212,11 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
 			ZuiControlCall(Proc_Browser_LoadHtml, cp, ZuiResDBGetRes(Param2, ZREST_TXT), NULL, NULL);
 		break;
 	}
+	case Proc_JsPut: {
+		js_State *J = Param2;
+		if (wcscmp(Param1, L"url") == 0) ZuiControlCall(Proc_Browser_LoadUrl, cp, js_tostring(J,-1), NULL, NULL);
+		break;
+	}
 	case Proc_GetImePoint: {
 		wkeRect caret = wkeGetCaretRect(p->view);
 		ZPoint pt;

@@ -335,7 +335,10 @@ int js_gettop(js_State *J)
 {
 	return TOP - BOT;
 }
-
+int js_getbot(js_State *J)
+{
+	return BOT;
+}
 void js_pop(js_State *J, int n)
 {
 	TOP -= n;

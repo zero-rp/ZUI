@@ -177,6 +177,7 @@ short js_toint16(js_State *J, int idx);
 unsigned short js_touint16(js_State *J, int idx);
 
 int js_gettop(js_State *J);
+int js_getbot(js_State *J);
 void js_settop(js_State *J, int idx);
 void js_pop(js_State *J, int n);
 void js_rot(js_State *J, int n);

@@ -458,8 +458,17 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 			//}
 		}
 		else if (wcscmp(Param1, L"visible") == 0) ZuiControlCall(Proc_SetVisible, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
-		else
-			rb_insert((key_t)Zui_Hash(Param1), _wcsdup((ZuiText)Param2), p->m_rAttribute);
+		else {
+			rb_node *old = rb_search((key_t)Zui_Hash(Param1), p->m_rAttribute);
+			if (old)
+			{
+				free(old->data);
+				old->data = _wcsdup(Param2);
+			}
+			else {
+				rb_insert((key_t)Zui_Hash(Param1), _wcsdup(Param2), p->m_rAttribute);
+			}
+		}
 	}
 		break;
 	case Proc_GetAttribute: {
@@ -509,7 +518,18 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 
 		}
 		else if (wcscmp(Param1, L"visible") == 0) ZuiControlCall(Proc_SetVisible, p, js_toboolean(J, -1), NULL, NULL);
-		
+		else
+		{
+			rb_node *old = rb_search((key_t)Zui_Hash(Param1), p->m_rAttribute);
+			if (old)
+			{
+				free(old->data);
+				old->data = _wcsdup(js_tostring(J, -1));
+			}
+			else {
+				rb_insert((key_t)Zui_Hash(Param1), _wcsdup(js_tostring(J, -1)), p->m_rAttribute);
+			}
+		}
 		break;
 	}
 	case Proc_JsCall: {
