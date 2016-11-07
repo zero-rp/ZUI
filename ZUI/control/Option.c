@@ -87,7 +87,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
 
 
 
-		ZuiControlNotify(L"selectchanged", cp, Param1, NULL, NULL);
+		ZuiControlNotify(L"selectchanged", cp, Param1, JS_TNUMBER, NULL, NULL, NULL, NULL);
 		ZuiControlInvalidate(cp);
 		break;
 	}

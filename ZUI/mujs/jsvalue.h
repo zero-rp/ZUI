@@ -11,17 +11,6 @@ enum {
 	JS_HSTRING
 };
 
-enum js_Type {
-	JS_TSHRSTR, /* type tag doubles as string zero-terminator */
-	JS_TUNDEFINED,
-	JS_TNULL,
-	JS_TBOOLEAN,
-	JS_TNUMBER,
-	JS_TLITSTR,
-	JS_TMEMSTR,
-	JS_TOBJECT,
-};
-
 enum js_Class {
 	JS_COBJECT,
 	JS_CARRAY,

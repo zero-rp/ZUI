@@ -12,13 +12,13 @@ void _staticOnPaintUpdated(wkeWebView webView, void* param, const HDC hdc, int x
 // 回调：页面标题改变
 void _staticOnTitleChanged(wkeWebView webWindow, void* param, const wkeString title)
 {
-	ZuiControlNotify(L"titlechanged", ((ZuiBrowser)param)->cp, wkeGetStringW(title), NULL, NULL);
+	ZuiControlNotify(L"titlechanged", ((ZuiBrowser)param)->cp, wkeGetStringW(title), JS_TSHRSTR, NULL, NULL, NULL, NULL);
 }
 
 // 回调：创建新的页面，比如说调用了 window.open 或者点击了 <a target="_blank" .../>
 wkeWebView _staticOnCreateView(wkeWebView webWindow, void* param, wkeNavigationType navType, const wkeString url, const wkeWindowFeatures* features)
 {
-	ZuiBrowser bro = ZuiControlNotify(L"newwindow", ((ZuiBrowser)param)->cp, (void *)navType, wkeGetStringW(url), features);
+	ZuiBrowser bro = ZuiControlNotify(L"newwindow", ((ZuiBrowser)param)->cp, (void *)navType, JS_TNUMBER, wkeGetStringW(url), JS_TSHRSTR, NULL, NULL);
 	if (bro)
 		return ZuiControlCall(Proc_Browser_GetView, bro, NULL, NULL, NULL);
 	return 0;

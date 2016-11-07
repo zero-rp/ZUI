@@ -194,26 +194,46 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 							 break;
 	}
 	case Proc_OnEvent:{
-						  if (((TEventUI *)Param1)->Type == ZEVENT_SETCURSOR)
-						  {
-							  SetCursor(LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
-							  return 0;
-						  }
-						  if (((TEventUI *)Param1)->Type == ZEVENT_SETFOCUS)
-						  {
-							  p->m_bFocused = TRUE;
-							  ZuiControlInvalidate(p);
-							  return 0;
-						  }
-						  if (((TEventUI *)Param1)->Type == ZEVENT_KILLFOCUS)
-						  {
-							  p->m_bFocused = FALSE;
-							  ZuiControlInvalidate(p);
-							  return 0;
-						  }
-						  if (p->m_pParent != NULL)
-							  ZuiControlCall(Proc_OnEvent, p->m_pParent, Param1, NULL, NULL);
-						  break;
+		switch (((TEventUI *)Param1)->Type)
+		{
+		case ZEVENT_SETCURSOR:
+			{
+				SetCursor(LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
+				return 0;
+			}
+		case ZEVENT_SETFOCUS:
+			{
+				p->m_bFocused = TRUE;
+				ZuiControlInvalidate(p);
+				return 0;
+			}
+		case ZEVENT_KILLFOCUS:
+			{
+				p->m_bFocused = FALSE;
+				ZuiControlInvalidate(p);
+				return 0;
+			}
+		case ZEVENT_MOUSELEAVE: {
+			ZuiControlNotify(L"onmouseleave", p, NULL, NULL, NULL, NULL, NULL, NULL);
+		}
+			break;
+		case ZEVENT_MOUSEENTER: {
+			ZuiControlNotify(L"onmouseenter", p, ((TEventUI *)Param1)->ptMouse.x, JS_TNUMBER, ((TEventUI *)Param1)->ptMouse.y, JS_TNUMBER, NULL, NULL);
+		}
+			break;
+		case ZEVENT_LBUTTONDOWN: {
+			ZuiControlNotify(L"onlbuttondown", p, ((TEventUI *)Param1)->ptMouse.x, JS_TNUMBER, ((TEventUI *)Param1)->ptMouse.y, JS_TNUMBER, NULL, NULL);
+		}
+			break;
+		case ZEVENT_LBUTTONUP: {
+			ZuiControlNotify(L"onclick", p, ((TEventUI *)Param1)->ptMouse.x, JS_TNUMBER, ((TEventUI *)Param1)->ptMouse.y, JS_TNUMBER, NULL, NULL);
+		}
+		default:
+			break;
+		}
+		if (p->m_pParent != NULL)
+			ZuiControlCall(Proc_OnEvent, p->m_pParent, Param1, NULL, NULL);
+		break;
 	}
 	case Proc_GetMinWidth: {
 		return (void *)p->m_cxyMin.cx;
@@ -482,8 +502,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 	case Proc_JsHas: {
 		if (wcscmp(Param1, L"root") == 0) ZuiBuilderJs_pushControl(Param2, p->m_pManager->m_pRoot);
 		else if (wcscmp(Param1, L"parent") == 0)  ZuiBuilderJs_pushControl(Param2, p->m_pParent);
-		else if (wcscmp(Param1, L"text") == 0) 
-			js_pushstring(Param2, p->m_sText);
+		else if (wcscmp(Param1, L"text") == 0) js_pushstring(Param2, p->m_sText);
 		else if (wcscmp(Param1, L"tooltip") == 0) js_pushstring(Param2, p->m_sToolTip);
 		else if (wcscmp(Param1, L"width") == 0) js_pushnumber(Param2, p->m_cxyFixed.cx);
 		else if (wcscmp(Param1, L"height") == 0) js_pushnumber(Param2, p->m_cxyFixed.cy);
@@ -569,8 +588,31 @@ ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, 
 	}
 	return NULL;
 }
-
-ZEXPORT ZuiAny ZCALL ZuiControlNotify(ZuiText msg, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+ZuiBool ZuiControlNotifyPushJs(js_State *J, ZuiAny Param, ZuiInt Type)
+{
+	switch (Type)
+	{
+	case JS_TSHRSTR:
+	case JS_TLITSTR:	
+	case JS_TMEMSTR:
+		js_pushstring(J, Param);
+		break;
+	case JS_TBOOLEAN:
+		js_pushboolean(J, Param);
+		break;
+	case JS_TNUMBER:
+		js_pushnumber(J, (int)Param);
+		break;
+	case JS_TOBJECT:
+		js_pushobject(J, Param);
+		break;
+	default:
+		return FALSE;
+		break;
+	}
+	return TRUE;
+}
+ZEXPORT ZuiAny ZCALL ZuiControlNotify(ZuiText msg, ZuiControl p, ZuiAny Param1,ZuiInt p1Type, ZuiAny Param2, ZuiInt p2Type, ZuiAny Param3, ZuiInt p3Type) {
 	//先通知js
 	rb_node * node = rb_search((key_t)Zui_Hash(msg), p->m_rAttribute);
 	if (node) {
@@ -580,10 +622,33 @@ ZEXPORT ZuiAny ZCALL ZuiControlNotify(ZuiText msg, ZuiControl p, ZuiAny Param1, 
 			ZuiBuilderJsLoad(p->m_pManager->m_js, att->v, att->vlen);
 		}
 		else {
-			
+			int ret = 1;
 			js_pushobject(p->m_pManager->m_js, att->v);
 			ZuiBuilderJs_pushControl(p->m_pManager->m_js, p);
-			js_pcall(p->m_pManager->m_js, 1);
+			if (Param1)
+			{
+				if (ZuiControlNotifyPushJs(p->m_pManager->m_js, Param1, p1Type))
+					ret++;
+			}
+			if (Param2)
+			{
+				if (ZuiControlNotifyPushJs(p->m_pManager->m_js, Param2, p2Type))
+					ret++;
+			}
+			if (Param3)
+			{
+				if (ZuiControlNotifyPushJs(p->m_pManager->m_js, Param3, p3Type))
+					ret++;
+			}
+			js_pcall(p->m_pManager->m_js, ret);
+			if (!js_isundefined(p->m_pManager->m_js, -1)) {
+				ZuiAny r=0;
+				if (js_isuserdata(p->m_pManager->m_js, -1, NULL)) {
+					r = js_touserdata(p->m_pManager->m_js, -1, NULL);
+				}
+				js_pop(p->m_pManager->m_js, 1);
+				return r;
+			}
 			js_pop(p->m_pManager->m_js,1);
 		}
 		

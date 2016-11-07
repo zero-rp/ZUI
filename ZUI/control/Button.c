@@ -38,7 +38,7 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
 		case ZEVENT_LBUTTONUP: {
 			p->type = 1;
 			ZuiControlInvalidate(cp);
-			ZuiControlNotify(L"onclick", cp, &event->ptMouse, NULL, NULL);
+			return ZuiControlNotify(L"onclick", cp, event->ptMouse.x, JS_TNUMBER, event->ptMouse.y, JS_TNUMBER, NULL, NULL);
 		}
 		   break;
 		default:

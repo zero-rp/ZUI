@@ -320,6 +320,8 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 			return 1;
 		else if (wcscmp(Param1, L"GetItemIndex") == 0)
 			return 1;
+		else if (wcscmp(Param1, L"GetItemAt") == 0)
+			return 1;
 		else if (wcscmp(Param1, L"count") == 0) js_pushnumber(J, (int)ZuiControlCall(Proc_Layout_GetCount, cp, NULL, NULL, NULL));
 		else {
 			for (int it = darray_len(p->m_items) - 1; it >= 0; it--) {
@@ -347,6 +349,13 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 			ZuiControl ite = ZuiBuilderJs_toControl(Param2, -1);
 			ZuiInt index = ZuiControlCall(Proc_Layout_GetItemIndex, cp, ite, NULL, NULL);
 			js_pushnumber(Param2, index);
+		}
+		else if (wcscmp(Param1, L"GetItemAt") == 0) {
+			ZuiControl ite = ZuiControlCall(Proc_Layout_GetItemAt, cp, js_toint32(Param2, -1), NULL, NULL);
+			if (ite)
+				ZuiBuilderJs_pushControl(Param2, ite);
+			else
+				js_pushundefined(Param2);
 		}
 		break;
 	}

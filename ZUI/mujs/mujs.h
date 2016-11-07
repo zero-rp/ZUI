@@ -78,6 +78,16 @@ enum {
 	JS_DONTCONF = 4,
 };
 
+enum js_Type {
+	JS_TSHRSTR, /* type tag doubles as string zero-terminator */
+	JS_TUNDEFINED,
+	JS_TNULL,
+	JS_TBOOLEAN,
+	JS_TNUMBER,
+	JS_TLITSTR,
+	JS_TMEMSTR,
+	JS_TOBJECT,
+};
 void js_newerror(js_State *J, const wchar_t *message);
 void js_newevalerror(js_State *J, const wchar_t *message);
 void js_newrangeerror(js_State *J, const wchar_t *message);

@@ -227,8 +227,12 @@ int js_isregexp(js_State *J, int idx)
 int js_isuserdata(js_State *J, int idx, const char *tag)
 {
 	js_Value *v = stackidx(J, idx);
-	if (v->type == JS_TOBJECT && v->u.object->type == JS_CUSERDATA)
-		return !wcscmp(tag, v->u.object->u.user.tag);
+	if (v->type == JS_TOBJECT && v->u.object->type == JS_CUSERDATA) {
+		if (tag)
+			return !wcscmp(tag, v->u.object->u.user.tag);
+		else
+			return 1;
+	}
 	return 0;
 }
 
@@ -313,8 +317,14 @@ void *js_touserdata(js_State *J, int idx, const wchar_t *tag)
 {
 	js_Value *v = stackidx(J, idx);
 	if (v->type == JS_TOBJECT && v->u.object->type == JS_CUSERDATA)
-		if (!wcscmp(tag, v->u.object->u.user.tag))
+	{
+		if (!tag)
 			return v->u.object->u.user.data;
+		else
+			if (!wcscmp(tag, v->u.object->u.user.tag))
+				return v->u.object->u.user.data;
+
+	}
 	js_typeerror(J, L"not a %s", tag);
 }
 
