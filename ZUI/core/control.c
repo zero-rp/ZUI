@@ -459,15 +459,19 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		}
 		else if (wcscmp(Param1, L"visible") == 0) ZuiControlCall(Proc_SetVisible, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
 		else {
+			ZuiAttribute att;
 			rb_node *old = rb_search((key_t)Zui_Hash(Param1), p->m_rAttribute);
-			if (old)
-			{
-				free(old->data);
-				old->data = _wcsdup(Param2);
+			if (old) {
+				att = (ZuiAttribute)old->data;
+				free(att->v);
 			}
 			else {
-				rb_insert((key_t)Zui_Hash(Param1), _wcsdup(Param2), p->m_rAttribute);
+				att = malloc(sizeof(ZAttribute));
+				rb_insert((key_t)Zui_Hash(Param1), att, p->m_rAttribute);
 			}
+			att->type = ZAttType_String;
+			att->v = _wcsdup(Param2);
+			att->vlen = wcslen(att->v);
 		}
 	}
 		break;
@@ -478,7 +482,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 	case Proc_JsHas: {
 		if (wcscmp(Param1, L"root") == 0) ZuiBuilderJs_pushControl(Param2, p->m_pManager->m_pRoot);
 		else if (wcscmp(Param1, L"parent") == 0)  ZuiBuilderJs_pushControl(Param2, p->m_pParent);
-		else if (wcscmp(Param1, L"text") == 0) js_pushstring(Param2, p->m_sText);
+		else if (wcscmp(Param1, L"text") == 0) 
+			js_pushstring(Param2, p->m_sText);
 		else if (wcscmp(Param1, L"tooltip") == 0) js_pushstring(Param2, p->m_sToolTip);
 		else if (wcscmp(Param1, L"width") == 0) js_pushnumber(Param2, p->m_cxyFixed.cx);
 		else if (wcscmp(Param1, L"height") == 0) js_pushnumber(Param2, p->m_cxyFixed.cy);
@@ -520,14 +525,26 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		else if (wcscmp(Param1, L"visible") == 0) ZuiControlCall(Proc_SetVisible, p, js_toboolean(J, -1), NULL, NULL);
 		else
 		{
+			ZuiAttribute att;
 			rb_node *old = rb_search((key_t)Zui_Hash(Param1), p->m_rAttribute);
-			if (old)
-			{
-				free(old->data);
-				old->data = _wcsdup(js_tostring(J, -1));
+			if (old) {
+				att = (ZuiAttribute)old->data;
+				free(att->v);
 			}
 			else {
-				rb_insert((key_t)Zui_Hash(Param1), _wcsdup(js_tostring(J, -1)), p->m_rAttribute);
+				att = malloc(sizeof(ZAttribute));
+				rb_insert((key_t)Zui_Hash(Param1), att, p->m_rAttribute);
+			}
+			if (js_iscallable(J, -1)) {
+				att->type = ZAttType_JsCall;
+				js_Object *obj = js_toobject(J, -1);
+				att->v = obj;
+			}
+			else
+			{
+				att->type = ZAttType_String;
+				att->v = _wcsdup(js_tostring(J, -1));
+				att->vlen = wcslen(att->v);
 			}
 		}
 		break;
@@ -557,7 +574,19 @@ ZEXPORT ZuiAny ZCALL ZuiControlNotify(ZuiText msg, ZuiControl p, ZuiAny Param1, 
 	//先通知js
 	rb_node * node = rb_search((key_t)Zui_Hash(msg), p->m_rAttribute);
 	if (node) {
-		ZuiBuilderJsLoad(p->m_pManager->m_js, node->data, wcslen(node->data));
+		ZuiAttribute att = node->data;
+		if (att->type == ZAttType_String)
+		{
+			ZuiBuilderJsLoad(p->m_pManager->m_js, att->v, att->vlen);
+		}
+		else {
+			
+			js_pushobject(p->m_pManager->m_js, att->v);
+			ZuiBuilderJs_pushControl(p->m_pManager->m_js, p);
+			js_pcall(p->m_pManager->m_js, 1);
+			js_pop(p->m_pManager->m_js,1);
+		}
+		
 	}
 	if (p->m_pNotify)
 	{

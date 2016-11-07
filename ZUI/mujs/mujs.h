@@ -25,6 +25,7 @@
 #endif
 
 typedef struct js_State js_State;
+typedef struct js_Object js_Object;
 
 typedef void *(*js_Alloc)(void *memctx, void *ptr, int size);
 typedef void (*js_Panic)(js_State *J);
@@ -169,6 +170,8 @@ int js_toboolean(js_State *J, int idx);
 double js_tonumber(js_State *J, int idx);
 const wchar_t *js_tostring(js_State *J, int idx);
 void *js_touserdata(js_State *J, int idx, const wchar_t *tag);
+js_Object *js_toobject(js_State *J, int idx);
+void js_pushobject(js_State *J, js_Object *v);
 
 int js_tointeger(js_State *J, int idx);
 int js_toint32(js_State *J, int idx);
