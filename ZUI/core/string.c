@@ -71,6 +71,34 @@ ZEXPORT ZuiBool ZCALL ZuiStingIsUtf8(ZuiAny str, ZuiInt length)
 	return TRUE;
 }
 
+ZEXPORT ZuiVoid ZCALL ZuiStingSplit(ZuiText src, ZuiText pSeparator, ZuiText *dest, ZuiInt *num)
+{
+	ZuiText pStart, pEnd;
+	unsigned int sep_len;
+	int count = 0;
+	if (src == NULL || wcslen(src) == 0) return;
+	sep_len = wcslen(pSeparator);
+	pStart = src;
+	while (1)
+	{
+		pEnd = wcsstr(pStart, pSeparator);
+		if (pEnd != NULL)
+		{
+			memset(pEnd, '\0', sep_len*sizeof(_ZuiText));
+			*dest++ = pStart;
+			pEnd = pEnd + sep_len;
+			pStart = pEnd;
+			++count;
+		}
+		else
+		{
+			*dest = pStart;
+			++count;
+			break;
+		}
+	}
+	*num = count;
+}
 
 ZEXPORT ZuiInt ZCALL ZuiUtf8ToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen)
 {

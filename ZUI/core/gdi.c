@@ -148,20 +148,36 @@ ZEXPORT ZuiVoid ZCALL ZuiDrawImageEx(ZuiGraphics Graphics, ZuiImage Image, ZuiIn
 	if (!(Graphics && Image)) {
 		return;
 	}
+	if (Image->src.Left)
+		xSrc = Image->src.Left;
+	if (Image->src.Top)
+		ySrc = Image->src.Top;
 
 	if (Width <= 0) {
-		Width = (ZuiInt)(Image->Width - xSrc);
+		if (Image->src.Width)
+			Width = Image->src.Width - xSrc;
+		else
+			Width = (ZuiInt)(Image->Width - xSrc);
 	}
 	if (Height <= 0) {
-		Height = (ZuiInt)(Image->Height - ySrc);
+		if (Image->src.Height)
+			Height = Image->src.Height - ySrc;
+		else
+			Height = (ZuiInt)(Image->Height - ySrc);
 	}
 
 
 	if (WidthSrc <= 0 || WidthSrc + xSrc > Image->Width) {
-		WidthSrc = (ZuiInt)(Image->Width - xSrc);
+		if (Image->src.Width)
+			WidthSrc = Image->src.Width;
+		else
+			WidthSrc = (ZuiInt)(Image->Width - xSrc);
 	}
 	if (HeightSrc <= 0 || HeightSrc + ySrc > Image->Height) {
-		HeightSrc = (ZuiInt)(Image->Height - ySrc);
+		if (Image->src.Height)
+			HeightSrc = Image->src.Height;
+		else
+			HeightSrc = (ZuiInt)(Image->Height - ySrc);
 	}
 	GdipDrawImageRectRectI(Graphics->graphics, Image->image, x, y, Width, Height, xSrc, ySrc, WidthSrc, HeightSrc, 2, NULL, NULL, NULL);
 }
@@ -275,7 +291,7 @@ ZEXPORT ZuiGraphics ZCALL ZuiCreateGraphicsInMemory(ZuiInt Width, ZuiInt Height)
 	HBITMAP OldBitmap = (HBITMAP)SelectObject(Graphics->hdc, (HGDIOBJ)Graphics->HBitmap);
 
 	GdipCreateFromHDC(Graphics->hdc, &Graphics->graphics);
-	GdipSetTextRenderingHint(Graphics->graphics, 4);//设置抗锯齿模式
+	GdipSetTextRenderingHint(Graphics->graphics, 5);//设置抗锯齿模式
 	return Graphics;
 }
 /*销毁图形*/

@@ -190,7 +190,6 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
 	}
 	case Proc_SetPos:{
 		wkeSetHandleOffset(p->view, ((RECT*)Param1)->left, ((RECT*)Param1)->top);
-		OutputDebugString(L"a");
 		break;
 	}
 	case Proc_Browser_LoadUrl: {

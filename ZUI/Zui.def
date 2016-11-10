@@ -38,36 +38,5 @@
 		ZuiAsciiToUnicode
 		ZuiUnicodeToAscii
 
-		ZuiDrawFillRect
-		ZuiDrawRect
-		ZuiDrawPolygon
-		ZuiDrawLine
-		ZuiDrawString
-		ZuiMeasureStringRect
-		ZuiDrawFilledRoundRect
-		ZuiDrawRoundRect
-		ZuiDrawImage
-		ZuiDrawImageEx
-		ZuiAlphaBlendEx
-		ZuiAlphaBlend
-		ZuiGraphicsClear
-		ZuiCreateStringFormat
-		ZuiDestroyStringFormat
-		ZuiCreateGraphicsInMemory
-		ZuiDestroyGraphics
-		ZuiCreateRegion
-		ZuiCreateRegionRect
-		ZuiDestroyRegion
-		ZuiRegionIsVisiblePoint
-		ZuiRegionCombineExclude
-		ZuiRegionTranslate
-		ZuiGraphicsSetClipRegion
-		ZuiGraphicsGetClipRegion
-		ZuiGraphicsResetClip
-		ZuiLoadImageFromFile
-		ZuiLoadImageFromBinary
-		ZuiImageGetFrameCount
-		ZuiImageGetFrameIniDly
-		ZuiImageSetFrame
-		ZuiDestroyImage
+
 

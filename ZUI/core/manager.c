@@ -321,7 +321,7 @@ ZEXPORT ZuiVoid ZCALL ZuiPaintManagerReapObjects(ZuiPaintManager p, ZuiControl p
 	if (pControl == p->m_pEventHover) p->m_pEventHover = NULL;
 	if (pControl == p->m_pEventClick) p->m_pEventClick = NULL;
 	if (pControl == p->m_pFocus) p->m_pFocus = NULL;
-	ZuiPaintManagerKillTimer(p, pControl);
+	ZuiPaintManagerKillTimer(pControl);
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -701,7 +701,6 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 						else {
 							if (!GetUpdateRect(p->m_hWndPaint, &rcPaint, FALSE)) return TRUE;
 						}
-
 						p->m_bIsPainting = TRUE;
 						//是否需要更新控件布局
 						if (p->m_bUpdateNeeded) {	//更新控件布局
@@ -775,8 +774,8 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 						//是否双缓存绘图
 						if (p->m_bOffscreenPaint)
 						{
-							HBITMAP hOldBitmap = (HBITMAP) SelectObject(p->m_hDcOffscreen->hdc, p->m_hDcOffscreen->HBitmap);
-							int iSaveDC = SaveDC(p->m_hDcOffscreen->hdc);
+							//HBITMAP hOldBitmap = (HBITMAP) SelectObject(p->m_hDcOffscreen->hdc, p->m_hDcOffscreen->HBitmap);
+							//int iSaveDC = SaveDC(p->m_hDcOffscreen->hdc);
 							//if (p->m_bLayered && p->m_diLayered.pImageInfo == NULL) {
 							//擦除绘制区域背景
 							COLORREF* pOffscreenBits = NULL;
@@ -793,7 +792,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 								ZuiControl pPostPaintControl = (ZuiControl)(p->m_aPostPaintControls->data[i]);
 								ZuiControlCall(Proc_OnPostPaint, pPostPaintControl, p->m_hDcOffscreen, &rcPaint, NULL);
 							}
-							RestoreDC(p->m_hDcOffscreen->hdc, iSaveDC);
+							//RestoreDC(p->m_hDcOffscreen->hdc, iSaveDC);
 							if (p->m_bLayered) {
 								RECT rcWnd = { 0 };
 								GetWindowRect(p->m_hWndPaint, &rcWnd);
@@ -814,7 +813,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 							}
 							else
 								BitBlt(p->m_hDcPaint, rcPaint.left, rcPaint.top, rcPaint.right - rcPaint.left, rcPaint.bottom - rcPaint.top, p->m_hDcOffscreen->hdc, rcPaint.left, rcPaint.top, SRCCOPY);
-							SelectObject(p->m_hDcOffscreen->hdc, hOldBitmap);
+							//SelectObject(p->m_hDcOffscreen->hdc, hOldBitmap);
 
 							if (p->m_bShowUpdateRect && !p->m_bLayered) { //绘制更新矩形
 								HPEN hOldPen = (HPEN)SelectObject(p->m_hDcPaint, m_hUpdateRectPen);

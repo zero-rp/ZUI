@@ -204,6 +204,15 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 	case Proc_SetAttribute: {
 		if (wcscmp(Param1, L"nobox") == 0) ZuiControlCall(Proc_Window_SetNoBox, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
 		else if (wcscmp(Param1, L"combo") == 0) ZuiControlCall(Proc_Window_SetComBo, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
+		else if (wcscmp(Param1, L"layered") == 0) {
+			if (wcscmp(Param2, L"true") == 0) {
+				ZuiPaintManagerSetLayered(p->m_pm, TRUE);
+			}
+			else {
+				ZuiPaintManagerSetLayered(p->m_pm, FALSE);
+			}
+		}
+		else if (wcscmp(Param1, L"opacity") == 0) ZuiPaintManagerSetLayeredOpacity(p->m_pm, _wtoi(Param2));
 		else if (wcscmp(Param1, L"mininfo") == 0) {
 			LPTSTR pstr = NULL;
 			int cx = wcstol(Param2, &pstr, 10);  ASSERT(pstr);

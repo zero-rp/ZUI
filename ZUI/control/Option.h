@@ -30,6 +30,10 @@ typedef struct _ZOption
 	ZuiRes		m_ResSelectedHot;		//选中的点燃状态
 	ZuiRes		m_ResSelectedPushed;	//选中的按下状态
 
+	ZuiColor	m_ColorSelected;		//选中的普通状态
+	ZuiColor	m_ColorSelectedHot;		//选中的点燃状态
+	ZuiColor	m_ColorSelectedPushed;	//选中的按下状态
+
 	ZCtlProc old_call;
 	ZuiAny old_udata;
 }*ZuiOption, ZOption;

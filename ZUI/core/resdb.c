@@ -26,7 +26,7 @@ ZuiBool ZuiResDBInit() {
 	p->type = ZRESDBT_PE;
 	rb_insert(Zui_Hash(L"pe"), p, Global_ResDB->resdb);
 	//加载默认资源包
-	ZuiResDBGetRes(L"pe:zip,106", ZREST_ZIP);
+	ZuiResDBGetRes(L"pe:zip:106", ZREST_ZIP);
 	return TRUE;
 }
 //打开压缩文件
@@ -137,17 +137,13 @@ ZEXPORT ZuiVoid ZCALL ZuiResDBDestroy(ZuiResDB db)
 }
 ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 	if (Path) {
-		_ZuiText name[255];
-		ZuiText pp = Path;
-		ZuiText p = &name;
-		while (*(wchar_t *)pp != L':' && *(wchar_t *)pp != L'\0')
-		{
-			*p = *(wchar_t *)pp;
-			p++;
-			pp++;
-		}
-		*p = 0;
-		pp++;
+		_ZuiText pathbuf[1024];
+		ZuiText arr[20];
+		ZuiInt arrnum = 20;
+		wcscpy(pathbuf, Path);
+		ZuiStingSplit(pathbuf, L":", arr, &arrnum);
+		if (arrnum < 2)
+			return NULL;
 		//先查找已经加载过的资源里面是否存在
 		rb_node *node = rb_search(Zui_Hash(Path), Global_ResDB->res);
 		if (node) {
@@ -155,7 +151,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 			return (ZuiRes)node->data;
 		}
 		//没找到就查找对应的资源包
-		node = rb_search(Zui_Hash(name), Global_ResDB->resdb);
+		node = rb_search(Zui_Hash(arr[0]), Global_ResDB->resdb);
 		if (!node) {
 			return NULL;
 		}
@@ -166,9 +162,9 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 		/*压缩*/if (db->type == ZRESDBT_ZIP_FILE || db->type == ZRESDBT_ZIP_STREAM)
 		{
 			//转换路径编码
-			ZuiInt len = ZuiUnicodeToAscii(pp, -1, 0, 0);
+			ZuiInt len = ZuiUnicodeToAscii(arr[1], -1, 0, 0);
 			ZuiAny n = malloc(len);
-			ZuiUnicodeToAscii(pp, len, n, len);
+			ZuiUnicodeToAscii(arr[1], len, n, len);
 			unz_file_info64 info;
 			int ret = unzLocateFile(db->uf, n, 0);
 			if (ret == 0)
@@ -186,7 +182,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 			free(n);
 		}
 		/*文件*/else if (db->type == ZRESDBT_FILE) {
-			FILE*f = _wfopen(pp, L"rb");
+			FILE*f = _wfopen(arr[1], L"rb");
 			fseek(f, 0L, SEEK_END);
 			buflen = ftell(f); /* 得到文件大小 */
 			buf = malloc(buflen); /* 根据文件大小动态分配内存空间 */
@@ -206,7 +202,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 			ZuiBool https = FALSE;
 			int len;
 			int i;
-			parseptr2 = pp;
+			parseptr2 = arr[1];
 			parseptr1 = wcschr(parseptr2, L':');
 			if (NULL != parseptr1) {
 				len = parseptr1 - parseptr2;
@@ -292,13 +288,8 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 		}
 		/*PE*/else if(db->type==ZRESDBT_PE)
 		{
-			wchar_t name[255];
-			p= wcschr(pp, L',');
-			memcpy(name, pp, (p - pp)*sizeof(wchar_t));
-			name[p - pp] = 0;
-			pp += p - pp + 1;
 			//定位我们的自定义资源，这里因为我们是从本模块定位资源，所以将句柄简单地置为NULL即可
-			HRSRC hRsrc = FindResource(NULL, _wtoi(pp), name);
+			HRSRC hRsrc = FindResource(NULL, _wtoi(arr[2]), arr[1]);
 			if (hRsrc) {
 				//获取资源的大小
 				buflen = SizeofResource(NULL, hRsrc);
@@ -334,13 +325,25 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 		memset(res, 0, sizeof(ZRes));
 		res->type = type;
 		if (type == ZREST_IMG) {
-			res->p = ZuiLoadImageFromBinary(buf, buflen);
+			ZuiImage img = ZuiLoadImageFromBinary(buf, buflen);
+			res->p = img;
 			//释放缓冲
 			free(buf);
 			if (!res->p) {
 				free(res);
 				return NULL;
 			}
+			for (size_t i = 2; i < arrnum; i++)
+			{
+				if (wcsncmp(arr[i], L"src='",5) == 0) {
+					LPTSTR pstr = NULL;
+					img->src.Left = _tcstol(arr[i]+5, &pstr, 10);  ASSERT(pstr);
+					img->src.Top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+					img->src.Width = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+					img->src.Height = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+				}
+			}
+
 		}
 		else if (type == ZREST_TXT) {
 			int bufsize;

@@ -16,6 +16,9 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
 		//创建继承的控件 保存数据指针
 		p->old_udata = ZuiButtonProc(Proc_OnCreate, cp, 0, 0, 0, 0);
 		p->old_call = (ZCtlProc)&ZuiButtonProc;
+		p->m_ColorSelected= ARGB(200, 0, 3, 255);		//选中的普通状态
+		p->m_ColorSelectedHot= ARGB(200, 0, 255, 255);		//选中的点燃状态
+		p->m_ColorSelectedPushed= ARGB(200, 255, 255, 255);	//选中的按下状态
 		return p;
 	}
 		break;
@@ -43,7 +46,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
 					ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
 				}
 				else {
-					ZuiDrawFillRect(gp, ARGB(200, 0, 3, 255), rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1);
+					ZuiDrawFillRect(gp, p->m_ColorSelected, rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1);
 				}
 			}
 			else if (((ZuiButton)p->old_udata)->type == 1) {
@@ -52,7 +55,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
 					ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
 				}
 				else {
-					ZuiDrawFillRect(gp, ARGB(200, 0, 255, 255), rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1);
+					ZuiDrawFillRect(gp, p->m_ColorSelectedHot, rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1);
 				}
 			}
 			else if (((ZuiButton)p->old_udata)->type == 2) {
@@ -61,7 +64,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
 					ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
 				}
 				else {
-					ZuiDrawFillRect(gp, ARGB(200, 255, 255, 255), rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1);
+					ZuiDrawFillRect(gp, p->m_ColorSelectedPushed, rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1);
 				}
 			}
 			return 0;//选择状态下不由按钮控件绘制

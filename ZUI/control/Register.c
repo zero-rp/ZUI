@@ -14,7 +14,9 @@ BOOL ZuiControlRegister()
 	ZuiControlRegisterAdd(L"tablayout", (ZCtlProc)&ZuiTabLayoutProc);
 	ZuiControlRegisterAdd(L"tilelayout", (ZCtlProc)&ZuiTileLayoutProc);
 
+
 	ZuiControlRegisterAdd(L"window", (ZCtlProc)&ZuiWindowProc);
+	ZuiControlRegisterAdd(L"label", (ZCtlProc)&ZuiLabelProc);
 	ZuiControlRegisterAdd(L"button", (ZCtlProc)&ZuiButtonProc);
 	ZuiControlRegisterAdd(L"browser", (ZCtlProc)&ZuiBrowserProc);
 	ZuiControlRegisterAdd(L"edit", (ZCtlProc)&ZuiEditProc);

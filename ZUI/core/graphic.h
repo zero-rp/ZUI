@@ -1,5 +1,5 @@
 ﻿/**
-* @file		gdi.h
+* @file		graphic.h
 * @brief	图形接口.
 * @author	[Zero](22249030)
 * @version	1.0
@@ -11,10 +11,21 @@
 * + v1.0版发布.
 *
 */
-#ifndef __ZUI_PLATFORM_GRAPH_GDI_H__
-#define __ZUI_PLATFORM_GRAPH_GDI_H__
+#ifndef __ZUI_PLATFORM_GRAPH_H__
+#define __ZUI_PLATFORM_GRAPH_H__
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif
 
+/*FontStyleRegular    = 0,//常规  
+  FontStyleBold       = 1,//加粗  
+  FontStyleItalic     = 2,//斜体  
+  FontStyleBoldItalic = 3,//粗斜  
+  FontStyleUnderline  = 4,//下划线  
+  FontStyleStrikeout  = 8//强调线，即在字体中部划线  
+  */
 #define ZTS_BOLD			1	//粗体
 #define ZTS_ITALIC			2	//斜体
 #define ZTS_ALIGN_LEFT		0	//水平居左
@@ -25,20 +36,29 @@
 #define ZTS_VALIGN_BOTTOM	32	//垂直底部对齐
 #define ZTS_SHADOW			64	//阴影
 
-
+#define AGG
 
 /**图像*/
 typedef struct _ZImage {
-	void *image;
+#ifdef AGG
+	struct ZuiAggImage *image;	///图形句柄
+#else
+	void *image;	///图形句柄
+#endif
 	ZuiInt Width;
 	ZuiInt Height;
+	ZRect src;	//源矩形
 }*ZuiImage, ZImage;
 
 /**图形*/
 typedef struct _ZGraphics {
 	ZuiInt Width;
-	ZuiInt Height;	
-	void *graphics;	///GDI+图形句柄
+	ZuiInt Height;
+#ifdef AGG
+	struct ZuiAggGraphics *graphics;	///图形句柄
+#else
+	void *graphics;	///图形句柄
+#endif
 	HDC hdc;		///内存场景
 	HBITMAP HBitmap;///位图句柄
 	void* Bits;		///内存指针
@@ -54,11 +74,15 @@ typedef struct _ZRegion {
 typedef struct _ZStringFormat{
 	ZuiColor TextColor;
 	ZuiColor ShadowColor;
+#ifdef AGG
+	struct ZuiAggFont *font;	///图形句柄
+#else
 	void *font;///字体
 	void *StringFormat;///文本格式
 	void *FontFamily;///字体族
 	void *BrushShadow;
 	void *Brush;
+#endif
 }*ZuiStringFormat, ZStringFromat;
 
 
@@ -251,5 +275,7 @@ ZEXPORT ZuiInt ZCALL ZuiImageSetFrame(ZuiImage Image, ZuiInt index);
 ZEXPORT ZuiVoid ZCALL ZuiDestroyImage(ZuiImage Image);
 
 
-
+#ifdef __cplusplus
+}
+#endif
 #endif //__ZUI_PLATFORM_GRAPH_GDI_H__

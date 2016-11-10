@@ -11,8 +11,10 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
 	case Proc_OnCreate: {
 		p = (ZuiButton)malloc(sizeof(ZButton));
 		memset(p, 0, sizeof(ZButton));
+
 		//保存原来的回调地址,创建成功后回调地址指向当前函数
-		p->old_call = cp->call;
+		p->old_udata = ZuiLabelProc(Proc_OnCreate, cp, 0, 0, 0, 0);
+		p->old_call = (ZCtlProc)&ZuiLabelProc;
 		return p;
 	}
 		break;
@@ -46,42 +48,38 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
 		}
 	}
 		break;
-	case Proc_OnPaint:{
+	case Proc_OnPaintStatusImage: {
 		ZuiGraphics gp = (ZuiGraphics)Param1;
 		RECT *rc = &cp->m_rcItem;
-		HPEN hPen=0;
+		HPEN hPen = 0;
 		ZuiImage img;
 		if (p->type == 0) {
-			if(p->m_ResNormal){
+			if (p->m_ResNormal) {
 				img = p->m_ResNormal->p;
-				ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
+				ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
 			}
 			else {
-				ZuiDrawFillRect(gp, ARGB(200, 0, 3, 255), rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top );
+				ZuiDrawFillRect(gp, ARGB(200, 0, 3, 255), rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1);
 			}
 		}
-		else if(p->type==1) {
+		else if (p->type == 1) {
 			if (p->m_ResHot) {
 				img = p->m_ResHot->p;
-				ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
+				ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
 			}
 			else {
-				ZuiDrawFillRect(gp, ARGB(200, 0, 255, 255), rc->left, rc->top, rc->right - rc->left , rc->bottom - rc->top);
+				ZuiDrawFillRect(gp, ARGB(200, 0, 255, 255), rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1);
 			}
 		}
 		else if (p->type == 2) {
 			if (p->m_ResPushed) {
 				img = p->m_ResPushed->p;
-				ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
+				ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
 			}
 			else {
-				ZuiDrawFillRect(gp, ARGB(200, 255, 255, 255), rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+				ZuiDrawFillRect(gp, ARGB(200, 255, 255, 255), rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1);
 			}
 		}
-		ZRect r;
-		MAKEZRECT(r, rc->left + 5, rc->top + 5, rc->right - rc->left - 10, rc->bottom - rc->top - 10);
-		ZuiDrawString(gp, Global_StringFormat, cp->m_sText, &r);
-		return 0;
 		break;
 	}
 	case Proc_Button_SetResNormal: {
@@ -122,6 +120,21 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
 		else if (wcscmp(Param1, L"disabledimage") == 0) ZuiControlCall(Proc_Button_SetResDisabled, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
 		break;
 	}
+	case Proc_JsPut: {
+		js_State *J = Param2;
+		if (wcscmp(Param1, L"normalimage") == 0) {
+			ZuiText str = js_tostring(J, -1);
+			ZuiRes res = ZuiResDBGetRes(str, ZREST_IMG);
+			ZuiControlCall(Proc_Button_SetResNormal, cp,
+				res,
+				NULL, NULL);
+		}
+		else if (wcscmp(Param1, L"hotimage") == 0) ZuiControlCall(Proc_Button_SetResHot, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
+		else if (wcscmp(Param1, L"pushedimage") == 0) ZuiControlCall(Proc_Button_SetResPushed, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
+		else if (wcscmp(Param1, L"focusedimage") == 0) ZuiControlCall(Proc_Button_SetResFocused, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
+		else if (wcscmp(Param1, L"disabledimage") == 0) ZuiControlCall(Proc_Button_SetResDisabled, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
+		break;
+	}
 	case Proc_OnInit:{
 
 	}
@@ -129,7 +142,7 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
 	default:
 		break;
 	}
-	return p->old_call(ProcId, cp,0, Param1, Param2, Param3);
+	return p->old_call(ProcId, cp, p->old_udata, Param1, Param2, Param3);
 }
 
 

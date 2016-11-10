@@ -156,7 +156,7 @@ void js_newstring(js_State *J, const wchar_t *v);
 void js_newcfunction(js_State *J, js_CFunction fun, const wchar_t *name, int length);
 void js_newcconstructor(js_State *J, js_CFunction fun, js_CFunction con, const wchar_t *name, int length);
 void js_newuserdata(js_State *J, const wchar_t *tag, void *data, js_Finalize finalize);
-void js_newuserdatax(js_State *J, const wchar_t *tag, void *data, js_HasProperty has, js_Put put, js_Delete delete, js_Finalize finalize);
+void js_newuserdatax(js_State *J, const wchar_t *tag, void *data, js_HasProperty has, js_Put put, js_Delete delete1, js_Finalize finalize);
 void js_newregexp(js_State *J, const wchar_t *pattern, int flags);
 
 void js_pushiterator(js_State *J, int idx, int own);

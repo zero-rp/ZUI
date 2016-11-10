@@ -63,10 +63,6 @@ void FreeCControlUI(ZuiControl p)
 	ZuiControlCall(Proc_OnDestroy, p, NULL, NULL, NULL);
 	if (p->m_pManager != NULL)
 		ZuiPaintManagerReapObjects(p->m_pManager, p);
-	if (p->m_sText)
-		free(p->m_sText);
-	if (p->m_sToolTip)
-		free(p->m_sToolTip);
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -303,6 +299,11 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		return (void *)p->m_rcItem.top;
 		break;
 	}
+	case Proc_SetFloatPercent: {
+		memcpy(&p->m_piFloatPercent, Param1, sizeof(RECT));
+		ZuiControlNeedParentUpdate(p);
+		break;
+	}
 	case Proc_GetPadding: {
 		return (void *)&p->m_rcPadding;
 		break;
@@ -414,16 +415,54 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		break;
 	}
 	case Proc_OnPaint: {
+		//开始绘制
+		ZuiControlCall(Proc_OnPaintBkColor, p, Param1, Param2, NULL);
+		ZuiControlCall(Proc_OnPaintBkImage, p, Param1, Param2, NULL);
+		ZuiControlCall(Proc_OnPaintStatusImage, p, Param1, Param2, NULL);
+		ZuiControlCall(Proc_OnPaintText, p, Param1, Param2, NULL);
+		ZuiControlCall(Proc_OnPaintBorder, p, Param1, Param2, NULL);
+		break;
+	}
+	case Proc_OnPaintBkColor: {
+		ZuiGraphics gp = (ZuiGraphics)Param1;
+		RECT *rc = &p->m_rcItem;
+		if (p->m_BkgColor)
+			ZuiDrawFillRect(gp, p->m_BkgColor, rc->left, rc->top, rc->right - rc->left -1, rc->bottom - rc->top -1);
+		break;
+	}
+	case Proc_OnPaintBkImage: {
 		ZuiGraphics gp = (ZuiGraphics)Param1;
 		RECT *rc = &p->m_rcItem;
 		if (p->m_BkgImg) {
 			ZuiImage img = p->m_BkgImg->p;
 			ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
 		}
-		else if (p->m_BkgColor)
-			ZuiDrawFillRect(gp, p->m_BkgColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+		break;
+	}
+	case Proc_OnPaintStatusImage: {
+		ZuiGraphics gp = (ZuiGraphics)Param1;
+		RECT *rc = &p->m_rcItem;
+		break;
+	}
+	case Proc_OnPaintText: {
+		ZuiGraphics gp = (ZuiGraphics)Param1;
+		RECT *rc = &p->m_rcItem;
+		break;
+	}
+	case Proc_OnPaintBorder: {
+		ZuiGraphics gp = (ZuiGraphics)Param1;
+		RECT *rc = &p->m_rcItem;
 		if (p->m_dwBorderColor)
-			ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - rc->left-1, rc->bottom - rc->top-1, 1);
+			ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1, 1);
+		break;
+	}
+	case Proc_OnDestroy: {
+		if (p->m_sText)
+			free(p->m_sText);
+		if (p->m_sToolTip)
+			free(p->m_sToolTip);
+		if(p->m_pParent)
+			ZuiControlCall(Proc_Layout_Remove, p->m_pParent, p, TRUE, NULL);
 		break;
 	}
 	case Proc_SetAttribute: {
@@ -462,22 +501,32 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		}
 		else if (wcscmp(Param1, L"name") == 0) ZuiControlCall(Proc_SetName, p, Param2, NULL, NULL);
 		else if (wcscmp(Param1, L"float") == 0) {
-			//CDuiString nValue = Param2;
-			//if (nValue.Find(',') < 0) {
-			//	SetFloat(_tcscmp(Param2, L"true") == 0);
-			//}
-			//else {
+			if (wcschr(Param2, ',') == 0) {
+				ZuiControlCall(Proc_SetFloat, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
+			}
+			else {
 				TPercentInfo piFloatPercent = { 0 };
 				LPTSTR pstr = NULL;
 				piFloatPercent.left = _tcstod(Param2, &pstr);  ASSERT(pstr);
 				piFloatPercent.top = _tcstod(pstr + 1, &pstr);    ASSERT(pstr);
 				piFloatPercent.right = _tcstod(pstr + 1, &pstr);  ASSERT(pstr);
 				piFloatPercent.bottom = _tcstod(pstr + 1, &pstr); ASSERT(pstr);
-				//SetFloatPercent(piFloatPercent);
-				//SetFloat(true);
-			//}
+				ZuiControlCall(Proc_SetFloatPercent, p, &piFloatPercent, NULL, NULL);
+				ZuiControlCall(Proc_SetFloat, p, TRUE, NULL, NULL);
+			}
 		}
 		else if (wcscmp(Param1, L"visible") == 0) ZuiControlCall(Proc_SetVisible, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
+		if (wcscmp(Param1, L"pos") == 0) {
+			RECT rcPos = { 0 };
+			ZuiText pstr = NULL;
+			rcPos.left = _tcstol(Param2, &pstr, 10);  ASSERT(pstr);
+			rcPos.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+			rcPos.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+			rcPos.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+			ZuiControlCall(Proc_SetFixedXY, p, rcPos.left, rcPos.top, NULL);
+			ZuiControlCall(Proc_SetFixedWidth, p, rcPos.right - rcPos.left, NULL, NULL);
+			ZuiControlCall(Proc_SetFixedHeight, p, rcPos.bottom - rcPos.top, NULL, NULL);
+		}
 		else {
 			ZuiAttribute att;
 			rb_node *old = rb_search((key_t)Zui_Hash(Param1), p->m_rAttribute);
@@ -501,7 +550,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 	}
 	case Proc_JsHas: {
 		if (wcscmp(Param1, L"root") == 0) ZuiBuilderJs_pushControl(Param2, p->m_pManager->m_pRoot);
-		else if (wcscmp(Param1, L"parent") == 0)  ZuiBuilderJs_pushControl(Param2, p->m_pParent);
+		else if (wcscmp(Param1, L"parent") == 0)  
+			ZuiBuilderJs_pushControl(Param2, p->m_pParent);
 		else if (wcscmp(Param1, L"text") == 0) js_pushstring(Param2, p->m_sText);
 		else if (wcscmp(Param1, L"tooltip") == 0) js_pushstring(Param2, p->m_sToolTip);
 		else if (wcscmp(Param1, L"width") == 0) js_pushnumber(Param2, p->m_cxyFixed.cx);
@@ -512,6 +562,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		else if (wcscmp(Param1, L"maxheight") == 0) js_pushnumber(Param2, p->m_cxyMax.cy);
 		else if (wcscmp(Param1, L"bkcolor") == 0) js_pushnumber(Param2, p->m_BkgColor);
 		else if (wcscmp(Param1, L"drag") == 0) js_pushboolean(Param2, p->m_drag);
+		else if (wcscmp(Param1, L"clos") == 0) return 1;
 		break;
 	}
 	case Proc_JsPut: {
@@ -569,7 +620,9 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		break;
 	}
 	case Proc_JsCall: {
-
+		if (wcscmp(Param1, L"clos") == 0) {
+			FreeCControlUI(p);
+		}
 		break;
 	}
 	default:

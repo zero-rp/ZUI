@@ -29,6 +29,7 @@ typedef struct _ZButton
 
 	int type;
 	ZCtlProc old_call;
+	ZuiAny old_udata;
 }*ZuiButton, ZButton;
 ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 

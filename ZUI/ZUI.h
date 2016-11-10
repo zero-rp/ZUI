@@ -54,7 +54,7 @@
 #define ZAPI(Type) extern "C" Type __attribute__((__stdcall__))
 #endif
 
-#define ARGB(A,R,G,B) ((uint32_t)((((A)&0xff)<<24)|(((R)&0xff)<<16)|(((G)&0xff)<<8)|((B)&0xff)))
+#define ARGB(A,R,G,B) ((int32_t)((((A)&0xff)<<24)|(((R)&0xff)<<16)|(((G)&0xff)<<8)|((B)&0xff)))
 #define RGBA(R,G,B,A) ARGB(A,R,G,B)
 #define RGB2ARGB(COLOR,A) RGBA(((COLOR) >> 16 & 0xFF), ((COLOR) >> 8 & 0xFF), ((COLOR) & 0xFF), (A))
 #ifdef LINUX
@@ -132,6 +132,11 @@ typedef struct _ZPointR
 
 #define	DEBUG_BORDER	1
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif
+
 #include "mujs/mujs.h"
 /*基础辅助函数*/
 #include "Core/carray.h"
@@ -140,13 +145,12 @@ typedef struct _ZPointR
 #include "Core/tree.h"
 #include "zlib/unzip.h"
 #include "Core/mxml.h"
-#include "Core/gdi.h"
+#include "Core/graphic.h"
 #include "Core/resdb.h"
 #include "Core/global.h"
 /*内核*/
 #include "Core/manager.h"		//绘制管理器
 #include "Core/control.h"		//控件基类
-#include "Core/obj.h"			//基础对象
 #include "Core/template.h"
 #include "Core/builder.h"
 
@@ -154,6 +158,7 @@ typedef struct _ZPointR
 #include "Control/Register.h"
 #include "Control/window.h"
 
+#include "control/Label.h"
 #include "Control/Button.h"
 #include "control/Browser.h"
 #include "control/Edit.h"
@@ -172,5 +177,9 @@ typedef struct _ZPointR
 #pragma comment( lib, "comctl32.lib" )
 #pragma comment(lib, "Msimg32.lib")  
 #pragma comment(lib, "Gdiplus.lib")
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif

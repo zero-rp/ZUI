@@ -48,7 +48,8 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 		for (int it = 0; it < darray_len(p->m_items); it++) {
 			if ((ZuiControl)(p->m_items->data[it]) == (ZuiControl)Param1) {
 				ZuiControlNeedUpdate(cp);
-				FreeCControlUI((ZuiControl)Param1);
+				if(!Param2)
+					FreeCControlUI((ZuiControl)Param1);
 				return darray_delete(p->m_items,it);
 			}
 		}
