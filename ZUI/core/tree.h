@@ -14,7 +14,16 @@
 #ifndef __ZUI_CORE_TREE_H__
 #define __ZUI_CORE_TREE_H__
 
+#ifdef _WIN32
 #include <windows.h>
+#else
+#include <stdlib.h>
+
+#define BOOL int
+#define FALSE 0
+#define TRUE 1
+
+#endif
 
 #ifdef __cplusplus
 	extern "C" {

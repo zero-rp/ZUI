@@ -26,23 +26,23 @@ static  void rb_set_color(rb_node *rb, int color)
 #define RB_EMPTY_NODE(node)        (rb_parent(node) == node)
 #define RB_CLEAR_NODE(node)        (rb_set_parent(node, node))
 
-void rb_insert_color(struct rb_node *, struct rb_root *);
-void rb_erase(struct rb_node *, struct rb_root *);
+void rb_insert_color(rb_node *node, rb_root *root);
+void rb_erase(rb_node *node, rb_root *root);
 
-typedef void(*rb_augment_f)(struct rb_node *node, void *data);
+typedef void(*rb_augment_f)(rb_node *node, void *data);
 
-void rb_augment_insert(struct rb_node *node, rb_augment_f func, void *data);
-struct rb_node *rb_augment_erase_begin(struct rb_node *node);
-void rb_augment_erase_end(struct rb_node *node, rb_augment_f func, void *data);
+void rb_augment_insert(rb_node *node, rb_augment_f func, void *data);
+rb_node *rb_augment_erase_begin(rb_node *node);
+void rb_augment_erase_end(rb_node *node, rb_augment_f func, void *data);
 
 /* Find logical next and previous nodes in a tree */
-struct rb_node *rb_next(const struct rb_node *);
-struct rb_node *rb_prev(const struct rb_node *);
-struct rb_node *rb_first(const struct rb_root *);
-struct rb_node *rb_last(const struct rb_root *);
+rb_node *rb_next(rb_node *);
+rb_node *rb_prev(rb_node *node);
+rb_node *rb_first(rb_root *);
+rb_node *rb_last(rb_root *);
 
 /* Fast replacement of a single node without remove/rebalance/add/rebalance */
-void rb_replace_node(struct rb_node *victim, struct rb_node *new, struct rb_root *root);
+void rb_replace_node(rb_node *victim, rb_node *new, rb_root *root);
 
 static  void rb_link_node(rb_node * node, rb_node * parent, rb_node ** rb_link)
 {
@@ -311,7 +311,7 @@ color:
 		__rb_erase_color(child, parent, root);
 }
 
-static void rb_augment_path(rb_node *node, rb_augment_f func, void *data)
+void rb_augment_path(rb_node *node, rb_augment_f func, void *data)
 {
 	rb_node *parent;
 
@@ -340,7 +340,7 @@ void rb_augment_insert(rb_node *node, rb_augment_f func, void *data)
 	rb_augment_path(node, func, data);
 }
 
-struct rb_node *rb_augment_erase_begin(rb_node *node)
+rb_node *rb_augment_erase_begin(rb_node *node)
 {
 	rb_node *deepest;
 
@@ -361,13 +361,13 @@ struct rb_node *rb_augment_erase_begin(rb_node *node)
 	return deepest;
 }
 
-void rb_augment_erase_end(struct rb_node *node, rb_augment_f func, void *data)
+void rb_augment_erase_end(rb_node *node, rb_augment_f func, void *data)
 {
 	if (node)
 		rb_augment_path(node, func, data);
 }
 
-struct rb_node *rb_first(rb_root *root)
+rb_node *rb_first(rb_root *root)
 {
 	rb_node  *n;
 
@@ -379,7 +379,7 @@ struct rb_node *rb_first(rb_root *root)
 	return n;
 }
 
-struct rb_node *rb_last(rb_root *root)
+rb_node *rb_last(rb_root *root)
 {
 	rb_node  *n;
 
@@ -391,7 +391,7 @@ struct rb_node *rb_last(rb_root *root)
 	return n;
 }
 
-struct rb_node *rb_next(rb_node *node)
+rb_node *rb_next(rb_node *node)
 {
 	rb_node *parent;
 
@@ -411,7 +411,7 @@ struct rb_node *rb_next(rb_node *node)
 	return parent;
 }
 
-struct rb_node *rb_prev(rb_node *node)
+rb_node *rb_prev(rb_node *node)
 {
 	rb_node *parent;
 

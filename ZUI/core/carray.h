@@ -15,7 +15,16 @@
 #define __CARRAY_H__
 
 //动态数组实现
+#ifdef _WIN32
 #include <windows.h>
+#else
+#include <stdlib.h>
+
+#define BOOL int
+#define FALSE 0
+#define TRUE 1
+
+#endif
 
 
 #ifdef __cplusplus
