@@ -58,7 +58,14 @@
 #define ZCALL __stdcall
 
 #else
-#define ZAPI(Type) extern "C" Type __attribute__((__stdcall__))
+#ifdef __cplusplus
+#define ZEXPORT extern "C" 
+#else
+#define ZEXPORT
+
+#endif
+
+#define ZCALL __attribute__((__stdcall__))
 #endif
 
 #define ARGB(A,R,G,B) ((int32_t)((((A)&0xff)<<24)|(((R)&0xff)<<16)|(((G)&0xff)<<8)|((B)&0xff)))
@@ -167,16 +174,18 @@ extern "C"
 
 #include "control/Label.h"
 #include "control/Button.h"
+#ifdef WIN32
 #include "control/Browser.h"
+#endif
 #include "control/Edit.h"
 #include "control/Option.h"
 
 /*布局*/
-#include "cayout/Layout.h"				//容器基类
-#include "cayout/VerticalLayout.h"		//纵向布局
-#include "cayout/HorizontalLayout.h"	//横向布局
-#include "cayout/TileLayout.h"			//列表布局
-#include "cayout/TabLayout.h"			//选择夹布局
+#include "layout/Layout.h"				//容器基类
+#include "layout/VerticalLayout.h"		//纵向布局
+#include "layout/HorizontalLayout.h"	//横向布局
+#include "layout/TileLayout.h"			//列表布局
+#include "layout/TabLayout.h"			//选择夹布局
 
 
 
