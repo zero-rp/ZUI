@@ -7,7 +7,20 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
 	switch (ProcId)
 	{
 	case Proc_CoreInit:
-		return 0;
+		return TRUE;
+	case Proc_OnDestroy: {
+		if (p->m_ResNormal)
+			ZuiResDBDelRes(p->m_ResNormal);
+		if (p->m_ResHot)
+			ZuiResDBDelRes(p->m_ResHot);
+		if (p->m_ResPushed)
+			ZuiResDBDelRes(p->m_ResPushed);
+		if (p->m_ResFocused)
+			ZuiResDBDelRes(p->m_ResFocused);
+		if (p->m_ResDisabled)
+			ZuiResDBDelRes(p->m_ResDisabled);
+		break;
+	}
 	case Proc_OnCreate: {
 		p = (ZuiButton)malloc(sizeof(ZButton));
 		memset(p, 0, sizeof(ZButton));
