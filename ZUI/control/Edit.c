@@ -7,7 +7,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 	switch (ProcId)
 	{
 	case Proc_CoreInit:
-		return 0;
+		return TRUE;
 	case Proc_OnCreate: {
 		p = (ZuiEdit)malloc(sizeof(ZEdit));
 		memset(p, 0, sizeof(ZEdit));

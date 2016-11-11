@@ -23,7 +23,7 @@ static void jsB_Function(js_State *J)
 	}
 
 	/* body */
-	body = js_isdefined(J, top - 1) ? js_tostring(J, top - 1) : "";
+	body = js_isdefined(J, top - 1) ? js_tostring(J, top - 1) : L"";
 
 	if (js_try(J)) {
 		js_free(J, sb);

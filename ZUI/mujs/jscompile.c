@@ -43,7 +43,7 @@ static js_Function *newfun(js_State *J, js_Ast *name, js_Ast *params, js_Ast *bo
 	F->filename = js_intern(J, J->filename);
 	F->line = name ? name->line : params ? params->line : body ? body->line : 1;
 	F->script = script;
-	F->name = name ? name->string : "";
+	F->name = name ? name->string : L"";
 
 	cfunbody(J, F, name, params, body);
 

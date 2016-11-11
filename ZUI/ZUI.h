@@ -22,19 +22,19 @@
 #include <windowsx.h>
 #include <commctrl.h>
 #include <tchar.h>
+#include <crtdbg.h>
 
 #pragma comment( lib, "winmm.lib" )
 #pragma comment( lib, "comctl32.lib" )
 #pragma comment(lib, "Msimg32.lib")  
 #pragma comment(lib, "Gdiplus.lib")
-#else
+#endif
 #include <stddef.h>
 #include <stdio.h>
 #include <assert.h>
 #include <malloc.h>
 #include <stdint.h>
 #include <stdlib.h>
-#endif
 
 #if defined _M_IX86
 #	pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
@@ -142,6 +142,22 @@ typedef struct _ZPointR
 	r->Top = T;\
 	r->Width = W;\
 	r->Height = H;
+
+#ifndef WIN32
+typedef long LONG;
+typedef struct tagRECT
+{
+	LONG    left;
+	LONG    top;
+	LONG    right;
+	LONG    bottom;
+} RECT, *PRECT, *NPRECT, *LPRECT;
+typedef struct tagSIZE
+{
+	LONG        cx;
+	LONG        cy;
+} SIZE, *PSIZE, *LPSIZE;
+#endif
 
 
 #define	DEBUG_BORDER	1

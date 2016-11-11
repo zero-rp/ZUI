@@ -71,6 +71,10 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 
 	switch (ProcId)
 	{
+	case Proc_CoreInit: {
+		return TRUE;
+		break;
+	}
 	case Proc_GetControlFlags:{
 								  return 0;
 	}

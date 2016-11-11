@@ -141,7 +141,7 @@ ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiStringFormat String
 		wchar_t *s = String;
 
 		// 字符输出的位置  
-		int x = Rect->Left, y = Rect->Top + Rect->Height / 2;
+		double x = Rect->Left, y = Rect->Top + Rect->Height / 2;
 		for (; *s; s++) {      // 让字体引擎准备好字体数据 
 			const agg::glyph_cache* glyph = StringFormat->font->font_manager->glyph(*s);
 			if (glyph) {
@@ -162,7 +162,7 @@ ZEXPORT ZuiVoid ZCALL ZuiMeasureStringRect(ZuiGraphics Graphics, ZuiStringFormat
 	if (String && Graphics){
 		// 字体串  
 		wchar_t *s = String;
-		int x = 0, y = 0;
+		double x = 0, y = 0;
 		for (; *s; s++) {      // 让字体引擎准备好字体数据 
 			const agg::glyph_cache* glyph = StringFormat->font->font_manager->glyph(*s);
 			if (glyph) {

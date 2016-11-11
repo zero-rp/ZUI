@@ -5,7 +5,7 @@ void* CALLBACK ZuiTileLayoutProc(int ProcId, ZuiControl cp, ZuiTileLayout p, voi
 	switch (ProcId)
 	{
 	case Proc_CoreInit:
-		return 0;
+		return TRUE;
 	case Proc_OnCreate: {
 		p = (ZuiTileLayout)malloc(sizeof(ZTileLayout));
 		memset(p, 0, sizeof(ZTileLayout));
@@ -133,9 +133,9 @@ void* CALLBACK ZuiTileLayoutProc(int ProcId, ZuiControl cp, ZuiTileLayout p, voi
 		break;
 	}
 	case Proc_TileLayout_SetItemSize: {
-		if (p->m_szItem.cx != Param1 || p->m_szItem.cy != Param2) {
-			p->m_szItem.cx = Param1;
-			p->m_szItem.cy = Param2;
+		if (p->m_szItem.cx != (LONG)Param1 || p->m_szItem.cy != (LONG)Param2) {
+			p->m_szItem.cx = (LONG)Param1;
+			p->m_szItem.cy = (LONG)Param2;
 			ZuiControlNeedUpdate(cp);
 		}
 		break;

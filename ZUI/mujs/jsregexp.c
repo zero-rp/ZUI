@@ -3,7 +3,7 @@
 #include "jsbuiltin.h"
 #include "regexp.h"
 
-void js_newregexp(js_State *J, const char *pattern, int flags)
+void js_newregexp(js_State *J, const wchar_t *pattern, int flags)
 {
 	const wchar_t *error;
 	js_Object *obj;
@@ -27,7 +27,7 @@ void js_newregexp(js_State *J, const char *pattern, int flags)
 	js_pushobject(J, obj);
 }
 
-void js_RegExp_prototype_exec(js_State *J, js_Regexp *re, const char *text)
+void js_RegExp_prototype_exec(js_State *J, js_Regexp *re, const wchar_t *text)
 {
 	int i;
 	int opts;
@@ -159,12 +159,12 @@ static void Rp_toString(js_State *J)
 	re = js_toregexp(J, 0);
 
 	out = js_malloc(J, (wcslen(re->source) + 6)*sizeof(wchar_t)); /* extra space for //gim */
-	wcscpy(out, "/");
+	wcscpy(out, L"/");
 	wcscat(out, re->source);
-	wcscat(out, "/");
-	if (re->flags & JS_REGEXP_G) wcscat(out, "g");
-	if (re->flags & JS_REGEXP_I) wcscat(out, "i");
-	if (re->flags & JS_REGEXP_M) wcscat(out, "m");
+	wcscat(out, L"/");
+	if (re->flags & JS_REGEXP_G) wcscat(out, L"g");
+	if (re->flags & JS_REGEXP_I) wcscat(out, L"i");
+	if (re->flags & JS_REGEXP_M) wcscat(out, L"m");
 
 	if (js_try(J)) {
 		js_free(J, out);

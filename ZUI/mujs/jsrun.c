@@ -670,7 +670,7 @@ static void jsR_defproperty(js_State *J, js_Object *obj, const wchar_t *name,
 			if (!(ref->atts & JS_DONTCONF))
 				ref->setter = setter;
 			else if (J->strict)
-				js_typeerror(J, "'%s' is non-configurable", name);
+				js_typeerror(J, L"'%ls' is non-configurable", name);
 		}
 		ref->atts |= atts;
 	}
@@ -679,7 +679,7 @@ static void jsR_defproperty(js_State *J, js_Object *obj, const wchar_t *name,
 
 readonly:
 	if (J->strict)
-		js_typeerror(J, "'%s' is read-only or non-configurable", name);
+		js_typeerror(J, L"'%ls' is read-only or non-configurable", name);
 }
 
 static int jsR_delproperty(js_State *J, js_Object *obj, const wchar_t *name)
@@ -831,7 +831,7 @@ void js_pushiterator(js_State *J, int idx, int own)
 	js_pushobject(J, jsV_newiterator(J, js_toobject(J, idx), own));
 }
 
-const char *js_nextiterator(js_State *J, int idx)
+const wchar_t *js_nextiterator(js_State *J, int idx)
 {
 	return jsV_nextiterator(J, js_toobject(J, idx));
 }

@@ -7,7 +7,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 	switch (ProcId)
 	{
 	case Proc_CoreInit:
-		return 0;
+		return TRUE;
 	case Proc_OnCreate: {
 		p = (ZuiLayout)malloc(sizeof(ZLayout));
 		memset(p, 0, sizeof(ZLayout));

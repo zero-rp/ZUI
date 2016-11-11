@@ -7,7 +7,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
 	switch (ProcId)
 	{
 	case Proc_CoreInit:
-		return 0;
+		return TRUE;
 		break;
 	case Proc_OnCreate: {
 		p = (ZuiOption)malloc(sizeof(ZOption));
@@ -72,11 +72,11 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
 		break;
 	}
 	case Proc_Option_SetSelected: {
-		if (p->m_bSelected == Param1) return;
+		if (p->m_bSelected == Param1) return 0;
 		p->m_bSelected = Param1;
 
 		if (p->m_bGroup && Param1) {
-			for (size_t i = 0; i < ZuiControlCall(Proc_Layout_GetCount, cp->m_pParent, NULL, NULL, NULL); i++)
+			for (size_t i = 0; i < (size_t)ZuiControlCall(Proc_Layout_GetCount, cp->m_pParent, NULL, NULL, NULL); i++)
 			{
 				ZuiControl pControl;
 				if ((pControl = ZuiControlCall(Proc_Layout_GetItemAt, cp->m_pParent, i, NULL, NULL)) != cp)
@@ -120,11 +120,11 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
 		break;
 	}
 	case Proc_SetAttribute: {
-		if (_tcscmp(Param1, _T("group")) == 0) ZuiControlCall(Proc_Option_SetGroup, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
-		else if (_tcscmp(Param1, _T("selected")) == 0) ZuiControlCall(Proc_Option_SetSelected, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
-		else if (_tcscmp(Param1, _T("selectedimage")) == 0) ZuiControlCall(Proc_Option_SetResSelected, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
-		else if (_tcscmp(Param1, _T("selectedhotimage")) == 0) ZuiControlCall(Proc_Option_SetResSelectedHot, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
-		else if (_tcscmp(Param1, _T("selectedpushedimage")) == 0) ZuiControlCall(Proc_Option_SetResSelectedPushed, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+		if (_tcscmp(Param1, _T("group")) == 0) ZuiControlCall(Proc_Option_SetGroup, cp, (ZuiAny)(wcscmp(Param2, L"true") == 0 ? TRUE : FALSE), NULL, NULL);
+		else if (_tcscmp(Param1, _T("selected")) == 0) ZuiControlCall(Proc_Option_SetSelected, cp, (ZuiAny)(wcscmp(Param2, L"true") == 0 ? TRUE : FALSE), NULL, NULL);
+		else if (_tcscmp(Param1, _T("selectedimage")) == 0) ZuiControlCall(Proc_Option_SetResSelected, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+		else if (_tcscmp(Param1, _T("selectedhotimage")) == 0) ZuiControlCall(Proc_Option_SetResSelectedHot, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+		else if (_tcscmp(Param1, _T("selectedpushedimage")) == 0) ZuiControlCall(Proc_Option_SetResSelectedPushed, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
 		break;
 	}
 	case Proc_JsHas: {
@@ -135,9 +135,9 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
 	case Proc_JsPut: {
 		js_State *J = Param2;
 		if (wcscmp(Param1, L"group") == 0)
-			ZuiControlCall(Proc_Option_SetGroup, cp, js_toboolean(J, -1), NULL, NULL);
+			ZuiControlCall(Proc_Option_SetGroup, cp, (ZuiAny)js_toboolean(J, -1), NULL, NULL);
 		else if (wcscmp(Param1, L"selected") == 0)
-			ZuiControlCall(Proc_Option_SetSelected, cp, js_toboolean(J, -1), NULL, NULL);
+			ZuiControlCall(Proc_Option_SetSelected, cp, (ZuiAny)js_toboolean(J, -1), NULL, NULL);
 		break;
 	}
 	case Proc_OnInit:{

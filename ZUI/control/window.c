@@ -85,6 +85,11 @@ LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				pThis->root->m_bVisible = FALSE;
 				ShowWindow(hWnd, SW_HIDE);
 			}
+			else if (uMsg == WM_DESTROY)
+			{
+				FreeCPaintManagerUI(pThis->m_pm);
+				return DefWindowProc(hWnd, uMsg, wParam, lParam);
+			}
 		}
 		if (pThis->m_pm)
 			if (ZuiPaintManagerMessageHandler(pThis->m_pm, uMsg, wParam, lParam, &lRes))
@@ -110,9 +115,13 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 		wc.hbrBackground = NULL;
 		wc.lpszMenuName = NULL;
-		wc.lpszClassName = L"AA";
+		wc.lpszClassName = L"ZUI";
 		RegisterClass(&wc);
-		return 0;
+		return TRUE;
+		break;
+	}
+	case Proc_OnDestroy: {
+		CloseWindow(p->m_hWnd);
 		break;
 	}
 	case Proc_OnCreate: {

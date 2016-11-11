@@ -276,13 +276,13 @@ static void JSON_stringify(js_State *J)
 
 	if (js_isdefined(J, 1)) {
 		js_copy(J, 1);
-		if (fmtvalue(J, &sb, "", gap, 0)) {
+		if (fmtvalue(J, &sb, L"", gap, 0)) {
 			js_putc(J, &sb, 0);
 			if (js_try(J)) {
 				js_free(J, sb);
 				js_throw(J);
 			}
-			js_pushstring(J, sb ? sb->s : "");
+			js_pushstring(J, sb ? sb->s : L"");
 			js_endtry(J);
 			js_free(J, sb);
 		}

@@ -78,13 +78,13 @@ ZuiBool ZuiPaintManagerInitialize() {
 
 	static int dpi_x = 0;
 	static int dpi_y = 0;
-	static bool should_initialize = true;
+	static BOOL should_initialize = TRUE;
 
 	FARPROC pSetProcessDpiAwareness = GetProcAddress(LoadLibrary(L"SHCORE.DLL"), "SetProcessDpiAwareness");
 	if (pSetProcessDpiAwareness)
 		pSetProcessDpiAwareness(2);//自己实现DPI缩放
 	if (should_initialize) {
-		should_initialize = false;
+		should_initialize = FALSE;
 		HDC screen_dc = GetDC(NULL);
 		if (NULL != screen_dc) {
 			dpi_x = GetDeviceCaps(screen_dc, LOGPIXELSX);

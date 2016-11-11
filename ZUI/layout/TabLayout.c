@@ -4,7 +4,7 @@ void* CALLBACK ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void*
 	switch (ProcId)
 	{
 	case Proc_CoreInit:
-		return 0;
+		return TRUE;
 	case Proc_OnCreate: {
 		p = (ZuiTabLayout)malloc(sizeof(ZTabLayout));
 		memset(p, 0, sizeof(ZTabLayout));
@@ -67,7 +67,7 @@ void* CALLBACK ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void*
 		break;
 	}
 	case Proc_Layout_Add: {
-		BOOL ret = ZuiLayoutProc(Proc_Layout_Add, cp, p->old_udata, Param1, Param2, Param3);
+		BOOL ret = (BOOL)ZuiLayoutProc(Proc_Layout_Add, cp, p->old_udata, Param1, Param2, Param3);
 		if (!ret)
 			return ret;
 		
@@ -84,7 +84,7 @@ void* CALLBACK ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void*
 		break;
 	}
 	case Proc_Layout_AddAt: {
-		BOOL ret = ZuiLayoutProc(Proc_Layout_AddAt, cp, p->old_udata, Param1, Param2, Param3);
+		BOOL ret = (BOOL)ZuiLayoutProc(Proc_Layout_AddAt, cp, p->old_udata, Param1, Param2, Param3);
 		if (!ret)
 			return ret;
 
@@ -92,7 +92,7 @@ void* CALLBACK ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void*
 		{
 			p->m_iCurSel = ZuiLayoutProc(Proc_Layout_GetItemIndex, cp, p->old_udata, Param1, Param2, Param3);
 		}
-		else if (p->m_iCurSel != -1 && Param2 <= p->m_iCurSel)
+		else if (p->m_iCurSel != -1 && (int)Param2 <= p->m_iCurSel)
 		{
 			p->m_iCurSel += 1;
 		}
@@ -108,8 +108,8 @@ void* CALLBACK ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void*
 		if (Param1 == NULL)
 			return FALSE;
 
-		int index = ZuiControlCall(Proc_Layout_GetItemIndex, cp, Param1, Param2, Param3);
-		BOOL ret = ZuiLayoutProc(Proc_Layout_Remove, cp, p->old_udata, Param1, Param2, Param3);
+		int index = (int)ZuiControlCall(Proc_Layout_GetItemIndex, cp, Param1, Param2, Param3);
+		BOOL ret = (BOOL)ZuiLayoutProc(Proc_Layout_Remove, cp, p->old_udata, Param1, Param2, Param3);
 		if (!ret)
 			return FALSE;
 
@@ -140,7 +140,7 @@ void* CALLBACK ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void*
 		break;
 	}
 	case Proc_Layout_Tab_SelectItem: {
-		ZuiInt iIndex = Param1;
+		ZuiInt iIndex = (ZuiInt)Param1;
 		ZuiLayout op = (ZuiLayout)p->old_udata;
 		if (iIndex < 0 || iIndex >= darray_len(op->m_items)) return FALSE;
 		if (iIndex == p->m_iCurSel) return TRUE;
@@ -150,19 +150,19 @@ void* CALLBACK ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void*
 		for (int it = 0; it < darray_len(op->m_items); it++)
 		{
 			if (it == iIndex) {
-				ZuiControlCall(Proc_SetVisible, (ZuiControl)ZuiControlCall(Proc_Layout_GetItemAt, cp, it, NULL, NULL), TRUE, NULL, NULL);
-				ZuiControlCall(Proc_SetFocus, (ZuiControl)ZuiControlCall(Proc_Layout_GetItemAt, cp, it, NULL, NULL), NULL, NULL, NULL);
+				ZuiControlCall(Proc_SetVisible, (ZuiControl)ZuiControlCall(Proc_Layout_GetItemAt, cp, (ZuiAny)it, NULL, NULL), TRUE, NULL, NULL);
+				ZuiControlCall(Proc_SetFocus, (ZuiControl)ZuiControlCall(Proc_Layout_GetItemAt, cp, (ZuiAny)it, NULL, NULL), NULL, NULL, NULL);
 			}
-			else ZuiControlCall(Proc_SetVisible, (ZuiControl)ZuiControlCall(Proc_Layout_GetItemAt, cp, it, NULL, NULL), FALSE, NULL, NULL);
+			else ZuiControlCall(Proc_SetVisible, (ZuiControl)ZuiControlCall(Proc_Layout_GetItemAt, cp, (ZuiAny)it, NULL, NULL), FALSE, NULL, NULL);
 		}
 		ZuiControlNeedParentUpdate(cp);
 
-		return TRUE;
+		return (ZuiAny)TRUE;
 		break;
 	}
 	case Proc_JsPut: {
 		js_State *J = Param2;
-		if (wcscmp(Param1, L"selectitem") == 0) ZuiControlCall(Proc_Layout_Tab_SelectItem, cp, js_toint32(J, -1), NULL, NULL);
+		if (wcscmp(Param1, L"selectitem") == 0) ZuiControlCall(Proc_Layout_Tab_SelectItem, cp, (ZuiAny)js_toint32(J, -1), NULL, NULL);
 		break;
 	}
 	default:

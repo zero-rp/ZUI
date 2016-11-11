@@ -60,7 +60,7 @@ static void Op_valueOf(js_State *J)
 static void Op_hasOwnProperty(js_State *J)
 {
 	js_Object *self = js_toobject(J, 0);
-	const char *name = js_tostring(J, 1);
+	const wchar_t *name = js_tostring(J, 1);
 	js_Property *ref = jsV_getownproperty(J, self, name);
 	js_pushboolean(J, ref != NULL);
 }
@@ -84,7 +84,7 @@ static void Op_isPrototypeOf(js_State *J)
 static void Op_propertyIsEnumerable(js_State *J)
 {
 	js_Object *self = js_toobject(J, 0);
-	const char *name = js_tostring(J, 1);
+	const wchar_t *name = js_tostring(J, 1);
 	js_Property *ref = jsV_getownproperty(J, self, name);
 	js_pushboolean(J, ref && !(ref->atts & JS_DONTENUM));
 }

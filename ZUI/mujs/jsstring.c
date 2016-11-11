@@ -477,7 +477,7 @@ end:
 		js_free(J, sb);
 		js_throw(J);
 	}
-	js_pushstring(J, sb ? sb->s : "");
+	js_pushstring(J, sb ? sb->s : L"");
 	js_endtry(J);
 	js_free(J, sb);
 }
@@ -537,7 +537,7 @@ static void Sp_replace_string(js_State *J)
 		js_free(J, sb);
 		js_throw(J);
 	}
-	js_pushstring(J, sb ? sb->s : "");
+	js_pushstring(J, sb ? sb->s : L"");
 	js_endtry(J);
 	js_free(J, sb);
 }

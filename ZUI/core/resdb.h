@@ -25,7 +25,7 @@ typedef enum ZREST
 	ZREST_IMG = 1,
 	ZREST_TXT,
 	ZREST_STREAM,
-	ZREST_ZIP,
+	ZREST_ZIP
 };
 /*资源包类型*/
 typedef enum ZRESDBT
@@ -35,7 +35,7 @@ typedef enum ZRESDBT
 	ZRESDBT_FILE,			///文件
 	ZRESDBT_STREAM,			///字节流
 	ZRESDBT_URL,			///网络资源
-	ZRESDBT_PE,				///应用资源
+	ZRESDBT_PE				///应用资源
 };
 /**资源包结构*/
 typedef struct _ZResDB

@@ -59,8 +59,10 @@ typedef struct _ZGraphics {
 #else
 	void *graphics;	///图形句柄
 #endif
+#ifdef WIN32
 	HDC hdc;		///内存场景
 	HBITMAP HBitmap;///位图句柄
+#endif
 	void* Bits;		///内存指针
 }*ZuiGraphics, ZGraphics;
 

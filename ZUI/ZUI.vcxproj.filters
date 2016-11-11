@@ -234,9 +234,6 @@
     <ClCompile Include="core\agg.cpp">
       <Filter>源文件\core</Filter>
     </ClCompile>
-    <ClCompile Include="core\agg\src\agg_gsv_text.cpp">
-      <Filter>源文件\core\AGG\src</Filter>
-    </ClCompile>
     <ClCompile Include="core\agg\agg_font_win32_tt.cpp">
       <Filter>源文件\core\AGG</Filter>
     </ClCompile>
