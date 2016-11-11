@@ -84,3 +84,5 @@ build/
 *.bak
 *.pdb
 *.dat
+bin/Win32/Debug/ZUI.lib
+bin/Win32/Debug/ZUI.exe

@@ -15,14 +15,9 @@
 #define __CARRAY_H__
 
 //动态数组实现
-#include <stdlib.h>
-#define BOOL int
-#ifndef _MSC_VER
-enum bool_type
-{
-	FALSE, TRUE
-};
-#endif
+#include <windows.h>
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif

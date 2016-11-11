@@ -14,7 +14,7 @@
 #ifndef __ZUI_CORE_TREE_H__
 #define __ZUI_CORE_TREE_H__
 
-	#include <Windows.h>
+#include <windows.h>
 
 #ifdef __cplusplus
 	extern "C" {
