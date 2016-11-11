@@ -15,19 +15,26 @@
 #define __ZUI_H__
 
 /*系统头文件*/
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <olectl.h>
 #include <windows.h>
 #include <windowsx.h>
 #include <commctrl.h>
+#include <tchar.h>
+
+#pragma comment( lib, "winmm.lib" )
+#pragma comment( lib, "comctl32.lib" )
+#pragma comment(lib, "Msimg32.lib")  
+#pragma comment(lib, "Gdiplus.lib")
+#else
 #include <stddef.h>
 #include <stdio.h>
-#include <tchar.h>
 #include <assert.h>
-#include <crtdbg.h>
 #include <malloc.h>
 #include <stdint.h>
 #include <stdlib.h>
+#endif
 
 #if defined _M_IX86
 #	pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
@@ -139,44 +146,41 @@ extern "C"
 
 #include "mujs/mujs.h"
 /*基础辅助函数*/
-#include "Core/carray.h"
-#include "Core/string.h"
-#include "Core/function.h"
-#include "Core/tree.h"
+#include "core/carray.h"
+#include "core/string.h"
+#include "core/function.h"
+#include "core/tree.h"
 #include "zlib/unzip.h"
-#include "Core/mxml.h"
-#include "Core/graphic.h"
-#include "Core/resdb.h"
-#include "Core/global.h"
+#include "core/mxml.h"
+#include "core/graphic.h"
+#include "core/resdb.h"
+#include "core/global.h"
 /*内核*/
-#include "Core/manager.h"		//绘制管理器
-#include "Core/control.h"		//控件基类
-#include "Core/template.h"
-#include "Core/builder.h"
+#include "core/manager.h"		//绘制管理器
+#include "core/control.h"		//控件基类
+#include "core/template.h"
+#include "core/builder.h"
 
 /*控件*/
-#include "Control/Register.h"
-#include "Control/window.h"
+#include "control/Register.h"
+#include "control/window.h"
 
 #include "control/Label.h"
-#include "Control/Button.h"
+#include "control/Button.h"
 #include "control/Browser.h"
 #include "control/Edit.h"
 #include "control/Option.h"
 
 /*布局*/
-#include "Layout/Layout.h"				//容器基类
-#include "Layout/VerticalLayout.h"		//纵向布局
-#include "Layout/HorizontalLayout.h"	//横向布局
-#include "Layout/TileLayout.h"			//列表布局
-#include "Layout/TabLayout.h"			//选择夹布局
+#include "cayout/Layout.h"				//容器基类
+#include "cayout/VerticalLayout.h"		//纵向布局
+#include "cayout/HorizontalLayout.h"	//横向布局
+#include "cayout/TileLayout.h"			//列表布局
+#include "cayout/TabLayout.h"			//选择夹布局
 
 
 
-#pragma comment( lib, "winmm.lib" )
-#pragma comment( lib, "comctl32.lib" )
-#pragma comment(lib, "Msimg32.lib")  
-#pragma comment(lib, "Gdiplus.lib")
+
 
 #if defined(__cplusplus)
 }

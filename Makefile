@@ -14,7 +14,8 @@ SRC_CXX=\
 
 
 SRC_C=\
-    ZUI/core/carray.c \
+	ZUI/debug.c \
+	ZUI/core/carray.c \
     ZUI/core/tree.c 
 
 
