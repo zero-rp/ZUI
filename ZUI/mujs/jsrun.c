@@ -113,7 +113,7 @@ void js_pushstring(js_State *J, const wchar_t *v)
 {
 	int n = wcslen(v);
 	CHECKSTACK(1);
-	if (n <= soffsetof(js_Value, type)) {
+	if (n <= soffsetof(js_Value, type)/sizeof(wchar_t)) {
 		wchar_t *s = STACK[TOP].u.shrstr;
 		while (n--) *s++ = *v++;
 		*s = 0;

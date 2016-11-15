@@ -40,6 +40,7 @@ typedef enum ZRESDBT
 /**资源包结构*/
 typedef struct _ZResDB
 {
+	HINSTANCE Instance; //pe句柄
 	unzFile uf;		//压缩包句柄
 	ZuiText pass;	//压缩包密码
 	ZuiInt type;	//资源包类型

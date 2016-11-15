@@ -73,7 +73,7 @@ HPEN m_hUpdateRectPen = NULL;
 
 ZuiBool ZuiPaintManagerInitialize() {
 	m_aPreMessages = darray_create();
-	m_hInstance = (HINSTANCE)GetModuleHandleA(NULL);
+	//m_hInstance = (HINSTANCE)GetModuleHandleA(NULL);
 	//初始化DPI
 
 	static int dpi_x = 0;

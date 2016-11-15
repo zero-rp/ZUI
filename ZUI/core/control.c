@@ -227,7 +227,12 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 			break;
 		case ZEVENT_LBUTTONUP: {
 			ZuiControlNotify(L"onclick", p, ((TEventUI *)Param1)->ptMouse.x, JS_TNUMBER, ((TEventUI *)Param1)->ptMouse.y, JS_TNUMBER, NULL, NULL);
+			break;
 		}
+		case ZEVENT_CHAR: {
+			ZuiControlNotify(L"onchar", p, &((TEventUI *)Param1)->wParam, JS_TSHRSTR, NULL, NULL, NULL, NULL);
+		}
+			break;
 		default:
 			break;
 		}

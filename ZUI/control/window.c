@@ -250,12 +250,14 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 		if (wcscmp(Param1, L"SetWindowMin") == 0) return 1;
 		else if (wcscmp(Param1, L"SetWindowMax") == 0) return 1;
 		else if (wcscmp(Param1, L"SetWindowRestor") == 0) return 1;
+		else if (wcscmp(Param1, L"Popup") == 0) return 1;
 		break;
 	}
 	case Proc_JsCall: {
 		if (wcscmp(Param1, L"SetWindowMin") == 0) ZuiControlCall(Proc_Window_SetWindowMin, cp, NULL, NULL, NULL);
 		else if (wcscmp(Param1, L"SetWindowMax") == 0) ZuiControlCall(Proc_Window_SetWindowMax, cp, NULL, NULL, NULL);
 		else if (wcscmp(Param1, L"SetWindowRestor") == 0) ZuiControlCall(Proc_Window_SetWindowRestor, cp, NULL, NULL, NULL);
+		else if (wcscmp(Param1, L"Popup") == 0) ZuiControlCall(Proc_Window_Popup, cp, NULL, NULL, NULL);
 		break;
 	}
 	case Proc_SetVisible: {

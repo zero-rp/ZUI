@@ -24,9 +24,10 @@ ZuiBool ZuiResDBInit() {
 	p = (ZuiResDB)malloc(sizeof(ZResDB));
 	memset(p, 0, sizeof(ZResDB));
 	p->type = ZRESDBT_PE;
-	rb_insert(Zui_Hash(L"pe"), p, Global_ResDB->resdb);
+	p->Instance = m_hInstance;
+	rb_insert(Zui_Hash(L"pe_zui"), p, Global_ResDB->resdb);
 	//加载默认资源包
-	ZuiResDBGetRes(L"pe:zip:106", ZREST_ZIP);
+	ZuiResDBGetRes(L"pe_zui:zip:106", ZREST_ZIP);
 	return TRUE;
 }
 //打开压缩文件
@@ -289,13 +290,13 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 		/*PE*/else if(db->type==ZRESDBT_PE)
 		{
 			//定位我们的自定义资源，这里因为我们是从本模块定位资源，所以将句柄简单地置为NULL即可
-			HRSRC hRsrc = FindResource(NULL, _wtoi(arr[2]), arr[1]);
+			HRSRC hRsrc = FindResource(db->Instance, _wtoi(arr[2]), arr[1]);
 			if (hRsrc) {
 				//获取资源的大小
-				buflen = SizeofResource(NULL, hRsrc);
+				buflen = SizeofResource(db->Instance, hRsrc);
 				if (buflen) {
 					//加载资源
-					HGLOBAL hGlobal = LoadResource(NULL, hRsrc);
+					HGLOBAL hGlobal = LoadResource(db->Instance, hRsrc);
 					if (hGlobal) {
 						//锁定资源
 						buf = malloc(buflen);

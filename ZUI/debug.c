@@ -1,6 +1,6 @@
 ﻿#include <stdio.h>
 #include <ZUI.h>
-#if !(defined NDEBUG1)
+#if !(defined NDEBUG)
 #ifdef _WIN32
 #include "play.h"
 #pragma comment(lib, "play.lib")
@@ -84,8 +84,6 @@ void __stdcall DLLDebug(){
 	cp->call = (ZCtlProc)ZuiFFTProcEx;
 	ZuiPaintManagerSetTimer(cp, 1000, 100);
 	play = ZPlayNew();
-	ZPlayOpen(play);
-	ZPlayStart(play);
 #endif
 	ZuiMsgLoop();
 
@@ -98,9 +96,11 @@ int  main(){
 
 #endif
 #ifdef _WIN32
+#if !(defined NDEBUG)
 int _stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	DLLDebug();
 }
+#endif
 #if (defined NDEBUG)
 int __security_cookie = 0;     //比错误提示的名称少一个下划线
 
@@ -158,6 +158,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 	switch (fdwReason)
 	{
 	case DLL_PROCESS_ATTACH:
+		m_hInstance = hinstDLL;
 		break;
 	case DLL_THREAD_ATTACH:
 		break;

@@ -61,6 +61,16 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
 		}
 	}
 		break;
+	case Proc_OnPaint: {
+		//调整绘制顺序
+		ZuiControlCall(Proc_OnPaintBkColor, cp, Param1, Param2, NULL);
+		ZuiControlCall(Proc_OnPaintStatusImage, cp, Param1, Param2, NULL);
+		ZuiControlCall(Proc_OnPaintBkImage, cp, Param1, Param2, NULL);
+		ZuiControlCall(Proc_OnPaintText, cp, Param1, Param2, NULL);
+		ZuiControlCall(Proc_OnPaintBorder, cp, Param1, Param2, NULL);
+		return 0;
+	}
+		   break;
 	case Proc_OnPaintStatusImage: {
 		ZuiGraphics gp = (ZuiGraphics)Param1;
 		RECT *rc = &cp->m_rcItem;

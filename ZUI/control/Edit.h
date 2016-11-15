@@ -17,6 +17,7 @@
 /**按钮控件结构*/
 typedef struct _ZEdit
 {
+	ZuiStringFormat sf;
 	ZuiColor FrameColor;	//边框颜色
 	ZuiColor FireColor;		//点燃颜色
 	ZuiColor FocusColor;	//焦点颜色

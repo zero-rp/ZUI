@@ -17,7 +17,6 @@
 //图像线段生成器
 #include "agg\include\agg_math_stroke.h"
 #include "agg\include\agg_conv_stroke.h"
-#include "agg\include\agg_gsv_text.h"
 #include "agg\include\agg_font_cache_manager.h"
 #include "agg\agg_font_win32_tt.h"
 

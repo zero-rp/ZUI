@@ -16,11 +16,12 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 		cp->m_sText = malloc(sizeof(_ZuiText) * 1024);
 		p->StrBufLen = 1024;
 		cp->m_sText[0] = L'\0';
+		p->sf = ZuiCreateStringFormat(L"微软雅黑", 12, ARGB(255, 255, 0, 0), ARGB(255, 255, 255, 255), ZTS_VALIGN_MIDDLE | ZTS_SHADOW);
 		return p;
 	}
-		break;
+						break;
 	case Proc_OnEvent: {
-		TEventUI *event= (TEventUI *)Param1;
+		TEventUI *event = (TEventUI *)Param1;
 		switch (event->Type)
 		{
 		case ZEVENT_TIMER: {
@@ -67,6 +68,11 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 			break;
 		}
 		case ZEVENT_CHAR: {
+			//过滤回车
+			if (event->wParam == L'\r') {
+				break;
+			}
+
 			if (event->wParam == L'\b' && p->pos == 0) {
 				break;
 			}
@@ -83,9 +89,9 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 				if (p->StrLen == p->pos)
 					cp->m_sText[p->pos] = L'\0';
 			}
-			ZRectR r = {0};
-			ZuiMeasureStringRect(cp->m_pManager->m_hDcOffscreen, ZuiCreateStringFormat(L"微软雅黑", 12, ARGB(255, 255, 0, 0), ARGB(255, 255, 255, 255), ZTS_VALIGN_MIDDLE | ZTS_SHADOW), cp->m_sText, &r, 0);
-			p->x=r.Width;
+			ZRectR r = { 0 };
+			ZuiMeasureStringRect(cp->m_pManager->m_hDcOffscreen, p->sf, cp->m_sText, &r, 0);
+			p->x = r.Width;
 			ZuiControlInvalidate(cp);
 			break;
 		}
@@ -94,11 +100,11 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 		}
 		break;
 	}
-	case Proc_OnPaint:{
+	case Proc_OnPaint: {
 		ZuiGraphics gp = (ZuiGraphics)Param1;
 		RECT *rc = &cp->m_rcItem;
 
-		if (p->MouseType==1)
+		if (p->MouseType == 1)
 		{
 			ZuiDrawRect(gp, ARGB(200, 0, 0, 0), rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1, 1);//鼠标悬停
 		}
@@ -113,11 +119,11 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 		//画文本
 		ZRect r;
 		MAKEZRECT(r, rc->left + 5, rc->top + 5, rc->right - rc->left - 10, rc->bottom - rc->top - 10);
-		ZuiDrawString(gp, ZuiCreateStringFormat(L"微软雅黑", 12, ARGB(255, 255, 0, 0), ARGB(255, 255, 255, 255), ZTS_VALIGN_MIDDLE | ZTS_SHADOW), cp->m_sText, &r);
+		ZuiDrawString(gp, p->sf, cp->m_sText, &r);
 
 		//画光标
 		if (p->type)
-			ZuiDrawLine(gp, ARGB(255, 0, 0, 0), rc->left+p->x + 5, rc->top+2, rc->left+p->x + 5, rc->bottom-4, 1);
+			ZuiDrawLine(gp, ARGB(255, 0, 0, 0), rc->left + p->x + 5, rc->top + 2, rc->left + p->x + 5, rc->bottom - 4, 1);
 		return 0;
 		break;
 	}
@@ -126,11 +132,11 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 	}
 	case Proc_GetImePoint: {
 		ZPoint pt;
-		pt.x = p->x+7;
+		pt.x = p->x + 7;
 		pt.y = 5;
 		return &pt;
 	}
-	case Proc_OnInit:{
+	case Proc_OnInit: {
 		break;
 	}
 	case Proc_GetControlFlags: {
@@ -140,7 +146,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 	default:
 		break;
 	}
-	return p->old_call(ProcId, cp,0, Param1, Param2, Param3);
+	return p->old_call(ProcId, cp, 0, Param1, Param2, Param3);
 }
 
 
