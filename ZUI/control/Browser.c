@@ -356,8 +356,11 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
 		break;
 	}
 	case Proc_Browser_LoadHtml: {
-		wkeLoadHTMLW(p->view, ((ZuiRes)Param1)->p);
-		ZuiResDBDelRes((ZuiRes)Param1);
+		if (Param1)
+		{
+			wkeLoadHTMLW(p->view, ((ZuiRes)Param1)->p);
+			ZuiResDBDelRes((ZuiRes)Param1);
+		}
 		break;
 	}
 	case Proc_Browser_GetView: {
@@ -373,6 +376,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
 	case Proc_JsPut: {
 		js_State *J = Param2;
 		if (wcscmp(Param1, L"url") == 0) ZuiControlCall(Proc_Browser_LoadUrl, cp, (ZuiAny)js_tostring(J, -1), NULL, NULL);
+		
 		break;
 	}
 	case Proc_GetImePoint: {

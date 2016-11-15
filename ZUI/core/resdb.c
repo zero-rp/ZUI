@@ -184,12 +184,14 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 		}
 		/*文件*/else if (db->type == ZRESDBT_FILE) {
 			FILE*f = _wfopen(arr[1], L"rb");
-			fseek(f, 0L, SEEK_END);
-			buflen = ftell(f); /* 得到文件大小 */
-			buf = malloc(buflen); /* 根据文件大小动态分配内存空间 */
-			fseek(f, 0L, SEEK_SET); /* 定位到文件开头 */
-			fread(buf, buflen, 1, f); /* 一次性读取全部文件内容 */
-			fclose(f);
+			if (f) {
+				fseek(f, 0L, SEEK_END);
+				buflen = ftell(f); /* 得到文件大小 */
+				buf = malloc(buflen); /* 根据文件大小动态分配内存空间 */
+				fseek(f, 0L, SEEK_SET); /* 定位到文件开头 */
+				fread(buf, buflen, 1, f); /* 一次性读取全部文件内容 */
+				fclose(f);
+			}
 		}
 		/*字节*/else if (db->type == ZRESDBT_STREAM) {
 
