@@ -212,6 +212,14 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 		if (p->m_combo == Param1)
 			break;
 		p->m_combo = Param1;
+		DWORD dwStyle = GetWindowLong(p->m_hWnd, GWL_EXSTYLE);
+		if (Param1) {
+			dwStyle |= WS_EX_TOOLWINDOW;
+		}
+		else {
+			dwStyle &= ~WS_EX_TOOLWINDOW;
+		}
+		SetWindowLong(p->m_hWnd, GWL_EXSTYLE, dwStyle);
 		break;
 	}
 	case Proc_SetAttribute: {
