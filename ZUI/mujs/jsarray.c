@@ -602,7 +602,7 @@ static void Ap_reduce(js_State *J)
 	k = 0;
 
 	if (len == 0 && !hasinitial)
-		js_typeerror(J, "no initial value");
+		js_typeerror(J, L"no initial value");
 
 	/* initial value of accumulator */
 	if (hasinitial)

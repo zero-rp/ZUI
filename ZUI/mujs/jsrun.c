@@ -325,7 +325,7 @@ void *js_touserdata(js_State *J, int idx, const wchar_t *tag)
 				return v->u.object->u.user.data;
 
 	}
-	js_typeerror(J, L"not a %s", tag);
+	js_typeerror(J, L"not a %ls", tag);
 }
 
 static js_Object *jsR_tofunction(js_State *J, int idx)
@@ -617,7 +617,7 @@ static void jsR_setproperty(js_State *J, js_Object *obj, const wchar_t *name)
 
 readonly:
 	if (J->strict)
-		js_typeerror(J, "'%s' is read-only", name);
+		js_typeerror(J, "'%ls' is read-only", name);
 }
 
 static void jsR_defproperty(js_State *J, js_Object *obj, const wchar_t *name,
@@ -658,13 +658,13 @@ static void jsR_defproperty(js_State *J, js_Object *obj, const wchar_t *name,
 			if (!(ref->atts & JS_READONLY))
 				ref->value = *value;
 			else if (J->strict)
-				js_typeerror(J, "'%s' is read-only", name);
+				js_typeerror(J, "'%ls' is read-only", name);
 		}
 		if (getter) {
 			if (!(ref->atts & JS_DONTCONF))
 				ref->getter = getter;
 			else if (J->strict)
-				js_typeerror(J, "'%s' is non-configurable", name);
+				js_typeerror(J, "'%ls' is non-configurable", name);
 		}
 		if (setter) {
 			if (!(ref->atts & JS_DONTCONF))
@@ -723,7 +723,7 @@ static int jsR_delproperty(js_State *J, js_Object *obj, const wchar_t *name)
 
 dontconf:
 	if (J->strict)
-		js_typeerror(J, "'%s' is non-configurable", name);
+		js_typeerror(J, "'%ls' is non-configurable", name);
 	return 0;
 }
 
@@ -1161,9 +1161,11 @@ int js_pcall(js_State *J, int n)
 {
 	int savetop = TOP - n - 2;
 	if (js_try(J)) {
+		
 		/* clean up the stack to only hold the error object */
 		STACK[savetop] = STACK[TOP-1];
 		TOP = savetop + 1;
+		fprintf(stderr, "%ls\n", js_tostring(J, -1));
 		return 1;
 	}
 	js_call(J, n);

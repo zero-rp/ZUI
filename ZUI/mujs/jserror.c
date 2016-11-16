@@ -17,9 +17,9 @@ static int jsB_stacktrace(js_State *J, int skip)
 		int line = J->trace[n].line;
 		if (line > 0) {
 			if (name[0])
-				swprintf(buf, sizeof buf, L"\n\tat %ls (%ls:%d)", name, file, line);
+				_snwprintf(buf, sizeof buf, L"\n\tat %ls (%ls:%d)", name, file, line);
 			else
-				swprintf(buf, sizeof buf, L"\n\tat %ls:%d", file, line);
+				_snwprintf(buf, sizeof buf, L"\n\tat %ls:%d", file, line);
 		} else
 			snprintf(buf, sizeof buf, L"\n\tat %ls (%ls)", name, file);
 		js_pushstring(J, buf);
@@ -43,7 +43,7 @@ static void Ep_toString(js_State *J)
 	if (js_hasproperty(J, 0, L"message"))
 		message = js_tostring(J, -1);
 
-	swprintf(buf, sizeof buf, L"%ls: %ls", name, message);
+	_snwprintf(buf, sizeof buf, L"%ls: %ls", name, message);
 	js_pushstring(J, buf);
 
 	if (js_hasproperty(J, 0, L"stackTrace"))
@@ -83,7 +83,7 @@ static void js_newerrorx(js_State *J, const wchar_t *message, js_Object *prototy
 		va_list ap; \
 		wchar_t buf[256]; \
 		va_start(ap, fmt); \
-		vswprintf(buf, sizeof buf, fmt, ap); \
+		_snwprintf(buf, sizeof buf, fmt, ap); \
 		va_end(ap); \
 		js_newerrorx(J, buf, J->Name##_prototype); \
 		js_throw(J); \

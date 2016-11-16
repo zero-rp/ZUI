@@ -135,7 +135,7 @@ static void Decode(js_State *J, const char *str, const char *reserved)
 			js_putc(J, &sb, c);
 		else {
 			if (!str[0] || !str[1])
-				js_urierror(J, "truncated escape sequence");
+				js_urierror(J, L"truncated escape sequence");
 			a = *str++;
 			b = *str++;
 			if (!jsY_ishex(a) || !jsY_ishex(b))

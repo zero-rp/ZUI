@@ -357,7 +357,7 @@ static double js_todate(js_State *J, int idx)
 {
 	js_Object *self = js_toobject(J, idx);
 	if (self->type != JS_CDATE)
-		js_typeerror(J, "not a date");
+		js_typeerror(J, L"not a date");
 	return self->u.number;
 }
 
@@ -365,7 +365,7 @@ static void js_setdate(js_State *J, int idx, double t)
 {
 	js_Object *self = js_toobject(J, idx);
 	if (self->type != JS_CDATE)
-		js_typeerror(J, "not a date");
+		js_typeerror(J, L"not a date");
 	self->u.number = TimeClip(t);
 	js_pushnumber(J, self->u.number);
 }
@@ -476,7 +476,7 @@ static void Dp_toISOString(js_State *J)
 	char buf[64];
 	double t = js_todate(J, 0);
 	if (!isfinite(t))
-		js_rangeerror(J, "invalid date");
+		js_rangeerror(J, L"invalid date");
 	js_pushstring(J, fmtdatetime(buf, t, 0));
 }
 
