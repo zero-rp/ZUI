@@ -6,6 +6,8 @@
 #define	Proc_ScrollBar_GetScrollPos		1002	//获取位置
 #define	Proc_ScrollBar_GetScrollRange	1003
 #define	Proc_ScrollBar_SetOwner			1004
+#define	Proc_ScrollBar_SetScrollRange	1005
+
 #define	DEFAULT_SCROLLBAR_SIZE			16		//默认滚动条大小
 #define	DEFAULT_TIMERID					10		//时钟ID
 typedef struct _ZScrollBar

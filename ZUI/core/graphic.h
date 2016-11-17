@@ -36,7 +36,7 @@ extern "C"
 #define ZTS_VALIGN_BOTTOM	32	//垂直底部对齐
 #define ZTS_SHADOW			64	//阴影
 
-#define AGG
+#define AGG1
 
 /**图像*/
 typedef struct _ZImage {

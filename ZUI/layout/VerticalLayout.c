@@ -13,7 +13,7 @@ void* CALLBACK ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayou
 		//创建继承的控件 保存数据指针
 		p->old_udata = ZuiLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
 		p->old_call = (ZCtlProc)&ZuiLayoutProc;
-
+		
 		return p;
 		break;
 	}
@@ -26,7 +26,10 @@ void* CALLBACK ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayou
 		rc.top += op->m_rcInset.top;
 		rc.right -= op->m_rcInset.right;
 		rc.bottom -= op->m_rcInset.bottom;
+		if (op->m_pVerticalScrollBar && op->m_pVerticalScrollBar->m_bVisible) rc.right -= (ZuiInt)ZuiControlCall(Proc_GetFixedWidth, op->m_pVerticalScrollBar, NULL, NULL, NULL);
+		if (op->m_pHorizontalScrollBar && op->m_pHorizontalScrollBar->m_bVisible) rc.bottom -= (ZuiInt)ZuiControlCall(Proc_GetFixedHeight, op->m_pHorizontalScrollBar, NULL, NULL, NULL);
 		if (darray_len(op->m_items) == 0) {
+			ZuiControlCall(Proc_Layout_ProcessScrollBar, cp, &rc, 0, 0);
 			return 0;
 		}
 
@@ -63,13 +66,13 @@ void* CALLBACK ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayou
 		// Position the elements
 		SIZE szRemaining = szAvailable;
 		int iPosY = rc.top;
-		//if (m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible()) {
-		//	iPosY -= m_pVerticalScrollBar->GetScrollPos();
-		//}
+		if (op->m_pVerticalScrollBar && op->m_pVerticalScrollBar->m_bVisible) {
+			iPosY -= (LONG)ZuiControlCall(Proc_ScrollBar_GetScrollPos, op->m_pVerticalScrollBar, NULL, NULL, NULL);
+		}
 		int iPosX = rc.left;
-		//if (m_pHorizontalScrollBar && m_pHorizontalScrollBar->IsVisible()) {
-		//	iPosX -= m_pHorizontalScrollBar->GetScrollPos();
-		//}
+		if (op->m_pHorizontalScrollBar && op->m_pHorizontalScrollBar->m_bVisible) {
+			iPosX -= (LONG)ZuiControlCall(Proc_ScrollBar_GetScrollPos, op->m_pHorizontalScrollBar, NULL, NULL, NULL);
+		}
 		int iAdjustable = 0;
 		int cyFixedRemaining = cyFixed;
 		for (int it2 = 0; it2 < darray_len(op->m_items); it2++) {
@@ -118,7 +121,8 @@ void* CALLBACK ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayou
 		cyNeeded += (nEstimateNum - 1) * op->m_iChildPadding;
 
 		// Process the scrollbar
-		//ProcessScrollBar(rc, 0, cyNeeded);
+
+		ZuiControlCall(Proc_Layout_ProcessScrollBar, cp, &rc, 0, cyNeeded);
 		return 0;
 		break;
 	}

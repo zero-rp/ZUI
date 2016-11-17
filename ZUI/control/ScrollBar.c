@@ -10,6 +10,12 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
 		memset(p, 0, sizeof(ZScrollBar));
 		//保存原来的回调地址,创建成功后回调地址指向当前函数
 		p->old_call = cp->call;
+
+		p->m_nRange = 100;
+		p->m_nLineSize = 8;
+		p->m_bShowButton1 = TRUE; 
+		p->m_bShowButton2 = TRUE;
+		cp->m_cxyFixed.cx = DEFAULT_SCROLLBAR_SIZE;
 		return p;
 	}
 		break;
@@ -464,7 +470,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
 		if (p->m_pOwner != NULL)
 			ZuiControlNeedUpdate(p->m_pOwner);
 		else
-			ZuiControlNeedParentUpdate(p->m_pOwner);
+			ZuiControlNeedParentUpdate(cp);
 	}
 		break;
 	case Proc_ScrollBar_SetScrollPos: {
@@ -473,9 +479,27 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
 		p->m_nScrollPos = Param1;
 		if (p->m_nScrollPos < 0) p->m_nScrollPos = 0;
 		if (p->m_nScrollPos > p->m_nRange) p->m_nScrollPos = p->m_nRange;
-		ZuiDefaultControlProc(Proc_SetPos, cp, 0, &cp->m_rcItem, NULL, NULL);
+		ZuiControlCall(Proc_SetPos, cp, &cp->m_rcItem, NULL, NULL);
 	}
 		break;
+	case Proc_ScrollBar_GetScrollPos: {
+		return p->m_nScrollPos;
+	}
+	case Proc_ScrollBar_GetScrollRange: {
+		return p->m_nRange;
+	}
+	case Proc_ScrollBar_SetOwner: {
+		p->m_pOwner = Param1;
+		break;
+	}
+	case Proc_ScrollBar_SetScrollRange: {
+		if (p->m_nRange == Param1) return;
+
+		p->m_nRange = Param1;
+		if (p->m_nRange < 0) p->m_nRange = 0;
+		if (p->m_nScrollPos > p->m_nRange) p->m_nScrollPos = p->m_nRange;
+		ZuiControlCall(Proc_SetPos, cp, &cp->m_rcItem, NULL, NULL);
+	}
 	default:
 		break;
 	}

@@ -46,7 +46,7 @@
 #define	Proc_Layout_EnableScrollBar	530
 #define	Proc_Layout_GetVerticalScrollBar	531
 #define	Proc_Layout_GetHorizontalScrollBar	532
-
+#define	Proc_Layout_ProcessScrollBar	533	//调整滚动条位置
 /**容器基类结构*/
 typedef struct _ZuiLayout
 {
@@ -54,6 +54,7 @@ typedef struct _ZuiLayout
 	RECT m_rcInset;				///
 	BOOL m_bMouseChildEnabled;
 	int m_iChildPadding;
+	BOOL m_bScrollProcess; // 防止SetPos循环调用
 	int	 m_nScrollStepSize;
 	ZuiControl m_pVerticalScrollBar;//纵向滚动条
 	ZuiControl m_pHorizontalScrollBar;//横向滚动条

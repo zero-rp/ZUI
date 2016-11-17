@@ -231,9 +231,6 @@
     <ClCompile Include="core\agg\src\agg_trans_affine.cpp">
       <Filter>源文件\core\AGG\src</Filter>
     </ClCompile>
-    <ClCompile Include="core\agg.cpp">
-      <Filter>源文件\core</Filter>
-    </ClCompile>
     <ClCompile Include="core\agg\agg_font_win32_tt.cpp">
       <Filter>源文件\core\AGG</Filter>
     </ClCompile>
@@ -242,6 +239,9 @@
     </ClCompile>
     <ClCompile Include="control\ScrollBar.c">
       <Filter>源文件\control</Filter>
+    </ClCompile>
+    <ClCompile Include="core\gdi.c">
+      <Filter>源文件\core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
