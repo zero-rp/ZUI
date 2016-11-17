@@ -8,6 +8,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 	{
 	case Proc_CoreInit:
 		return TRUE;
+		break;
 	case Proc_OnCreate: {
 		p = (ZuiLayout)malloc(sizeof(ZLayout));
 		memset(p, 0, sizeof(ZLayout));
@@ -162,7 +163,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 		// Check if this guy is valid
 		if (((UINT)Param3 & ZFIND_VISIBLE) != 0 && !cp->m_bVisible) return NULL;
 		if (((UINT)Param3 & ZFIND_ENABLED) != 0 && !cp->m_bEnabled) return NULL;
-		if (((UINT)Param3 & ZFIND_HITTEST) != 0 && !PtInRect(&cp->m_rcItem, *(LPPOINT)(Param2))) return NULL;
+		if (((UINT)Param3 & ZFIND_HITTEST) != 0 && !ZuiIsPointInRect(&cp->m_rcItem, Param2)) return NULL;
 		if (((UINT)Param3 & ZFIND_UPDATETEST) != 0 && ((FINDCONTROLPROC)Param1)(cp, Param2) != NULL) return NULL;
 
 		ZuiControl pResult = NULL;
@@ -181,7 +182,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 				for (int it = darray_len(p->m_items) - 1; it >= 0; it--) {
 					pResult = (ZuiControl)ZuiControlCall(Proc_FindControl, (ZuiControl)(p->m_items->data[it]), Param1, Param2, Param3);
 					if (pResult != NULL) {
-						if (((UINT)Param3 & ZFIND_HITTEST) != 0 && !pResult->m_bFloat && !PtInRect(&rc, *((LPPOINT)(Param2))))
+						if (((UINT)Param3 & ZFIND_HITTEST) != 0 && !pResult->m_bFloat && !ZuiIsPointInRect(&rc, Param2))
 							continue;
 						else
 							return pResult;
@@ -192,7 +193,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 				for (int it = 0; it < darray_len(p->m_items); it++) {
 					pResult = (ZuiControl)ZuiControlCall(Proc_FindControl, (ZuiControl)(p->m_items->data[it]), Param1, Param2, Param3);
 					if (pResult != NULL) {
-						if (((UINT)Param3 & ZFIND_HITTEST) != 0 && !pResult->m_bFloat && !PtInRect(&rc, *((LPPOINT)(Param2))))
+						if (((UINT)Param3 & ZFIND_HITTEST) != 0 && !pResult->m_bFloat && !ZuiIsPointInRect(&rc, Param2))
 							continue;
 						else
 							return pResult;
@@ -364,6 +365,213 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 		for (int it = 0; it < darray_len(p->m_items); it++) {
 			ZuiControlCall(Proc_SetManager, (ZuiControl)(p->m_items->data[it]),Param1, cp, Param3);
 		}
+		break;
+	}
+	case Proc_Layout_GetScrollPos: {
+		SIZE sz = { 0, 0 };
+		if (p->m_pVerticalScrollBar && p->m_pVerticalScrollBar->m_bVisible) sz.cy = ZuiControlCall(Proc_ScrollBar_GetScrollPos, p->m_pVerticalScrollBar, NULL, NULL, NULL);
+		if (p->m_pHorizontalScrollBar && p->m_pHorizontalScrollBar->m_bVisible) sz.cx = ZuiControlCall(Proc_ScrollBar_GetScrollPos, p->m_pHorizontalScrollBar, NULL, NULL, NULL);
+		return &sz;
+		break;
+	}
+	case Proc_Layout_GetScrollRange: {
+		SIZE sz = { 0, 0 };
+		if (p->m_pVerticalScrollBar && p->m_pVerticalScrollBar->m_bVisible) sz.cy = ZuiControlCall(Proc_ScrollBar_GetScrollRange, p->m_pVerticalScrollBar, NULL, NULL, NULL);
+		if (p->m_pHorizontalScrollBar && p->m_pHorizontalScrollBar->m_bVisible) sz.cx = ZuiControlCall(Proc_ScrollBar_GetScrollRange, p->m_pHorizontalScrollBar, NULL, NULL, NULL);
+		return &sz;
+		break;
+	}
+	case Proc_Layout_SetScrollPos: {
+		SIZE *szPos = Param1;
+		int cx = 0;
+		int cy = 0;
+		if (p->m_pVerticalScrollBar && p->m_pVerticalScrollBar->m_bVisible) {
+			int iLastScrollPos = ZuiControlCall(Proc_ScrollBar_GetScrollPos, p->m_pVerticalScrollBar, NULL, NULL, NULL);
+			ZuiControlCall(Proc_ScrollBar_SetScrollPos, p->m_pVerticalScrollBar, szPos->cy, NULL, NULL);
+			cy = (ZuiInt)ZuiControlCall(Proc_ScrollBar_GetScrollPos, p->m_pVerticalScrollBar, NULL, NULL, NULL) - iLastScrollPos;
+		}
+
+		if (p->m_pHorizontalScrollBar && p->m_pHorizontalScrollBar->m_bVisible) {
+			int iLastScrollPos = ZuiControlCall(Proc_ScrollBar_GetScrollPos, p->m_pHorizontalScrollBar, NULL, NULL, NULL);
+			ZuiControlCall(Proc_ScrollBar_SetScrollPos, p->m_pHorizontalScrollBar, szPos->cx, NULL, NULL);
+			cx = (ZuiInt)ZuiControlCall(Proc_ScrollBar_GetScrollPos, p->m_pHorizontalScrollBar, NULL, NULL, NULL) - iLastScrollPos;
+		}
+
+		if (cx == 0 && cy == 0) return;
+
+		RECT rcPos;
+		for (int it2 = 0; it2 < darray_len(p->m_items); it2++) {
+			ZuiControl pControl = (ZuiControl)(p->m_items->data[it2]);
+			if (!pControl->m_bVisible) continue;
+			if (pControl->m_bFloat) continue;
+			RECT *prcPos = (RECT *)ZuiControlCall(Proc_GetPos, pControl, NULL, NULL, NULL);
+			rcPos = *prcPos;
+			rcPos.left -= cx;
+			rcPos.right -= cx;
+			rcPos.top -= cy;
+			rcPos.bottom -= cy;
+			ZuiControlCall(Proc_SetPos, pControl, &rcPos, NULL, NULL);
+		}
+
+		ZuiControlInvalidate(cp);
+		break;
+	}
+	case Proc_Layout_SetScrollStepSize: {
+		if (Param1 >0)
+			p->m_nScrollStepSize = Param1;
+		break;
+	}
+	case Proc_Layout_GetScrollStepSize: {
+		return p->m_nScrollStepSize;
+		break;
+	}
+	case Proc_Layout_LineUp: {
+		int cyLine = p->m_nScrollStepSize;
+		if (p->m_nScrollStepSize == 0)
+		{
+			cyLine = 8;
+			//if (m_pManager) cyLine = m_pManager->GetDefaultFontInfo()->tm.tmHeight + 8;
+		}
+		
+		SIZE *psz = ZuiControlCall(Proc_Layout_GetScrollPos, cp, NULL, NULL, NULL);
+		SIZE sz = { psz->cx, psz->cy };
+		sz.cy -= cyLine;
+		ZuiControlCall(Proc_Layout_SetScrollPos, cp, &sz, NULL, NULL);
+		break;
+	}
+	case Proc_Layout_LineDown: {
+		int cyLine = p->m_nScrollStepSize;
+		if (p->m_nScrollStepSize == 0)
+		{
+			cyLine = 8;
+			//if (m_pManager) cyLine = m_pManager->GetDefaultFontInfo()->tm.tmHeight + 8;
+		}
+
+		SIZE *psz = ZuiControlCall(Proc_Layout_GetScrollPos, cp, NULL, NULL, NULL);
+		SIZE sz = { psz->cx, psz->cy };
+		sz.cy += cyLine;
+		ZuiControlCall(Proc_Layout_SetScrollPos, cp, &sz, NULL, NULL);
+		break;
+	}
+	case Proc_Layout_PageUp: {
+		SIZE *psz = ZuiControlCall(Proc_Layout_GetScrollPos, cp, NULL, NULL, NULL);
+		SIZE sz = { psz->cx, psz->cy };
+		int iOffset = cp->m_rcItem.bottom - cp->m_rcItem.top - p->m_rcInset.top - p->m_rcInset.bottom;
+		if (p->m_pHorizontalScrollBar && p->m_pHorizontalScrollBar->m_bVisible) iOffset -= (ZuiInt)ZuiControlCall(Proc_GetFixedHeight, p->m_pHorizontalScrollBar, NULL, NULL, NULL);
+		sz.cy -= iOffset;
+		ZuiControlCall(Proc_Layout_SetScrollPos, cp, &sz, NULL, NULL);
+		break;
+	}
+	case Proc_Layout_PageDown: {
+		SIZE *psz = ZuiControlCall(Proc_Layout_GetScrollPos, cp, NULL, NULL, NULL);
+		SIZE sz = { psz->cx, psz->cy };
+		int iOffset = cp->m_rcItem.bottom - cp->m_rcItem.top - p->m_rcInset.top - p->m_rcInset.bottom;
+		if (p->m_pHorizontalScrollBar && p->m_pHorizontalScrollBar->m_bVisible) iOffset -= (ZuiInt)ZuiControlCall(Proc_GetFixedHeight, p->m_pHorizontalScrollBar, NULL, NULL, NULL);
+		sz.cy += iOffset;
+		ZuiControlCall(Proc_Layout_SetScrollPos, cp, &sz, NULL, NULL);
+		break;
+	}
+	case Proc_Layout_HomeUp: {
+		SIZE *psz = ZuiControlCall(Proc_Layout_GetScrollPos, cp, NULL, NULL, NULL);
+		SIZE sz = { psz->cx, psz->cy };
+		sz.cy = 0;
+		ZuiControlCall(Proc_Layout_SetScrollPos, cp, &sz, NULL, NULL);
+		break;
+	}
+	case Proc_Layout_EndDown: {
+		SIZE *psz = ZuiControlCall(Proc_Layout_GetScrollPos, cp, NULL, NULL, NULL);
+		SIZE sz = { psz->cx, psz->cy };
+		sz.cy = ((SIZE *)ZuiControlCall(Proc_Layout_GetScrollRange, cp, NULL, NULL, NULL))->cy;
+		ZuiControlCall(Proc_Layout_SetScrollPos, cp, &sz, NULL, NULL);
+		break;
+	}
+	case Proc_Layout_LineLeft: {
+		int cxLine = p->m_nScrollStepSize == 0 ? 8 : p->m_nScrollStepSize;
+
+		SIZE *psz = ZuiControlCall(Proc_Layout_GetScrollPos, cp, NULL, NULL, NULL);
+		SIZE sz = { psz->cx, psz->cy };
+		sz.cx -= cxLine;
+		ZuiControlCall(Proc_Layout_SetScrollPos, cp, &sz, NULL, NULL);
+		break;
+	}
+	case Proc_Layout_LineRight: {
+		int cxLine = p->m_nScrollStepSize == 0 ? 8 : p->m_nScrollStepSize;
+
+		SIZE *psz = ZuiControlCall(Proc_Layout_GetScrollPos, cp, NULL, NULL, NULL);
+		SIZE sz = { psz->cx, psz->cy };
+		sz.cx += cxLine;
+		ZuiControlCall(Proc_Layout_SetScrollPos, cp, &sz, NULL, NULL);
+		break;
+	}
+	case Proc_Layout_PageLeft: {
+		SIZE *psz = ZuiControlCall(Proc_Layout_GetScrollPos, cp, NULL, NULL, NULL);
+		SIZE sz = { psz->cx, psz->cy };
+		int iOffset = cp->m_rcItem.right - cp->m_rcItem.left - p->m_rcInset.left - p->m_rcInset.right;
+		if (p->m_pVerticalScrollBar && p->m_pVerticalScrollBar->m_bVisible) iOffset -= (ZuiInt)ZuiControlCall(Proc_GetFixedWidth, p->m_pVerticalScrollBar, NULL, NULL, NULL);
+		sz.cx -= iOffset;
+		ZuiControlCall(Proc_Layout_SetScrollPos, cp, &sz, NULL, NULL);
+		break;
+	}
+	case Proc_Layout_PageRight: {
+		SIZE *psz = ZuiControlCall(Proc_Layout_GetScrollPos, cp, NULL, NULL, NULL);
+		SIZE sz = { psz->cx, psz->cy };
+		int iOffset = cp->m_rcItem.right - cp->m_rcItem.left - p->m_rcInset.left - p->m_rcInset.right;
+		if (p->m_pVerticalScrollBar && p->m_pVerticalScrollBar->m_bVisible) iOffset -= (ZuiInt)ZuiControlCall(Proc_GetFixedWidth, p->m_pVerticalScrollBar, NULL, NULL, NULL);
+		sz.cx += iOffset;
+		ZuiControlCall(Proc_Layout_SetScrollPos, cp, &sz, NULL, NULL);
+		break;
+	}
+	case Proc_Layout_HomeLeft: {
+		SIZE *psz = ZuiControlCall(Proc_Layout_GetScrollPos, cp, NULL, NULL, NULL);
+		SIZE sz = { psz->cx, psz->cy };
+		sz.cx = 0;
+		ZuiControlCall(Proc_Layout_SetScrollPos, cp, &sz, NULL, NULL);
+		break;
+	}
+	case Proc_Layout_EndRight: {
+		SIZE *psz = ZuiControlCall(Proc_Layout_GetScrollPos, cp, NULL, NULL, NULL);
+		SIZE sz = { psz->cx, psz->cy };
+		sz.cx = ((SIZE *)ZuiControlCall(Proc_Layout_GetScrollRange, cp, NULL, NULL, NULL))->cx;
+		ZuiControlCall(Proc_Layout_SetScrollPos, cp, &sz, NULL, NULL);
+		break;
+	}
+	case Proc_Layout_EnableScrollBar: {
+		BOOL bEnableVertical = Param1;
+		BOOL bEnableHorizontal = Param2;
+		if (bEnableVertical && !p->m_pVerticalScrollBar) {
+			p->m_pVerticalScrollBar = NewZuiControl(L"scrollbar", NULL, NULL, NULL);//创建滚动条
+			ZuiControlCall(Proc_ScrollBar_SetOwner, p->m_pVerticalScrollBar, cp, NULL, NULL);
+			p->m_pVerticalScrollBar->m_pManager = cp->m_pManager;
+
+			//			m_pVerticalScrollBar->SetVisible(false);
+		}
+		else if (!bEnableVertical && p->m_pVerticalScrollBar) {
+			FreeCControlUI(p->m_pVerticalScrollBar);
+			p->m_pVerticalScrollBar = NULL;
+		}
+
+		if (bEnableHorizontal && !p->m_pHorizontalScrollBar) {
+			p->m_pHorizontalScrollBar = NewZuiControl(L"scrollbar", NULL, NULL, NULL);//创建滚动条
+			ZuiControlCall(Proc_ScrollBar_SetHorizontal, p->m_pHorizontalScrollBar, TRUE, NULL, NULL);
+			ZuiControlCall(Proc_ScrollBar_SetOwner, p->m_pVerticalScrollBar, cp, NULL, NULL);
+			p->m_pHorizontalScrollBar->m_pManager = cp->m_pManager;
+			//			m_pHorizontalScrollBar->SetVisible(false);
+
+		}
+		else if (!bEnableHorizontal && p->m_pHorizontalScrollBar) {
+			FreeCControlUI(p->m_pHorizontalScrollBar);
+			p->m_pHorizontalScrollBar = NULL;
+		}
+
+		ZuiControlNeedUpdate(cp);
+		break;
+	}
+	case Proc_Layout_GetVerticalScrollBar: {
+		return p->m_pVerticalScrollBar;
+		break;
+	}
+	case Proc_Layout_GetHorizontalScrollBar: {
+		return p->m_pHorizontalScrollBar;
 		break;
 	}
 	default:

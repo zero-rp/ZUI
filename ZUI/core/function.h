@@ -15,6 +15,7 @@
 #define __ZUI_CORE_FUNCTION_H__
 
 void Rect_Join(RECT *rc, RECT *rc1);
+ZEXPORT ZuiBool ZCALL ZuiIsPointInRect(ZuiRect Rect, ZuiPoint pt);
 /*字符串HASH函数*/
 void * ZCALL Zui_Hash(wchar_t* str);
 /**

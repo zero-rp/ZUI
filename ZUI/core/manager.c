@@ -583,8 +583,7 @@ ZuiControl CALLBACK __FindControlFromCount(ZuiControl pThis, LPVOID pData)
 
 ZuiControl CALLBACK __FindControlFromPoint(ZuiControl pThis, LPVOID pData)
 {
-	LPPOINT pPoint = (LPPOINT)(pData);
-	return PtInRect((RECT *)ZuiControlCall(Proc_GetPos, pThis, NULL, NULL, NULL), *pPoint) ? pThis : NULL;
+	return ZuiIsPointInRect(ZuiControlCall(Proc_GetPos, pThis, NULL, NULL, NULL), pData) ? pThis : NULL;
 }
 
 ZuiControl CALLBACK __FindControlFromTab(ZuiControl pThis, LPVOID pData)
@@ -972,11 +971,11 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 							if (p->m_pRoot == NULL) break;
 							if (p->m_hwndTooltip != NULL) SendMessage(p->m_hwndTooltip, TTM_TRACKACTIVATE, FALSE, (LPARAM)&p->m_ToolTip);
 							if (p->m_bMouseTracking) {
-								POINT pt = { 0 };
-								RECT rcWnd = { 0 };
+								ZPoint pt = { 0 };
+								ZRect rcWnd = { 0 };
 								GetCursorPos(&pt);
 								GetWindowRect(p->m_hWndPaint, &rcWnd);
-								if (!IsIconic(p->m_hWndPaint) && GetActiveWindow() == p->m_hWndPaint && PtInRect(&rcWnd, pt)) {
+								if (!IsIconic(p->m_hWndPaint) && GetActiveWindow() == p->m_hWndPaint && ZuiIsPointInRect(&rcWnd, &pt)) {
 									if (SendMessage(p->m_hWndPaint, WM_NCHITTEST, 0, MAKELPARAM(pt.x, pt.y)) == HTCLIENT) {
 										ScreenToClient(p->m_hWndPaint, &pt);
 										SendMessage(p->m_hWndPaint, WM_MOUSEMOVE, 0, MAKELPARAM(pt.x, pt.y));

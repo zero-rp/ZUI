@@ -400,7 +400,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 			return NULL;
 		if (((UINT)Param3 & ZFIND_ENABLED) != 0 && !p->m_bEnabled)
 			return NULL;//激活
-		if (((UINT)Param3 & ZFIND_HITTEST) != 0 && (!p->m_bMouseEnabled || !PtInRect(&p->m_rcItem, *(LPPOINT)(Param2))))
+		if (((UINT)Param3 & ZFIND_HITTEST) != 0 && (!p->m_bMouseEnabled || !ZuiIsPointInRect(&p->m_rcItem, Param2)))
 			return NULL;
 		if (((UINT)Param3 & ZFIND_UPDATETEST) != 0 && ((FINDCONTROLPROC)Param1)(p, Param2) != NULL)
 			return NULL;
@@ -746,6 +746,11 @@ ZEXPORT ZuiVoid ZCALL ZuiClientToScreen(ZuiControl p, ZuiPoint pt) {
 	}
 }
 
+ZEXPORT ZuiVoid ZCALL ZuiScreenToClient(ZuiControl p, ZuiPoint pt) {
+	if (p && pt) {
+		ScreenToClient(p->m_pManager->m_hWndPaint, pt);
+	}
+}
 
 //-------------------------------------------------------------------------------------------------
 

@@ -94,7 +94,14 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define	Proc_SetBorderColor		60	//设置边框颜色
 
 
-
+//-------控件状态
+#define ZSTATE_FOCUSED      0x00000001
+#define ZSTATE_SELECTED     0x00000002
+#define ZSTATE_DISABLED     0x00000004
+#define ZSTATE_HOT          0x00000008
+#define ZSTATE_PUSHED       0x00000010
+#define ZSTATE_READONLY     0x00000020
+#define ZSTATE_CAPTURED     0x00000040
 
 
 typedef enum ZAttType
@@ -171,7 +178,7 @@ ZEXPORT ZuiVoid ZCALL ZuiControlRegNotify(ZuiControl p, ZNotifyProc pNotify);
 
 //客户坐标转屏幕坐标
 ZEXPORT ZuiVoid ZCALL ZuiClientToScreen(ZuiControl p, ZuiPoint pt);
-
+ZEXPORT ZuiVoid ZCALL ZuiScreenToClient(ZuiControl p, ZuiPoint pt);
 
 ZEXPORT ZuiControl ZCALL ZuiControlFindName(ZuiControl p, ZuiText Name);
 

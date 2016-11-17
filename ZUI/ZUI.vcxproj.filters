@@ -240,6 +240,9 @@
     <ClCompile Include="core\agg\src\agg_curves.cpp">
       <Filter>源文件\core\AGG\src</Filter>
     </ClCompile>
+    <ClCompile Include="control\ScrollBar.c">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZUI.h">
@@ -382,6 +385,9 @@
     </ClInclude>
     <ClInclude Include="core\graphic.h">
       <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="control\ScrollBar.h">
+      <Filter>头文件\control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

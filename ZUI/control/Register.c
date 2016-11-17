@@ -16,6 +16,7 @@ BOOL ZuiControlRegister()
 
 
 	ZuiControlRegisterAdd(L"window", (ZCtlProc)&ZuiWindowProc);
+	ZuiControlRegisterAdd(L"scrollbar", (ZCtlProc)&ZuiScrollBarProc);
 	ZuiControlRegisterAdd(L"label", (ZCtlProc)&ZuiLabelProc);
 	ZuiControlRegisterAdd(L"button", (ZCtlProc)&ZuiButtonProc);
 	ZuiControlRegisterAdd(L"browser", (ZCtlProc)&ZuiBrowserProc);

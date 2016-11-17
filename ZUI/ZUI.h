@@ -188,6 +188,7 @@ extern "C"
 #include "control/Register.h"
 #include "control/window.h"
 
+#include "control/ScrollBar.h"
 #include "control/Label.h"
 #include "control/Button.h"
 #ifdef WIN32
