@@ -62,6 +62,7 @@ void* CALLBACK ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayou
 		// Place elements
 		int cyNeeded = 0;
 		int cyExpand = 0;
+		int cxNeeded = 0;
 		if (nAdjustables > 0) cyExpand = MAX(0, (szAvailable.cy - cyFixed) / nAdjustables);
 		// Position the elements
 		SIZE szRemaining = szAvailable;
@@ -117,12 +118,15 @@ void* CALLBACK ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayou
 			iPosY += sz.cy + op->m_iChildPadding + rcPadding->top + rcPadding->bottom;
 			cyNeeded += sz.cy + rcPadding->top + rcPadding->bottom;
 			szRemaining.cy -= sz.cy + op->m_iChildPadding + rcPadding->bottom;
+
+			int tmp = sz.cx + rcPadding->left + rcPadding->right;
+			cxNeeded = (tmp > cxNeeded) ? tmp : cxNeeded;
 		}
 		cyNeeded += (nEstimateNum - 1) * op->m_iChildPadding;
-
+		cxNeeded += (nEstimateNum - 1) * op->m_iChildPadding;
 		// Process the scrollbar
 
-		ZuiControlCall(Proc_Layout_ProcessScrollBar, cp, &rc, 0, cyNeeded);
+		ZuiControlCall(Proc_Layout_ProcessScrollBar, cp, &rc, cxNeeded, cyNeeded);
 		return 0;
 		break;
 	}
