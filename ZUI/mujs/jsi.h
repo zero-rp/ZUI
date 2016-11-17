@@ -120,8 +120,8 @@ void js_trap(js_State *J, int pc); /* dump stack and environment to stdout */
 
 struct js_StackTrace
 {
-	const char *name;
-	const char *file;
+	const wchar_t *name;
+	const wchar_t *file;
 	int line;
 };
 

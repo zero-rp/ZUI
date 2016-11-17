@@ -293,7 +293,7 @@ static void checkdup(JF, js_Ast *list, js_Ast *end)
 			else
 				straw =  prop->string;
 			if (!wcscmp(needle, straw))
-				jsC_error(J, list, L"duplicate property '%s' in object literal", needle);
+				jsC_error(J, list, L"duplicate property '%ls' in object literal", needle);
 		}
 		list = list->b;
 	}

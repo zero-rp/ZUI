@@ -21,7 +21,7 @@ static js_Ast *memberexp(js_State *J);
 static js_Ast *statement(js_State *J);
 static js_Ast *funbody(js_State *J);
 
-JS_NORETURN static void jsP_error(js_State *J, const char *fmt, ...) JS_PRINTFLIKE(2,3);
+JS_NORETURN static void jsP_error(js_State *J, const wchar_t *fmt, ...) JS_PRINTFLIKE(2,3);
 
 static void jsP_error(js_State *J, const wchar_t *fmt, ...)
 {
@@ -30,10 +30,10 @@ static void jsP_error(js_State *J, const wchar_t *fmt, ...)
 	wchar_t msgbuf[256];
 
 	va_start(ap, fmt);
-	vswprintf(msgbuf, 256, fmt, ap);
+	_snwprintf(msgbuf, sizeof msgbuf, fmt, ap);
 	va_end(ap);
 
-	swprintf(buf, 256, L"%ls:%d: ", J->filename, J->lexline);
+	_snwprintf(buf, sizeof buf, L"%ls:%d: ", J->filename, J->lexline);
 	wcscat(buf, msgbuf);
 
 	js_newsyntaxerror(J, buf);
@@ -161,7 +161,7 @@ static const wchar_t *strictfuturewords[] = {
 static void checkfutureword(js_State *J, const wchar_t *s)
 {
 	if (jsY_findword(s, futurewords, nelem(futurewords)) >= 0)
-		jsP_error(J, L"'%s' is a future reserved word", s);
+		jsP_error(J, L"'%ls' is a future reserved word", s);
 	if (J->strict && jsY_findword(s, strictfuturewords, nelem(strictfuturewords)) >= 0)
 		jsP_error(J, L"'%ls' is a strict mode future reserved word", s);
 }
@@ -358,7 +358,7 @@ static js_Ast *primary(js_State *J)
 	if (jsP_accept(J, '[')) { a = EXP1(ARRAY, arrayliteral(J)); jsP_expect(J, ']'); return a; }
 	if (jsP_accept(J, '(')) { a = expression(J, 0); jsP_expect(J, ')'); return a; }
 
-	jsP_error(J, "unexpected token in expression: %s", jsY_tokenstring(J->lookahead));
+	jsP_error(J, "unexpected token in expression: %ls", jsY_tokenstring(J->lookahead));
 }
 
 static js_Ast *arguments(js_State *J)
@@ -613,7 +613,7 @@ static js_Ast *caseclause(js_State *J)
 		return STM1(DEFAULT, a);
 	}
 
-	jsP_error(J, L"unexpected token in switch: %s (expected 'case' or 'default')", jsY_tokenstring(J->lookahead));
+	jsP_error(J, L"unexpected token in switch: %ls (expected 'case' or 'default')", jsY_tokenstring(J->lookahead));
 }
 
 static js_Ast *caselist(js_State *J)
@@ -663,7 +663,7 @@ static js_Ast *forstatement(js_State *J)
 			c = statement(J);
 			return STM3(FOR_IN_VAR, a, b, c);
 		}
-		jsP_error(J, L"unexpected token in for-var-statement: %s", jsY_tokenstring(J->lookahead));
+		jsP_error(J, L"unexpected token in for-var-statement: %ls", jsY_tokenstring(J->lookahead));
 	}
 
 	if (J->lookahead != ';')
@@ -682,7 +682,7 @@ static js_Ast *forstatement(js_State *J)
 		c = statement(J);
 		return STM3(FOR_IN, a, b, c);
 	}
-	jsP_error(J, L"unexpected token in for-statement: %s", jsY_tokenstring(J->lookahead));
+	jsP_error(J, L"unexpected token in for-statement: %ls", jsY_tokenstring(J->lookahead));
 }
 
 static js_Ast *statement(js_State *J)
@@ -798,7 +798,7 @@ static js_Ast *statement(js_State *J)
 			d = block(J);
 		}
 		if (!b && !d)
-			jsP_error(J, L"unexpected token in try: %s (expected 'catch' or 'finally')", jsY_tokenstring(J->lookahead));
+			jsP_error(J, L"unexpected token in try: %ls (expected 'catch' or 'finally')", jsY_tokenstring(J->lookahead));
 		return STM4(TRY, a, b, c, d);
 	}
 

@@ -185,6 +185,8 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 		break;
 	}
 	case Proc_Window_SetSize: {
+		ZuiControlCall(Proc_SetFixedWidth, cp, Param1, NULL, NULL);
+		ZuiControlCall(Proc_SetFixedHeight, cp, Param2, NULL, NULL);
 		SetWindowPos(p->m_hWnd, NULL, 0, 0, Param1, Param2, SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
 		break;
 	}
@@ -265,7 +267,13 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 		if (wcscmp(Param1, L"SetWindowMin") == 0) ZuiControlCall(Proc_Window_SetWindowMin, cp, NULL, NULL, NULL);
 		else if (wcscmp(Param1, L"SetWindowMax") == 0) ZuiControlCall(Proc_Window_SetWindowMax, cp, NULL, NULL, NULL);
 		else if (wcscmp(Param1, L"SetWindowRestor") == 0) ZuiControlCall(Proc_Window_SetWindowRestor, cp, NULL, NULL, NULL);
-		else if (wcscmp(Param1, L"Popup") == 0) ZuiControlCall(Proc_Window_Popup, cp, NULL, NULL, NULL);
+		else if (wcscmp(Param1, L"Popup") == 0) {
+			if (js_gettop(Param2) ==  3) {
+				ZPoint pt = { js_toint32(Param2,1),js_toint32(Param2,2) };
+				ZuiControlCall(Proc_Window_Popup, cp, &pt, NULL, NULL);
+			}else
+				ZuiControlCall(Proc_Window_Popup, cp, NULL, NULL, NULL);
+		}
 		break;
 	}
 	case Proc_SetVisible: {

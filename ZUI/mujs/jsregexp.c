@@ -18,7 +18,7 @@ void js_newregexp(js_State *J, const wchar_t *pattern, int flags)
 
 	prog = js_regcomp(pattern, opts, &error);
 	if (!prog)
-		js_syntaxerror(J, L"regular expression: %s", error);
+		js_syntaxerror(J, L"regular expression: %ls", error);
 
 	obj->u.r.prog = prog;
 	obj->u.r.source = js_strdup(J, pattern);

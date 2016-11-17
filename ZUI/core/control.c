@@ -551,8 +551,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 			att->v = _wcsdup(Param2);
 			att->vlen = wcslen(att->v);
 		}
-	}
 		break;
+	}
 	case Proc_GetAttribute: {
 
 		break;
@@ -572,6 +572,17 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		else if (wcscmp(Param1, L"bkcolor") == 0) js_pushnumber(Param2, p->m_BkgColor);
 		else if (wcscmp(Param1, L"drag") == 0) js_pushboolean(Param2, p->m_drag);
 		else if (wcscmp(Param1, L"clos") == 0) return 1;
+		else if (wcscmp(Param1, L"rect") == 0) {
+			js_newobject(Param2);
+			js_pushnumber(Param2, p->m_rcItem.left);
+			js_setproperty(Param2, -2, L"left");
+			js_pushnumber(Param2, p->m_rcItem.top);
+			js_setproperty(Param2, -2, L"top");
+			js_pushnumber(Param2, p->m_rcItem.bottom);
+			js_setproperty(Param2, -2, L"bottom");
+			js_pushnumber(Param2, p->m_rcItem.right);
+			js_setproperty(Param2, -2, L"right");
+		}
 		break;
 	}
 	case Proc_JsPut: {
@@ -728,6 +739,14 @@ ZEXPORT ZuiVoid ZCALL ZuiControlRegNotify(ZuiControl p, ZNotifyProc pNotify) {
 		p->m_pNotify = pNotify;
 	}
 }
+
+ZEXPORT ZuiVoid ZCALL ZuiClientToScreen(ZuiControl p, ZuiPoint pt) {
+	if (p && pt) {
+		ClientToScreen(p->m_pManager->m_hWndPaint, pt);
+	}
+}
+
+
 //-------------------------------------------------------------------------------------------------
 
 ZEXPORT ZuiControl ZCALL ZuiControlFindName(ZuiControl p, ZuiText Name) {

@@ -22,7 +22,7 @@ static int jsonaccept(js_State *J, int t)
 static void jsonexpect(js_State *J, int t)
 {
 	if (!jsonaccept(J, t))
-		js_syntaxerror(J, L"JSON: unexpected token: %s (expected %s)",
+		js_syntaxerror(J, L"JSON: unexpected token: %ls (expected %ls)",
 				jsY_tokenstring(J->lookahead), jsY_tokenstring(t));
 }
 
@@ -49,7 +49,7 @@ static void jsonvalue(js_State *J)
 			return;
 		do {
 			if (J->lookahead != TK_STRING)
-				js_syntaxerror(J, L"JSON: unexpected token: %s (expected string)", jsY_tokenstring(J->lookahead));
+				js_syntaxerror(J, L"JSON: unexpected token: %ls (expected string)", jsY_tokenstring(J->lookahead));
 			name = J->text;
 			jsonnext(J);
 			jsonexpect(J, ':');

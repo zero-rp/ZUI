@@ -100,6 +100,7 @@ static void Control_prototype_call(js_State *J)
 	ZuiText name = js_getcfunctionname(J, -(js_gettop(J)+1));
 	ZuiControlCall(Proc_JsCall, p, name, J, NULL);
 }
+//属性
 static int Control_has(js_State *J, void *p, const wchar_t *name) {
 	if (ZuiControlCall(Proc_JsHas, p, name, J, NULL)) {
 		js_newcfunction(J, Control_prototype_call, name, 0);
@@ -133,6 +134,7 @@ void ZuiBuilderJs_Control(js_State *J)
 	js_newcconstructor(J, new_Control, new_Control, L"Control",0);
 	js_defglobal(J, L"Control", JS_DONTENUM);
 }
+//----------------辅助函数
 //查找控件
 static void ZuiJsBind_Call_GetByName(js_State *J) {
 	if (js_isstring(J, 1)) {
@@ -151,6 +153,28 @@ static void ZuiJsBind_Call_GetByName(js_State *J) {
 	}
 	js_pushundefined(J);
 }
+static void ZuiJsBind_Call_ClientToScreen(js_State *J) {
+	if (js_isuserdata(J, 1, TAG) && js_isobject(J,2)) {
+		ZuiControl p = js_touserdata(J, 1, TAG);
+		if (p)
+		{
+			js_getproperty(J, 2, "x");
+			int x = js_toint32(J, -1);
+			js_getproperty(J, 2, "y");
+			int y = js_toint32(J, -1);
+			ZPoint pt = { x,y };
+			ZuiClientToScreen(p, &pt);
+			js_newobject(J);
+			js_pushnumber(J, pt.x);
+			js_setproperty(J, -2, L"x");
+			js_pushnumber(J, pt.y);
+			js_setproperty(J, -2, L"y");
+			return;
+		}
+	}
+	js_pushundefined(J);
+}
+//----------------辅助函数结束
 ZuiVoid ZuiBuilderJs_pushControl(js_State *J, ZuiControl cp) {
 	if (!cp)
 		return;
@@ -192,6 +216,9 @@ ZEXPORT ZuiBool ZCALL ZuiBuilderJs(js_State *J) {
 
 	js_newcfunction(J, ZuiJsBind_Call_GetByName, L"GetByName", 0);
 	js_setglobal(J, L"GetByName");
+
+	js_newcfunction(J, ZuiJsBind_Call_ClientToScreen, L"ClientToScreen", 0);
+	js_setglobal(J, L"ClientToScreen");
 
 	js_newcfunction(J, ZuiJsBind_Call_LayoutLoad, L"LayoutLoad", 0);
 	js_setglobal(J, L"LayoutLoad");
