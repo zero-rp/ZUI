@@ -98,6 +98,9 @@ ZEXPORT ZuiVoid ZCALL ZuiMsgBox() {
 	return;
 }
 ZEXPORT ZuiBool ZCALL ZuiIsPointInRect(ZuiRect Rect, ZuiPoint pt) {
+	
+	return PtInRect(Rect, *(POINT *)pt);
+	/*
 	if (pt->x <= Rect->Left) {
 		return FALSE;
 	}
@@ -111,6 +114,7 @@ ZEXPORT ZuiBool ZCALL ZuiIsPointInRect(ZuiRect Rect, ZuiPoint pt) {
 	if (pt->y >= Rect->Height + Rect->Top) {
 		return FALSE;
 	}
-
+	
 	return TRUE;
+	*/
 }

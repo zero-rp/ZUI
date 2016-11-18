@@ -47,7 +47,7 @@ ZEXPORT ZuiAny ZCALL ZuiSplitterBarProc(ZuiInt ProcId, ZuiControl cp, ZuiSplitte
 					ZuiControl np = ZuiControlCall(Proc_Layout_GetItemAt, cp->m_pParent, index + 1, NULL, NULL);//下一个控件
 					if (lp && np) {
 						if (cp->m_rcItem.right - cp->m_rcItem.left < cp->m_rcItem.bottom - cp->m_rcItem.top) {
-							if (event->ptMouse.x - lp->m_rcItem.left > lp->m_cxyMin.cx) {
+							if (event->ptMouse.x - lp->m_rcItem.left > lp->m_cxyMin.cx && np->m_rcItem.right - lp->m_rcItem.left - event->ptMouse.x + lp->m_rcItem.left - cp->m_rcItem.right + cp->m_rcItem.left > np->m_cxyMin.cx) {
 								ZuiInt width = np->m_rcItem.right - lp->m_rcItem.left;
 								ZuiControlCall(Proc_SetFixedWidth, lp, event->ptMouse.x - lp->m_rcItem.left, TRUE, NULL);
 								ZuiControlCall(Proc_SetFixedWidth, np, width - event->ptMouse.x + lp->m_rcItem.left - cp->m_rcItem.right + cp->m_rcItem.left, TRUE, NULL);
@@ -56,7 +56,7 @@ ZEXPORT ZuiAny ZCALL ZuiSplitterBarProc(ZuiInt ProcId, ZuiControl cp, ZuiSplitte
 								return 0;
 						}
 						else {
-							if (event->ptMouse.y - lp->m_rcItem.top > lp->m_cxyMin.cy) {
+							if (event->ptMouse.y - lp->m_rcItem.top > lp->m_cxyMin.cy && np->m_rcItem.bottom - lp->m_rcItem.top - event->ptMouse.y + lp->m_rcItem.top - cp->m_rcItem.bottom + cp->m_rcItem.top) {
 								ZuiInt height = np->m_rcItem.bottom - lp->m_rcItem.top;
 								ZuiControlCall(Proc_SetFixedHeight, lp, event->ptMouse.y - lp->m_rcItem.top, TRUE, NULL);
 								ZuiControlCall(Proc_SetFixedHeight, np, height - event->ptMouse.y + lp->m_rcItem.top - cp->m_rcItem.bottom + cp->m_rcItem.top, TRUE, NULL);

@@ -38,6 +38,7 @@ ZEXPORT ZuiAny ZCALL ZuiCodeEditProc(ZuiInt ProcId, ZuiControl cp, ZuiCodeEdit p
 		p->fnDirect(p->ptrDirect, SCI_SETMARGINWIDTHN, 2, 20);
 	}
 		break;
+
 	case Proc_OnPaintText: {
 		ZuiGraphics gp = (ZuiGraphics)Param1;
 		RECT *rc = &cp->m_rcItem;
