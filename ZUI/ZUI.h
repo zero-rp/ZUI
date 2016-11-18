@@ -187,10 +187,12 @@ extern "C"
 /*控件*/
 #include "control/Register.h"
 #include "control/window.h"
+#include "control/Virtual.h"	//虚拟控件,用来管理原生控件
 
 #include "control/ScrollBar.h"
 #include "control/Label.h"
 #include "control/Button.h"
+#include "control/SplitterBar.h"
 #ifdef WIN32
 #include "control/Browser.h"
 #endif

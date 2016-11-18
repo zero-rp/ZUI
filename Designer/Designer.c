@@ -1,9 +1,11 @@
 ﻿#include <stdio.h>
 #include <ZUI.h>
+#include "CodeEdit.h"
 ZuiControl Designer;
 
 int _stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	ZuiInit();
+	ZuiControlRegisterAdd(L"codeedit", (ZCtlProc)&ZuiCodeEditProc);
 
 	FILE*fp;
 	long flen;

@@ -13,10 +13,12 @@ BOOL ZuiControlRegister()
 	ZuiControlRegisterAdd(L"horizontallayout", (ZCtlProc)&ZuiHorizontalLayoutProc);
 	ZuiControlRegisterAdd(L"tablayout", (ZCtlProc)&ZuiTabLayoutProc);
 	ZuiControlRegisterAdd(L"tilelayout", (ZCtlProc)&ZuiTileLayoutProc);
+	ZuiControlRegisterAdd(L"virtual", (ZCtlProc)&ZuiVirtualProc);
 
 
 	ZuiControlRegisterAdd(L"window", (ZCtlProc)&ZuiWindowProc);
 	ZuiControlRegisterAdd(L"scrollbar", (ZCtlProc)&ZuiScrollBarProc);
+	ZuiControlRegisterAdd(L"splitterbar", (ZCtlProc)&ZuiSplitterBarProc);
 	ZuiControlRegisterAdd(L"label", (ZCtlProc)&ZuiLabelProc);
 	ZuiControlRegisterAdd(L"button", (ZCtlProc)&ZuiButtonProc);
 	ZuiControlRegisterAdd(L"browser", (ZCtlProc)&ZuiBrowserProc);

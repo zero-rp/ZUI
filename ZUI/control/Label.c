@@ -9,8 +9,8 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
 	case Proc_CoreInit:
 		return TRUE;
 	case Proc_OnCreate: {
-		p = (ZuiButton)malloc(sizeof(ZButton));
-		memset(p, 0, sizeof(ZButton));
+		p = (ZuiLabel)malloc(sizeof(ZLabel));
+		memset(p, 0, sizeof(ZLabel));
 		//保存原来的回调地址,创建成功后回调地址指向当前函数
 		p->old_call = cp->call;
 		return p;

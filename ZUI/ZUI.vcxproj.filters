@@ -243,6 +243,12 @@
     <ClCompile Include="core\gdi.c">
       <Filter>源文件\core</Filter>
     </ClCompile>
+    <ClCompile Include="control\Virtual.c">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\SplitterBar.c">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZUI.h">
@@ -387,6 +393,12 @@
       <Filter>头文件\core</Filter>
     </ClInclude>
     <ClInclude Include="control\ScrollBar.h">
+      <Filter>头文件\control</Filter>
+    </ClInclude>
+    <ClInclude Include="control\Virtual.h">
+      <Filter>头文件\control</Filter>
+    </ClInclude>
+    <ClInclude Include="control\SplitterBar.h">
       <Filter>头文件\control</Filter>
     </ClInclude>
   </ItemGroup>

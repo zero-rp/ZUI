@@ -106,7 +106,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 	{
 	case Proc_CoreInit: {
 		WNDCLASS wc = { 0 };
-		wc.style = 8;
+		wc.style = 11;
 		wc.cbClsExtra = 0;
 		wc.cbWndExtra = 0;
 		wc.hIcon = NULL;

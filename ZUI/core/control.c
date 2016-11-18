@@ -340,7 +340,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		if ((LONG)Param1 < 0)
 			return 0;
 		p->m_cxyFixed.cx = (LONG)Param1;
-		ZuiControlNeedParentUpdate(p);
+		if (!Param2)
+			ZuiControlNeedParentUpdate(p);
 		break;
 	}
 	case Proc_GetFixedHeight: {
@@ -351,7 +352,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		if ((LONG)Param1 < 0)
 			return 0;
 		p->m_cxyFixed.cy = (LONG)Param1;
-		ZuiControlNeedParentUpdate(p);
+		if (!Param2)
+			ZuiControlNeedParentUpdate(p);
 		break;
 	}
 	case Proc_GetRelativePos: {
