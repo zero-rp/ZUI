@@ -82,7 +82,7 @@ ZEXPORT ZuiVoid ZCALL ZuiDrawRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt L
 	if (Graphics){
 		void *pen;
 		GdipCreatePen1(Color, (ZuiReal)LineWidth, 2, &pen);
-		GdipDrawRectangleI(Graphics->graphics, pen, Left, Top, Width, Height);
+		GdipDrawRectangleI(Graphics->graphics, pen, Left, Top, Width - 1, Height - 1);
 		GdipDeletePen(pen);
 	}
 }

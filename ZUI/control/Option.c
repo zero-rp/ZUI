@@ -46,7 +46,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
 					ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
 				}
 				else {
-					ZuiDrawFillRect(gp, p->m_ColorSelected, rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1);
+					ZuiDrawFillRect(gp, p->m_ColorSelected, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
 				}
 			}
 			else if (((ZuiButton)p->old_udata)->type == 1) {
@@ -55,7 +55,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
 					ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
 				}
 				else {
-					ZuiDrawFillRect(gp, p->m_ColorSelectedHot, rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1);
+					ZuiDrawFillRect(gp, p->m_ColorSelectedHot, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
 				}
 			}
 			else if (((ZuiButton)p->old_udata)->type == 2) {
@@ -64,7 +64,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
 					ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
 				}
 				else {
-					ZuiDrawFillRect(gp, p->m_ColorSelectedPushed, rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1);
+					ZuiDrawFillRect(gp, p->m_ColorSelectedPushed, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
 				}
 			}
 			return 0;//选择状态下不由按钮控件绘制

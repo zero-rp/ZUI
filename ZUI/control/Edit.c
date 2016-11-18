@@ -106,15 +106,15 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 
 		if (p->MouseType == 1)
 		{
-			ZuiDrawRect(gp, ARGB(200, 0, 0, 0), rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1, 1);//鼠标悬停
+			ZuiDrawRect(gp, ARGB(200, 0, 0, 0), rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 1);//鼠标悬停
 		}
 		else if (cp->m_bFocused)
 		{
-			ZuiDrawRect(gp, ARGB(200, 34, 255, 255), rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1, 1);//焦点
+			ZuiDrawRect(gp, ARGB(200, 34, 255, 255), rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 1);//焦点
 		}
 		else
 		{
-			ZuiDrawRect(gp, ARGB(200, 0, 30, 255), rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1, 1);//通常
+			ZuiDrawRect(gp, ARGB(200, 0, 30, 255), rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 1);//通常
 		}
 		//画文本
 		ZRect r;
