@@ -36,7 +36,7 @@ ZEXPORT ZuiAny ZCALL ZuiVirtualProc(ZuiInt ProcId, ZuiControl cp, ZuiVirtual p, 
 	}
 		break;
 	case Proc_OnDestroy: {
-		CloseWindow(p->m_hwnd);
+		DestroyWindow(p->m_hwnd);
 	}
 		break;
 	default:
