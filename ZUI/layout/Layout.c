@@ -359,6 +359,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 				{
 					if (wcscmp(Param1, ((ZuiControl)(p->m_items->data[it]))->m_sName) == 0) {
 						ZuiBuilderJs_pushControl(Param2, p->m_items->data[it]);
+						return 0;
 						continue;
 					}
 				}

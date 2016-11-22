@@ -86,7 +86,8 @@ void* CALLBACK ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalL
 		int cxFixedRemaining = cxFixed;
 		for (int it2 = 0; it2 < darray_len(op->m_items); it2++) {
 			ZuiControl pControl = (ZuiControl)(op->m_items->data[it2]);
-			if (!pControl->m_bVisible) continue;
+			if (!pControl->m_bVisible)
+				continue;
 			if (pControl->m_bFloat) {
 				ZuiControlCall(Proc_Layout_SetFloatPos, cp, (void *)it2, 0, 0);
 				continue;

@@ -249,6 +249,12 @@
     <ClCompile Include="control\SplitterBar.c">
       <Filter>源文件\control</Filter>
     </ClCompile>
+    <ClCompile Include="control\Menu.c">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\MenuBar.c">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZUI.h">
@@ -399,6 +405,12 @@
       <Filter>头文件\control</Filter>
     </ClInclude>
     <ClInclude Include="control\SplitterBar.h">
+      <Filter>头文件\control</Filter>
+    </ClInclude>
+    <ClInclude Include="control\Menu.h">
+      <Filter>头文件\control</Filter>
+    </ClInclude>
+    <ClInclude Include="control\MenuBar.h">
       <Filter>头文件\control</Filter>
     </ClInclude>
   </ItemGroup>

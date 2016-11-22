@@ -36,6 +36,22 @@ ZEXPORT ZuiAny ZCALL ZuiCodeEditProc(ZuiInt ProcId, ZuiControl cp, ZuiCodeEdit p
 
 		p->fnDirect(p->ptrDirect, SCI_SETMARGINTYPEN, 2, SC_MARGIN_NUMBER);//显示行号
 		p->fnDirect(p->ptrDirect, SCI_SETMARGINWIDTHN, 2, 20);
+
+
+		const char* g_szKeywords =
+			"abstract boolean break byte case catch char class const continue debugger default delete do double else enum export extends final finally float for from function goto if implements import in instanceof int interface let long native new null of package private protected public return short static super switch synchronized this throw throws transient try typeof var void volatile while with true false prototype";
+		
+		p->fnDirect(p->ptrDirect, SCI_SETLEXER, SCLEX_CPP,0); //C++语法解析
+		p->fnDirect(p->ptrDirect, SCI_SETKEYWORDS, 0, (sptr_t)g_szKeywords);//设置关键字
+																 // 下面设置各种语法元素前景色
+		p->fnDirect(p->ptrDirect, SCI_STYLESETFORE, SCE_C_WORD, 0x00FF0000);   //关键字
+		p->fnDirect(p->ptrDirect, SCI_STYLESETFORE, SCE_C_STRING, 0x001515A3); //字符串
+		p->fnDirect(p->ptrDirect, SCI_STYLESETFORE, SCE_C_CHARACTER, 0x001515A3); //字符
+		p->fnDirect(p->ptrDirect, SCI_STYLESETFORE, SCE_C_PREPROCESSOR, 0x00808080);//预编译开关
+		p->fnDirect(p->ptrDirect, SCI_STYLESETFORE, SCE_C_COMMENT, 0x00008000);//块注释
+		p->fnDirect(p->ptrDirect, SCI_STYLESETFORE, SCE_C_COMMENTLINE, 0x00008000);//行注释
+		p->fnDirect(p->ptrDirect, SCI_STYLESETFORE, SCE_C_COMMENTDOC, 0x00008000);//文档注释（/**开头）
+
 	}
 		break;
 

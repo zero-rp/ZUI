@@ -188,6 +188,8 @@ extern "C"
 #include "control/Register.h"
 #include "control/window.h"
 #include "control/Virtual.h"	//虚拟控件,用来管理原生控件
+#include "control/Menu.h"
+#include "control/MenuBar.h"
 
 #include "control/ScrollBar.h"
 #include "control/Label.h"

@@ -458,6 +458,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 	case Proc_OnPaintText: {
 		ZuiGraphics gp = (ZuiGraphics)Param1;
 		RECT *rc = &p->m_rcItem;
+
 		break;
 	}
 	case Proc_OnPaintBorder: {
@@ -527,7 +528,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 			}
 		}
 		else if (wcscmp(Param1, L"visible") == 0) ZuiControlCall(Proc_SetVisible, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
-		if (wcscmp(Param1, L"pos") == 0) {
+		else if (wcscmp(Param1, L"pos") == 0) {
 			RECT rcPos = { 0 };
 			ZuiText pstr = NULL;
 			rcPos.left = _tcstol(Param2, &pstr, 10);  ASSERT(pstr);
@@ -538,6 +539,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 			ZuiControlCall(Proc_SetFixedWidth, p, rcPos.right - rcPos.left, NULL, NULL);
 			ZuiControlCall(Proc_SetFixedHeight, p, rcPos.bottom - rcPos.top, NULL, NULL);
 		}
+		else if (wcscmp(Param1, L"enabled") == 0) ZuiControlCall(Proc_SetEnabled, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
 		else {
 			ZuiAttribute att;
 			rb_node *old = rb_search((key_t)Zui_Hash(Param1), p->m_rAttribute);
@@ -585,6 +587,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 			js_pushnumber(Param2, p->m_rcItem.right);
 			js_setproperty(Param2, -2, L"right");
 		}
+		else if (wcscmp(Param1, L"enabled") == 0) js_pushboolean(Param2, p->m_bEnabled);
 		break;
 	}
 	case Proc_JsPut: {
@@ -615,6 +618,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 
 		}
 		else if (wcscmp(Param1, L"visible") == 0) ZuiControlCall(Proc_SetVisible, p, js_toboolean(J, -1), NULL, NULL);
+		else if (wcscmp(Param1, L"enabled") == 0) ZuiControlCall(Proc_SetEnabled, p, js_toboolean(J, -1), NULL, NULL);
 		else
 		{
 			ZuiAttribute att;
@@ -627,6 +631,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 				att = malloc(sizeof(ZAttribute));
 				rb_insert((key_t)Zui_Hash(Param1), att, p->m_rAttribute);
 			}
+
 			if (js_iscallable(J, -1)) {
 				att->type = ZAttType_JsCall;
 				js_Object *obj = js_toobject(J, -1);
