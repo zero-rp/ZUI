@@ -36,7 +36,15 @@ ZEXPORT ZuiAny ZCALL ZuiVirtualProc(ZuiInt ProcId, ZuiControl cp, ZuiVirtual p, 
 	}
 		break;
 	case Proc_OnDestroy: {
-		DestroyWindow(p->m_hwnd);
+		if (p->m_hwnd)
+			DestroyWindow(p->m_hwnd);
+		free(p);
+	}
+		break;
+	case Proc_Virtual_SetHost: {
+		if (p->m_hwnd)
+			DestroyWindow(p->m_hwnd);
+		p->m_hwnd = Param1;
 	}
 		break;
 	default:

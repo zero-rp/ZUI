@@ -5,9 +5,9 @@
 //
 //
 
-static UINT MapKeyState()
+static ZuiInt MapKeyState()
 {
-	UINT uState = 0;
+	ZuiInt uState = 0;
 	if (GetKeyState(VK_CONTROL) < 0) uState |= MK_CONTROL;
 	if (GetKeyState(VK_RBUTTON) < 0) uState |= MK_RBUTTON;
 	if (GetKeyState(VK_LBUTTON) < 0) uState |= MK_LBUTTON;
@@ -20,23 +20,23 @@ typedef struct tagFINDTABINFO
 {
 	ZuiControl pFocus;
 	ZuiControl pLast;
-	BOOL bForward;
-	BOOL bNextIsIt;
+	ZuiBool bForward;
+	ZuiBool bNextIsIt;
 } FINDTABINFO;
 
 typedef struct tagFINDSHORTCUT
 {
 	TCHAR ch;
-	BOOL bPickNext;
+	ZuiBool bPickNext;
 } FINDSHORTCUT;
 //定时器结构
 typedef struct tagTIMERINFO
 {
 	ZuiControl pSender;	//接收时钟消息的控件
-	UINT nLocalID;		//时钟ID
+	ZuiInt nLocalID;		//时钟ID
 	HWND hWnd;			//窗口句柄
-	UINT uWinTimer;		
-	BOOL bKilled;
+	ZuiInt uWinTimer;		
+	ZuiBool bKilled;
 } TIMERINFO;
 
 

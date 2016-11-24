@@ -34,8 +34,8 @@ ZEXPORT ZuiAny ZCALL ZuiCodeEditProc(ZuiInt ProcId, ZuiControl cp, ZuiCodeEdit p
 		p->fnDirect(p->ptrDirect, SCI_SETCARETLINEVISIBLE, TRUE, NULL);//高亮当前行
 		p->fnDirect(p->ptrDirect, SCI_SETCARETLINEBACK, 0xb0ffff, NULL);
 
-		p->fnDirect(p->ptrDirect, SCI_SETMARGINTYPEN, 2, SC_MARGIN_NUMBER);//显示行号
-		p->fnDirect(p->ptrDirect, SCI_SETMARGINWIDTHN, 2, 20);
+		p->fnDirect(p->ptrDirect, SCI_SETMARGINTYPEN, 1, SC_MARGIN_NUMBER);//显示行号
+		p->fnDirect(p->ptrDirect, SCI_SETMARGINWIDTHN, 1, 32);
 
 
 		const char* g_szKeywords =
@@ -51,7 +51,43 @@ ZEXPORT ZuiAny ZCALL ZuiCodeEditProc(ZuiInt ProcId, ZuiControl cp, ZuiCodeEdit p
 		p->fnDirect(p->ptrDirect, SCI_STYLESETFORE, SCE_C_COMMENT, 0x00008000);//块注释
 		p->fnDirect(p->ptrDirect, SCI_STYLESETFORE, SCE_C_COMMENTLINE, 0x00008000);//行注释
 		p->fnDirect(p->ptrDirect, SCI_STYLESETFORE, SCE_C_COMMENTDOC, 0x00008000);//文档注释（/**开头）
+		
+		p->fnDirect(p->ptrDirect, SCI_STYLESETEOLFILLED, SCE_C_DEFAULT, TRUE);
+		p->fnDirect(p->ptrDirect, SCI_STYLESETEOLFILLED, SCE_C_COMMENTLINE, TRUE);
+		p->fnDirect(p->ptrDirect, SCI_STYLESETEOLFILLED, SCE_C_COMMENT, TRUE);
+		p->fnDirect(p->ptrDirect, SCI_STYLESETEOLFILLED, SCE_C_COMMENTDOC, TRUE);
 
+		p->fnDirect(p->ptrDirect, SCI_SETPROPERTY, "fold", "1");//开启代码折叠
+		//p->fnDirect(p->ptrDirect, SCI_SETPROPERTY, "fold.compact", "0");
+
+		//p->fnDirect(p->ptrDirect, SCI_SETPROPERTY, "fold.comment", "1");
+		//p->fnDirect(p->ptrDirect, SCI_SETPROPERTY, "fold.preprocessor", "1");
+
+		// Disable track preprocessor to avoid incorrect detection.
+		// In the most of cases, the symbols are defined outside of file.
+		//p->fnDirect(p->ptrDirect, SCI_SETPROPERTY, "lexer.cpp.track.preprocessor", "0");
+		//p->fnDirect(p->ptrDirect, SCI_SETPROPERTY, "lexer.cpp.backquoted.strings", "1");
+
+		p->fnDirect(p->ptrDirect, SCI_SETMARGINTYPEN, 2, SC_MARGIN_SYMBOL);//页边类型 
+		p->fnDirect(p->ptrDirect, SCI_SETMARGINMASKN, 2, SC_MASK_FOLDERS); //页边掩码 
+		p->fnDirect(p->ptrDirect, SCI_SETMARGINWIDTHN, 2, 11); //页边宽度 
+		p->fnDirect(p->ptrDirect, SCI_SETMARGINSENSITIVEN, 2, TRUE); //响应鼠标消息 
+
+																	  // 折叠标签样式 
+		p->fnDirect(p->ptrDirect, SCI_MARKERDEFINE, SC_MARKNUM_FOLDER, SC_MARK_CIRCLEPLUS);
+		p->fnDirect(p->ptrDirect, SCI_MARKERDEFINE, SC_MARKNUM_FOLDEROPEN, SC_MARK_CIRCLEMINUS);
+		p->fnDirect(p->ptrDirect, SCI_MARKERDEFINE, SC_MARKNUM_FOLDEREND, SC_MARK_CIRCLEPLUSCONNECTED);
+		p->fnDirect(p->ptrDirect, SCI_MARKERDEFINE, SC_MARKNUM_FOLDEROPENMID, SC_MARK_CIRCLEMINUSCONNECTED);
+		p->fnDirect(p->ptrDirect, SCI_MARKERDEFINE, SC_MARKNUM_FOLDERMIDTAIL, SC_MARK_TCORNERCURVE);
+		p->fnDirect(p->ptrDirect, SCI_MARKERDEFINE, SC_MARKNUM_FOLDERSUB, SC_MARK_VLINE);
+		p->fnDirect(p->ptrDirect, SCI_MARKERDEFINE, SC_MARKNUM_FOLDERTAIL, SC_MARK_LCORNERCURVE);
+
+		// 折叠标签颜色 
+		p->fnDirect(p->ptrDirect, SCI_MARKERSETBACK, SC_MARKNUM_FOLDERSUB, 0xa0a0a0);
+		p->fnDirect(p->ptrDirect, SCI_MARKERSETBACK, SC_MARKNUM_FOLDERMIDTAIL, 0xa0a0a0);
+		p->fnDirect(p->ptrDirect, SCI_MARKERSETBACK, SC_MARKNUM_FOLDERTAIL, 0xa0a0a0);
+
+		p->fnDirect(p->ptrDirect, SCI_SETFOLDFLAGS, 16 | 4, 0); //如果折叠就在折叠行的上下各画一条横线 
 	}
 		break;
 

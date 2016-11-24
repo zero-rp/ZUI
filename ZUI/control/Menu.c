@@ -12,7 +12,10 @@ ZEXPORT ZuiAny ZCALL ZuiMenuProc(ZuiInt ProcId, ZuiControl cp, ZuiMenu p, ZuiAny
 		p = (ZuiMenu)malloc(sizeof(ZMenu));
 		memset(p, 0, sizeof(ZMenu));
 		//保存原来的回调地址,创建成功后回调地址指向当前函数
-		p->old_call = cp->call;
+		p->old_udata = ZuiWindowProc(Proc_OnCreate, cp, 0, 0, 0, 0);
+		p->old_call = (ZCtlProc)&ZuiWindowProc;
+		ZuiControlCall(Proc_Window_SetComBo, cp, TRUE, NULL, NULL);
+		ZuiControlCall(Proc_SetVisible, cp, FALSE, NULL, NULL);
 		return p;
 	}
 		break;
@@ -27,7 +30,7 @@ ZEXPORT ZuiAny ZCALL ZuiMenuProc(ZuiInt ProcId, ZuiControl cp, ZuiMenu p, ZuiAny
 	default:
 		break;
 	}
-	return p->old_call(ProcId, cp,0, Param1, Param2, Param3);
+	return p->old_call(ProcId, p->old_call, p->old_udata, Param1, Param2, Param3);
 }
 
 

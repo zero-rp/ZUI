@@ -17,8 +17,8 @@
 /**按钮控件结构*/
 typedef struct _ZMenuBar
 {
-
 	ZCtlProc old_call;
+	ZuiAny old_udata;
 }*ZuiMenuBar, ZMenuBar;
 ZEXPORT ZuiAny ZCALL ZuiMenuBarProc(ZuiInt ProcId, ZuiControl cp, ZuiMenuBar p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 

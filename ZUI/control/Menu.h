@@ -17,8 +17,8 @@
 /**按钮控件结构*/
 typedef struct _ZMenu
 {
-	ZuiRes font;	//字体控制
 	ZCtlProc old_call;
+	ZuiAny old_udata;
 }*ZuiMenu, ZMenu;
 ZEXPORT ZuiAny ZCALL ZuiMenuProc(ZuiInt ProcId, ZuiControl cp, ZuiMenu p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 

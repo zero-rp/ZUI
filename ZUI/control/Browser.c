@@ -320,7 +320,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
 				flags |= WKE_MBUTTON;
 			if (event->wParam & MK_RBUTTON)
 				flags |= WKE_RBUTTON;
-			BOOL handled = wkeFireMouseWheelEvent(p->view, pt.x, pt.y, delta, flags);
+			ZuiBool handled = wkeFireMouseWheelEvent(p->view, pt.x, pt.y, delta, flags);
 			if (handled)
 				return 0;
 			break;

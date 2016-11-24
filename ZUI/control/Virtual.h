@@ -13,7 +13,7 @@
 */
 #ifndef __Virtual_H__
 #define __Virtual_H__
-
+#define	Proc_Virtual_SetHost				601	///添加控件
 /**按钮控件结构*/
 typedef struct _ZVirtual
 {

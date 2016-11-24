@@ -14,6 +14,11 @@
 #ifndef __ZUI_H__
 #define __ZUI_H__
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif
+
 /*系统头文件*/
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -90,7 +95,7 @@ typedef float		ZuiReal;
 #ifdef _WIN64
 typedef int64_t		ZuiInt;
 #else
-typedef int32_t		ZuiInt;
+typedef int			ZuiInt;
 #endif
 typedef int			ZuiBool;
 typedef void		ZuiVoid;
@@ -161,11 +166,6 @@ typedef struct tagSIZE
 
 
 #define	DEBUG_BORDER	1
-
-#if defined(__cplusplus)
-extern "C"
-{
-#endif
 
 #include "mujs/mujs.h"
 /*基础辅助函数*/
