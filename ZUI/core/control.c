@@ -60,9 +60,9 @@ ZuiControl NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny
 //销毁控件
 void FreeCControlUI(ZuiControl p)
 {
-	ZuiControlCall(Proc_OnDestroy, p, NULL, NULL, NULL);
 	if (p->m_pManager != NULL)
 		ZuiPaintManagerReapObjects(p->m_pManager, p);
+	ZuiControlCall(Proc_OnDestroy, p, NULL, NULL, NULL);
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -423,6 +423,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		if (p->m_BkgImg)
 			ZuiResDBDelRes(p->m_BkgImg);
 		p->m_BkgImg = Param1;
+		ZuiControlInvalidate(p);
 		break;
 	}
 	case Proc_OnPaint: {
@@ -473,8 +474,11 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 			free(p->m_sText);
 		if (p->m_sToolTip)
 			free(p->m_sToolTip);
+		if(p->m_BkgImg)
+			ZuiResDBDelRes(p->m_BkgImg);
 		if(p->m_pParent)
 			ZuiControlCall(Proc_Layout_Remove, p->m_pParent, p, TRUE, NULL);
+		free(p);
 		break;
 	}
 	case Proc_SetAttribute: {

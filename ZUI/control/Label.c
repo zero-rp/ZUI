@@ -16,6 +16,14 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
 		return p;
 	}
 		break;
+	case Proc_OnDestroy: {
+		ZCtlProc old_call = p->old_call;
+
+		free(p);
+
+		return old_call(ProcId, cp, 0, Param1, Param2, Param3);
+		break;
+	}
 	case Proc_OnPaintText: {
 		ZuiGraphics gp = (ZuiGraphics)Param1;
 		RECT *rc = &cp->m_rcItem;

@@ -194,7 +194,9 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 			}
 		}
 		/*字节*/else if (db->type == ZRESDBT_STREAM) {
-
+			buflen = _wtoi(arr[2]);
+			buf = malloc(buflen);
+			memcpy(buf, _wtoi(arr[1]), buflen);
 		}
 		/*网络*/else if (db->type == ZRESDBT_URL) {
 			const wchar_t *parseptr1;

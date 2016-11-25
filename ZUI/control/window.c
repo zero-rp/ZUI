@@ -121,7 +121,13 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 		break;
 	}
 	case Proc_OnDestroy: {
-		CloseWindow(p->m_hWnd);
+		DestroyWindow(p->m_hWnd);
+		ZCtlProc old_call = p->old_call;
+		ZuiAny old_udata = p->old_udata;
+
+		free(p);
+
+		return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
 		break;
 	}
 	case Proc_OnCreate: {

@@ -19,6 +19,13 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
 			ZuiResDBDelRes(p->m_ResFocused);
 		if (p->m_ResDisabled)
 			ZuiResDBDelRes(p->m_ResDisabled);
+
+		ZCtlProc old_call = p->old_call;
+		ZuiAny old_udata = p->old_udata;
+
+		free(p);
+
+		return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
 		break;
 	}
 	case Proc_OnCreate: {

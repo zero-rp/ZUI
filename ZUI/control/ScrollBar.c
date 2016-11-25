@@ -19,6 +19,14 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
 		return p;
 	}
 		break;
+	case Proc_OnDestroy: {
+		ZCtlProc old_call = p->old_call;
+
+		free(p);
+
+		return old_call(ProcId, cp, 0, Param1, Param2, Param3);
+		break;
+	}
 	case Proc_OnPaint: {
 		//调整绘制顺序
 		ZuiControlCall(Proc_OnPaintBkColor, cp, Param1, Param2, NULL);

@@ -17,6 +17,15 @@ void* CALLBACK ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayou
 		return p;
 		break;
 	}
+	case Proc_OnDestroy: {
+		ZCtlProc old_call = p->old_call;
+		ZuiAny old_udata = p->old_udata;
+
+		free(p);
+
+		return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+		break;
+	}
 	case Proc_SetPos: {
 		ZuiDefaultControlProc(ProcId, cp, 0, Param1, Param2, Param3);
 		RECT rc = cp->m_rcItem;

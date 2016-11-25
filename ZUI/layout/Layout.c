@@ -20,6 +20,30 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 		return p;
 		break;
 	}
+	case Proc_OnDestroy: {
+		for (int it = darray_len(p->m_items) - 1; it >= 0; it--) {
+			ZuiControlCall(Proc_OnDestroy, p->m_items->data[it], Param1, Param2, Param3);
+		}
+		ZCtlProc old_call = p->old_call;
+		if(p->m_pHorizontalScrollBar)
+			FreeCControlUI(p->m_pHorizontalScrollBar);
+		if (p->m_pVerticalScrollBar)
+			FreeCControlUI(p->m_pVerticalScrollBar);
+		darray_destroy(p->m_items);
+		free(p);
+
+		return old_call(ProcId, cp, 0, Param1, Param2, Param3);
+		break;
+		break;
+	}
+	case Proc_SetVisible: {
+		p->old_call(Proc_SetVisible, cp, 0, Param1, Param2, Param3);
+		for (int it = darray_len(p->m_items) - 1; it >= 0; it--) {
+			ZuiControlCall(Proc_SetVisible, p->m_items->data[it], Param1, Param2, Param3);
+		}
+		return 0;
+		break;
+	}
 	case Proc_Layout_Add: {
 		if (Param1 == NULL) return FALSE;
 

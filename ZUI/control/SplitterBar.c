@@ -16,6 +16,14 @@ ZEXPORT ZuiAny ZCALL ZuiSplitterBarProc(ZuiInt ProcId, ZuiControl cp, ZuiSplitte
 		return p;
 	}
 		break;
+	case Proc_OnDestroy: {
+		ZCtlProc old_call = p->old_call;
+
+		free(p);
+
+		return old_call(ProcId, cp, 0, Param1, Param2, Param3);
+		break;
+	}
 	case Proc_OnEvent: {
 		TEventUI *event = (TEventUI *)Param1;
 		switch (event->Type)

@@ -22,6 +22,15 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
 		return p;
 	}
 		break;
+	case Proc_OnDestroy: {
+		ZCtlProc old_call = p->old_call;
+		ZuiAny old_udata = p->old_udata;
+
+		free(p);
+
+		return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+		break;
+	}
 	case Proc_OnEvent: {
 		TEventUI *event= (TEventUI *)Param1;
 		switch (event->Type)
