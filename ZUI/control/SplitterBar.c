@@ -15,7 +15,7 @@ ZEXPORT ZuiAny ZCALL ZuiSplitterBarProc(ZuiInt ProcId, ZuiControl cp, ZuiSplitte
 		p->old_call = cp->call;
 		return p;
 	}
-		break;
+						break;
 	case Proc_OnDestroy: {
 		ZCtlProc old_call = p->old_call;
 
@@ -36,15 +36,15 @@ ZEXPORT ZuiAny ZCALL ZuiSplitterBarProc(ZuiInt ProcId, ZuiControl cp, ZuiSplitte
 				SetCursor(LoadCursor(NULL, MAKEINTRESOURCE(IDC_SIZENS)));
 			return 0;
 		}
-			break;
+		break;
 		case ZEVENT_LBUTTONDOWN: {
 			p->mousedown = TRUE;
 		}
-			break;
+								 break;
 		case ZEVENT_LBUTTONUP: {
 			p->mousedown = FALSE;
 		}
-			break;
+							   break;
 		case ZEVENT_MOUSEMOVE: {
 			if (p->mousedown && cp->m_pParent)
 			{
@@ -57,8 +57,13 @@ ZEXPORT ZuiAny ZCALL ZuiSplitterBarProc(ZuiInt ProcId, ZuiControl cp, ZuiSplitte
 						if (cp->m_rcItem.right - cp->m_rcItem.left < cp->m_rcItem.bottom - cp->m_rcItem.top) {
 							if (event->ptMouse.x - lp->m_rcItem.left > lp->m_cxyMin.cx && np->m_rcItem.right - lp->m_rcItem.left - event->ptMouse.x + lp->m_rcItem.left - cp->m_rcItem.right + cp->m_rcItem.left > np->m_cxyMin.cx) {
 								ZuiInt width = np->m_rcItem.right - lp->m_rcItem.left;
+								if (p->type == 1) {
 								ZuiControlCall(Proc_SetFixedWidth, lp, event->ptMouse.x - lp->m_rcItem.left, TRUE, NULL);
-								ZuiControlCall(Proc_SetFixedWidth, np, width - event->ptMouse.x + lp->m_rcItem.left - cp->m_rcItem.right + cp->m_rcItem.left, TRUE, NULL);
+								}
+								else if (p->type == 3)
+								{
+									ZuiControlCall(Proc_SetFixedWidth, np, width - event->ptMouse.x + lp->m_rcItem.left - cp->m_rcItem.right + cp->m_rcItem.left, TRUE, NULL);
+								}
 							}
 							else
 								return 0;
@@ -66,8 +71,13 @@ ZEXPORT ZuiAny ZCALL ZuiSplitterBarProc(ZuiInt ProcId, ZuiControl cp, ZuiSplitte
 						else {
 							if (event->ptMouse.y - lp->m_rcItem.top > lp->m_cxyMin.cy && np->m_rcItem.bottom - lp->m_rcItem.top - event->ptMouse.y + lp->m_rcItem.top - cp->m_rcItem.bottom + cp->m_rcItem.top) {
 								ZuiInt height = np->m_rcItem.bottom - lp->m_rcItem.top;
-								ZuiControlCall(Proc_SetFixedHeight, lp, event->ptMouse.y - lp->m_rcItem.top, TRUE, NULL);
-								ZuiControlCall(Proc_SetFixedHeight, np, height - event->ptMouse.y + lp->m_rcItem.top - cp->m_rcItem.bottom + cp->m_rcItem.top, TRUE, NULL);
+								if (p->type == 2) {
+									ZuiControlCall(Proc_SetFixedHeight, lp, event->ptMouse.y - lp->m_rcItem.top, TRUE, NULL);
+								}
+								else if (p->type == 4)
+								{
+									ZuiControlCall(Proc_SetFixedHeight, np, height - event->ptMouse.y + lp->m_rcItem.top - cp->m_rcItem.bottom + cp->m_rcItem.top, TRUE, NULL);
+								}
 							}
 							else
 								return 0;
@@ -77,15 +87,32 @@ ZEXPORT ZuiAny ZCALL ZuiSplitterBarProc(ZuiInt ProcId, ZuiControl cp, ZuiSplitte
 					}
 				}
 
-				
+
 			}
 		}
-			break;
+							   break;
 		default:
 			break;
 		}
 	}
+					   break;
+	case Proc_SetAttribute: {
+		if (wcscmp(Param1, L"sepside") == 0) {
+			if (wcscmp(Param2, L"left") == 0) {
+				p->type = 1;
+			}
+			else if (wcscmp(Param2, L"top") == 0) {
+				p->type = 2;
+			}
+			else if (wcscmp(Param2, L"right") == 0) {
+				p->type = 3;
+			}
+			else if (wcscmp(Param2, L"bottom") == 0) {
+				p->type = 4;
+			}
+		}
 		break;
+	}
 	case Proc_GetControlFlags: {
 		return (ZuiAny)ZFLAG_SETCURSOR;
 		break;
@@ -98,7 +125,7 @@ ZEXPORT ZuiAny ZCALL ZuiSplitterBarProc(ZuiInt ProcId, ZuiControl cp, ZuiSplitte
 	default:
 		break;
 	}
-	return p->old_call(ProcId, cp,0, Param1, Param2, Param3);
+	return p->old_call(ProcId, cp, 0, Param1, Param2, Param3);
 }
 
 

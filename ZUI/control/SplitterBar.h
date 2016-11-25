@@ -14,11 +14,11 @@
 #ifndef __SplitterBar_H__
 #define __SplitterBar_H__
 
-/**按钮控件结构*/
+/**分割条结构*/
 typedef struct _ZSplitterBar
 {
 	BOOL mousedown;
-	ZuiRes font;	//字体控制
+	ZuiInt type;
 	ZCtlProc old_call;
 }*ZuiSplitterBar, ZSplitterBar;
 ZEXPORT ZuiAny ZCALL ZuiSplitterBarProc(ZuiInt ProcId, ZuiControl cp, ZuiSplitterBar p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);

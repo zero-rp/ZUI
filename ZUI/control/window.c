@@ -158,10 +158,6 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 		((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.top = 1;
 		break;
 	}
-	case Proc_SetPos: {
-		OutputDebugString(L"a");
-		break;
-	}
 	case Proc_SetText: {
 		SetWindowText(p->m_hWnd, Param1);
 		break;
