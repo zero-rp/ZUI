@@ -303,7 +303,7 @@ int mxmlRelease(mxml_node_t *node)
 }
 //--------XML树解析
 typedef int(*mxml_getc)(void *p);
-//取字符A
+//取字符
 static wchar_t mxml_string_getc(mxml_buf_t *p)
 {
 	wchar_t		ch=0;			/* Character */

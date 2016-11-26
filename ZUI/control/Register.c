@@ -14,7 +14,6 @@ BOOL ZuiControlRegister()
 	ZuiControlRegisterAdd(L"tablayout", (ZCtlProc)&ZuiTabLayoutProc);
 	ZuiControlRegisterAdd(L"tilelayout", (ZCtlProc)&ZuiTileLayoutProc);
 	ZuiControlRegisterAdd(L"virtual", (ZCtlProc)&ZuiVirtualProc);
-	ZuiControlRegisterAdd(L"menu", (ZCtlProc)&ZuiMenuProc);
 	ZuiControlRegisterAdd(L"menubar", (ZCtlProc)&ZuiMenuBarProc);
 
 	ZuiControlRegisterAdd(L"window", (ZCtlProc)&ZuiWindowProc);

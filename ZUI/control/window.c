@@ -143,11 +143,12 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 		p->m_pm = NewCPaintManagerUI();
 		p->m_OldWndProc = DefWindowProc;
 		p->root = cp;
-		p->m_hWnd = CreateWindowEx(0, L"ZUI", L"", WS_VISIBLE | WS_POPUP | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, GetModuleHandleA(NULL), p);
+		p->m_hWnd = CreateWindowEx(0, L"ZUI", L"", WS_POPUP | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, GetModuleHandleA(NULL), p);
 
 		ZuiPaintManagerInit(p->m_pm, p->m_hWnd);
 		ZuiPaintManagerAttachDialog(p->m_pm, cp);
-		ShowWindow(p->m_hWnd, SW_SHOW);
+		if (!Param1)
+			ShowWindow(p->m_hWnd, SW_SHOW);
 		return p;
 		break;
 	}

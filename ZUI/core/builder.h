@@ -13,7 +13,7 @@
 */
 #ifndef __ZUI_CORE_BUILDER_H__
 #define __ZUI_CORE_BUILDER_H__
-
+ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win);
 ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len);
 //绑定js对象
 ZuiVoid ZuiBuilderJs_pushControl(js_State *J, ZuiControl cp);

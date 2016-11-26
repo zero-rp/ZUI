@@ -1,31 +1,49 @@
 ﻿#include <ZUI.h>
 
 js_State *Global_Js;
-ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
-	mxml_node_t *tree;
+
+ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
 	mxml_node_t *node;
 	ZuiText ClassName = NULL;
 	ZuiStringFormat StringFormat = NULL;
 	ZuiBool Visible = FALSE, Enabled = TRUE;
 	ZuiControl Control;
-	ZuiControl win = NULL;//本xml对应的窗口
-	tree = mxmlLoadString(NULL, xml, len);
-
 	for (node = mxmlFindElement(tree, tree, NULL, NULL, NULL, MXML_DESCEND); node != NULL; node = mxmlWalkNext(node, NULL, MXML_DESCEND)/*node = mxmlFindElement(node, tree, NULL,NULL,NULL,MXML_DESCEND)*/) {
 		{
 			ClassName = node->value.name;
 #if !(defined NDEBUG)
 			printf("layout创建控件: 类名:%ls\r\n", ClassName);
 #endif
-			if (wcscmp(ClassName, L"Template")==0) {//模版类
+			if (wcscmp(ClassName, L"Template") == 0) {//模版类
 				ZuiAddTemplate(node);
 				node = node->next;
-				if(node)
+				if (node)
 					ClassName = node->value.name;
 				else
 					continue;
 			}
-			if (wcscmp(ClassName, L"LoadScript") == 0) {
+			if (wcscmp(ClassName, L"Menu") == 0) {//菜单类
+				ZuiAddMenu(node, win);
+				node = node->next;
+				if (node)
+					ClassName = node->value.name;
+				else
+					continue;
+			}
+			if (wcscmp(ClassName, L"Include") == 0) {//包含文件
+				ZuiText src = NULL;
+				for (size_t i = 0; i < node->value.num_attrs; i++)
+				{
+					if (wcscmp(node->value.attrs[i].name, L"src") == 0) {
+						src = node->value.attrs[i].value;
+					}
+				}
+				ZuiRes res = ZuiResDBGetRes(src, NULL);
+				mxml_node_t *new_node = ZuiLayoutLoad(res->p, res->plen);
+				mxmlAdd(node->parent ? node->parent : node, MXML_ADD_BEFORE, node, new_node);
+				ZuiResDBDelRes(res);
+			}
+			else if (wcscmp(ClassName, L"LoadScript") == 0) {
 				ZuiText src = NULL;
 				for (size_t i = 0; i < node->value.num_attrs; i++)
 				{
@@ -43,7 +61,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
 					//上级控件已存在且当前欲创建的子窗口不为窗口对象
 					if (Control) {
 						node->user_data = Control;//保存控件到节点
-						/*添加到容器*/
+												  /*添加到容器*/
 						ZuiControlCall(Proc_Layout_Add, node->parent->user_data, Control, NULL, NULL);
 					}
 					else {
@@ -55,7 +73,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
 					}
 				}
 				else if (!node->parent->user_data && wcsicmp(ClassName, L"window") == 0) {
-					//上级控件已存在且当前欲创建的子窗口不为窗口对象
+					//上级控件已存在且当前欲创建的子窗口为窗口对象
 					if (Control) {
 						node->user_data = Control;//保存控件到节点
 						win = Control;
@@ -71,6 +89,12 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
 			}
 		}
 	}
+}
+
+ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
+	mxml_node_t *tree;
+	tree = mxmlLoadString(NULL, xml, len);
+	ZuiControl win = ZuiLayoutLoadNode(tree, NULL);
 	/*解析完成后释放xml树*/
 	mxmlDelete(tree);
 	return win;

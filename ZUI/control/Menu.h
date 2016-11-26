@@ -14,13 +14,13 @@
 #ifndef __MENU_H__
 #define __MENU_H__
 
+ZuiVoid ZuiAddMenu(mxml_node_t *node, ZuiControl win);
+
 /**按钮控件结构*/
 typedef struct _ZMenu
 {
-	ZCtlProc old_call;
-	ZuiAny old_udata;
+	ZuiControl win;
 }*ZuiMenu, ZMenu;
-ZEXPORT ZuiAny ZCALL ZuiMenuProc(ZuiInt ProcId, ZuiControl cp, ZuiMenu p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 
 
 #endif	//__MENU_H__

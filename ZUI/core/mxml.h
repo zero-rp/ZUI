@@ -62,7 +62,7 @@ typedef struct mxml_buf			/**** XML 节点 ****/
 }mxml_buf_t;
 
 mxml_node_t *mxmlLoadString(mxml_node_t *top, ZuiAny s, ZuiInt len);
-
+void mxmlAdd(mxml_node_t *parent, int where, mxml_node_t *child, mxml_node_t *node);
 mxml_node_t *mxmlFindElement(mxml_node_t *node, mxml_node_t *top, const char *name, const char *attr, const char *value, int descend);
 mxml_node_t *mxmlFindPath(mxml_node_t *top, const char  *path);
 mxml_node_t *mxmlWalkNext(mxml_node_t *node, mxml_node_t *top, int descend);
