@@ -421,6 +421,7 @@
     <None Include="res.zip">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="res\res.zip" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Zui.rc">

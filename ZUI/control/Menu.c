@@ -83,6 +83,7 @@ ZuiVoid ZuiAddMenu(mxml_node_t *node, ZuiControl win) {
 		p->win = NewZuiControl(L"window", TRUE, NULL, NULL);
 		node->user_data = p->win;
 		ZuiLayoutLoadMenuNode(node, p->win);
+
 	}
 }
 

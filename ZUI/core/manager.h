@@ -110,7 +110,7 @@ typedef struct _ZuiPaintManager
 	HWND m_hwndTooltip;				///提示窗口句柄
 	TOOLINFO m_ToolTip;				///提示消息
 	int m_iHoverTime;				///鼠标悬停世间
-	BOOL m_bShowUpdateRect;			///是否显示更新区域 调试使用
+	ZuiBool m_bShowUpdateRect;			///是否显示更新区域 调试使用
 	//
 	ZuiControl m_pRoot;				///控件树根节点
 	ZuiControl m_pFocus;			///处于获得焦点状态的控件
@@ -124,26 +124,26 @@ typedef struct _ZuiPaintManager
 	SIZE m_szMaxWindow;				///窗口最大大小
 	SIZE m_szInitWindowSize;		///窗体初始化时的大小
 	UINT m_uTimerID;				///当前定时器ID
-	BOOL m_bFirstLayout;			///是否是第一次布局 相当于窗口初始化
-	BOOL m_bUpdateNeeded;			///是否需要更新界面布局
-	BOOL m_bFocusNeeded;			///是否需要焦点
-	BOOL m_bOffscreenPaint;			///是否需要开双缓存绘图
+	ZuiBool m_bFirstLayout;			///是否是第一次布局 相当于窗口初始化
+	ZuiBool m_bUpdateNeeded;			///是否需要更新界面布局
+	ZuiBool m_bFocusNeeded;			///是否需要焦点
+	ZuiBool m_bOffscreenPaint;			///是否需要开双缓存绘图
 
 	BYTE m_nOpacity;				///窗口透明度
-	BOOL m_bLayered;				///是否分层
+	ZuiBool m_bLayered;				///是否分层
 	RECT m_rcLayeredInset;			///
-	BOOL m_bLayeredChanged;			///
+	ZuiBool m_bLayeredChanged;			///
 	RECT m_rcLayeredUpdate;			///
 
-	BOOL m_bMouseTracking;			///是否需要支持鼠标追踪
-	BOOL m_bMouseCapture;			///是否需要支持鼠标捕获
-	BOOL m_bIsPainting;				///是否正在绘制
-	BOOL m_bUsedVirtualWnd;
+	ZuiBool m_bMouseTracking;			///是否需要支持鼠标追踪
+	ZuiBool m_bMouseCapture;			///是否需要支持鼠标捕获
+	ZuiBool m_bIsPainting;				///是否正在绘制
+	ZuiBool m_bUsedVirtualWnd;
 	//
 	js_State *m_js;				///
 	//
 	DArray *m_aTimers;				///时钟句柄数组
-	DArray *m_aPostPaintControls;	///发送绘制请求的控件集合
+	DArray *m_aPostPaintControls;	///在绘制完成后发送绘制请求的控件集合
 	DArray *m_aFoundControls;		///
 } *ZuiPaintManager, IZuiPaintManager;
 

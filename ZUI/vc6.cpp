@@ -1,6 +1,6 @@
 ﻿#include <stdio.h>
 #include <ZUI.h>
-#if (defined NDEBUG)
+#if (defined NDEBUG) && (defined AGG)
 void __cdecl operator delete(void* p, unsigned int)
 {
 	free(p);
@@ -14,9 +14,9 @@ void __cdecl operator delete[](void * p, unsigned int)
 #endif
 
 #if (defined NDEBUG)
-int __security_cookie = 0;     //比错误提示的名称少一个下划线
+extern "C" int __security_cookie = 0;     //比错误提示的名称少一个下划线
 
-__declspec(naked) __int64 _ftol2_sse(double v)
+extern "C" __declspec(naked) __int64 _ftol2_sse(double v)
 {
 	__asm {
 		push        ebp
