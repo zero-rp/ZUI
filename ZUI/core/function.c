@@ -7,23 +7,39 @@ void Rect_Join(RECT *rc, RECT *rc1)
 	if (rc1->bottom > rc->bottom) rc->bottom = rc1->bottom;
 }
 
-void * ZCALL Zui_Hash(wchar_t* str){
-	__asm{
-		mov esi, str
-			xor edx, edx
-		hash_loop :
-		movsx eax, byte ptr ds : [esi]
-		movsx eax, byte ptr ds : [esi]
-			cmp al, ah
-			je compare_hash
-			ror edx, 0x7
-			add edx, eax
-			inc esi
-			inc esi
-			jmp hash_loop
-		compare_hash :
-		mov eax, edx
+void * ZCALL Zui_Hash(wchar_t* str) {
+	/*
+		__asm{
+			mov esi, str
+				xor edx, edx
+			hash_loop :
+			movsx eax, byte ptr ds : [esi]
+			movsx eax, byte ptr ds : [esi]
+				cmp al, ah
+				je compare_hash
+				ror edx, 0x7
+				add edx, eax
+				inc esi
+				inc esi
+				jmp hash_loop
+			compare_hash :
+			mov eax, edx
+		}
+	*/
+	register size_t hash = 0;
+	size_t ch;
+	for (long i = 0; ch = (size_t)*str++; i++)
+	{
+		if ((i & 1) == 0)
+		{
+			hash ^= ((hash << 7) ^ ch ^ (hash >> 3));
+		}
+		else
+		{
+			hash ^= (~((hash << 11) ^ ch ^ (hash >> 5)));
+		}
 	}
+	return hash;
 }
 
 ZEXPORT ZuiBool ZCALL ZuiInit() {
@@ -98,7 +114,7 @@ ZEXPORT ZuiVoid ZCALL ZuiMsgBox() {
 	return;
 }
 ZEXPORT ZuiBool ZCALL ZuiIsPointInRect(ZuiRect Rect, ZuiPoint pt) {
-	
+
 	return PtInRect(Rect, *(POINT *)pt);
 	/*
 	if (pt->x <= Rect->Left) {
@@ -114,7 +130,7 @@ ZEXPORT ZuiBool ZCALL ZuiIsPointInRect(ZuiRect Rect, ZuiPoint pt) {
 	if (pt->y >= Rect->Height + Rect->Top) {
 		return FALSE;
 	}
-	
+
 	return TRUE;
 	*/
 }
