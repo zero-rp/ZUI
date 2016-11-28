@@ -12,7 +12,7 @@
 
 static  void rb_set_parent(rb_node *rb, rb_node *p)
 {
-	rb->rb_parent_color = (rb->rb_parent_color & 3) | (unsigned long)p;
+	rb->rb_parent_color = (rb->rb_parent_color & 3) | (size_t)p;
 }
 
 static  void rb_set_color(rb_node *rb, int color)
@@ -46,7 +46,7 @@ void rb_replace_node(rb_node *victim, rb_node *new, rb_root *root);
 
 static  void rb_link_node(rb_node * node, rb_node * parent, rb_node ** rb_link)
 {
-	node->rb_parent_color = (unsigned long)parent;
+	node->rb_parent_color = (size_t)parent;
 	node->rb_left = node->rb_right = NULL;
 
 	*rb_link = node;

@@ -29,14 +29,14 @@
 	extern "C" {
 #endif
 
-	typedef int key_t;
+	typedef size_t key_t;
 	typedef void *data_t;
 
 	typedef struct rb_node_
 	{
 		struct rb_node_ *rb_right;
 		struct rb_node_ *rb_left;
-		unsigned long  rb_parent_color;
+		size_t  rb_parent_color;
 		key_t key;
 		data_t data;
 	}rb_node;

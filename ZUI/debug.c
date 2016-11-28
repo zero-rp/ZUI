@@ -2,6 +2,7 @@
 #include <ZUI.h>
 #if !(defined NDEBUG)
 #ifdef _WIN32
+/*
 #include "play.h"
 #pragma comment(lib, "play.lib")
 ZuiPlay play;
@@ -60,6 +61,7 @@ ZEXPORT ZuiAny ZCALL ZuiFFTProcEx(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zui
 	}
 	return ZuiDefaultControlProc(ProcId, cp, p, Param1, Param2, Param3);
 }
+*/
 #endif
 void __stdcall DLLDebug(){
 	ZuiInit();
@@ -81,9 +83,9 @@ void __stdcall DLLDebug(){
 	
 	ZuiControl cp = ZuiControlFindName(ZuiLayoutLoad(p, flen), L"Play_FFT");
 #ifdef _WIN32
-	cp->call = (ZCtlProc)ZuiFFTProcEx;
-	ZuiPaintManagerSetTimer(cp, 1000, 100);
-	play = ZPlayNew();
+	//cp->call = (ZCtlProc)ZuiFFTProcEx;
+	//ZuiPaintManagerSetTimer(cp, 1000, 100);
+	//play = ZPlayNew();
 #endif
 	ZuiMsgLoop();
 

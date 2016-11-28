@@ -28,8 +28,8 @@ enum
 
 int	chartorune(Rune *rune, const wchar_t *str);
 int	runetochar(char *str, const Rune *rune);
-int	runelen(int c);
-int	utflen(const wchar_t *s);
+size_t	runelen(int c);
+size_t	utflen(const wchar_t *s);
 
 int		isalpharune(Rune c);
 int		islowerrune(Rune c);
