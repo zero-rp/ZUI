@@ -176,7 +176,6 @@ ZEXPORT ZuiVoid ZCALL ZuiPaintManagerInit(ZuiPaintManager p, HWND hWnd)
 		p->m_hIMC = ImmGetContext(hWnd);//获取系统的输入法
 		/*屏蔽输入法*/
 		ImmAssociateContext(hWnd, NULL);
-		darray_append(m_aPreMessages, p);
 	}
 }
 //指定区域失效
@@ -294,7 +293,8 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerAttachDialog(ZuiPaintManager p, ZuiControl 
 {
 	ASSERT(IsWindow(p->m_hWndPaint));
 	// Reset any previous attachment
-	ZuiPaintManagerSetFocus(p, NULL, TRUE);
+	if (!p->m_bUnfocusPaintWindow)
+		ZuiPaintManagerSetFocus(p, NULL, TRUE);
 	p->m_pEventKey = NULL;
 	p->m_pEventHover = NULL;
 	p->m_pEventClick = NULL;

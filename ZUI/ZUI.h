@@ -200,6 +200,7 @@ typedef struct tagSIZE
 #endif
 #include "control/Edit.h"
 #include "control/Option.h"
+#include "control/List.h"
 
 /*布局*/
 #include "layout/Layout.h"				//容器基类

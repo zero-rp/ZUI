@@ -251,7 +251,7 @@ static void ZuiJsBind_Call_ZuiPopupMenu(js_State *J) {
 		js_getproperty(J, 2, "y");
 		int y = js_toint32(J, -1);
 		ZPoint pt = { x,y };
-		ZuiPopupMenu(js_tostring(J, 1),&pt);
+		ZuiPopupMenu(js_getcontext(J),js_tostring(J, 1),&pt);
 	}
 	js_pushundefined(J);
 }

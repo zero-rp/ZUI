@@ -27,6 +27,8 @@ BOOL ZuiControlRegister()
 	ZuiControlRegisterAdd(L"browser", (ZCtlProc)&ZuiBrowserProc);
 	ZuiControlRegisterAdd(L"edit", (ZCtlProc)&ZuiEditProc);
 	ZuiControlRegisterAdd(L"option", (ZCtlProc)&ZuiOptionProc);
+	ZuiControlRegisterAdd(L"list", (ZCtlProc)&ZuiListProc);
+	ZuiControlRegisterAdd(L"listitem", (ZCtlProc)&ZuiListItemProc);
 
 	/*初始化全部控件*/
 	//rb_foreach(Global_ControlClass, ZuiCoreInit);

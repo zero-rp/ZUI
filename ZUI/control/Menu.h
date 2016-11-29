@@ -19,8 +19,8 @@ typedef struct _ZMenu
 	BOOL    bExit;
 	HWND m_hWnd;
 	WNDPROC m_OldWndProc;
-
-
+	struct _ZMenu *m_aSubMenu;
+	struct _ZMenu *m_aParentMenu;
 	ZuiPaintManager m_pm;
 	ZuiControl root;
 	ZCtlProc old_call;
@@ -28,11 +28,13 @@ typedef struct _ZMenu
 }*ZuiMenu, ZMenu;
 typedef struct _ZMenuItem
 {
+
+	mxml_node_t *node;//子菜单节点
 	ZCtlProc old_call;
 	ZuiAny old_udata;
 }*ZuiMenuItem, ZMenuItem;
 ZuiMenu ZuiAddMenu(mxml_node_t *node, ZuiMenu pm);
-ZEXPORT ZuiVoid ZCALL ZuiPopupMenu(ZuiText name, ZuiPoint pt);
+ZEXPORT ZuiVoid ZCALL ZuiPopupMenu(ZuiPaintManager mp,ZuiText name, ZuiPoint pt);
 ZEXPORT ZuiAny ZCALL ZuiMenuProc(ZuiInt ProcId, ZuiControl cp, ZuiMenu p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 ZEXPORT ZuiAny ZCALL ZuiMenuItemProc(ZuiInt ProcId, ZuiControl cp, ZuiMenuItem p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 

@@ -22,22 +22,22 @@ static void jsY_error(js_State *J, const wchar_t *fmt, ...)
 
 static const wchar_t *tokenstring[] = {
 	L"(end-of-file)",
-	L"'\\x01'", L"'\\x02'", "'\\x03'", L"'\\x04'", L"'\\x05'", L"'\\x06'", L"'\\x07'",
-	L"'\\x08'", L"'\\x09'", L"'\\x0A'", L"'\\x0B'", L"'\\x0C'", L"'\\x0D'", L"'\\x0E'", L"'\\x0F'",
-	L"'\\x10'", L"'\\x11'", L"'\\x12'", L"'\\x13'", L"'\\x14'", L"'\\x15'", L"'\\x16'", L"'\\x17'",
-	L"'\\x18'", L"'\\x19'", L"'\\x1A'", L"'\\x1B'", L"'\\x1C'", L"'\\x1D'", L"'\\x1E'", L"'\\x1F'",
-	L"' '", L"'!'", L"'\"'", L"'#'", L"'$'", L"'%'", L"'&'", L"'\\''",
-	L"'('", L"')'", L"'*'", L"'+'", L"','", L"'-'", L"'.'", L"'/'",
-	L"'0'", L"'1'", L"'2'", L"'3'", L"'4'", L"'5'", L"'6'", L"'7'",
-	L"'8'", L"'9'", L":", L";", L"<", L"=", L"'>'", L"'?'",
-	L"'@'", L"'A'", L"'B'", L"'C'", L"'D'", L"'E'", L"'F'", L"'G'",
-	L"'H'", L"'I'", L"'J'", L"'K'", L"'L'", L"'M'", L"'N'", L"'O'",
-	L"'P'", L"'Q'", L"'R'", L"'S'", L"'T'", L"'U'", L"'V'", L"'W'",
-	L"'X'", L"'Y'", L"'Z'", L"'['", L"'\'", L"']'", L"'^'", L"'_'",
-	L"'`'", L"'a'", L"'b'", L"'c'", L"'d'", L"'e'", L"'f'", L"'g'",
-	L"'h'", L"'i'", L"'j'", L"'k'", L"'l'", L"'m'", L"'n'", L"'o'",
-	L"'p'", L"'q'", L"'r'", L"'s'", L"'t'", L"'u'", L"'v'", L"'w'",
-	L"'x'", L"'y'", L"'z'", L"'{'", L"'|'", L"'}'", L"'~'", L"'\\x7F'",
+	L"\\x01", L"\\x02", L"\\x03", L"\\x04", L"\\x05", L"\\x06", L"\\x07",
+	L"\\x08", L"\\x09", L"\\x0A", L"\\x0B", L"\\x0C", L"\\x0D", L"\\x0E", L"\\x0F",
+	L"\\x10", L"\\x11", L"\\x12", L"\\x13", L"\\x14", L"\\x15", L"\\x16", L"\\x17",
+	L"\\x18", L"\\x19", L"\\x1A", L"\\x1B", L"\\x1C", L"\\x1D", L"\\x1E", L"\\x1F",
+	L" ", L"!", L"\"", L"#", L"$", L"%", L"&", L"\\'",
+	L"(", L")", L"*", L"+", L",", L"-", L".", L"/",
+	L"0", L"1", L"2", L"3", L"4", L"5", L"6", L"7",
+	L"8", L"9", L":", L";", L"<", L"=", L">", L"?",
+	L"@", L"A", L"B", L"C", L"D", L"E", L"F", L"G",
+	L"H", L"I", L"J", L"K", L"L", L"M", L"N", L"O",
+	L"P", L"Q", L"R", L"S", L"T", L"U", L"V", L"W",
+	L"X", L"Y", L"Z", L"[", L"\\", L"]", L"^", L"_",
+	L"`", L"a", L"b", L"c", L"d", L"e", L"f", L"g",
+	L"h", L"i", L"j", L"k", L"l", L"m", L"n", L"o",
+	L"p", L"q", L"r", L"s", L"t", L"u", L"v", L"w",
+	L"x", L"y", L"z", L"{", L"|", L"}", L"~", L"\\x7F",
 
 	0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
 	0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
@@ -50,17 +50,17 @@ static const wchar_t *tokenstring[] = {
 
 	L"(identifier)", L"(number)", L"(string)", L"(regexp)",
 
-	L"'<='", L"'>='", L"'=='", L"'!='", L"'==='", L"'!=='",
-	L"'<<'", L"'>>'", L"'>>>'", L"'&&'", L"'||'",
-	L"'+='", L"'-='", L"'*='", L"'/='", L"'%='",
-	L"'<<='", L"'>>='", L"'>>>='", L"'&='", L"'|='", L"'^='",
-	L"'++'", L"'--'",
+	L"<=", L">=", L"==", L"!=", L"===", L"!==",
+	L"<<", L">>", L">>>", L"&&", L"||",
+	L"+=", L"-=", L"*=", L"/=", L"%=",
+	L"<<=", L">>=", L">>>=", L"&=", L"|=", L"^=",
+	L"++", L"--",
 
-	L"'break'", L"'case'", L"'catch'", L"'continue'", L"'debugger'",
-	L"'default'", L"'delete'", L"'do'", L"'else'", L"'false'", L"'finally'", L"'for'",
-	L"'function'", L"'if'", L"'in'", L"'instanceof'", L"'new'", L"'null'", L"'return'",
-	L"'switch'", L"'this'", L"'throw'", L"'true'", L"'try'", L"'typeof'", L"'var'",
-	L"'void'", L"'while'", L"'with'",
+	L"break", L"case", L"catch", L"continue", L"debugger",
+	L"default", L"delete", L"do", L"else", L"false", L"finally", L"for",
+	L"function", L"if", L"in", L"instanceof", L"new", L"null", L"return",
+	L"switch", L"this", L"throw", L"true", L"try", L"typeof", L"var",
+	L"void", L"while", L"with",
 };
 
 const wchar_t *jsY_tokenstring(int token)
@@ -77,7 +77,12 @@ static const wchar_t *keywords[] = {
 	L"instanceof", L"new", L"null", L"return", L"switch", L"this", L"throw",
 	L"true", L"try", L"typeof", L"var", L"void", L"while", L"with",
 };
-
+static const wchar_t *keywords_CN[] = {
+	L"break", L"case", L"catch", L"跳出循环", L"debugger", L"default", L"delete",
+	L"do", L"那么", L"假", L"finally", L"计次循环", L"函数", L"如果", L"in",
+	L"instanceof", L"new", L"空", L"返回", L"switch", L"this", L"throw",
+	L"真", L"try", L"typeof", L"变量", L"void", L"while", L"with",
+};
 int jsY_findword(const wchar_t *s, const wchar_t **list, int num)
 {
 	int l = 0;
@@ -94,10 +99,20 @@ int jsY_findword(const wchar_t *s, const wchar_t **list, int num)
 	}
 	return -1;
 }
-
+int jsY_findword_CN(const wchar_t *s, const wchar_t **list, int num)
+{
+	for (size_t i = 0; i < num; i++)
+	{
+		if (wcscmp(s, list[i]) == 0)
+			return i;
+	}
+	return -1;
+}
 static int jsY_findkeyword(js_State *J, const wchar_t *s)
 {
 	int i = jsY_findword(s, keywords, nelem(keywords));
+	if(i==-1)
+		i = jsY_findword_CN(s, keywords_CN, nelem(keywords_CN));
 	if (i >= 0) {
 		J->text = keywords[i];
 		return TK_BREAK + i; /* first keyword + i */
