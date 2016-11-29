@@ -22,13 +22,13 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 	}
 	case Proc_OnDestroy: {
 		for (int it = darray_len(p->m_items) - 1; it >= 0; it--) {
-			ZuiControlCall(Proc_OnDestroy, p->m_items->data[it], Param1, Param2, Param3);
+			ZuiControlCall(Proc_OnDestroy, p->m_items->data[it], TRUE, Param2, Param3);
 		}
 		ZCtlProc old_call = p->old_call;
 		if(p->m_pHorizontalScrollBar)
-			FreeCControlUI(p->m_pHorizontalScrollBar);
+			FreeZuiControl(p->m_pHorizontalScrollBar);
 		if (p->m_pVerticalScrollBar)
-			FreeCControlUI(p->m_pVerticalScrollBar);
+			FreeZuiControl(p->m_pVerticalScrollBar);
 		darray_destroy(p->m_items);
 		free(p);
 
@@ -74,7 +74,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 			if ((ZuiControl)(p->m_items->data[it]) == (ZuiControl)Param1) {
 				ZuiControlNeedUpdate(cp);
 				if(!Param2)
-					FreeCControlUI((ZuiControl)Param1);
+					FreeZuiControl((ZuiControl)Param1);
 				return darray_delete(p->m_items,it);
 			}
 		}
@@ -92,7 +92,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 	}
 	case Proc_Layout_RemoveAll: {
 		for (int it = 0; it < darray_len(p->m_items); it++) {
-			FreeCControlUI((ZuiControl)(p->m_items->data[it]));
+			FreeZuiControl((ZuiControl)(p->m_items->data[it]));
 		}
 		darray_empty(p->m_items);
 		ZuiControlNeedUpdate(cp);
@@ -601,7 +601,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 			//			m_pVerticalScrollBar->SetVisible(false);
 		}
 		else if (!bEnableVertical && p->m_pVerticalScrollBar) {
-			FreeCControlUI(p->m_pVerticalScrollBar);
+			FreeZuiControl(p->m_pVerticalScrollBar);
 			p->m_pVerticalScrollBar = NULL;
 		}
 
@@ -614,7 +614,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 
 		}
 		else if (!bEnableHorizontal && p->m_pHorizontalScrollBar) {
-			FreeCControlUI(p->m_pHorizontalScrollBar);
+			FreeZuiControl(p->m_pHorizontalScrollBar);
 			p->m_pHorizontalScrollBar = NULL;
 		}
 

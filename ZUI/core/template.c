@@ -28,10 +28,12 @@ ZuiVoid ZuiAddTemplate(mxml_node_t *node)
 	}
 }
 
-ZuiVoid ZuiLoadTemplate(mxml_node_t *node, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3){
+ZuiVoid ZuiLoadTemplate(mxml_node_t *n, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3){
 	ZuiText Layout = "Layout";
 	ZuiText ClassName = NULL;
 	ZuiControl Control;
+	mxml_node_t *node = mxmlClone(n, NULL);//先把节点克隆出来
+
 	for (size_t i = 0; i < node->value.num_attrs; i++)
 	{
 		if (wcscmp(node->value.attrs[i].name, L"layout") == 0) {
@@ -81,4 +83,5 @@ ZuiVoid ZuiLoadTemplate(mxml_node_t *node, ZuiControl p, ZuiAny Param1, ZuiAny P
 			}
 		}
 	}
+	mxmlDelete(node);
 }

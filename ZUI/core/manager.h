@@ -135,6 +135,7 @@ typedef struct _ZuiPaintManager
 	ZuiBool m_bLayeredChanged;			///
 	RECT m_rcLayeredUpdate;			///
 
+	ZuiBool m_bUnfocusPaintWindow;		///开启无焦点窗口
 	ZuiBool m_bMouseTracking;			///是否需要支持鼠标追踪
 	ZuiBool m_bMouseCapture;			///是否需要支持鼠标捕获
 	ZuiBool m_bIsPainting;				///是否正在绘制

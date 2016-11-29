@@ -100,15 +100,15 @@ typedef int			ZuiInt;
 typedef int			ZuiBool;
 typedef void		ZuiVoid;
 typedef void*		ZuiAny;
-typedef int32_t		ZuiColor;
+typedef DWORD		ZuiColor;
 typedef unsigned	ZuiByte;
 /**矩形*/
 typedef struct _ZRect
 {
-	ZuiInt Left;	///左边
-	ZuiInt Top;		///顶边
-	ZuiInt Width;	///宽度
-	ZuiInt Height;	///高度
+	int Left;	///左边
+	int Top;		///顶边
+	int Width;	///宽度
+	int Height;	///高度
 } *ZuiRect, ZRect;
 /**矩形(浮点)*/
 typedef struct _ZRectR
@@ -121,14 +121,14 @@ typedef struct _ZRectR
 /**点*/
 typedef struct _ZPoint
 {
-	ZuiInt x;
-	ZuiInt y;
+	int x;
+	int y;
 } *ZuiPoint, ZPoint;
 /**大小*/
 typedef struct _ZSize
 {
-	ZuiInt Width;	///宽度
-	ZuiInt Height;	///高度
+	int Width;	///宽度
+	int Height;	///高度
 } *ZuiSize, ZSize;
 /**点(浮点)*/
 typedef struct _ZPointR

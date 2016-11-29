@@ -167,7 +167,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 //创建控件
 ZuiControl NewZuiControl(ZuiText classname, void* Param1, void* Param2, void* Param3);
 //销毁控件
-void FreeCControlUI(ZuiControl p);
+void FreeZuiControl(ZuiControl p);
 
 //调用控件处理函数
 ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);

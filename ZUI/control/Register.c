@@ -15,6 +15,9 @@ BOOL ZuiControlRegister()
 	ZuiControlRegisterAdd(L"tilelayout", (ZCtlProc)&ZuiTileLayoutProc);
 	ZuiControlRegisterAdd(L"virtual", (ZCtlProc)&ZuiVirtualProc);
 	ZuiControlRegisterAdd(L"menubar", (ZCtlProc)&ZuiMenuBarProc);
+	ZuiControlRegisterAdd(L"menu", (ZCtlProc)&ZuiMenuProc);
+	ZuiControlRegisterAdd(L"menuitem", (ZCtlProc)&ZuiMenuItemProc);
+
 
 	ZuiControlRegisterAdd(L"window", (ZCtlProc)&ZuiWindowProc);
 	ZuiControlRegisterAdd(L"scrollbar", (ZCtlProc)&ZuiScrollBarProc);
@@ -29,7 +32,7 @@ BOOL ZuiControlRegister()
 	//rb_foreach(Global_ControlClass, ZuiCoreInit);
 	return TRUE;
 }
-ZEXPORT ZuiBool ZCALL ZuiControlRegisterAdd(ZuiText *name, ZCtlProc Proc)
+ZEXPORT ZuiBool ZCALL ZuiControlRegisterAdd(ZuiText name, ZCtlProc Proc)
 {
 	if (ZuiCoreInit(Proc))
 	{
@@ -37,7 +40,7 @@ ZEXPORT ZuiBool ZCALL ZuiControlRegisterAdd(ZuiText *name, ZCtlProc Proc)
 	}
 	return FALSE;
 }
-ZEXPORT ZuiBool ZCALL ZuiControlRegisterDel(ZuiText *name)
+ZEXPORT ZuiBool ZCALL ZuiControlRegisterDel(ZuiText name)
 {
 	rb_delete((key_t)Zui_Hash(name), Global_ControlClass);
 	return 0;

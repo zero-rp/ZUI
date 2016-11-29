@@ -1,5 +1,8 @@
 ﻿#include <ZUI.h>
-ZuiControl ZuiLayoutLoadMenuNode(mxml_node_t *tree, ZuiControl win) {
+
+
+
+ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNodeMenu(mxml_node_t *tree, ZuiControl win) {
 	mxml_node_t *node;
 	ZuiText ClassName = NULL;
 	ZuiStringFormat StringFormat = NULL;
@@ -7,6 +10,7 @@ ZuiControl ZuiLayoutLoadMenuNode(mxml_node_t *tree, ZuiControl win) {
 	ZuiControl Control;
 	for (node = mxmlFindElement(tree, tree, NULL, NULL, NULL, MXML_DESCEND); node != NULL; node = mxmlWalkNext(node, NULL, MXML_DESCEND)/*node = mxmlFindElement(node, tree, NULL,NULL,NULL,MXML_DESCEND)*/) {
 		{
+		LoadNodeBedin:
 			ClassName = node->value.name;
 #if !(defined NDEBUG)
 			printf("layout创建控件: 类名:%ls\r\n", ClassName);
@@ -14,20 +18,39 @@ ZuiControl ZuiLayoutLoadMenuNode(mxml_node_t *tree, ZuiControl win) {
 			if (wcscmp(ClassName, L"Template") == 0) {//模版类
 				ZuiAddTemplate(node);
 				node = node->next;
-				if (node)
+				if (node) {
 					ClassName = node->value.name;
+					goto LoadNodeBedin;
+				}
 				else
 					continue;
 			}
 			if (wcscmp(ClassName, L"Menu") == 0) {//菜单类
-				ZuiAddMenu(node, win);
+				//ZuiAddMenu(node, NULL);
 				node = node->next;
-				if (node)
+				if (node) {
 					ClassName = node->value.name;
+					goto LoadNodeBedin;
+				}
 				else
 					continue;
 			}
-			if (wcscmp(ClassName, L"LoadScript") == 0) {
+			if (wcscmp(ClassName, L"Include") == 0) {//包含文件
+				ZuiText src = NULL;
+				for (size_t i = 0; i < node->value.num_attrs; i++)
+				{
+					if (wcscmp(node->value.attrs[i].name, L"src") == 0) {
+						src = node->value.attrs[i].value;
+					}
+				}
+				ZuiRes res = ZuiResDBGetRes(src, NULL);
+				if (res) {
+					mxml_node_t *new_node = ZuiLayoutLoad(res->p, res->plen);
+					mxmlAdd(node->parent ? node->parent : node, MXML_ADD_BEFORE, node, new_node);
+					ZuiResDBDelRes(res);
+				}
+			}
+			else if (wcscmp(ClassName, L"LoadScript") == 0) {
 				ZuiText src = NULL;
 				for (size_t i = 0; i < node->value.num_attrs; i++)
 				{
@@ -36,25 +59,38 @@ ZuiControl ZuiLayoutLoadMenuNode(mxml_node_t *tree, ZuiControl win) {
 					}
 				}
 				ZuiRes res = ZuiResDBGetRes(src, ZREST_TXT);
-				ZuiBuilderJsLoad(win->m_pManager->m_js, res->p, res->plen);
-				ZuiResDBDelRes(res);
+				if (res)
+				{
+					ZuiBuilderJsLoad(win->m_pManager->m_js, res->p, res->plen);
+					ZuiResDBDelRes(res);
+				}
 			}
 			else if (!node->user_data) {//当前节点还未创建
 				Control = NewZuiControl(ClassName, NULL, NULL, NULL);
-				//上级控件已存在且当前欲创建的子窗口不为窗口对象
-				if (Control) {
-					node->user_data = Control;//保存控件到节点
-											  /*添加到容器*/
-					ZuiControlCall(Proc_Layout_Add, node->parent->user_data, Control, NULL, NULL);
+				if (node->parent->user_data && wcsicmp(ClassName, L"Menu") != 0) {
+					//上级控件已存在且当前欲创建的子窗口不为窗口对象
+					if (Control) {
+						node->user_data = Control;//保存控件到节点
+												  /*添加到容器*/
+						ZuiControlCall(Proc_Layout_Add, node->parent->user_data, Control, NULL, NULL);
+					}
+					else {
+						/*当前控件创建失败 子控件肯定创建不了 删除节点*/
+						mxmlDelete(node);
+						/*再次从头处理*/
+						node = tree;
+						continue;//窗口创建失败就没必要继续下去了
+					}
 				}
-				else {
-					/*当前控件创建失败 子控件肯定创建不了 删除节点*/
-					mxmlDelete(node);
-					/*再次从头处理*/
-					node = tree;
-					continue;//窗口创建失败就没必要继续下去了
+				else if (!node->parent->user_data && wcsicmp(ClassName, L"Menu") == 0) {
+					//上级控件已存在且当前欲创建的子窗口为窗口对象
+					if (Control) {
+						node->user_data = Control;//保存控件到节点
+						win = Control;
+					}
+					else
+						break;//窗口创建失败就没必要继续下去了
 				}
-
 				/*解析属性*/
 				for (size_t i = 0; i < node->value.num_attrs; i++)
 				{
@@ -63,28 +99,351 @@ ZuiControl ZuiLayoutLoadMenuNode(mxml_node_t *tree, ZuiControl win) {
 			}
 		}
 	}
+	return win;
 }
 
 
-ZuiVoid ZuiAddMenu(mxml_node_t *node, ZuiControl win) {
-	ZuiText name = NULL;
+
+static LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	ZuiMenu pThis = NULL;
+	if (uMsg == WM_NCCREATE) {
+
+		LPCREATESTRUCT lpcs = (LPCREATESTRUCT)(lParam);
+		pThis = (ZuiMenu)(lpcs->lpCreateParams);
+		pThis->m_hWnd = hWnd;
+		SetWindowLongPtr(hWnd, GWLP_USERDATA, (LPARAM)pThis);
+	}
+	else {
+		pThis = (ZuiMenu)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+		if (uMsg == WM_NCDESTROY && pThis != NULL) {
+			LRESULT lRes = CallWindowProc(pThis->m_OldWndProc, hWnd, uMsg, wParam, lParam);
+			SetWindowLongPtr(pThis->m_hWnd, GWLP_USERDATA, 0L);
+			pThis->m_hWnd = NULL;
+			return lRes;
+		}
+	}
+	if (pThis != NULL) {
+		LRESULT lRes = 0;
+		{
+			if (uMsg == WM_DESTROY)
+			{
+				FreeCPaintManagerUI(pThis->m_pm);
+				return DefWindowProc(hWnd, uMsg, wParam, lParam);
+			}
+		}
+		if (pThis->m_pm)
+			if (ZuiPaintManagerMessageHandler(pThis->m_pm, uMsg, wParam, lParam, &lRes))
+				return lRes;
+		return CallWindowProc(pThis->m_OldWndProc, pThis->m_hWnd, uMsg, wParam, lParam);
+	}
+	else {
+		return DefWindowProc(hWnd, uMsg, wParam, lParam);
+	}
+}
+
+ZEXPORT ZuiAny ZCALL ZuiMenuProc(ZuiInt ProcId, ZuiControl cp, ZuiMenu p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+	switch (ProcId)
+	{
+	case Proc_CoreInit: {
+		WNDCLASS wc = { 0 };
+		wc.style = 8;
+		wc.cbClsExtra = 0;
+		wc.cbWndExtra = 0;
+		wc.hIcon = NULL;
+		wc.lpfnWndProc = __WndProc;
+		wc.hInstance = GetModuleHandleA(NULL);
+		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+		wc.hbrBackground = NULL;
+		wc.lpszMenuName = NULL;
+		wc.lpszClassName = L"ZUI_MENU";
+		RegisterClass(&wc);
+		return TRUE;
+		break;
+	}
+	case Proc_OnDestroy: {
+		p->m_pm->m_pRoot = NULL;
+		DestroyWindow(p->m_hWnd);
+		ZCtlProc old_call = p->old_call;
+		ZuiAny old_udata = p->old_udata;
+
+		//free(p);
+		
+		return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+		break;
+	}
+	case Proc_OnCreate: {
+		p = (ZuiWindow)malloc(sizeof(ZWindow));
+		memset(p, 0, sizeof(ZWindow));
+		//保存原来的回调地址,创建成功后回调地址指向当前函数
+		//创建继承的控件 保存数据指针
+		p->old_udata = ZuiVerticalLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
+		p->old_call = (ZCtlProc)&ZuiVerticalLayoutProc;
+
+		//创建宿主窗口
+		//创建绘制管理器
+		p->m_pm = NewCPaintManagerUI();
+		p->m_OldWndProc = DefWindowProc;
+		p->root = cp;
+		p->m_hWnd = CreateWindowEx(WS_EX_NOACTIVATE | WS_EX_TOPMOST | WS_EX_TOOLWINDOW, L"ZUI_MENU", L"",   WS_POPUP | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, GetModuleHandleA(NULL), p);
+
+		ZuiPaintManagerInit(p->m_pm, p->m_hWnd);
+		ZuiPaintManagerAttachDialog(p->m_pm, cp);
+		if (!Param1)
+			ShowWindow(p->m_hWnd, SW_SHOW);
+		return p;
+		break;
+	}
+	case Proc_SetBorderColor: {
+		((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.left = 1;
+		((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.bottom = 1;
+		((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.right = 1;
+		((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.top = 1;
+		break;
+	}
+	case Proc_Window_SetSize: {
+		ZuiControlCall(Proc_SetFixedWidth, cp, Param1, NULL, NULL);
+		ZuiControlCall(Proc_SetFixedHeight, cp, Param2, NULL, NULL);
+		SetWindowPos(p->m_hWnd, NULL, 0, 0, Param1, Param2, SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
+		break;
+	}
+	case Proc_SetAttribute: {
+		if (wcscmp(Param1, L"layered") == 0) {
+			if (wcscmp(Param2, L"true") == 0) {
+				ZuiPaintManagerSetLayered(p->m_pm, TRUE);
+			}
+			else {
+				ZuiPaintManagerSetLayered(p->m_pm, FALSE);
+			}
+		}
+		else if (wcscmp(Param1, L"opacity") == 0) ZuiPaintManagerSetLayeredOpacity(p->m_pm, _wtoi(Param2));
+		else if (wcscmp(Param1, L"size") == 0) {
+			LPTSTR pstr = NULL;
+			int cx = wcstol(Param2, &pstr, 10);  ASSERT(pstr);
+			int cy = wcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+			ZuiControlCall(Proc_Window_SetSize, cp, cx, cy, NULL);
+		}
+		break;
+	}
+	case Proc_JsHas: {
+		break;
+	}
+	case Proc_JsCall: {
+		break;
+	}
+	case Proc_SetVisible: {
+		if (cp->m_bVisible == (BOOL)Param1)
+			return 0;
+		if (Param1)
+			ShowWindow(p->m_hWnd, SW_SHOWNORMAL);
+		else
+			ShowWindow(p->m_hWnd, SW_HIDE);
+		break;
+	}
+	default:
+		break;
+	}
+	return p->old_call(ProcId, cp, p->old_udata, Param1, Param2, Param3);
+}
+
+ZEXPORT ZuiAny ZCALL ZuiMenuItemProc(ZuiInt ProcId, ZuiControl cp, ZuiMenuItem p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+	switch (ProcId)
+	{
+	case Proc_CoreInit: {
+		return TRUE;
+		break;
+	}
+	case Proc_OnDestroy: {
+		ZCtlProc old_call = p->old_call;
+		ZuiAny old_udata = p->old_udata;
+
+		free(p);
+
+		return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+		break;
+	}
+	case Proc_OnCreate: {
+		p = (ZuiMenuItem)malloc(sizeof(ZMenuItem));
+		memset(p, 0, sizeof(ZMenuItem));
+		//保存原来的回调地址,创建成功后回调地址指向当前函数
+		//创建继承的控件 保存数据指针
+		p->old_udata = ZuiVerticalLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
+		p->old_call = (ZCtlProc)&ZuiVerticalLayoutProc;
+
+		return p;
+		break;
+	}
+	case Proc_SetAttribute: {
+		break;
+	}
+	case Proc_JsHas: {
+		break;
+	}
+	case Proc_JsCall: {
+		break;
+	}
+	default:
+		break;
+	}
+	return p->old_call(ProcId, cp, p->old_udata, Param1, Param2, Param3);
+}
+
+ZuiMenu ZuiAddMenu(mxml_node_t *node, ZuiControl win) {
+	ZuiText classname = NULL;
 	/*解析属性*/
 	for (size_t i = 0; i < node->value.num_attrs; i++)
 	{
 		if (wcscmp(node->value.attrs[i].name, L"name") == 0)
 		{
-			name = node->value.attrs[i].value;
+			classname = node->value.attrs[i].value;
 		}
 	}
-	if (name)
+	if (classname)
 	{
-		ZuiMenu p = (ZuiMenu)malloc(sizeof(ZMenu));
-		memset(p, 0, sizeof(ZMenu));
-		p->win = NewZuiControl(L"window", TRUE, NULL, NULL);
-		node->user_data = p->win;
-		ZuiLayoutLoadMenuNode(node, p->win);
+		mxml_node_t *new_node = mxmlClone(node, NULL);
+		if (new_node)
+		{
+			wcslwr(classname);
+			rb_insert((key_t)Zui_Hash(classname), new_node, Global_MenuClass);
+		}
+	}
+	return ;
+}
+ZuiBool ZuiIsMenuWnd(ZuiMenu p, HWND hwnd) {
+	return p->m_hWnd == hwnd;
+}
+ZuiDestroyMenu(ZuiMenu p) {
+	//DestroyWindow(p->m_hWnd);
+	FreeZuiControl(p->root);
+	p->bExit = TRUE;
+}
+ZEXPORT ZuiVoid ZCALL ZuiPopupMenu(ZuiText name, ZuiPoint pt) {
+	if (name) {
+		rb_node *node = rb_search((key_t)Zui_Hash(name), Global_MenuClass);
+		if (node) {
+			mxml_node_t *xnode = mxmlClone((mxml_node_t *)node->data, NULL);//先把节点克隆出来
 
+			ZuiControl win = NewZuiControl(L"menu", NULL, NULL, NULL);
+			xnode->user_data = win;
+			for (size_t i = 0; i < xnode->value.num_attrs; i++)
+			{
+				ZuiControlCall(Proc_SetAttribute, win, xnode->value.attrs[i].name, xnode->value.attrs[i].value, NULL);
+			}
+
+			ZuiLayoutLoadNodeMenu(xnode, win);
+			mxmlDelete(xnode);//释放克隆出来的节点
+
+			ZuiMenu p = win->m_sUserData;
+
+			SetWindowPos(p->m_hWnd, NULL, pt->x, pt->y,0, 0, SWP_NOSIZE);
+
+			int nRet = -1;
+			BOOL bMenuDestroyed=FALSE;
+			BOOL bMsgQuit=FALSE;
+			while (TRUE)
+			{
+				if (p->bExit)
+				{
+					nRet = 0;
+					break;
+				}
+
+				if (GetForegroundWindow() != p->m_hWnd)
+				{
+					break;
+				}
+				BOOL bInterceptOther=FALSE;
+				MSG msg = { 0 };
+				if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+				{
+					if (msg.message == WM_KEYDOWN
+						|| msg.message == WM_SYSKEYDOWN
+						|| msg.message == WM_KEYUP
+						|| msg.message == WM_SYSKEYUP
+						|| msg.message == WM_CHAR
+						|| msg.message == WM_IME_CHAR)
+					{
+						//transfer the message to menu window
+						//if (m_menus->IsKeyEvent())
+						//{
+						//	SKILL_ASSERT(m_pKeyEvent->GetMenuWnd()->GetHWND());
+						//	msg.hwnd = m_pKeyEvent->GetMenuWnd()->GetHWND();
+						//}
+					}
+					else if (msg.message == WM_LBUTTONDOWN
+						|| msg.message == WM_RBUTTONDOWN
+						|| msg.message == WM_NCLBUTTONDOWN
+						|| msg.message == WM_NCRBUTTONDOWN
+						|| msg.message == WM_LBUTTONDBLCLK)
+					{
+						//click on other window
+						if (!ZuiIsMenuWnd(p, msg.hwnd))
+						{
+							ZuiDestroyMenu(p);
+							//为了和菜单再次的弹出消息同步
+							//这里会导致父窗口被拖动
+							//PostMessage(msg.hwnd, msg.message, msg.wParam, msg.lParam);
+							bInterceptOther = TRUE;
+							bMenuDestroyed = TRUE;
+
+						}
+					}
+					else if (msg.message == WM_LBUTTONUP
+						|| msg.message == WM_RBUTTONUP
+						|| msg.message == WM_NCLBUTTONUP
+						|| msg.message == WM_NCRBUTTONUP
+						|| msg.message == WM_CONTEXTMENU)
+					{
+						if (!ZuiIsMenuWnd(p, msg.hwnd))
+						{
+							//防止菜单同时弹出多个
+							PostMessage(msg.hwnd, msg.message, msg.wParam, msg.lParam);
+							break;
+
+						}
+
+					}
+					else if (msg.message == WM_QUIT)
+					{
+
+						bMsgQuit = TRUE;
+					}
+
+					//拦截非菜单窗口的MouseMove消息
+					if (msg.message == WM_MOUSEMOVE)
+					{
+						if (!ZuiIsMenuWnd(p, msg.hwnd))
+						{
+							bInterceptOther = TRUE;
+						}
+					}
+
+					if (!bInterceptOther)
+					{
+						TranslateMessage(&msg);
+						DispatchMessage(&msg);
+					}
+
+				}
+				else
+				{
+					MsgWaitForMultipleObjects(0, 0, 0, 10, QS_ALLINPUT);
+				}
+
+				if (bMenuDestroyed) break;
+
+				if (bMsgQuit)
+				{
+					PostQuitMessage(msg.wParam);
+					break;
+				}
+			}
+
+			if (!bMenuDestroyed)
+			{
+				ZuiDestroyMenu(p);
+			}
+			return nRet;
+		}
 	}
 }
-
-

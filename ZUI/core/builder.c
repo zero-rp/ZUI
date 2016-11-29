@@ -10,6 +10,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
 	ZuiControl Control;
 	for (node = mxmlFindElement(tree, tree, NULL, NULL, NULL, MXML_DESCEND); node != NULL; node = mxmlWalkNext(node, NULL, MXML_DESCEND)/*node = mxmlFindElement(node, tree, NULL,NULL,NULL,MXML_DESCEND)*/) {
 		{
+			LoadNodeBedin:
 			ClassName = node->value.name;
 #if !(defined NDEBUG)
 			printf("layout创建控件: 类名:%ls\r\n", ClassName);
@@ -17,17 +18,19 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
 			if (wcscmp(ClassName, L"Template") == 0) {//模版类
 				ZuiAddTemplate(node);
 				node = node->next;
-				if (node)
+				if (node) {
 					ClassName = node->value.name;
-				else
+					goto LoadNodeBedin;
+				}else
 					continue;
 			}
 			if (wcscmp(ClassName, L"Menu") == 0) {//菜单类
-				ZuiAddMenu(node, win);
+				ZuiAddMenu(node, NULL);
 				node = node->next;
-				if (node)
+				if (node) {
 					ClassName = node->value.name;
-				else
+					goto LoadNodeBedin;
+				}else
 					continue;
 			}
 			if (wcscmp(ClassName, L"Include") == 0) {//包含文件
@@ -39,9 +42,11 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
 					}
 				}
 				ZuiRes res = ZuiResDBGetRes(src, NULL);
-				mxml_node_t *new_node = ZuiLayoutLoad(res->p, res->plen);
-				mxmlAdd(node->parent ? node->parent : node, MXML_ADD_BEFORE, node, new_node);
-				ZuiResDBDelRes(res);
+				if (res) {
+					mxml_node_t *new_node = ZuiLayoutLoad(res->p, res->plen);
+					mxmlAdd(node->parent ? node->parent : node, MXML_ADD_BEFORE, node, new_node);
+					ZuiResDBDelRes(res);
+				}
 			}
 			else if (wcscmp(ClassName, L"LoadScript") == 0) {
 				ZuiText src = NULL;
@@ -52,8 +57,11 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
 					}
 				}
 				ZuiRes res = ZuiResDBGetRes(src, ZREST_TXT);
-				ZuiBuilderJsLoad(win->m_pManager->m_js, res->p, res->plen);
-				ZuiResDBDelRes(res);
+				if (res)
+				{
+					ZuiBuilderJsLoad(win->m_pManager->m_js, res->p, res->plen);
+					ZuiResDBDelRes(res);
+				}
 			}
 			else if (!node->user_data) {//当前节点还未创建
 				Control = NewZuiControl(ClassName, NULL, NULL, NULL);
@@ -89,6 +97,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
 			}
 		}
 	}
+	return win;
 }
 
 ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
@@ -213,6 +222,10 @@ ZuiControl ZuiBuilderJs_toControl(js_State *J, ZuiInt idx) {
 	return js_touserdata(J, idx, TAG);;
 }
 //--------------------------------------------------Control_End
+//--------------------------------------------------PaintManager_Begin
+
+
+//--------------------------------------------------PaintManager_End
 static void ZuiJsBind_Call_LayoutLoad(js_State *J) {
 	if (js_isstring(J, 1)) {
 		ZuiRes res = ZuiResDBGetRes(js_tostring(J, 1), ZREST_STREAM);
@@ -230,8 +243,20 @@ static void ZuiJsBind_Call_LayoutLoad(js_State *J) {
 	}
 	js_pushundefined(J);
 }
+
+static void ZuiJsBind_Call_ZuiPopupMenu(js_State *J) {
+	if (js_isstring(J, 1) && js_isobject(J, 2)) {
+		js_getproperty(J, 2, "x");
+		int x = js_toint32(J, -1);
+		js_getproperty(J, 2, "y");
+		int y = js_toint32(J, -1);
+		ZPoint pt = { x,y };
+		ZuiPopupMenu(js_tostring(J, 1),&pt);
+	}
+	js_pushundefined(J);
+}
 //---------------------------------------------------------
-ZEXPORT ZuiBool ZCALL ZuiBuilderJs(js_State *J) {
+ZuiBool ZuiBuilderJs(js_State *J) {
 	js_newcfunction(J, ZuiJsBind_Call_exit,L"exit", 0);
 	js_setglobal(J, L"exit");
 
@@ -247,10 +272,15 @@ ZEXPORT ZuiBool ZCALL ZuiBuilderJs(js_State *J) {
 	js_newcfunction(J, ZuiJsBind_Call_LayoutLoad, L"LayoutLoad", 0);
 	js_setglobal(J, L"LayoutLoad");
 
+	js_newcfunction(J, ZuiJsBind_Call_ZuiPopupMenu, L"PopupMenu", 0);
+	js_setglobal(J, L"PopupMenu");
+
 	ZuiBuilderJs_Control(J);
 	return TRUE;
 }
+ZuiBool ZuiBuilderJsPM(js_State *J, ZuiPaintManager p) {
 
+}
 ZEXPORT ZuiBool ZCALL ZuiBuilderJsLoad(js_State *J, ZuiText str, ZuiInt len) {
 	js_dostring(J, str);
 }

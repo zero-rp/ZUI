@@ -58,7 +58,7 @@ ZuiControl NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny
 	return NULL;
 }
 //销毁控件
-void FreeCControlUI(ZuiControl p)
+void FreeZuiControl(ZuiControl p)
 {
 	if (p->m_pManager != NULL)
 		ZuiPaintManagerReapObjects(p->m_pManager, p);
@@ -476,7 +476,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 			free(p->m_sToolTip);
 		if(p->m_BkgImg)
 			ZuiResDBDelRes(p->m_BkgImg);
-		if(p->m_pParent)
+		if(p->m_pParent && !Param1)
 			ZuiControlCall(Proc_Layout_Remove, p->m_pParent, p, TRUE, NULL);
 		free(p);
 		break;
@@ -652,7 +652,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 	}
 	case Proc_JsCall: {
 		if (wcscmp(Param1, L"clos") == 0) {
-			FreeCControlUI(p);
+			FreeZuiControl(p);
 		}
 		break;
 	}
@@ -703,6 +703,8 @@ ZEXPORT ZuiAny ZCALL ZuiControlNotify(ZuiText msg, ZuiControl p, ZuiAny Param1,Z
 		ZuiAttribute att = node->data;
 		if (att->type == ZAttType_String)
 		{
+			ZuiBuilderJs_pushControl(p->m_pManager->m_js, p);
+			js_setglobal(p->m_pManager->m_js, L"ec");
 			ZuiBuilderJsLoad(p->m_pManager->m_js, att->v, att->vlen);
 		}
 		else {

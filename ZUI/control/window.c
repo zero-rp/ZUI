@@ -2,7 +2,7 @@
 
 
 
-LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+static LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	ZuiWindow pThis = NULL;
 	if (uMsg == WM_NCCREATE) {
@@ -143,7 +143,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 		p->m_pm = NewCPaintManagerUI();
 		p->m_OldWndProc = DefWindowProc;
 		p->root = cp;
-		p->m_hWnd = CreateWindowEx(0, L"ZUI", L"", WS_POPUP | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, GetModuleHandleA(NULL), p);
+		p->m_hWnd = CreateWindowEx(0, L"ZUI", L"", (Param2 ? WS_CHILDWINDOW:WS_POPUP) | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, Param2, NULL, GetModuleHandleA(NULL), p);
 
 		ZuiPaintManagerInit(p->m_pm, p->m_hWnd);
 		ZuiPaintManagerAttachDialog(p->m_pm, cp);
@@ -295,6 +295,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 			SetWindowPos(p->m_hWnd, NULL, ((ZuiPoint)Param1)->x, ((ZuiPoint)Param1)->y, p->m_rect.Width, p->m_rect.Height, SWP_NOZORDER | SWP_NOACTIVATE);
 		}
 		ShowWindow(p->m_hWnd, SW_SHOWNORMAL);
+		SetFocus(p->m_hWnd);
 		break;
 	}
 	default:

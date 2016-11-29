@@ -1,6 +1,6 @@
 ﻿#include <ZUI.h>
 
-
+rb_root *Global_MenuClass;
 ZuiImage Global_Res_Ctl[4][3];			//窗口控制按钮资源
 ZuiStringFormat Global_StringFormat;	//默认字体风格
 HINSTANCE m_hInstance = NULL;			//模块句柄
@@ -15,6 +15,6 @@ ZuiBool ZuiGlobalInit(){
 	Global_DefaultFontName = _wcsdup(lf.lfFaceName);
 	Global_StringFormat = ZuiCreateStringFormat(Global_DefaultFontName, 12, ARGB(254, 0, 0, 0), ARGB(255, 255, 255, 255), ZTS_ALIGN_CENTER | ZTS_VALIGN_MIDDLE);
 
-
+	Global_MenuClass = rb_new();
 	return TRUE;
 }
