@@ -156,6 +156,12 @@ void FreeCPaintManagerUI(ZuiPaintManager p) {
 	if (p->m_hDcPaint != NULL)
 		ReleaseDC(p->m_hWndPaint, p->m_hDcPaint);
 	darray_delete(m_aPreMessages, darray_find(m_aPreMessages, p));
+
+	darray_destroy(p->m_aTimers);
+	darray_destroy(p->m_aPostPaintControls);
+	darray_destroy(p->m_aFoundControls);
+	js_freestate(p->m_js);
+	free(p);
 }
 //-------------------------------------------------------------------------------------------------
 
