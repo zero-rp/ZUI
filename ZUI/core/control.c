@@ -60,8 +60,6 @@ ZuiControl NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny
 //销毁控件
 void FreeZuiControl(ZuiControl p)
 {
-	if (p->m_pManager != NULL)
-		ZuiPaintManagerReapObjects(p->m_pManager, p);
 	ZuiControlCall(Proc_OnDestroy, p, NULL, NULL, NULL);
 }
 //-------------------------------------------------------------------------------------------------
@@ -478,6 +476,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 			ZuiResDBDelRes(p->m_BkgImg);
 		if(p->m_pParent && !Param1)
 			ZuiControlCall(Proc_Layout_Remove, p->m_pParent, p, TRUE, NULL);
+		if (p->m_pManager != NULL)
+			ZuiPaintManagerReapObjects(p->m_pManager, p);
 		free(p);
 		break;
 	}
@@ -652,7 +652,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 	}
 	case Proc_JsCall: {
 		if (wcscmp(Param1, L"clos") == 0) {
-			FreeZuiControl(p);
+			ZuiPaintManagerAddDelayedCleanup(p->m_pManager, p);
+			//FreeZuiControl(p);
 		}
 		break;
 	}
