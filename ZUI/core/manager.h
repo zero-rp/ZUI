@@ -146,6 +146,7 @@ typedef struct _ZuiPaintManager
 	DArray *m_aTimers;				///时钟句柄数组
 	DArray *m_aPostPaintControls;	///在绘制完成后发送绘制请求的控件集合
 	DArray *m_aFoundControls;		///
+	DArray *m_aDelayedCleanup;		//延时销毁的控件
 } *ZuiPaintManager, IZuiPaintManager;
 
 ZuiBool ZuiPaintManagerInitialize();
@@ -188,6 +189,7 @@ ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetImeStatus(ZuiPaintManager p, ZuiBool Sta
 
 ZEXPORT ZuiBool ZCALL ZuiPaintManagerSetNextTabControl(ZuiPaintManager p, BOOL bForward /*默认TRUE*/);
 
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerAddDelayedCleanup(ZuiPaintManager p, ZuiControl pControl);
 
 ZEXPORT ZuiBool ZCALL ZuiPaintManagerAddPostPaint(ZuiPaintManager p, ZuiControl pControl);
 ZEXPORT ZuiBool ZCALL ZuiPaintManagerRemovePostPaint(ZuiPaintManager p, ZuiControl pControl);

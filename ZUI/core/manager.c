@@ -132,6 +132,7 @@ ZuiPaintManager NewCPaintManagerUI() {
 		p->m_aTimers = darray_create();
 		p->m_aPostPaintControls = darray_create();
 		p->m_aFoundControls = darray_create();
+		p->m_aDelayedCleanup = darray_create();
 		darray_append(m_aPreMessages, p);
 		return p;
 	}
@@ -160,6 +161,9 @@ void FreeCPaintManagerUI(ZuiPaintManager p) {
 	darray_destroy(p->m_aTimers);
 	darray_destroy(p->m_aPostPaintControls);
 	darray_destroy(p->m_aFoundControls);
+	for (size_t i = 0; i < darray_len(p->m_aDelayedCleanup); i++)
+		FreeZuiControl(p->m_aDelayedCleanup->data[i]);
+	darray_destroy(p->m_aDelayedCleanup);
 	js_freestate(p->m_js);
 	free(p);
 }
@@ -546,6 +550,13 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerSetNextTabControl(ZuiPaintManager p, BOOL b
 	return TRUE;
 }
 //-------------------------------------------------------------------------------------------------
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerAddDelayedCleanup(ZuiPaintManager p, ZuiControl pControl)
+{
+	ZuiControlCall(Proc_Layout_Remove, pControl->m_pParent, pControl, TRUE, NULL);
+	ZuiControlCall(Proc_SetManager, pControl, p, NULL, (void*)FALSE);
+	darray_append(p->m_aDelayedCleanup, pControl);
+	PostMessage(p->m_hWndPaint, WM_APP + 1, 0, 0L);
+}
 
 //发送绘制请求控件的数量
 int CPaintManagerUI_GetPostPaintCount(ZuiPaintManager p)
@@ -650,6 +661,13 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 
 	// 事件的自定义处理
 	switch (uMsg) {
+	case WM_APP + 1:
+	{
+		for (size_t i = 0; i < darray_len(p->m_aDelayedCleanup); i++)
+			FreeZuiControl(p->m_aDelayedCleanup->data[i]);
+		darray_empty(p->m_aDelayedCleanup);
+	}
+	break;
 	case WM_CLOSE:	//关闭窗口
 	{
 		// Make sure all matching "closing" events are sent
