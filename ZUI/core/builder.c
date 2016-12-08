@@ -226,6 +226,25 @@ ZuiControl ZuiBuilderJs_toControl(js_State *J, ZuiInt idx) {
 
 
 //--------------------------------------------------PaintManager_End
+//--------------------------------------------------Graphic_Begin
+
+
+
+ZuiBool ZuiBuilderJs_Graphic(js_State *J) {
+	js_newcfunction(J, ZuiJsBind_Call_exit, L"DrawFillRect", 0);
+	js_setglobal(J, L"DrawFillRect");
+
+	js_newcfunction(J, ZuiJsBind_Call_exit, L"DrawRect", 0);
+	js_setglobal(J, L"DrawFillRect");
+
+	js_newcfunction(J, ZuiJsBind_Call_exit, L"DrawLine", 0);
+	js_setglobal(J, L"DrawFillRect");
+
+	js_newcfunction(J, ZuiJsBind_Call_exit, L"DrawString", 0);
+	js_setglobal(J, L"DrawString");
+	return TRUE;
+}
+//--------------------------------------------------Graphic_End
 static void ZuiJsBind_Call_LayoutLoad(js_State *J) {
 	if (js_isstring(J, 1)) {
 		ZuiRes res = ZuiResDBGetRes(js_tostring(J, 1), ZREST_STREAM);
@@ -276,6 +295,7 @@ ZuiBool ZuiBuilderJs(js_State *J) {
 	js_setglobal(J, L"PopupMenu");
 
 	ZuiBuilderJs_Control(J);
+	ZuiBuilderJs_Graphic(J);
 	return TRUE;
 }
 ZuiBool ZuiBuilderJsPM(js_State *J, ZuiPaintManager p) {

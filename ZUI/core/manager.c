@@ -161,8 +161,16 @@ void FreeCPaintManagerUI(ZuiPaintManager p) {
 	darray_destroy(p->m_aTimers);
 	darray_destroy(p->m_aPostPaintControls);
 	darray_destroy(p->m_aFoundControls);
-	for (size_t i = 0; i < darray_len(p->m_aDelayedCleanup); i++)
-		FreeZuiControl(p->m_aDelayedCleanup->data[i]);
+	while (darray_len(p->m_aDelayedCleanup)) {
+		ZuiControl cp = p->m_aDelayedCleanup->data[0];
+		darray_delete(p->m_aDelayedCleanup, darray_find(p->m_aDelayedCleanup, cp));
+		if (darray_len(p->m_aDelayedCleanup) == 0) {
+			FreeZuiControl(cp);
+			break;
+		}
+		else
+			FreeZuiControl(cp);
+	};
 	darray_destroy(p->m_aDelayedCleanup);
 	js_freestate(p->m_js);
 	free(p);
@@ -663,9 +671,16 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 	switch (uMsg) {
 	case WM_APP + 1:
 	{
-		for (size_t i = 0; i < darray_len(p->m_aDelayedCleanup); i++)
-			FreeZuiControl(p->m_aDelayedCleanup->data[i]);
-		darray_empty(p->m_aDelayedCleanup);
+		while (darray_len(p->m_aDelayedCleanup)) {
+			ZuiControl cp = p->m_aDelayedCleanup->data[0];
+			darray_delete(p->m_aDelayedCleanup, darray_find(p->m_aDelayedCleanup, cp));
+			if (darray_len(p->m_aDelayedCleanup) == 0) {
+				FreeZuiControl(cp);
+				break;
+			}else
+				FreeZuiControl(cp);
+		} ;
+		return TRUE;
 	}
 	break;
 	case WM_CLOSE:	//关闭窗口

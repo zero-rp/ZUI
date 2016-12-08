@@ -88,6 +88,7 @@ static LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 			else if (uMsg == WM_DESTROY)
 			{
 				FreeCPaintManagerUI(pThis->m_pm);
+				pThis->m_pm = NULL;
 				return DefWindowProc(hWnd, uMsg, wParam, lParam);
 			}
 		}
@@ -121,13 +122,16 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 		break;
 	}
 	case Proc_OnDestroy: {
-		DestroyWindow(p->m_hWnd);
 		ZCtlProc old_call = p->old_call;
 		ZuiAny old_udata = p->old_udata;
 
-		free(p);
+		p->m_pm->m_pRoot = NULL;
 
-		return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+		old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+
+		DestroyWindow(p->m_hWnd);
+		free(p);
+		return ;
 		break;
 	}
 	case Proc_OnCreate: {
