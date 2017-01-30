@@ -26,9 +26,9 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 		}
 		ZCtlProc old_call = p->old_call;
 		if(p->m_pHorizontalScrollBar)
-			FreeZuiControl(p->m_pHorizontalScrollBar);
+			FreeZuiControl(p->m_pHorizontalScrollBar, NULL);
 		if (p->m_pVerticalScrollBar)
-			FreeZuiControl(p->m_pVerticalScrollBar);
+			FreeZuiControl(p->m_pVerticalScrollBar, NULL);
 		darray_destroy(p->m_items);
 		free(p);
 
@@ -74,7 +74,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 			if ((ZuiControl)(p->m_items->data[it]) == (ZuiControl)Param1) {
 				ZuiControlNeedUpdate(cp);
 				if(!Param2)
-					FreeZuiControl((ZuiControl)Param1);
+					FreeZuiControl((ZuiControl)Param1, NULL);
 				return darray_delete(p->m_items,it);
 			}
 		}
@@ -92,7 +92,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 	}
 	case Proc_Layout_RemoveAll: {
 		for (int it = 0; it < darray_len(p->m_items); it++) {
-			FreeZuiControl((ZuiControl)(p->m_items->data[it]));
+			FreeZuiControl((ZuiControl)(p->m_items->data[it]), NULL);
 		}
 		darray_empty(p->m_items);
 		ZuiControlNeedUpdate(cp);
@@ -601,7 +601,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 			//			m_pVerticalScrollBar->SetVisible(false);
 		}
 		else if (!bEnableVertical && p->m_pVerticalScrollBar) {
-			FreeZuiControl(p->m_pVerticalScrollBar);
+			FreeZuiControl(p->m_pVerticalScrollBar, NULL);
 			p->m_pVerticalScrollBar = NULL;
 		}
 
@@ -614,7 +614,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 
 		}
 		else if (!bEnableHorizontal && p->m_pHorizontalScrollBar) {
-			FreeZuiControl(p->m_pHorizontalScrollBar);
+			FreeZuiControl(p->m_pHorizontalScrollBar, NULL);
 			p->m_pHorizontalScrollBar = NULL;
 		}
 

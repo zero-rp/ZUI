@@ -111,6 +111,8 @@ void js_pushnumber(js_State *J, double v)
 
 void js_pushstring(js_State *J, const wchar_t *v)
 {
+	if (!v)
+		return;
 	int n = wcslen(v);
 	CHECKSTACK(1);
 	if (n <= soffsetof(js_Value, type)/sizeof(wchar_t)) {

@@ -166,14 +166,16 @@ ZEXPORT ZuiAny ZCALL ZuiMenuProc(ZuiInt ProcId, ZuiControl cp, ZuiMenu p, ZuiAny
 		break;
 	}
 	case Proc_OnDestroy: {
-		p->m_pm->m_pRoot = NULL;
-		DestroyWindow(p->m_hWnd);
 		ZCtlProc old_call = p->old_call;
 		ZuiAny old_udata = p->old_udata;
 
-		//free(p);
-		
-		return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+		p->m_pm->m_pRoot = NULL;
+
+		old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+
+		DestroyWindow(p->m_hWnd);
+		free(p);
+		return;
 		break;
 	}
 	case Proc_OnCreate: {
@@ -266,9 +268,9 @@ ZuiDestroyMenu(ZuiMenu p) {
 			break;
 		ZuiMenu old = next;
 		next = next->m_aParentMenu;
-		FreeZuiControl(old->root);
+		FreeZuiControl(old->root, TRUE);
 	}
-	FreeZuiControl(p->root);
+	FreeZuiControl(p->root, TRUE);
 	if (p->m_aParentMenu)
 		p->m_aParentMenu->m_aSubMenu = NULL;
 	else

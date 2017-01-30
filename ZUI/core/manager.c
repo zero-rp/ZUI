@@ -142,7 +142,7 @@ ZuiPaintManager NewCPaintManagerUI() {
 void FreeCPaintManagerUI(ZuiPaintManager p) {
 	// Delete the control-tree structures
 	if (p->m_pRoot != NULL)
-		FreeZuiControl(p->m_pRoot);
+		FreeZuiControl(p->m_pRoot, NULL);
 
 	ZuiPaintManagerRemoveAllTimers(p);
 
@@ -165,11 +165,11 @@ void FreeCPaintManagerUI(ZuiPaintManager p) {
 		ZuiControl cp = p->m_aDelayedCleanup->data[0];
 		darray_delete(p->m_aDelayedCleanup, darray_find(p->m_aDelayedCleanup, cp));
 		if (darray_len(p->m_aDelayedCleanup) == 0) {
-			FreeZuiControl(cp);
+			FreeZuiControl(cp, NULL);
 			break;
 		}
 		else
-			FreeZuiControl(cp);
+			FreeZuiControl(cp, NULL);
 	};
 	darray_destroy(p->m_aDelayedCleanup);
 	js_freestate(p->m_js);
@@ -675,10 +675,10 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 			ZuiControl cp = p->m_aDelayedCleanup->data[0];
 			darray_delete(p->m_aDelayedCleanup, darray_find(p->m_aDelayedCleanup, cp));
 			if (darray_len(p->m_aDelayedCleanup) == 0) {
-				FreeZuiControl(cp);
+				FreeZuiControl(cp, NULL);
 				break;
 			}else
-				FreeZuiControl(cp);
+				FreeZuiControl(cp, NULL);
 		} ;
 		return TRUE;
 	}

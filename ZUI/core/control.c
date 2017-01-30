@@ -58,9 +58,12 @@ ZuiControl NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny
 	return NULL;
 }
 //销毁控件
-void FreeZuiControl(ZuiControl p)
+void FreeZuiControl(ZuiControl p, ZuiBool Delayed)
 {
-	ZuiControlCall(Proc_OnDestroy, p, NULL, NULL, NULL);
+	if (!Delayed)
+		ZuiControlCall(Proc_OnDestroy, p, NULL, NULL, NULL);
+	else
+		ZuiPaintManagerAddDelayedCleanup(p->m_pManager, p);
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -104,6 +107,9 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		free(p->m_sText);
 		p->m_sText = _wcsdup((ZuiText)Param1);
 		break;
+	}
+	case Proc_GetText: {
+		return p->m_sText;
 	}
 	case Proc_SetName: {
 		if (!p->m_sName)
@@ -569,7 +575,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 		if (wcscmp(Param1, L"root") == 0) ZuiBuilderJs_pushControl(Param2, p->m_pManager->m_pRoot);
 		else if (wcscmp(Param1, L"parent") == 0)  
 			ZuiBuilderJs_pushControl(Param2, p->m_pParent);
-		else if (wcscmp(Param1, L"text") == 0) js_pushstring(Param2, p->m_sText);
+		else if (wcscmp(Param1, L"text") == 0) js_pushstring(Param2, ZuiControlCall(Proc_GetText, p, NULL, NULL, NULL));
 		else if (wcscmp(Param1, L"tooltip") == 0) js_pushstring(Param2, p->m_sToolTip);
 		else if (wcscmp(Param1, L"width") == 0) js_pushnumber(Param2, p->m_cxyFixed.cx);
 		else if (wcscmp(Param1, L"height") == 0) js_pushnumber(Param2, p->m_cxyFixed.cy);

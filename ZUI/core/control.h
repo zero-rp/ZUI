@@ -52,46 +52,47 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define	Proc_Activate			22	//活动
 #define	Proc_SetVisible			23	//设置是否可视
 #define	Proc_SetText			24	//设置文本
-#define	Proc_SetName			25	//设置名字
-#define	Proc_SetTooltip			26	//设置提示文本
-#define	Proc_GetPos				27	//得到控件位置
-#define	Proc_SetPos				28	//设置控件位置并重绘
-#define	Proc_SetManager			29	//设置控件的绘制管理者
+#define	Proc_GetText			25	//设置文本
+#define	Proc_SetName			26	//设置名字
+#define	Proc_SetTooltip			27	//设置提示文本
+#define	Proc_GetPos				28	//得到控件位置
+#define	Proc_SetPos				29	//设置控件位置并重绘
+#define	Proc_SetManager			30	//设置控件的绘制管理者
 //设置大小的限制值
-#define	Proc_GetMinWidth		30	//
-#define	Proc_SetMinWidth		31	//
-#define	Proc_GetMaxWidth		32	//
-#define	Proc_SetMaxWidth		33	//
-#define	Proc_GetMinHeight		34	//
-#define	Proc_SetMinHeight		35	//
-#define	Proc_GetMaxHeight		36	//
-#define	Proc_SetMaxHeight		37	//
+#define	Proc_GetMinWidth		31	//
+#define	Proc_SetMinWidth		32	//
+#define	Proc_GetMaxWidth		33	//
+#define	Proc_SetMaxWidth		34	//
+#define	Proc_GetMinHeight		35	//
+#define	Proc_SetMinHeight		36	//
+#define	Proc_GetMaxHeight		37	//
+#define	Proc_SetMaxHeight		38	//
 
-#define	Proc_GetWidth			38	//
-#define	Proc_GetHeight			39	//
-#define	Proc_GetX				40	//
-#define	Proc_GetY				41
-#define	Proc_EstimateSize		42	//获取自适应大小
-#define	Proc_SetFloatPercent	43	//
-#define	Proc_GetPadding			44
-#define	Proc_SetPadding			45	// 设置外边距，由上层窗口绘制
-#define	Proc_GetFixedXY			46	// 实际大小位置使用GetPos获取，这里得到的是预设的参考值
-#define	Proc_SetFixedXY			47	// 仅float为true时有效
-#define	Proc_GetFixedWidth		48	// 实际大小位置使用GetPos获取，这里得到的是预设的参考值
-#define	Proc_SetFixedWidth		49	// 预设的参考值
-#define	Proc_GetFixedHeight		50	// 实际大小位置使用GetPos获取，这里得到的是预设的参考值
-#define	Proc_SetFixedHeight		51	// 预设的参考值
-#define	Proc_GetRelativePos		52	// 相对(父控件)位置
-#define Proc_GetImePoint		53	
-#define	Proc_SetFloat			54	//设置为浮动控件
-#define	Proc_SetEnabled			55	//设置可用状态
-#define	Proc_SetFocus			56	//设置焦点
-#define	Proc_SetDrag			57	//设置拖拽控件
+#define	Proc_GetWidth			39	//
+#define	Proc_GetHeight			40	//
+#define	Proc_GetX				41	//
+#define	Proc_GetY				42
+#define	Proc_EstimateSize		43	//获取自适应大小
+#define	Proc_SetFloatPercent	44	//
+#define	Proc_GetPadding			45
+#define	Proc_SetPadding			46	// 设置外边距，由上层窗口绘制
+#define	Proc_GetFixedXY			47	// 实际大小位置使用GetPos获取，这里得到的是预设的参考值
+#define	Proc_SetFixedXY			48	// 仅float为true时有效
+#define	Proc_GetFixedWidth		49	// 实际大小位置使用GetPos获取，这里得到的是预设的参考值
+#define	Proc_SetFixedWidth		50	// 预设的参考值
+#define	Proc_GetFixedHeight		51	// 实际大小位置使用GetPos获取，这里得到的是预设的参考值
+#define	Proc_SetFixedHeight		52	// 预设的参考值
+#define	Proc_GetRelativePos		53	// 相对(父控件)位置
+#define Proc_GetImePoint		54	
+#define	Proc_SetFloat			55	//设置为浮动控件
+#define	Proc_SetEnabled			56	//设置可用状态
+#define	Proc_SetFocus			57	//设置焦点
+#define	Proc_SetDrag			58	//设置拖拽控件
 
 //-------绘图资源
-#define	Proc_SetBkColor			58	//设置背景色
-#define	Proc_SetBkImage			59	//设置背景图片
-#define	Proc_SetBorderColor		60	//设置边框颜色
+#define	Proc_SetBkColor			59	//设置背景色
+#define	Proc_SetBkImage			60	//设置背景图片
+#define	Proc_SetBorderColor		61	//设置边框颜色
 
 
 //-------控件状态
@@ -167,7 +168,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 //创建控件
 ZuiControl NewZuiControl(ZuiText classname, void* Param1, void* Param2, void* Param3);
 //销毁控件
-void FreeZuiControl(ZuiControl p);
+void FreeZuiControl(ZuiControl p, ZuiBool Delayed);
 
 //调用控件处理函数
 ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);

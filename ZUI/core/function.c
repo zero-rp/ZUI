@@ -26,8 +26,8 @@ void * ZCALL Zui_Hash(wchar_t* str) {
 			mov eax, edx
 		}
 	*/
-	register size_t hash = 0;
-	size_t ch;
+	size_t hash = 0;
+	wchar_t ch;
 	for (long i = 0; ch = (size_t)*str++; i++)
 	{
 		if ((i & 1) == 0)

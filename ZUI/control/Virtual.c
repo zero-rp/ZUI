@@ -51,6 +51,11 @@ ZEXPORT ZuiAny ZCALL ZuiVirtualProc(ZuiInt ProcId, ZuiControl cp, ZuiVirtual p, 
 		p->m_hwnd = Param1;
 	}
 		break;
+	case Proc_SetText: {
+		SetWindowText(p->m_hwnd, Param1);
+
+	}
+		break;
 	default:
 		break;
 	}

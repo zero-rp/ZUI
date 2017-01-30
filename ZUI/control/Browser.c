@@ -46,6 +46,13 @@ typedef void(*t_wkeSetHandle)(wkeWebView webView, HWND wnd);
 typedef void(*t_wkeSetHandleOffset)(wkeWebView webView, int x, int y);
 typedef void(*t_wkeLoadURLW)(wkeWebView webView, const wchar_t* url);
 typedef void(*t_wkeLoadHTMLW)(wkeWebView webView, const wchar_t* html);
+typedef void(*t_wkeLoadFileW)(wkeWebView webView, const wchar_t* html);
+typedef void(*t_wkeOnLoadUrlBegin)(wkeWebView webView, void* callback, void* callbackParam);
+typedef void(*t_wkeOnNavigation)(wkeWebView webView, void* callback, void* param);
+typedef void(*t_wkeSetUserAgentW)(wkeWebView webView, const wchar_t* userAgent);
+typedef void*(*t_wkeRunJSW)(wkeWebView webView, const wchar_t* script);
+typedef wchar_t*(*t_jsToTempStringW)(void *es, long long v);
+typedef void*(*t_wkeGlobalExec)(wkeWebView webView);
 
 t_wkeInitialize wkeInitialize;
 t_wkeDestroyWebView wkeDestroyWebView;
@@ -71,7 +78,13 @@ t_wkeSetHandle wkeSetHandle;
 t_wkeSetHandleOffset wkeSetHandleOffset;
 t_wkeLoadURLW wkeLoadURLW;
 t_wkeLoadHTMLW wkeLoadHTMLW;
-
+t_wkeLoadFileW wkeLoadFileW;
+t_wkeOnLoadUrlBegin wkeOnLoadUrlBegin;
+t_wkeOnNavigation wkeOnNavigation;
+t_wkeSetUserAgentW wkeSetUserAgentW;
+t_wkeRunJSW wkeRunJSW;
+t_jsToTempStringW jsToTempStringW;
+t_wkeGlobalExec wkeGlobalExec;
 // 回调：重绘
 void _staticOnPaintUpdated(wkeWebView webView, void* param, const HDC hdc, int x, int y, int cx, int cy)
 {
@@ -98,7 +111,12 @@ wkeWebView _staticOnCreateView(wkeWebView webWindow, void* param, int navType, v
 // 回调：url改变
 wkeWebView _staticOnURLChanged(wkeWebView webView, void* param, void *url)
 {
+	((ZuiBrowser)param)->url = _wcsdup(wkeGetStringW(url));
 	ZuiControlNotify(L"urlchanged", ((ZuiBrowser)param)->cp, wkeGetStringW(url), JS_TSHRSTR, NULL, NULL, NULL, NULL);
+}
+// 回调：转跳
+BOOL _staticOnNavigation(wkeWebView webView, void* param, int navigationType, void *url) {
+	return !ZuiControlNotify(L"navigation", ((ZuiBrowser)param)->cp, wkeGetStringW(url), JS_TSHRSTR, NULL, NULL, NULL, NULL);
 }
 ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 	switch (ProcId)
@@ -179,6 +197,27 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
 		wkeLoadHTMLW = (t_wkeLoadHTMLW)GetProcAddress(dll, "wkeLoadHTMLW");
 		if (!wkeLoadHTMLW)
 			goto LoadLibraryErro;
+		wkeOnLoadUrlBegin = (t_wkeOnLoadUrlBegin)GetProcAddress(dll, "wkeOnLoadUrlBegin");
+		if (!wkeOnLoadUrlBegin)
+			goto LoadLibraryErro;
+		wkeOnNavigation = (t_wkeOnNavigation)GetProcAddress(dll, "wkeOnNavigation");
+		if (!wkeOnNavigation)
+			goto LoadLibraryErro;
+		wkeSetUserAgentW = (t_wkeSetUserAgentW)GetProcAddress(dll, "wkeSetUserAgentW");
+		if (!wkeSetUserAgentW)
+			goto LoadLibraryErro;
+		wkeRunJSW = (t_wkeRunJSW)GetProcAddress(dll, "wkeRunJSW");
+		if (!wkeRunJSW)
+			goto LoadLibraryErro;
+		wkeLoadFileW = (t_wkeLoadFileW)GetProcAddress(dll, "wkeLoadFileW");
+		if (!wkeLoadFileW)
+			goto LoadLibraryErro;
+		jsToTempStringW = (t_jsToTempStringW)GetProcAddress(dll, "jsToTempStringW");
+		if (!jsToTempStringW)
+			goto LoadLibraryErro;
+		wkeGlobalExec = (t_wkeGlobalExec)GetProcAddress(dll, "wkeGlobalExec");
+		if (!wkeGlobalExec)
+			goto LoadLibraryErro;
 
 		wkeInitialize();
 		return TRUE;
@@ -202,6 +241,8 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
 		wkeOnTitleChanged(p->view, _staticOnTitleChanged, p);
 		wkeOnCreateView(p->view, _staticOnCreateView, p);
 		wkeOnURLChanged(p->view, _staticOnURLChanged, p);
+		wkeOnNavigation(p->view, _staticOnNavigation, p);
+		//wkeSetUserAgentW(p->view, L"Mozilla/5.0 (Linux; Android 4.4.2; Nexus 4 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.114 Mobile Safari/537.36");
 		return p;
 		break;
 	}
@@ -217,7 +258,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
 		switch (event->Type)
 		{
 		case ZEVENT_TIMER: {
-			wkeRepaintIfNeeded(p->view);
+			//wkeRepaintIfNeeded(p->view);
 			break;
 		}
 		case ZEVENT_SETFOCUS:
@@ -237,7 +278,8 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
 				flags |= WKE_EXTENDED;
 
 			if (wkeFireKeyPressEvent(p->view, charCode, flags, FALSE))
-				return 0;
+				//return 0;
+			break;
 			break;
 		}
 		case ZEVENT_KEYUP: {
@@ -358,8 +400,14 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
 	case Proc_Browser_LoadHtml: {
 		if (Param1)
 		{
-			wkeLoadHTMLW(p->view, ((ZuiRes)Param1)->p);
-			ZuiResDBDelRes((ZuiRes)Param1);
+			wkeLoadHTMLW(p->view, Param1);
+		}
+		break;
+	}
+	case Proc_Browser_LoadFile: {
+		if (Param1)
+		{
+			wkeLoadFileW(p->view, Param1);
 		}
 		break;
 	}
@@ -368,15 +416,36 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
 		break;
 	}
 	case Proc_SetAttribute: {
+
 		if (wcscmp(Param1, L"url") == 0) ZuiControlCall(Proc_Browser_LoadUrl, cp, Param2, NULL, NULL);
-		if (wcscmp(Param1, L"html") == 0)
-			ZuiControlCall(Proc_Browser_LoadHtml, cp, ZuiResDBGetRes(Param2, ZREST_TXT), NULL, NULL);
+		if (wcscmp(Param1, L"html") == 0) {
+			ZuiControlCall(Proc_Browser_LoadHtml, cp, Param2, NULL, NULL);
+		}
+		break;
+	}
+	case Proc_Browser_RunJs: {
+		if (Param1) {
+			return wkeRunJSW(p->view, Param1);
+		}
+	}
+	case Proc_Browser_jsToString: {
+		void *es = wkeGlobalExec(p->view);
+		if (es && Param1) {
+
+			long long v = Param1;
+			return jsToTempStringW(es, v);
+		}
+		return NULL;
 		break;
 	}
 	case Proc_JsPut: {
 		js_State *J = Param2;
 		if (wcscmp(Param1, L"url") == 0) ZuiControlCall(Proc_Browser_LoadUrl, cp, (ZuiAny)js_tostring(J, -1), NULL, NULL);
 		
+		break;
+	}
+	case Proc_JsHas: {
+		if (wcscmp(Param1, L"url") == 0) js_pushstring(Param2, p->url);
 		break;
 	}
 	case Proc_GetImePoint: {
@@ -389,7 +458,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
 	}
 	case Proc_OnInit: {
 		wkeSetHandle(p->view, cp->m_pManager->m_hWndPaint);
-		ZuiPaintManagerSetTimer(cp, 1000, 20);
+		//ZuiPaintManagerSetTimer(cp, 1000, 20);
 		break;
 	}
 	case Proc_GetControlFlags: {

@@ -207,7 +207,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 			ZuiBool https = FALSE;
 			int len;
 			int i;
-			parseptr2 = arr[1];
+			parseptr2 = Path + 4;
 			parseptr1 = wcschr(parseptr2, L':');
 			if (NULL != parseptr1) {
 				len = parseptr1 - parseptr2;
@@ -229,6 +229,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 					parseptr2++;
 				}
 				parseptr1 = wcschr(parseptr2, L':');
+				parseptr1 = NULL;
 				if (NULL == parseptr1)//判断有无端口号
 				{
 					parseptr1 = wcschr(parseptr2, L'/');
@@ -404,10 +405,70 @@ ZEXPORT ZuiVoid ZCALL ZuiResDBDelRes(ZuiRes res) {
 			if (res->type == ZREST_IMG) {
 				ZuiDestroyImage(res->p);
 			}
-			else if (res->type == ZREST_TXT) {
+			else if (res->type == ZREST_TXT || res->type ==ZREST_STREAM) {
 				free(res->p);
 			}
 			free(res);
 		}
 	}
+}
+ZEXPORT ZuiRes ZCALL ZuiResDBNewTempRes(ZuiAny b, ZuiInt buflen, ZuiInt type) {
+	//创建对应的资源类型
+	ZuiRes res = malloc(sizeof(ZRes));
+	if (!res)
+		return NULL;
+	memset(res, 0, sizeof(ZRes));
+	res->type = type;
+	ZuiAny buf = malloc(buflen);
+	memcpy(buf, b, buflen);
+	if (type == ZREST_IMG) {
+		ZuiImage img = ZuiLoadImageFromBinary(buf, buflen);
+		res->p = img;
+		//释放缓冲
+		free(buf);
+		if (!res->p) {
+			free(res);
+			return NULL;
+		}
+	}
+	else if (type == ZREST_TXT) {
+		int bufsize;
+		wchar_t *txtbuf;
+		if (ZuiStingIsUtf8(buf, buflen))
+		{
+			bufsize = ZuiUtf8ToUnicode(buf, -1, 0, 0)*sizeof(wchar_t);
+			txtbuf = malloc(bufsize + 2);
+			bufsize = ZuiUtf8ToUnicode(buf, buflen, txtbuf, bufsize);
+			txtbuf[bufsize] = 0;
+		}
+		else
+		{
+			bufsize = ZuiAsciiToUnicode(buf, -1, 0, 0)*sizeof(wchar_t);
+			txtbuf = malloc(bufsize + 2);
+			bufsize = ZuiAsciiToUnicode(buf, buflen, txtbuf, bufsize);
+			txtbuf[bufsize] = 0;
+		}
+		free(buf);
+		res->p = txtbuf;
+	}
+	else if (type == ZREST_ZIP)
+	{
+		res->p = ZuiResDBCreateFromBuf(buf, buflen, 0);
+		free(buf);
+		if (!res->p) {
+			free(res);
+			return NULL;
+		}
+	}
+	else if (type == ZREST_STREAM) {
+		res->p = buf;
+		res->plen = buflen;
+	}
+	if (!res->p) {
+		free(res);
+		return NULL;
+	}
+	//保存到资源map
+	res->ref++;////增加引用计数
+	return res;
 }
