@@ -23,33 +23,33 @@ typedef struct _ZControl *ZuiControl, ZControl;
 //事件类型定义
 typedef enum EVENTTYPE_UI
 {
-	ZEVENT__FIRST = 1,
-	ZEVENT__KEYBEGIN,
-	ZEVENT_KEYDOWN,
-	ZEVENT_KEYUP,
-	ZEVENT_CHAR,
-	ZEVENT_SYSKEY,
-	ZEVENT__KEYEND,
-	ZEVENT__MOUSEBEGIN,
-	ZEVENT_MOUSEMOVE,//鼠标移动
-	ZEVENT_MOUSELEAVE,//鼠标离开
-	ZEVENT_MOUSEENTER,//鼠标进入
-	ZEVENT_MOUSEHOVER,
-	ZEVENT_LBUTTONDOWN,
-	ZEVENT_LBUTTONUP,
-	ZEVENT_RBUTTONDOWN,
-	ZEVENT_LDBLCLICK,
-	ZEVENT_CONTEXTMENU,
-	ZEVENT_SCROLLWHEEL,
-	ZEVENT__MOUSEEND,
-	ZEVENT_KILLFOCUS,
-	ZEVENT_SETFOCUS,
-	ZEVENT_WINDOWSIZE,
-	ZEVENT_SETCURSOR,
-	ZEVENT_TIMER,
-	ZEVENT_NOTIFY,
-	ZEVENT_COMMAND,
-	ZEVENT__LAST,
+    ZEVENT__FIRST = 1,
+    ZEVENT__KEYBEGIN,
+    ZEVENT_KEYDOWN,
+    ZEVENT_KEYUP,
+    ZEVENT_CHAR,
+    ZEVENT_SYSKEY,
+    ZEVENT__KEYEND,
+    ZEVENT__MOUSEBEGIN,
+    ZEVENT_MOUSEMOVE,//鼠标移动
+    ZEVENT_MOUSELEAVE,//鼠标离开
+    ZEVENT_MOUSEENTER,//鼠标进入
+    ZEVENT_MOUSEHOVER,
+    ZEVENT_LBUTTONDOWN,
+    ZEVENT_LBUTTONUP,
+    ZEVENT_RBUTTONDOWN,
+    ZEVENT_LDBLCLICK,
+    ZEVENT_CONTEXTMENU,
+    ZEVENT_SCROLLWHEEL,
+    ZEVENT__MOUSEEND,
+    ZEVENT_KILLFOCUS,
+    ZEVENT_SETFOCUS,
+    ZEVENT_WINDOWSIZE,
+    ZEVENT_SETCURSOR,
+    ZEVENT_TIMER,
+    ZEVENT_NOTIFY,
+    ZEVENT_COMMAND,
+    ZEVENT__LAST,
 };
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -74,23 +74,23 @@ typedef enum EVENTTYPE_UI
 
 typedef struct tagTPercentInfo
 {
-	double left;
-	double top;
-	double right;
-	double bottom;
+    double left;
+    double top;
+    double right;
+    double bottom;
 } TPercentInfo;
 
 //事件结构
 typedef struct tagTEventUI
 {
-	int Type;			//事件类型
-	ZuiControl pSender;	//事件对应的控件
-	DWORD dwTimestamp;	//时间戳
-	ZPoint ptMouse;		//
-	TCHAR chKey;		//
-	WORD wKeyState;		//
-	WPARAM wParam;		//
-	LPARAM lParam;		//
+    int Type;			//事件类型
+    ZuiControl pSender;	//事件对应的控件
+    DWORD dwTimestamp;	//时间戳
+    ZPoint ptMouse;		//
+    TCHAR chKey;		//
+    WORD wKeyState;		//
+    WPARAM wParam;		//
+    LPARAM lParam;		//
 } TEventUI;
 
 
@@ -99,54 +99,54 @@ typedef struct tagTEventUI
 /**绘制管理器结构*/
 typedef struct _ZuiPaintManager
 {
-	HWND m_hWndPaint;				///要ZuiPaintManager进行Direct绘图操作的窗体句柄
-	HIMC m_hIMC;					///输入法句柄
-	HDC m_hDcPaint;					///直接绘制到窗体的DC(为窗体的整个区域包括费客户区)
-	ZuiGraphics m_hDcOffscreen;		///内存缓冲区绘图DC
+    HWND m_hWndPaint;				///要ZuiPaintManager进行Direct绘图操作的窗体句柄
+    HIMC m_hIMC;					///输入法句柄
+    HDC m_hDcPaint;					///直接绘制到窗体的DC(为窗体的整个区域包括费客户区)
+    ZuiGraphics m_hDcOffscreen;		///内存缓冲区绘图DC
 
-	COLORREF* m_pOffscreenBits;		///
+    COLORREF* m_pOffscreenBits;		///
 
-	int m_iTooltipWidth;			///
-	HWND m_hwndTooltip;				///提示窗口句柄
-	TOOLINFO m_ToolTip;				///提示消息
-	int m_iHoverTime;				///鼠标悬停世间
-	ZuiBool m_bShowUpdateRect;			///是否显示更新区域 调试使用
-	//
-	ZuiControl m_pRoot;				///控件树根节点
-	ZuiControl m_pFocus;			///处于获得焦点状态的控件
-	ZuiControl m_pEventHover;		///处于鼠标悬停状态的控件
-	ZuiControl m_pEventClick;		///被鼠标点击的控件
-	ZuiControl m_pEventKey;			///接收键盘输入的控件
-	//
-	ZPoint m_ptWin;					///窗口左上角位置
-	ZPoint m_ptLastMousePos;
-	SIZE m_szMinWindow;				///窗口最小大小
-	SIZE m_szMaxWindow;				///窗口最大大小
-	SIZE m_szInitWindowSize;		///窗体初始化时的大小
-	UINT m_uTimerID;				///当前定时器ID
-	ZuiBool m_bFirstLayout;			///是否是第一次布局 相当于窗口初始化
-	ZuiBool m_bUpdateNeeded;			///是否需要更新界面布局
-	ZuiBool m_bFocusNeeded;			///是否需要焦点
-	ZuiBool m_bOffscreenPaint;			///是否需要开双缓存绘图
+    int m_iTooltipWidth;			///
+    HWND m_hwndTooltip;				///提示窗口句柄
+    TOOLINFO m_ToolTip;				///提示消息
+    int m_iHoverTime;				///鼠标悬停世间
+    ZuiBool m_bShowUpdateRect;			///是否显示更新区域 调试使用
+    //
+    ZuiControl m_pRoot;				///控件树根节点
+    ZuiControl m_pFocus;			///处于获得焦点状态的控件
+    ZuiControl m_pEventHover;		///处于鼠标悬停状态的控件
+    ZuiControl m_pEventClick;		///被鼠标点击的控件
+    ZuiControl m_pEventKey;			///接收键盘输入的控件
+    //
+    ZPoint m_ptWin;					///窗口左上角位置
+    ZPoint m_ptLastMousePos;
+    SIZE m_szMinWindow;				///窗口最小大小
+    SIZE m_szMaxWindow;				///窗口最大大小
+    SIZE m_szInitWindowSize;		///窗体初始化时的大小
+    UINT m_uTimerID;				///当前定时器ID
+    ZuiBool m_bFirstLayout;			///是否是第一次布局 相当于窗口初始化
+    ZuiBool m_bUpdateNeeded;			///是否需要更新界面布局
+    ZuiBool m_bFocusNeeded;			///是否需要焦点
+    ZuiBool m_bOffscreenPaint;			///是否需要开双缓存绘图
 
-	BYTE m_nOpacity;				///窗口透明度
-	ZuiBool m_bLayered;				///是否分层
-	RECT m_rcLayeredInset;			///
-	ZuiBool m_bLayeredChanged;			///
-	RECT m_rcLayeredUpdate;			///
+    BYTE m_nOpacity;				///窗口透明度
+    ZuiBool m_bLayered;				///是否分层
+    RECT m_rcLayeredInset;			///
+    ZuiBool m_bLayeredChanged;			///
+    RECT m_rcLayeredUpdate;			///
 
-	ZuiBool m_bUnfocusPaintWindow;		///开启无焦点窗口
-	ZuiBool m_bMouseTracking;			///是否需要支持鼠标追踪
-	ZuiBool m_bMouseCapture;			///是否需要支持鼠标捕获
-	ZuiBool m_bIsPainting;				///是否正在绘制
-	ZuiBool m_bUsedVirtualWnd;
-	//
-	js_State *m_js;				///
-	//
-	DArray *m_aTimers;				///时钟句柄数组
-	DArray *m_aPostPaintControls;	///在绘制完成后发送绘制请求的控件集合
-	DArray *m_aFoundControls;		///
-	DArray *m_aDelayedCleanup;		//延时销毁的控件
+    ZuiBool m_bUnfocusPaintWindow;		///开启无焦点窗口
+    ZuiBool m_bMouseTracking;			///是否需要支持鼠标追踪
+    ZuiBool m_bMouseCapture;			///是否需要支持鼠标捕获
+    ZuiBool m_bIsPainting;				///是否正在绘制
+    ZuiBool m_bUsedVirtualWnd;
+    //
+    js_State *m_js;				///
+    //
+    DArray *m_aTimers;				///时钟句柄数组
+    DArray *m_aPostPaintControls;	///在绘制完成后发送绘制请求的控件集合
+    DArray *m_aFoundControls;		///
+    DArray *m_aDelayedCleanup;		//延时销毁的控件
 } *ZuiPaintManager, IZuiPaintManager;
 
 ZuiBool ZuiPaintManagerInitialize();
