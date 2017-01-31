@@ -83,11 +83,9 @@ ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromFile(ZuiText Path, ZuiText Pass);
 * @return 此函数没有返回值.
 */
 ZEXPORT ZuiVoid ZCALL ZuiResDBDestroy(ZuiResDB db);
-/** 此函数用作绘制文本.
-* @param Graphics ZuiGraphics对象
-* @param StringFormat 文本格式
-* @param String 文本
-* @param Rect 矩形区域
+/** 此函数用作获取资源.
+* @param Path 资源字符串
+* @param type 资源类型
 * @return 此函数没有返回值.
 */
 ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type);//获取一个资源

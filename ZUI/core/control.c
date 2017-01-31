@@ -598,6 +598,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 			js_setproperty(Param2, -2, L"right");
 		}
 		else if (wcscmp(Param1, L"enabled") == 0) js_pushboolean(Param2, p->m_bEnabled);
+        else if (wcscmp(Param1, L"visible") == 0) js_pushboolean(Param2, p->m_bVisible);
 		break;
 	}
 	case Proc_JsPut: {

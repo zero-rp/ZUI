@@ -38,6 +38,7 @@ typedef struct _ZWindow
 	ZuiBool m_combo;//组合窗口 失焦隐藏
 }*ZuiWindow, ZWindow;
 ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
-
+//查找窗口
+ZEXPORT ZuiControl ZCALL ZuiWindowFindName(ZuiText Name);
 
 #endif	//__UIWINDOW_H__
