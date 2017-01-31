@@ -202,13 +202,22 @@ ZEXPORT ZuiAny ZCALL ZuiMenuProc(ZuiInt ProcId, ZuiControl cp, ZuiMenu p, ZuiAny
         break;
     }
     case Proc_SetBorderColor: {
-        ZuiLayout *layout = (ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata;
         if (!cp->m_dwBorderColor) {
             //以前没有边框了,加上边距
             ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.left += 1;
             ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.bottom += 1;
             ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.right += 1;
             ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.top += 1;
+        }
+        break;
+    }
+    case Proc_Layout_SetInset: {
+        if (!cp->m_dwBorderColor) {
+            //以前没有边框了,加上边距
+            ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.left = 1;
+            ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.bottom = 1;
+            ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.right = 1;
+            ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.top = 1;
         }
         break;
     }

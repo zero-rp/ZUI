@@ -51,7 +51,7 @@
 typedef struct _ZuiLayout
 {
 	DArray *m_items;			///控件数组
-	RECT m_rcInset;				///
+	RECT m_rcInset;				///内边距
 	BOOL m_bMouseChildEnabled;
 	int m_iChildPadding;
 	BOOL m_bScrollProcess; // 防止SetPos循环调用
