@@ -43,6 +43,28 @@ typedef struct z_stream_s {
 
 typedef z_stream *z_streamp;
 
+/*
+gzip header information passed to and from zlib routines.  See RFC 1952
+for more details on the meanings of these fields.
+*/
+typedef struct gz_header_s {
+    int     text;       /* true if compressed data believed to be text */
+    uLong   time;       /* modification time */
+    int     xflags;     /* extra flags (not used when writing a gzip file) */
+    int     os;         /* operating system */
+    Bytef   *extra;     /* pointer to extra field or Z_NULL if none */
+    uInt    extra_len;  /* extra field length (valid if extra != Z_NULL) */
+    uInt    extra_max;  /* space at extra (only when reading header) */
+    Bytef   *name;      /* pointer to zero-terminated file name or Z_NULL */
+    uInt    name_max;   /* space at name (only when reading header) */
+    Bytef   *comment;   /* pointer to zero-terminated comment or Z_NULL */
+    uInt    comm_max;   /* space at comment (only when reading header) */
+    int     hcrc;       /* true if there was or will be a header crc */
+    int     done;       /* true when done reading gzip header (not used
+                        when writing a gzip file) */
+} gz_header;
+
+typedef gz_header *gz_headerp;
 
 #define Z_NO_FLUSH      0
 #define Z_PARTIAL_FLUSH 1
@@ -115,6 +137,19 @@ ZEXTERN int ZEXPORT inflateInit2_ OF((z_streamp strm, int  windowBits,
 ZEXTERN const z_crc_t * ZEXPORT get_crc_table    OF((void));
 ZEXTERN int            ZEXPORT inflateResetKeep OF((z_streamp));
 
+#define deflateInit(strm, level) \
+        deflateInit_((strm), (level), ZLIB_VERSION, (int)sizeof(z_stream))
+#define inflateInit(strm) \
+        inflateInit_((strm), ZLIB_VERSION, (int)sizeof(z_stream))
+#define deflateInit2(strm, level, method, windowBits, memLevel, strategy) \
+        deflateInit2_((strm),(level),(method),(windowBits),(memLevel),\
+                      (strategy), ZLIB_VERSION, (int)sizeof(z_stream))
+#define inflateInit2(strm, windowBits) \
+        inflateInit2_((strm), (windowBits), ZLIB_VERSION, \
+                      (int)sizeof(z_stream))
+#define inflateBackInit(strm, windowBits, window) \
+        inflateBackInit_((strm), (windowBits), (window), \
+                      ZLIB_VERSION, (int)sizeof(z_stream))
 
 #ifdef __cplusplus
 }

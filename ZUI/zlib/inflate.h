@@ -1,4 +1,17 @@
+/* inflate.h -- internal inflate state definition
+ * Copyright (C) 1995-2009 Mark Adler
+ * For conditions of distribution and use, see copyright notice in zlib.h
+ */
 
+/* WARNING: this file should *not* be used by applications. It is
+   part of the implementation of the compression library and is
+   subject to change. Applications should only use zlib.h.
+ */
+
+/* define NO_GZIP when compiling if you want to disable gzip header and
+   trailer decoding by inflate().  NO_GZIP would be used to avoid linking in
+   the crc code when it is not needed.  For shared libraries, gzip decoding
+   should be left enabled. */
 #ifndef NO_GZIP
 #  define GUNZIP
 #endif
@@ -39,6 +52,31 @@ typedef enum {
     SYNC        /* looking for synchronization bytes to restart inflate() */
 } inflate_mode;
 
+/*
+    State transitions between above modes -
+
+    (most modes can go to BAD or MEM on error -- not shown for clarity)
+
+    Process header:
+        HEAD -> (gzip) or (zlib) or (raw)
+        (gzip) -> FLAGS -> TIME -> OS -> EXLEN -> EXTRA -> NAME -> COMMENT ->
+                  HCRC -> TYPE
+        (zlib) -> DICTID or TYPE
+        DICTID -> DICT -> TYPE
+        (raw) -> TYPEDO
+    Read deflate blocks:
+            TYPE -> TYPEDO -> STORED or TABLE or LEN_ or CHECK
+            STORED -> COPY_ -> COPY -> TYPE
+            TABLE -> LENLENS -> CODELENS -> LEN_
+            LEN_ -> LEN
+    Read deflate codes in fixed or dynamic block:
+                LEN -> LENEXT or LIT or TYPE
+                LENEXT -> DIST -> DISTEXT -> MATCH -> LEN
+                LIT -> LEN
+    Process trailer:
+        CHECK -> LENGTH -> DONE
+ */
+
 /* state maintained between inflate() calls.  Approximately 10K bytes. */
 struct inflate_state {
     inflate_mode mode;          /* current inflate mode */
@@ -49,6 +87,7 @@ struct inflate_state {
     unsigned dmax;              /* zlib header max distance (INFLATE_STRICT) */
     unsigned long check;        /* protected copy of check value */
     unsigned long total;        /* protected copy of output count */
+    gz_headerp head;            /* where to save gzip header information */
         /* sliding window */
     unsigned wbits;             /* log base 2 of requested window size */
     unsigned wsize;             /* window size or zero if not using window */
