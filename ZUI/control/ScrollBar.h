@@ -8,6 +8,15 @@
 #define	Proc_ScrollBar_SetOwner			1004
 #define	Proc_ScrollBar_SetScrollRange	1005
 
+//------宏封装
+#define ZuiScrollBarSetHorizontal(Control, ...) ZProc(Control, ScrollBar_SetHorizontal, __VA_ARGS__);
+#define ZuiScrollBarSetScrollPos(Control, ...) ZProc(Control, ScrollBar_SetScrollPos, __VA_ARGS__);
+#define ZuiScrollBarGetScrollPos(Control, ...) ZProc(Control, ScrollBar_GetScrollPos, __VA_ARGS__);
+#define ZuiScrollBarGetScrollRange(Control, ...) ZProc(Control, ScrollBar_GetScrollRange, __VA_ARGS__);
+#define ZuiScrollBarSetOwner(Control, ...) ZProc(Control, ScrollBar_SetOwner, __VA_ARGS__);
+#define ZuiScrollBarSetScrollRange(Control, ...) ZProc(Control, ScrollBar_SetScrollRange, __VA_ARGS__);
+
+
 #define	DEFAULT_SCROLLBAR_SIZE			16		//默认滚动条大小
 #define	DEFAULT_TIMERID					10		//时钟ID
 typedef struct _ZScrollBar

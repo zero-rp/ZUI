@@ -20,6 +20,15 @@
 #define	Proc_Option_SetResSelectedHot		1034		//选中的点燃状态
 #define	Proc_Option_SetResSelectedPushed	1035	//选中的按下状态
 #define	Proc_Option_SetGroup				1036
+
+//------宏封装
+#define ZuiOptionSetSelected(Control, ...) ZProc(Control, Option_SetSelected, __VA_ARGS__);
+#define ZuiOptionGetSelected(Control, ...) ZProc(Control, Option_GetSelected, __VA_ARGS__);
+#define ZuiOptionSetResSelected(Control, ...) ZProc(Control, Option_SetResSelected, __VA_ARGS__);
+#define ZuiOptionSetResSelectedHot(Control, ...) ZProc(Control, Option_SetResSelectedHot, __VA_ARGS__);
+#define ZuiOptionSetResSelectedPushed(Control, ...) ZProc(Control, Option_SetResSelectedPushed, __VA_ARGS__);
+#define ZuiOptionSetGroup(Control, ...) ZProc(Control, Option_SetGroup, __VA_ARGS__);
+
 /**按钮控件结构*/
 typedef struct _ZOption
 {

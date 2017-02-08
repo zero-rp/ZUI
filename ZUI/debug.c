@@ -66,7 +66,18 @@ ZEXPORT ZuiAny ZCALL ZuiFFTProcEx(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zui
 void __stdcall DLLDebug(){
 	ZuiInit();
 	
+#if 1
+    ZuiControl win = NewZuiControl(L"Window", 0, 0, 0);
+    ZProc(win, Window_SetSize, 500, 500);
+    ZProc(win, Window_SetNoBox, TRUE);
+    ZProc(win, Window_SetNoBox, TRUE);
 
+    ZuiControl html = NewZuiControl(L"Html", 0, 0, 0);
+    ZuiControlSetBkColor(html, -1);
+    ZuiControlSetDrag(html, TRUE);
+    ZuiLayoutAdd(win, html);
+    ZuiMsgLoop();
+#endif
 
 	FILE*fp;
 	long flen;

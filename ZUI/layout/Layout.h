@@ -47,19 +47,55 @@
 #define	Proc_Layout_GetVerticalScrollBar	531
 #define	Proc_Layout_GetHorizontalScrollBar	532
 #define	Proc_Layout_ProcessScrollBar	533	//调整滚动条位置
+
+//------宏封装
+#define ZuiLayoutAdd(Control, ...) ZProc(Control, Layout_Add, __VA_ARGS__);
+#define ZuiLayoutAddAt(Control, ...) ZProc(Control, Layout_AddAt, __VA_ARGS__);
+#define ZuiLayoutRemove(Control, ...) ZProc(Control, Layout_Remove, __VA_ARGS__);
+#define ZuiLayoutRemoveAt(Control, ...) ZProc(Control, Layout_RemoveAt, __VA_ARGS__);
+#define ZuiLayoutRemoveAll(Control, ...) ZProc(Control, Layout_RemoveAll, __VA_ARGS__);
+#define ZuiLayoutGetCount(Control, ...) ZProc(Control, Layout_GetCount, __VA_ARGS__);
+#define ZuiLayoutGetItemIndex(Control, ...) ZProc(Control, Layout_GetItemIndex, __VA_ARGS__);
+#define ZuiLayoutSetItemIndex(Control, ...) ZProc(Control, Layout_SetItemIndex, __VA_ARGS__);
+#define ZuiLayoutGetItemAt(Control, ...) ZProc(Control, Layout_GetItemAt, __VA_ARGS__);
+#define ZuiLayoutSetFloatPos(Control, ...) ZProc(Control, Layout_SetFloatPos, __VA_ARGS__);
+#define ZuiLayoutSetInset(Control, ...) ZProc(Control, Layout_SetInset, __VA_ARGS__);
+#define ZuiLayoutGetScrollPos(Control, ...) ZProc(Control, Layout_GetScrollPos, __VA_ARGS__);
+#define ZuiLayoutGetScrollRange(Control, ...) ZProc(Control, Layout_GetScrollRange, __VA_ARGS__);
+#define ZuiLayoutSetScrollPos(Control, ...) ZProc(Control, Layout_SetScrollPos, __VA_ARGS__);
+#define ZuiLayoutSetScrollStepSize(Control, ...) ZProc(Control, Layout_SetScrollStepSize, __VA_ARGS__);
+#define ZuiLayoutGetScrollStepSize(Control, ...) ZProc(Control, Layout_GetScrollStepSize, __VA_ARGS__);
+#define ZuiLayoutLineUp(Control, ...) ZProc(Control, Layout_LineUp, __VA_ARGS__);
+#define ZuiLayoutLineDown(Control, ...) ZProc(Control, Layout_LineDown, __VA_ARGS__);
+#define ZuiLayoutPageUp(Control, ...) ZProc(Control, Layout_PageUp, __VA_ARGS__);
+#define ZuiLayoutPageDown(Control, ...) ZProc(Control, Layout_PageDown, __VA_ARGS__);
+#define ZuiLayoutHomeUp(Control, ...) ZProc(Control, Layout_HomeUp, __VA_ARGS__);
+#define ZuiLayoutEndDown(Control, ...) ZProc(Control, Layout_EndDown, __VA_ARGS__);
+#define ZuiLayoutLineLeft(Control, ...) ZProc(Control, Layout_LineLeft, __VA_ARGS__);
+#define ZuiLayoutLineRight(Control, ...) ZProc(Control, Layout_LineRight, __VA_ARGS__);
+#define ZuiLayoutPageLeft(Control, ...) ZProc(Control, Layout_PageLeft, __VA_ARGS__);
+#define ZuiLayoutPageRight(Control, ...) ZProc(Control, Layout_PageRight, __VA_ARGS__);
+#define ZuiLayoutHomeLeft(Control, ...) ZProc(Control, Layout_HomeLeft, __VA_ARGS__);
+#define ZuiLayoutEndRight(Control, ...) ZProc(Control, Layout_EndRight, __VA_ARGS__);
+#define ZuiLayoutEnableScrollBar(Control, ...) ZProc(Control, Layout_EnableScrollBar, __VA_ARGS__);
+#define ZuiLayoutGetVerticalScrollBar(Control, ...) ZProc(Control, Layout_GetVerticalScrollBar, __VA_ARGS__);
+#define ZuiLayoutGetHorizontalScrollBar(Control, ...) ZProc(Control, Layout_GetHorizontalScrollBar, __VA_ARGS__);
+#define ZuiLayoutProcessScrollBar(Control, ...) ZProc(Control, Layout_ProcessScrollBar, __VA_ARGS__);
+
+
 /**容器基类结构*/
 typedef struct _ZuiLayout
 {
-	DArray *m_items;			///控件数组
-	RECT m_rcInset;				///内边距
-	BOOL m_bMouseChildEnabled;
-	int m_iChildPadding;
-	BOOL m_bScrollProcess; // 防止SetPos循环调用
-	int	 m_nScrollStepSize;
-	ZuiControl m_pVerticalScrollBar;//纵向滚动条
-	ZuiControl m_pHorizontalScrollBar;//横向滚动条
+    DArray *m_items;			///控件数组
+    RECT m_rcInset;				///内边距
+    BOOL m_bMouseChildEnabled;
+    int m_iChildPadding;
+    BOOL m_bScrollProcess; // 防止SetPos循环调用
+    int	 m_nScrollStepSize;
+    ZuiControl m_pVerticalScrollBar;//纵向滚动条
+    ZuiControl m_pHorizontalScrollBar;//横向滚动条
 
-	ZCtlProc old_call;
+    ZCtlProc old_call;
 }*ZuiLayout, ZLayout;
 
 void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, void* Param2, void* Param3);

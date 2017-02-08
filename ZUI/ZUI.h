@@ -73,6 +73,8 @@ extern "C"
 #define ZCALL __attribute__((__stdcall__))
 #endif
 
+#define DEFARG(name, defval) ((#name[0]) ? (name + 0) : defval)
+#define ZProc(Control,Proc,Param1,Param2,Param3) ZuiControlCall(Proc_##Proc,Control,(ZuiAny)DEFARG(Param1, NULL), (ZuiAny)DEFARG(Param2, NULL), (ZuiAny)DEFARG(Param3, NULL));
 #define ARGB(A,R,G,B) ((int32_t)((((A)&0xff)<<24)|(((R)&0xff)<<16)|(((G)&0xff)<<8)|((B)&0xff)))
 #define RGBA(R,G,B,A) ARGB(A,R,G,B)
 #define RGB2ARGB(COLOR,A) RGBA(((COLOR) >> 16 & 0xFF), ((COLOR) >> 8 & 0xFF), ((COLOR) & 0xFF), (A))
@@ -187,6 +189,7 @@ typedef struct tagSIZE
 /*控件*/
 #include "control/Register.h"
 #include "control/window.h"
+#include "control/html.h"
 #include "control/Virtual.h"	//虚拟控件,用来管理原生控件
 #include "control/Menu.h"
 #include "control/MenuBar.h"

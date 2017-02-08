@@ -680,6 +680,7 @@ ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, 
     }
     return NULL;
 }
+
 ZuiBool ZuiControlNotifyPushJs(js_State *J, ZuiAny Param, ZuiInt Type)
 {
     switch (Type)

@@ -23,6 +23,18 @@
 #define	Proc_Window_SetSize			1007
 #define	Proc_Window_SetComBo		1008
 #define	Proc_Window_Popup			1009
+
+//------宏封装
+#define ZuiWindowSetNoBox(Control, ...) ZProc(Control, Window_SetNoBox, __VA_ARGS__);
+#define ZuiWindowSetWindowMin(Control, ...) ZProc(Control, Window_SetWindowMin, __VA_ARGS__);
+#define ZuiWindowSetWindowMax(Control, ...) ZProc(Control, Window_SetWindowMax, __VA_ARGS__);
+#define ZuiWindowSetWindowRestor(Control, ...) ZProc(Control, Window_SetWindowRestor, __VA_ARGS__);
+#define ZuiWindowSetMinInfo(Control, ...) ZProc(Control, Window_SetMinInfo, __VA_ARGS__);
+#define ZuiWindowSetMaxInfo(Control, ...) ZProc(Control, Window_SetMaxInfo, __VA_ARGS__);
+#define ZuiWindowSetSize(Control, ...) ZProc(Control, Window_SetSize, __VA_ARGS__);
+#define ZuiWindowSetComBo(Control, ...) ZProc(Control, Window_SetComBo, __VA_ARGS__);
+#define ZuiWindowPopup(Control, ...) ZProc(Control, Window_Popup, __VA_ARGS__);
+
 /**窗口控件结构*/
 typedef struct _ZWindow
 {
