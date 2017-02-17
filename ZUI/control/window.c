@@ -228,7 +228,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         p->m_rect.Top = r.top;
         p->m_rect.Height = r.bottom - r.top;
         p->m_rect.Width = r.right - r.left;
-        ZuiControlInvalidate(cp);
+        ZuiControlInvalidate(cp, TRUE);
         break;
     }
     case Proc_Window_SetComBo: {

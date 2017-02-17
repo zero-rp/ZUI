@@ -241,6 +241,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
         break;
     }
     case Proc_OnPaint: {
+        //这里是所有绘制的调度中心
         RECT rcTemp = { 0 };
         if (!IntersectRect(&rcTemp, (RECT *)Param2, &cp->m_rcItem))
             //不在绘制区域
@@ -298,7 +299,10 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
                     }
                     else {
                         if (!IntersectRect(&rcTemp, &rc, (RECT *)ZuiControlCall(Proc_GetPos, pControl, 0, 0, 0))) continue;
-                        ZuiControlCall(Proc_OnPaint, pControl, Param1, Param2, Param3);
+                        if (pControl->m_aAnime)
+                            pControl->m_aAnime->OnPaint(pControl, Param1, Param2);
+                        else
+                            ZuiControlCall(Proc_OnPaint, pControl, Param1, &pControl->m_rcItem, Param3);
                     }
                 }
 
@@ -308,7 +312,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
                 ZuiDestroyRegion(rgn_child);
             }
         }
-
+        //绘制滚动条
         if (p->m_pVerticalScrollBar != NULL && p->m_pVerticalScrollBar->m_bVisible) {
             if (IntersectRect(&rcTemp, Param2, (RECT *)ZuiControlCall(Proc_GetPos, p->m_pVerticalScrollBar, 0, 0, 0))) {
                 ZuiControlCall(Proc_OnPaint, p->m_pVerticalScrollBar, Param1, Param2, Param3);
@@ -468,7 +472,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
             ZuiControlCall(Proc_SetPos, pControl, &rcPos, NULL, NULL);
         }
 
-        ZuiControlInvalidate(cp);
+        ZuiControlInvalidate(cp,TRUE);
         break;
     }
     case Proc_Layout_SetScrollStepSize: {

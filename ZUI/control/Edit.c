@@ -34,17 +34,17 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 		{
 		case ZEVENT_TIMER: {
 			p->type = !p->type;
-			ZuiControlInvalidate(cp);
+			ZuiControlInvalidate(cp, TRUE);
 			break;
 		}
 		case ZEVENT_MOUSELEAVE: {
 			p->MouseType = 0;
-			ZuiControlInvalidate(cp);
+			ZuiControlInvalidate(cp, TRUE);
 			break;
 		}
 		case ZEVENT_MOUSEENTER: {
 			p->MouseType = 1;
-			ZuiControlInvalidate(cp);
+			ZuiControlInvalidate(cp, TRUE);
 			return;
 			break;
 		}
@@ -54,25 +54,25 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 			break;
 		}
 		case ZEVENT_LBUTTONDOWN: {
-			ZuiControlInvalidate(cp);
+			ZuiControlInvalidate(cp, TRUE);
 			break;
 		}
 		case ZEVENT_LBUTTONUP: {
 
-			ZuiControlInvalidate(cp);
+			ZuiControlInvalidate(cp, TRUE);
 			break;
 		}
 		case ZEVENT_KILLFOCUS: {
 			ZuiPaintManagerKillTimer_Id(cp, 1000);
 			ZuiPaintManagerSetImeStatus(cp->m_pManager, FALSE);
 			p->type = FALSE;
-			ZuiControlInvalidate(cp);
+			ZuiControlInvalidate(cp, TRUE);
 			break;
 		}
 		case ZEVENT_SETFOCUS: {
 			ZuiPaintManagerSetTimer(cp, 1000, 600);
 			ZuiPaintManagerSetImeStatus(cp->m_pManager, TRUE);
-			ZuiControlInvalidate(cp);
+			ZuiControlInvalidate(cp, TRUE);
 			break;
 		}
 		case ZEVENT_CHAR: {
@@ -100,7 +100,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 			ZRectR r = { 0 };
 			ZuiMeasureStringRect(cp->m_pManager->m_hDcOffscreen, p->sf, cp->m_sText, &r, 0);
 			p->x = r.Width;
-			ZuiControlInvalidate(cp);
+			ZuiControlInvalidate(cp, TRUE);
 			break;
 		}
 		default:

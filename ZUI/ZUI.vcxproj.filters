@@ -453,6 +453,9 @@
     <ClCompile Include="libjpeg\jquant2.c">
       <Filter>源文件\libjpeg</Filter>
     </ClCompile>
+    <ClCompile Include="core\animation.c">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZUI.h">
@@ -613,6 +616,9 @@
     </ClInclude>
     <ClInclude Include="control\List.h">
       <Filter>头文件\control</Filter>
+    </ClInclude>
+    <ClInclude Include="core\animation.h">
+      <Filter>头文件\core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

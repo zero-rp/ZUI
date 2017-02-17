@@ -71,11 +71,28 @@ void __stdcall DLLDebug(){
     ZProc(win, Window_SetSize, 500, 500);
     ZProc(win, Window_SetNoBox, TRUE);
     ZProc(win, Window_SetNoBox, TRUE);
+    ZuiControlSetBkColor(win, -1);
 
-    ZuiControl html = NewZuiControl(L"Html", 0, 0, 0);
-    ZuiControlSetBkColor(html, -1);
-    ZuiControlSetDrag(html, TRUE);
-    ZuiLayoutAdd(win, html);
+    //ZuiControl html = NewZuiControl(L"Html", 0, 0, 0);
+    //ZuiControlSetBkColor(html, -1);
+    //ZuiControlSetDrag(html, TRUE);
+    //ZuiLayoutAdd(win, html);
+
+    ZuiControl bt1 = NewZuiControl(L"Button", 0, 0, 0);
+    ZuiControlSetFixedHeight(bt1, 50);
+    bt1->m_aAnime = ZuiAnimationNew();
+    ZuiLayoutAdd(win, bt1);
+
+    ZuiControl null1 = NewZuiControl(L"NULL", 0, 0, 0);
+    ZuiControlSetFixedHeight(null1, 50);
+    ZuiLayoutAdd(win, null1);
+
+    ZuiControl bt2 = NewZuiControl(L"Button", 0, 0, 0);
+    ZuiControlSetFixedHeight(bt2, 50);
+    bt2->m_aAnime = ZuiAnimationNew();
+    ZuiLayoutAdd(win, bt2);
+
+    ZuiControlSetDrag(win, TRUE);
     ZuiMsgLoop();
 #endif
 

@@ -99,7 +99,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         break;
     }
     case Proc_SetText: {
-        ZuiControlInvalidate(p);
+        ZuiControlInvalidate(p, TRUE);
         if (!p->m_sText)
             p->m_sText = _wcsdup((ZuiText)Param1);
         if (wcscmp(p->m_sText, (ZuiText)Param1) == 0)
@@ -190,6 +190,11 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         }
         break;
     }
+    case Proc_OnSize: {
+        if (p->m_aAnime)
+            p->m_aAnime->OnSize(p, Param1, Param2);
+        break;
+    }
     case Proc_SetManager: {
         p->m_pManager = (ZuiPaintManager)Param1;
         p->m_pParent = (ZuiControl)Param2;
@@ -208,13 +213,13 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         case ZEVENT_SETFOCUS:
         {
             p->m_bFocused = TRUE;
-            ZuiControlInvalidate(p);
+            ZuiControlInvalidate(p, TRUE);
             return 0;
         }
         case ZEVENT_KILLFOCUS:
         {
             p->m_bFocused = FALSE;
-            ZuiControlInvalidate(p);
+            ZuiControlInvalidate(p, TRUE);
             return 0;
         }
         case ZEVENT_MOUSELEAVE: {
@@ -237,15 +242,13 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             ZuiControlNotify(L"onchar", p, &((TEventUI *)Param1)->wParam, JS_TSHRSTR, NULL, NULL, NULL, NULL);
         }
                           break;
-        case ZEVENT_TIMER:{
-
-        }
-                          break;
         default:
             break;
         }
         if (p->m_pParent != NULL)
             ZuiControlCall(Proc_OnEvent, p->m_pParent, Param1, NULL, NULL);
+        if (p->m_aAnime)
+            p->m_aAnime->OnEvent(p, Param1);
         break;
     }
     case Proc_GetMinWidth: {
@@ -386,7 +389,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             return 0;
 
         p->m_bEnabled = Param1;
-        ZuiControlInvalidate(p);
+        ZuiControlInvalidate(p, TRUE);
         break;
     }
     case Proc_SetFocus: {
@@ -419,19 +422,19 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     }
     case Proc_SetBkColor: {
         p->m_BkgColor = Param1;
-        ZuiControlInvalidate(p);
+        ZuiControlInvalidate(p, TRUE);
         break;
     }
     case Proc_SetBorderColor: {
         p->m_dwBorderColor = Param1;
-        ZuiControlInvalidate(p);
+        ZuiControlInvalidate(p, TRUE);
         break;
     }
     case Proc_SetBkImage: {
         if (p->m_BkgImg)
             ZuiResDBDelRes(p->m_BkgImg);
         p->m_BkgImg = Param1;
-        ZuiControlInvalidate(p);
+        ZuiControlInvalidate(p, TRUE);
         break;
     }
     case Proc_OnPaint: {
@@ -790,7 +793,7 @@ ZEXPORT ZuiControl ZCALL ZuiControlFindName(ZuiControl p, ZuiText Name) {
     return (ZuiControl)ZuiControlCall(Proc_FindControl, p->m_pManager->m_pRoot, __FindControlFromName, Name, (void *)(ZFIND_ALL));
 }
 
-ZEXPORT ZuiVoid ZCALL ZuiControlInvalidate(ZuiControl p)
+ZEXPORT ZuiVoid ZCALL ZuiControlInvalidate(ZuiControl p, ZuiBool ResetAnimation)
 {
     if (!p->m_bVisible) return;
 
@@ -808,7 +811,9 @@ ZEXPORT ZuiVoid ZCALL ZuiControlInvalidate(ZuiControl p)
             return;
         }
     }
-
+    //重置动画
+    if (ResetAnimation && p->m_aAnime)
+        p->m_aAnime->steup = NULL;
     if (p->m_pManager != NULL) ZuiPaintManagerInvalidateRect(p->m_pManager, &invalidateRc);
 }
 
@@ -816,7 +821,7 @@ ZEXPORT ZuiVoid ZCALL ZuiControlNeedUpdate(ZuiControl p)
 {
     if (!p->m_bVisible) return;
     p->m_bUpdateNeeded = TRUE;
-    ZuiControlInvalidate(p);
+    ZuiControlInvalidate(p, TRUE);
 
     if (p->m_pManager != NULL)
         p->m_pManager->m_bUpdateNeeded = TRUE;
@@ -826,7 +831,7 @@ ZEXPORT ZuiVoid ZCALL ZuiControlNeedParentUpdate(ZuiControl p)
 {
     if (p->m_pParent) {
         ZuiControlNeedUpdate(p->m_pParent);
-        ZuiControlInvalidate(p->m_pParent);
+        ZuiControlInvalidate(p->m_pParent, TRUE);
     }
     else {
         ZuiControlNeedUpdate(p);

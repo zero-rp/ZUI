@@ -247,7 +247,7 @@ ZEXPORT ZuiVoid ZCALL ZuiScreenToClient(ZuiControl p, ZuiPoint pt);
 
 ZEXPORT ZuiControl ZCALL ZuiControlFindName(ZuiControl p, ZuiText Name);
 
-ZEXPORT ZuiVoid ZCALL ZuiControlInvalidate(ZuiControl p);				//刷新显示
+ZEXPORT ZuiVoid ZCALL ZuiControlInvalidate(ZuiControl p, ZuiBool ResetAnimation);				//刷新显示
 ZEXPORT ZuiVoid ZCALL ZuiControlNeedUpdate(ZuiControl p);				//更新布局
 ZEXPORT ZuiVoid ZCALL ZuiControlNeedParentUpdate(ZuiControl p);			//更新父控件布局
 ZEXPORT ZuiVoid ZCALL ZuiControlEvent(ZuiControl p, TEventUI *event);	//发送事件

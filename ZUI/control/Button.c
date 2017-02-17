@@ -44,22 +44,22 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         {
         case ZEVENT_MOUSELEAVE: {
             p->type = 0;
-            ZuiControlInvalidate(cp);
+            ZuiControlInvalidate(cp, TRUE);
         }
                                 break;
         case ZEVENT_MOUSEENTER: {
             p->type = 1;
-            ZuiControlInvalidate(cp);
+            ZuiControlInvalidate(cp, TRUE);
         }
                                 break;
         case ZEVENT_LBUTTONDOWN: {
             p->type = 2;
-            ZuiControlInvalidate(cp);
+            ZuiControlInvalidate(cp, TRUE);
         }
                                  break;
         case ZEVENT_LBUTTONUP: {
             p->type = 1;
-            ZuiControlInvalidate(cp);
+            ZuiControlInvalidate(cp, TRUE);
             return ZuiControlNotify(L"onclick", cp, event->ptMouse.x, JS_TNUMBER, event->ptMouse.y, JS_TNUMBER, NULL, NULL);
         }
                                break;
@@ -80,7 +80,7 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
                        break;
     case Proc_OnPaintStatusImage: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        RECT *rc = &cp->m_rcItem;
+        RECT *rc = (RECT *)Param2;
         HPEN hPen = 0;
         ZuiImage img;
         if (p->type == 0) {

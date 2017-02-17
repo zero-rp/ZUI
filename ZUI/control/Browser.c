@@ -92,7 +92,7 @@ void _staticOnPaintUpdated(wkeWebView webView, void* param, const HDC hdc, int x
     pthis->init = TRUE;
     if (pthis->cp->m_bVisible)
     {
-        ZuiControlInvalidate(pthis->cp);
+        ZuiControlInvalidate(pthis->cp, TRUE);
     }
 }
 // 回调：页面标题改变

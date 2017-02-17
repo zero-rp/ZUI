@@ -138,15 +138,15 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
 
             if ((p->m_uThumbState & ZSTATE_CAPTURED) != 0) {
                 p->m_uThumbState &= ~(ZSTATE_CAPTURED | ZSTATE_PUSHED);
-                ZuiControlInvalidate(cp);
+                ZuiControlInvalidate(cp, TRUE);
             }
             else if ((p->m_uButton1State & ZSTATE_PUSHED) != 0) {
                 p->m_uButton1State &= ~ZSTATE_PUSHED;
-                ZuiControlInvalidate(cp);
+                ZuiControlInvalidate(cp, TRUE);
             }
             else if ((p->m_uButton2State & ZSTATE_PUSHED) != 0) {
                 p->m_uButton2State &= ~ZSTATE_PUSHED;
-                ZuiControlInvalidate(cp);
+                ZuiControlInvalidate(cp, TRUE);
             }
             return;
         }
@@ -173,14 +173,14 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 if ((p->m_uThumbState & ZSTATE_HOT) != 0) {
                     if (!ZuiIsPointInRect(&p->m_rcThumb, &event->ptMouse)) {
                         p->m_uThumbState &= ~ZSTATE_HOT;
-                        ZuiControlInvalidate(cp);
+                        ZuiControlInvalidate(cp, TRUE);
                     }
                 }
                 else {
                     if (!cp->m_bEnabled) return;
                     if (ZuiIsPointInRect(&p->m_rcThumb, &event->ptMouse)) {
                         p->m_uThumbState |= ZSTATE_HOT;
-                        ZuiControlInvalidate(cp);
+                        ZuiControlInvalidate(cp, TRUE);
                     }
                 }
             }
@@ -210,7 +210,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                     else
                         ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, p->m_nLastScrollPos + p->m_nLastScrollOffset, NULL, NULL);
                 }
-                ZuiControlInvalidate(cp);
+                ZuiControlInvalidate(cp, TRUE);
             }
             else if ((p->m_uButton1State & ZSTATE_PUSHED) != 0) {
                 if (p->m_nScrollRepeatDelay <= 5) return;
@@ -285,7 +285,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 p->m_uButton1State |= ZSTATE_HOT;
                 p->m_uButton2State |= ZSTATE_HOT;
                 if (ZuiIsPointInRect(&p->m_rcThumb, &event->ptMouse)) p->m_uThumbState |= ZSTATE_HOT;
-                ZuiControlInvalidate(cp);
+                ZuiControlInvalidate(cp, TRUE);
             }
             return;
         }
@@ -295,7 +295,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 p->m_uButton1State &= ~ZSTATE_HOT;
                 p->m_uButton2State &= ~ZSTATE_HOT;
                 p->m_uThumbState &= ~ZSTATE_HOT;
-                ZuiControlInvalidate(cp);
+                ZuiControlInvalidate(cp, TRUE);
             }
             return;
         }
