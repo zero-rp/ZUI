@@ -9,7 +9,6 @@ ZuiControl NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny
         p->m_pManager = NULL;
         p->m_pParent = NULL;
         p->m_bUpdateNeeded = TRUE;
-        p->m_bMenuUsed = FALSE;
         p->m_bVisible = TRUE;
         p->m_bFocused = FALSE;
         p->m_bEnabled = TRUE;
