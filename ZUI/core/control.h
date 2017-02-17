@@ -221,7 +221,7 @@ typedef struct _ZControl
     //控件默认样式-------------------
 
     int m_nTooltipWidth;			//多行ToolTip单行最长宽度
-    RECT m_rcPaint;					//
+    //RECT m_rcPaint;					//
 }*ZuiControl, ZControl;
 
 //控件默认处理函数
