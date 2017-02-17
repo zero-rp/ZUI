@@ -456,6 +456,9 @@
     <ClCompile Include="core\animation.c">
       <Filter>源文件\core</Filter>
     </ClCompile>
+    <ClCompile Include="core\agg.cpp">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZUI.h">

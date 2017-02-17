@@ -1,4 +1,6 @@
 ﻿#include <ZUI.h>
+#ifdef AGG
+
 #if defined(__cplusplus)
 #include "agg\include\agg_rendering_buffer.h"//内存管理器
 #include "agg\include\agg_pixfmt_rgba.h"//颜色空间管理
@@ -465,3 +467,5 @@ ZEXPORT ZuiVoid ZCALL ZuiDestroyImage(ZuiImage Image) {
 #ifdef __cplusplus
 }
 #endif
+
+#endif // AGG

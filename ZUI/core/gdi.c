@@ -1,5 +1,5 @@
 ﻿#include <ZUI.h>
-
+#ifndef AGG
 typedef struct
 {
     ZuiInt GdiplusVersion;
@@ -433,3 +433,4 @@ ZEXPORT ZuiVoid ZCALL ZuiDestroyImage(ZuiImage Image) {
 
 
 
+#endif

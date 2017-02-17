@@ -89,7 +89,7 @@ void __stdcall DLLDebug(){
 
     ZuiControl bt2 = NewZuiControl(L"Button", 0, 0, 0);
     ZuiControlSetFixedHeight(bt2, 50);
-    bt2->m_aAnime = ZuiAnimationNew();
+    //bt2->m_aAnime = ZuiAnimationNew();
     ZuiLayoutAdd(win, bt2);
 
     ZuiControlSetDrag(win, TRUE);
