@@ -97,6 +97,7 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define	Proc_SetBkImage			60	//设置背景图片
 #define	Proc_SetBorderColor		61	//设置边框颜色
 
+#define Proc_SetAnimationType   62  //设置动画类型
 
 //-------控件状态
 #define ZSTATE_FOCUSED      0x00000001
@@ -217,8 +218,10 @@ typedef struct _ZControl
     ZuiInt m_tyle;					//控件风格
     ZuiColor m_BkgColor;			//背景颜色
     ZuiRes m_BkgImg;				//背景图片
-    ZuiColor m_dwBorderColor;				//边框颜色
+    ZuiColor m_dwBorderColor;		//边框颜色
     //控件默认样式-------------------
+
+    ZuiAnimation m_aAnime;          //控件动画
 
     int m_nTooltipWidth;			//多行ToolTip单行最长宽度
 }*ZuiControl, ZControl;

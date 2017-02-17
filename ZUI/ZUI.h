@@ -182,6 +182,7 @@ typedef struct tagSIZE
 #include "core/global.h"
 /*内核*/
 #include "core/manager.h"		//绘制管理器
+#include "core/animation.h"     //动画处理器
 #include "core/control.h"		//控件基类
 #include "core/template.h"
 #include "core/builder.h"

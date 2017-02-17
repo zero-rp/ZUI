@@ -18,6 +18,7 @@ ZuiControl NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny
         p->m_bSetPos = FALSE;
         p->m_chShortcut = '\0';
         p->m_nTooltipWidth = 300;
+        p->m_aAnime = NULL;
 
         p->m_cXY.cx = p->m_cXY.cy = 0;
         p->m_cxyFixed.cx = p->m_cxyFixed.cy = 0;
@@ -234,6 +235,10 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         }
         case ZEVENT_CHAR: {
             ZuiControlNotify(L"onchar", p, &((TEventUI *)Param1)->wParam, JS_TSHRSTR, NULL, NULL, NULL, NULL);
+        }
+                          break;
+        case ZEVENT_TIMER:{
+
         }
                           break;
         default:
