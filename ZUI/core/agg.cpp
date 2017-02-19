@@ -265,7 +265,7 @@ ZEXPORT ZuiVoid ZCALL ZuiGraphicsClear(ZuiGraphics Graphics, ZuiColor Color) {
 /*创建字体格式*/
 ZEXPORT ZuiStringFormat ZCALL ZuiCreateStringFormat(ZuiText FontName, ZuiReal FontSize, ZuiColor TextColor, ZuiColor ShadowColor, ZuiInt StringStyle) {
 	int i = 0;
-	ZuiStringFormat StringFormat = (ZuiStringFormat)malloc(sizeof(ZStringFromat));
+	ZuiStringFormat StringFormat = (ZuiStringFormat)ZuiMalloc(sizeof(ZStringFromat));
 	if (!StringFormat){ return NULL; }
 	memset(StringFormat, 0, sizeof(ZStringFromat));
 	StringFormat->font = new ZuiAggFont;
@@ -297,12 +297,12 @@ ZEXPORT ZuiVoid ZCALL ZuiDestroyStringFormat(ZuiStringFormat StringFormat) {
 		delete StringFormat->font->font;
 		delete StringFormat->font->font_manager;
 		delete StringFormat->font;
-		free(StringFormat);
+        ZuiFree(StringFormat);
 	}
 }
 /*创建图形*/
 ZEXPORT ZuiGraphics ZCALL ZuiCreateGraphicsInMemory(ZuiInt Width, ZuiInt Height) {
-	ZuiGraphics Graphics = (ZuiGraphics)malloc(sizeof(ZGraphics));
+	ZuiGraphics Graphics = (ZuiGraphics)ZuiMalloc(sizeof(ZGraphics));
 	if (!Graphics){ return NULL; }
 	memset(Graphics, 0, sizeof(ZGraphics));
 	Graphics->Width = Width;
@@ -349,12 +349,12 @@ ZEXPORT ZuiVoid ZCALL ZuiDestroyGraphics(ZuiGraphics Graphics) {
 		delete (ZuiAggGraphics*)Graphics->graphics;
 		DeleteDC(Graphics->hdc);
 		DeleteObject(Graphics->HBitmap);
-		free(Graphics);
+        ZuiFree(Graphics);
 	}
 }
 /*创建区域*/
 ZEXPORT ZuiRegion ZCALL ZuiCreateRegion() {
-	ZuiRegion region = (ZuiRegion)malloc(sizeof(ZRegion));
+	ZuiRegion region = (ZuiRegion)ZuiMalloc(sizeof(ZRegion));
 	if (!region){ return NULL; }
 	memset(region, 0, sizeof(ZRegion));
 	
@@ -363,7 +363,7 @@ ZEXPORT ZuiRegion ZCALL ZuiCreateRegion() {
 	return region;
 }
 ZEXPORT ZuiRegion ZCALL ZuiCreateRegionRect(ZuiRect layoutRect) {
-	ZuiRegion region = (ZuiRegion)malloc(sizeof(ZRegion));
+	ZuiRegion region = (ZuiRegion)ZuiMalloc(sizeof(ZRegion));
 	if (!region){ return NULL; }
 	
 
@@ -375,7 +375,7 @@ ZEXPORT ZuiVoid ZCALL ZuiDestroyRegion(ZuiRegion region) {
 		
 
 
-		free(region);
+        ZuiFree(region);
 	}
 }
 
@@ -401,7 +401,7 @@ ZEXPORT ZuiBool ZCALL ZuiGraphicsResetClip(ZuiGraphics Graphics){
 
 /*加载图像自内存*/
 ZEXPORT ZuiImage ZCALL ZuiLoadImageFromBinary(ZuiAny buf, ZuiInt len) {
-		ZuiImage Image = (ZuiImage)malloc(sizeof(ZImage));
+		ZuiImage Image = (ZuiImage)ZuiMalloc(sizeof(ZImage));
 		if (!Image){ return NULL; }
 		memset(Image, 0, sizeof(ZImage));
 		Image->image = new ZuiAggImage();
@@ -433,7 +433,7 @@ ZEXPORT ZuiImage ZCALL ZuiLoadImageFromBinary(ZuiAny buf, ZuiInt len) {
 			DeleteDC(Image->image->hdc);
 			GdipDisposeImage(Image->image->image);
 			delete Image->image;
-			free(Image);
+            ZuiFree(Image);
 			return NULL;
 		}
 		SelectObject(Image->image->hdc, (HGDIOBJ)Image->image->HBitmap);
@@ -458,7 +458,7 @@ ZEXPORT ZuiVoid ZCALL ZuiDestroyImage(ZuiImage Image) {
 		DeleteObject(Image->image->HBitmap);
 		GdipDisposeImage(Image->image->image);
 		delete Image->image;
-		free(Image);
+        ZuiFree(Image);
 	}
 }
 

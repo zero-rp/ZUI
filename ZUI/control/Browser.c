@@ -111,7 +111,7 @@ wkeWebView _staticOnCreateView(wkeWebView webWindow, void* param, int navType, v
 // 回调：url改变
 wkeWebView _staticOnURLChanged(wkeWebView webView, void* param, void *url)
 {
-    ((ZuiBrowser)param)->url = _wcsdup(wkeGetStringW(url));
+    ((ZuiBrowser)param)->url = ZuiWcsdup(wkeGetStringW(url));
     ZuiControlNotify(L"urlchanged", ((ZuiBrowser)param)->cp, wkeGetStringW(url), JS_TSHRSTR, NULL, NULL, NULL, NULL);
 }
 // 回调：转跳
@@ -231,7 +231,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         break;
     }
     case Proc_OnCreate: {
-        p = (ZuiBrowser)malloc(sizeof(ZBrowser));
+        p = (ZuiBrowser)ZuiMalloc(sizeof(ZBrowser));
         memset(p, 0, sizeof(ZBrowser));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         p->old_call = cp->call;

@@ -8,7 +8,7 @@ ZEXPORT ZuiAny ZCALL ZuiVirtualProc(ZuiInt ProcId, ZuiControl cp, ZuiVirtual p, 
     case Proc_CoreInit:
         return TRUE;
     case Proc_OnCreate: {
-        p = (ZuiVirtual)malloc(sizeof(ZVirtual));
+        p = (ZuiVirtual)ZuiMalloc(sizeof(ZVirtual));
         memset(p, 0, sizeof(ZVirtual));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         p->old_call = cp->call;
@@ -40,7 +40,7 @@ ZEXPORT ZuiAny ZCALL ZuiVirtualProc(ZuiInt ProcId, ZuiControl cp, ZuiVirtual p, 
             DestroyWindow(p->m_hwnd);
         ZCtlProc old_call = p->old_call;
 
-        free(p);
+        ZuiFree(p);
 
         return old_call(ProcId, cp, 0, Param1, Param2, Param3);
     }

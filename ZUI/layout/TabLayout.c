@@ -6,7 +6,7 @@ void* CALLBACK ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void*
     case Proc_CoreInit:
         return TRUE;
     case Proc_OnCreate: {
-        p = (ZuiTabLayout)malloc(sizeof(ZTabLayout));
+        p = (ZuiTabLayout)ZuiMalloc(sizeof(ZTabLayout));
         memset(p, 0, sizeof(ZTabLayout));
         //创建继承的控件 保存数据指针
         p->old_udata = ZuiLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
@@ -19,7 +19,7 @@ void* CALLBACK ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void*
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
 
-        free(p);
+        ZuiFree(p);
 
         return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
         break;

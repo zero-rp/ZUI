@@ -23,13 +23,13 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
 
-        free(p);
+        ZuiFree(p);
 
         return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
         break;
     }
     case Proc_OnCreate: {
-        p = (ZuiButton)malloc(sizeof(ZButton));
+        p = (ZuiButton)ZuiMalloc(sizeof(ZButton));
         memset(p, 0, sizeof(ZButton));
 
         //保存原来的回调地址,创建成功后回调地址指向当前函数

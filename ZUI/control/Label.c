@@ -9,7 +9,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
     case Proc_CoreInit:
         return TRUE;
     case Proc_OnCreate: {
-        p = (ZuiLabel)malloc(sizeof(ZLabel));
+        p = (ZuiLabel)ZuiMalloc(sizeof(ZLabel));
         memset(p, 0, sizeof(ZLabel));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         p->old_call = cp->call;
@@ -19,7 +19,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
 
-        free(p);
+        ZuiFree(p);
 
         return old_call(ProcId, cp, 0, Param1, Param2, Param3);
         break;

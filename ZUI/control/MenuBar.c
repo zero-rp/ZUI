@@ -9,7 +9,7 @@ ZEXPORT ZuiAny ZCALL ZuiMenuBarProc(ZuiInt ProcId, ZuiControl cp, ZuiMenuBar p, 
     case Proc_CoreInit:
         return TRUE;
     case Proc_OnCreate: {
-        p = (ZuiMenuBar)malloc(sizeof(ZMenuBar));
+        p = (ZuiMenuBar)ZuiMalloc(sizeof(ZMenuBar));
         memset(p, 0, sizeof(ZMenuBar));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         p->old_udata = ZuiHorizontalLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);

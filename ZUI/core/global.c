@@ -12,7 +12,7 @@ ZuiBool ZuiGlobalInit() {
 
     LOGFONT lf;
     SystemParametersInfo(SPI_GETICONTITLELOGFONT, sizeof(LOGFONT), &lf, 0);
-    Global_DefaultFontName = _wcsdup(lf.lfFaceName);
+    Global_DefaultFontName = ZuiWcsdup(lf.lfFaceName);
     Global_StringFormat = ZuiCreateStringFormat(Global_DefaultFontName, 12, ARGB(254, 0, 0, 0), ARGB(255, 255, 255, 255), ZTS_ALIGN_CENTER | ZTS_VALIGN_MIDDLE);
 
     Global_MenuClass = rb_new();

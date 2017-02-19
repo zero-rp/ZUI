@@ -9,11 +9,11 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 	case Proc_CoreInit:
 		return TRUE;
 	case Proc_OnCreate: {
-		p = (ZuiEdit)malloc(sizeof(ZEdit));
+		p = (ZuiEdit)ZuiMalloc(sizeof(ZEdit));
 		memset(p, 0, sizeof(ZEdit));
 		//保存原来的回调地址,创建成功后回调地址指向当前函数
 		p->old_call = cp->call;
-		cp->m_sText = malloc(sizeof(_ZuiText) * 1024);
+		cp->m_sText = ZuiMalloc(sizeof(_ZuiText) * 1024);
 		p->StrBufLen = 1024;
 		cp->m_sText[0] = L'\0';
 		p->sf = ZuiCreateStringFormat(L"微软雅黑", 12, ARGB(255, 255, 0, 0), ARGB(255, 255, 255, 255), ZTS_VALIGN_MIDDLE | ZTS_SHADOW);
@@ -23,7 +23,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 	case Proc_OnDestroy: {
 		ZCtlProc old_call = p->old_call;
 
-		free(p);
+        ZuiFree(p);
 
 		return old_call(ProcId, cp, 0, Param1, Param2, Param3);
 		break;

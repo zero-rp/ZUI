@@ -174,12 +174,12 @@ ZEXPORT ZuiAny ZCALL ZuiMenuProc(ZuiInt ProcId, ZuiControl cp, ZuiMenu p, ZuiAny
         old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
 
         DestroyWindow(p->m_hWnd);
-        free(p);
+        ZuiFree(p);
         return;
         break;
     }
     case Proc_OnCreate: {
-        p = (ZuiWindow)malloc(sizeof(ZWindow));
+        p = (ZuiWindow)ZuiMalloc(sizeof(ZWindow));
         memset(p, 0, sizeof(ZWindow));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         //创建继承的控件 保存数据指针
@@ -302,13 +302,13 @@ ZEXPORT ZuiAny ZCALL ZuiMenuItemProc(ZuiInt ProcId, ZuiControl cp, ZuiMenuItem p
 
         if (p->node)
             mxmlDelete(p->node);//释放克隆出来的节点
-        free(p);
+        ZuiFree(p);
 
         return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
         break;
     }
     case Proc_OnCreate: {
-        p = (ZuiMenuItem)malloc(sizeof(ZMenuItem));
+        p = (ZuiMenuItem)ZuiMalloc(sizeof(ZMenuItem));
         memset(p, 0, sizeof(ZMenuItem));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         //创建继承的控件 保存数据指针

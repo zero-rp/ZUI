@@ -101,11 +101,11 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     case Proc_SetText: {
         ZuiControlInvalidate(p, TRUE);
         if (!p->m_sText)
-            p->m_sText = _wcsdup((ZuiText)Param1);
+            p->m_sText = ZuiWcsdup((ZuiText)Param1);
         if (wcscmp(p->m_sText, (ZuiText)Param1) == 0)
             return 0;
-        free(p->m_sText);
-        p->m_sText = _wcsdup((ZuiText)Param1);
+        ZuiFree(p->m_sText);
+        p->m_sText = ZuiWcsdup((ZuiText)Param1);
         break;
     }
     case Proc_GetText: {
@@ -113,19 +113,19 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     }
     case Proc_SetName: {
         if (!p->m_sName)
-            p->m_sName = _wcsdup((ZuiText)Param1);
+            p->m_sName = ZuiWcsdup((ZuiText)Param1);
         if (wcscmp(p->m_sName, (ZuiText)Param1) == 0)
             return 0;
-        free(p->m_sName);
-        p->m_sName = _wcsdup((ZuiText)Param1);
+        ZuiFree(p->m_sName);
+        p->m_sName = ZuiWcsdup((ZuiText)Param1);
         break;
     }
     case Proc_SetTooltip: {
         if (!p->m_sToolTip)
-            p->m_sToolTip = _wcsdup((ZuiText)Param1);
+            p->m_sToolTip = ZuiWcsdup((ZuiText)Param1);
         if (wcscmp(p->m_sToolTip, (ZuiText)Param1) == 0)
             return 0;
-        p->m_sToolTip = _wcsdup((ZuiText)Param1);
+        p->m_sToolTip = ZuiWcsdup((ZuiText)Param1);
         break;
     }
     case Proc_GetPos: {
@@ -482,16 +482,16 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     }
     case Proc_OnDestroy: {
         if (p->m_sText)
-            free(p->m_sText);
+            ZuiFree(p->m_sText);
         if (p->m_sToolTip)
-            free(p->m_sToolTip);
+            ZuiFree(p->m_sToolTip);
         if (p->m_BkgImg)
             ZuiResDBDelRes(p->m_BkgImg);
         if (p->m_pParent && !Param1)
             ZuiControlCall(Proc_Layout_Remove, p->m_pParent, p, TRUE, NULL);
         if (p->m_pManager != NULL)
             ZuiPaintManagerReapObjects(p->m_pManager, p);
-        free(p);
+        ZuiFree(p);
         break;
     }
     case Proc_SetAttribute: {
@@ -562,14 +562,14 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             rb_node *old = rb_search((key_t)Zui_Hash(Param1), p->m_rAttribute);
             if (old) {
                 att = (ZuiAttribute)old->data;
-                free(att->v);
+                ZuiFree(att->v);
             }
             else {
                 att = malloc(sizeof(ZAttribute));
                 rb_insert((key_t)Zui_Hash(Param1), att, p->m_rAttribute);
             }
             att->type = ZAttType_String;
-            att->v = _wcsdup(Param2);
+            att->v = ZuiWcsdup(Param2);
             att->vlen = wcslen(att->v);
         }
         break;
@@ -643,7 +643,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             rb_node *old = rb_search((key_t)Zui_Hash(Param1), p->m_rAttribute);
             if (old) {
                 att = (ZuiAttribute)old->data;
-                free(att->v);
+                ZuiFree(att->v);
             }
             else {
                 att = malloc(sizeof(ZAttribute));
@@ -658,7 +658,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             else
             {
                 att->type = ZAttType_String;
-                att->v = _wcsdup(js_tostring(J, -1));
+                att->v = ZuiWcsdup(js_tostring(J, -1));
                 att->vlen = wcslen(att->v);
             }
         }

@@ -104,7 +104,7 @@ ZuiBool ZuiPaintManagerInitialize() {
 
 //创建消息管理器
 ZuiPaintManager NewCPaintManagerUI() {
-    ZuiPaintManager p = (ZuiPaintManager)malloc(sizeof(IZuiPaintManager));
+    ZuiPaintManager p = (ZuiPaintManager)ZuiMalloc(sizeof(IZuiPaintManager));
     if (p) {
         memset(p, 0, sizeof(IZuiPaintManager));
 
@@ -173,7 +173,7 @@ void FreeCPaintManagerUI(ZuiPaintManager p) {
     };
     darray_destroy(p->m_aDelayedCleanup);
     js_freestate(p->m_js);
-    free(p);
+    ZuiFree(p);
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -435,7 +435,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerSetTimer(ZuiControl pControl, UINT nTimerID
 
         pControl->m_pManager->m_uTimerID = (++pControl->m_pManager->m_uTimerID) % 0xFF;
         if (!SetTimer(pControl->m_pManager->m_hWndPaint, pControl->m_pManager->m_uTimerID, uElapse, NULL)) return FALSE;
-        TIMERINFO* pTimer = malloc(sizeof(TIMERINFO));
+        TIMERINFO* pTimer = ZuiMalloc(sizeof(TIMERINFO));
         memset(pTimer, 0, sizeof(TIMERINFO));
         if (pTimer == NULL) return FALSE;
         pTimer->hWnd = pControl->m_pManager->m_hWndPaint;
@@ -480,7 +480,7 @@ ZEXPORT ZuiVoid ZCALL ZuiPaintManagerKillTimer(ZuiControl pControl)
             if (pTimer->pSender == pControl && pTimer->hWnd == pControl->m_pManager->m_hWndPaint) {
                 if (pTimer->bKilled == FALSE)
                     KillTimer(pTimer->hWnd, pTimer->uWinTimer);
-                free(pTimer);
+                ZuiFree(pTimer);
                 darray_delete(pControl->m_pManager->m_aTimers, i - j);
                 j++;
             }
@@ -496,7 +496,7 @@ ZEXPORT ZuiVoid ZCALL ZuiPaintManagerRemoveAllTimers(ZuiPaintManager p)
             if (pTimer->bKilled == FALSE) {
                 if (IsWindow(p->m_hWndPaint)) KillTimer(p->m_hWndPaint, pTimer->uWinTimer);
             }
-            free(pTimer);
+            ZuiFree(pTimer);
         }
     }
 

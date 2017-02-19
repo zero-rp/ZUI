@@ -131,30 +131,34 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
 
         DestroyWindow(p->m_hWnd);
-        free(p);
+        ZuiFree(p);
         return;
         break;
     }
     case Proc_OnCreate: {
-        p = (ZuiWindow)malloc(sizeof(ZWindow));
-        memset(p, 0, sizeof(ZWindow));
-        //保存原来的回调地址,创建成功后回调地址指向当前函数
-        //创建继承的控件 保存数据指针
-        p->old_udata = ZuiVerticalLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
-        p->old_call = (ZCtlProc)&ZuiVerticalLayoutProc;
+        p = (ZuiWindow)ZuiMalloc(sizeof(ZWindow));
+        if (p)
+        {
+            memset(p, 0, sizeof(ZWindow));
+            //保存原来的回调地址,创建成功后回调地址指向当前函数
+            //创建继承的控件 保存数据指针
+            p->old_udata = ZuiVerticalLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
+            p->old_call = (ZCtlProc)&ZuiVerticalLayoutProc;
 
-        //创建宿主窗口
-        //创建绘制管理器
-        p->m_pm = NewCPaintManagerUI();
-        p->m_OldWndProc = DefWindowProc;
-        p->root = cp;
-        p->m_hWnd = CreateWindowEx(0, L"ZUI", L"", (Param2 ? WS_CHILDWINDOW : WS_POPUP) | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, Param2, NULL, GetModuleHandleA(NULL), p);
+            //创建宿主窗口
+            //创建绘制管理器
+            p->m_pm = NewCPaintManagerUI();
+            p->m_OldWndProc = DefWindowProc;
+            p->root = cp;
+            p->m_hWnd = CreateWindowEx(0, L"ZUI", L"", (Param2 ? WS_CHILDWINDOW : WS_POPUP) | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, Param2, NULL, GetModuleHandleA(NULL), p);
 
-        ZuiPaintManagerInit(p->m_pm, p->m_hWnd);
-        ZuiPaintManagerAttachDialog(p->m_pm, cp);
-        if (!Param1)
-            ShowWindow(p->m_hWnd, SW_SHOW);
-        return p;
+            ZuiPaintManagerInit(p->m_pm, p->m_hWnd);
+            ZuiPaintManagerAttachDialog(p->m_pm, cp);
+            if (!Param1)
+                ShowWindow(p->m_hWnd, SW_SHOW);
+            return p;
+        }
+        return NULL;
         break;
     }
     case Proc_SetBorderColor: {

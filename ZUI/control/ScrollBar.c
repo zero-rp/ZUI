@@ -6,7 +6,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
     case Proc_CoreInit:
         return TRUE;
     case Proc_OnCreate: {
-        p = (ZuiScrollBar)malloc(sizeof(ZScrollBar));
+        p = (ZuiScrollBar)ZuiMalloc(sizeof(ZScrollBar));
         memset(p, 0, sizeof(ZScrollBar));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         p->old_call = cp->call;
@@ -22,7 +22,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
 
-        free(p);
+        ZuiFree(p);
 
         return old_call(ProcId, cp, 0, Param1, Param2, Param3);
         break;

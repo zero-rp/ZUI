@@ -9,7 +9,7 @@ ZEXPORT ZuiAny ZCALL ZuiSplitterBarProc(ZuiInt ProcId, ZuiControl cp, ZuiSplitte
     case Proc_CoreInit:
         return TRUE;
     case Proc_OnCreate: {
-        p = (ZuiSplitterBar)malloc(sizeof(ZSplitterBar));
+        p = (ZuiSplitterBar)ZuiMalloc(sizeof(ZSplitterBar));
         memset(p, 0, sizeof(ZSplitterBar));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         p->old_call = cp->call;
@@ -19,7 +19,7 @@ ZEXPORT ZuiAny ZCALL ZuiSplitterBarProc(ZuiInt ProcId, ZuiControl cp, ZuiSplitte
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
 
-        free(p);
+        ZuiFree(p);
 
         return old_call(ProcId, cp, 0, Param1, Param2, Param3);
         break;

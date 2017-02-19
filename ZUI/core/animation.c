@@ -35,7 +35,7 @@ ZuiVoid ZCALL OnEvent(ZuiControl p, TEventUI *event) {
 }
 
 ZuiAnimation ZuiAnimationNew() {
-    ZuiAnimation p = (ZuiAnimation)malloc(sizeof(ZAnimation));
+    ZuiAnimation p = (ZuiAnimation)ZuiMalloc(sizeof(ZAnimation));
     p->steup = 0;
     p->OnPaint = OnPaint;
     p->OnSize = OnSize;

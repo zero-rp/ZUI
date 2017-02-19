@@ -10,7 +10,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
         return TRUE;
         break;
     case Proc_OnCreate: {
-        p = (ZuiLayout)malloc(sizeof(ZLayout));
+        p = (ZuiLayout)ZuiMalloc(sizeof(ZLayout));
         memset(p, 0, sizeof(ZLayout));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         p->old_call = cp->call;
@@ -30,7 +30,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
         if (p->m_pVerticalScrollBar)
             FreeZuiControl(p->m_pVerticalScrollBar, NULL);
         darray_destroy(p->m_items);
-        free(p);
+        ZuiFree(p);
 
         return old_call(ProcId, cp, 0, Param1, Param2, Param3);
         break;

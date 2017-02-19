@@ -169,6 +169,8 @@ typedef struct tagSIZE
 
 #define	DEBUG_BORDER	1
 
+#include "core/memory.h"
+
 #include "mujs/mujs.h"
 /*基础辅助函数*/
 #include "core/carray.h"

@@ -1,4 +1,4 @@
-#include <ZUI.h>
+ï»¿#include <ZUI.h>
 
 
 
@@ -8,9 +8,9 @@ void* CALLBACK ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayou
     case Proc_CoreInit:
         return TRUE;
     case Proc_OnCreate: {
-        p = (ZuiVerticalLayout)malloc(sizeof(ZVerticalLayout));
+        p = (ZuiVerticalLayout)ZuiMalloc(sizeof(ZVerticalLayout));
         memset(p, 0, sizeof(ZVerticalLayout));
-        //´´½¨¼Ì³ÐµÄ¿Ø¼þ ±£´æÊý¾ÝÖ¸Õë
+        //åˆ›å»ºç»§æ‰¿çš„æŽ§ä»¶ ä¿å­˜æ•°æ®æŒ‡é’ˆ
         p->old_udata = ZuiLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
         p->old_call = (ZCtlProc)&ZuiLayoutProc;
 
@@ -21,7 +21,7 @@ void* CALLBACK ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayou
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
 
-        free(p);
+        ZuiFree(p);
 
         return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
         break;

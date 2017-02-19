@@ -4,31 +4,34 @@
 
 ZuiResDBPool Global_ResDB;					//全局资源包
 ZuiBool ZuiResDBInit() {
-    Global_ResDB = malloc(sizeof(ZResDBPool));
-    memset(Global_ResDB, 0, sizeof(ZResDBPool));
-    Global_ResDB->resdb = rb_new();
-    Global_ResDB->res = rb_new();
-    //创建流和文件的默认资源包
-    ZuiResDB p = (ZuiResDB)malloc(sizeof(ZResDB));
-    memset(p, 0, sizeof(ZResDB));
-    p->type = ZRESDBT_FILE;
-    rb_insert(Zui_Hash(L"file"), p, Global_ResDB->resdb);
-    p = (ZuiResDB)malloc(sizeof(ZResDB));
-    memset(p, 0, sizeof(ZResDB));
-    p->type = ZRESDBT_STREAM;
-    rb_insert(Zui_Hash(L"stream"), p, Global_ResDB->resdb);
-    p = (ZuiResDB)malloc(sizeof(ZResDB));
-    memset(p, 0, sizeof(ZResDB));
-    p->type = ZRESDBT_URL;
-    rb_insert(Zui_Hash(L"url"), p, Global_ResDB->resdb);
-    p = (ZuiResDB)malloc(sizeof(ZResDB));
-    memset(p, 0, sizeof(ZResDB));
-    p->type = ZRESDBT_PE;
-    p->Instance = m_hInstance;
-    rb_insert(Zui_Hash(L"pe_zui"), p, Global_ResDB->resdb);
-    //加载默认资源包
-    ZuiResDBGetRes(L"pe_zui:zip:106", ZREST_ZIP);
-    return TRUE;
+    Global_ResDB = ZuiMalloc(sizeof(ZResDBPool));
+    if (Global_ResDB) {
+        memset(Global_ResDB, 0, sizeof(ZResDBPool));
+        Global_ResDB->resdb = rb_new();
+        Global_ResDB->res = rb_new();
+        //创建流和文件的默认资源包
+        ZuiResDB p = (ZuiResDB)ZuiMalloc(sizeof(ZResDB));
+        memset(p, 0, sizeof(ZResDB));
+        p->type = ZRESDBT_FILE;
+        rb_insert(Zui_Hash(L"file"), p, Global_ResDB->resdb);
+        p = (ZuiResDB)ZuiMalloc(sizeof(ZResDB));
+        memset(p, 0, sizeof(ZResDB));
+        p->type = ZRESDBT_STREAM;
+        rb_insert(Zui_Hash(L"stream"), p, Global_ResDB->resdb);
+        p = (ZuiResDB)ZuiMalloc(sizeof(ZResDB));
+        memset(p, 0, sizeof(ZResDB));
+        p->type = ZRESDBT_URL;
+        rb_insert(Zui_Hash(L"url"), p, Global_ResDB->resdb);
+        p = (ZuiResDB)ZuiMalloc(sizeof(ZResDB));
+        memset(p, 0, sizeof(ZResDB));
+        p->type = ZRESDBT_PE;
+        p->Instance = m_hInstance;
+        rb_insert(Zui_Hash(L"pe_zui"), p, Global_ResDB->resdb);
+        //加载默认资源包
+        ZuiResDBGetRes(L"pe_zui:zip:106", ZREST_ZIP);
+        return TRUE;
+    }
+    return FALSE;
 }
 //打开压缩文件
 ZuiVoid ZuiResDBCallOnLoad(ZuiResDB db) {
@@ -38,11 +41,11 @@ ZuiVoid ZuiResDBCallOnLoad(ZuiResDB db) {
     {
         unzGetCurrentFileInfo64(db->uf, &info, 0, 0, 0, 0, 0, 0);
         unzOpenCurrentFilePassword(db->uf, db->pass);
-        char *buf = malloc(info.uncompressed_size);
+        char *buf = ZuiMalloc(info.uncompressed_size);
         int buflen = (int)info.uncompressed_size;
         int ret = unzReadCurrentFile(db->uf, buf, info.uncompressed_size);
         if (ret < 0) {
-            free(buf);
+            ZuiFree(buf);
             return;
         }
         int bufsize;
@@ -50,30 +53,30 @@ ZuiVoid ZuiResDBCallOnLoad(ZuiResDB db) {
         if (ZuiStingIsUtf8(buf, buflen))
         {
             bufsize = ZuiUtf8ToUnicode(buf, -1, 0, 0) * sizeof(wchar_t);
-            txtbuf = malloc(bufsize + 2);
+            txtbuf = ZuiMalloc(bufsize + 2);
             bufsize = ZuiUtf8ToUnicode(buf, buflen, txtbuf, bufsize);
             txtbuf[bufsize] = 0;
         }
         else
         {
             bufsize = ZuiAsciiToUnicode(buf, -1, 0, 0) * sizeof(wchar_t);
-            txtbuf = malloc(bufsize + 2);
+            txtbuf = ZuiMalloc(bufsize + 2);
             bufsize = ZuiAsciiToUnicode(buf, buflen, txtbuf, bufsize);
             txtbuf[bufsize] = 0;
         }
-        free(buf);
+        ZuiFree(buf);
         ZuiBuilderJsLoad(Global_Js, txtbuf, bufsize);
-        free(txtbuf);
+        ZuiFree(txtbuf);
     }
 }
 ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromBuf(ZuiAny data, ZuiInt len, ZuiText Pass)
 {
-    ZuiResDB p = (ZuiResDB)malloc(sizeof(ZResDB));
+    ZuiResDB p = (ZuiResDB)ZuiMalloc(sizeof(ZResDB));
     if (p)
     {
         memset(p, 0, sizeof(ZResDB));
         if (Pass) {
-            p->pass = (char *)malloc(strlen(Pass) + 1);
+            p->pass = (char *)ZuiMalloc(strlen(Pass) + 1);
             memset(p->pass, 0, strlen(Pass) + 1);
             memcpy(p->pass, Pass, strlen(Pass));
         }
@@ -83,13 +86,13 @@ ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromBuf(ZuiAny data, ZuiInt len, ZuiText Pa
             p->type = ZRESDBT_ZIP_STREAM;
             unzGetGlobalComment(p->uf, &name, 255);
             int bufsize = ZuiAsciiToUnicode(&name, -1, 0, 0) * sizeof(wchar_t);
-            wchar_t *txtbuf = malloc(bufsize);
+            wchar_t *txtbuf = ZuiMalloc(bufsize);
             bufsize = ZuiAsciiToUnicode(&name, bufsize / sizeof(wchar_t), txtbuf, bufsize);
             //添加到资源池
             rb_insert(Zui_Hash(txtbuf), p, Global_ResDB->resdb);
             //调用资源包初始化js
             ZuiResDBCallOnLoad(p);
-            free(txtbuf);
+            ZuiFree(txtbuf);
             return p;
         }
     }
@@ -97,12 +100,12 @@ ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromBuf(ZuiAny data, ZuiInt len, ZuiText Pa
 }
 ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromFile(ZuiText FileName, ZuiText Pass)
 {
-    ZuiResDB p = (ZuiResDB)malloc(sizeof(ZResDB));
+    ZuiResDB p = (ZuiResDB)ZuiMalloc(sizeof(ZResDB));
     if (p)
     {
         memset(p, 0, sizeof(ZResDB));
         if (Pass) {
-            p->pass = (char *)malloc(strlen(Pass) + 1);
+            p->pass = (char *)ZuiMalloc(strlen(Pass) + 1);
             memset(p->pass, 0, strlen(Pass) + 1);
             memcpy(p->pass, Pass, strlen(Pass));
         }
@@ -112,17 +115,17 @@ ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromFile(ZuiText FileName, ZuiText Pass)
             p->type = ZRESDBT_ZIP_FILE;
             unzGetGlobalComment(p->uf, &name, 255);
             int bufsize = ZuiAsciiToUnicode(&name, -1, 0, 0) * sizeof(wchar_t);
-            wchar_t *txtbuf = malloc(bufsize);
+            wchar_t *txtbuf = ZuiMalloc(bufsize);
             bufsize = ZuiAsciiToUnicode(&name, bufsize / sizeof(wchar_t), txtbuf, bufsize);
             //添加到资源池
             rb_insert(Zui_Hash(txtbuf), p, Global_ResDB->resdb);
             //调用资源包初始化js
             ZuiResDBCallOnLoad(p);
-            free(txtbuf);
+            ZuiFree(txtbuf);
             return p;
         }
     }
-    free(p);
+    ZuiFree(p);
     return 0;
 }
 
@@ -132,8 +135,8 @@ ZEXPORT ZuiVoid ZCALL ZuiResDBDestroy(ZuiResDB db)
     if (db)
     {
         unzClose(db->uf);
-        free(db->pass);
-        free(db);
+        ZuiFree(db->pass);
+        ZuiFree(db);
     }
 }
 ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
@@ -164,7 +167,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
         {
             //转换路径编码
             ZuiInt len = ZuiUnicodeToAscii(arr[1], -1, 0, 0);
-            ZuiAny n = malloc(len);
+            ZuiAny n = ZuiMalloc(len);
             ZuiUnicodeToAscii(arr[1], len, n, len);
             unz_file_info64 info;
             int ret = unzLocateFile(db->uf, n, 0);
@@ -172,22 +175,22 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
             {
                 unzGetCurrentFileInfo64(db->uf, &info, n, 256, 0, 0, 0, 0);
                 unzOpenCurrentFilePassword(db->uf, db->pass);
-                buf = malloc(info.uncompressed_size);
+                buf = ZuiMalloc(info.uncompressed_size);
                 buflen = (int)info.uncompressed_size;
                 ret = unzReadCurrentFile(db->uf, buf, info.uncompressed_size);
                 if (ret < 0) {
-                    free(buf);
+                    ZuiFree(buf);
                     buf = buflen = 0;
                 }
             }
-            free(n);
+            ZuiFree(n);
         }
         /*文件*/else if (db->type == ZRESDBT_FILE) {
             FILE*f = _wfopen(arr[1], L"rb");
             if (f) {
                 fseek(f, 0L, SEEK_END);
                 buflen = ftell(f); /* 得到文件大小 */
-                buf = malloc(buflen); /* 根据文件大小动态分配内存空间 */
+                buf = ZuiMalloc(buflen); /* 根据文件大小动态分配内存空间 */
                 fseek(f, 0L, SEEK_SET); /* 定位到文件开头 */
                 fread(buf, buflen, 1, f); /* 一次性读取全部文件内容 */
                 fclose(f);
@@ -195,7 +198,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
         }
         /*字节*/else if (db->type == ZRESDBT_STREAM) {
             buflen = _wtoi(arr[2]);
-            buf = malloc(buflen);
+            buf = ZuiMalloc(buflen);
             memcpy(buf, _wtoi(arr[1]), buflen);
         }
         /*网络*/else if (db->type == ZRESDBT_URL) {
@@ -277,10 +280,10 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
                                 HttpQueryInfo(hOpenRequest, HTTP_QUERY_CONTENT_LENGTH, &prot, &len, 0);
                                 prot[len] = 0;
                                 buflen = _wtoi(prot);
-                                buf = malloc(buflen);
+                                buf = ZuiMalloc(buflen);
                                 if (!InternetReadFile(hOpenRequest, buf, buflen, &buflen)) {
                                     buflen = 0;
-                                    free(buf);
+                                    ZuiFree(buf);
                                 }
                             }
                             InternetCloseHandle(hOpenRequest);
@@ -304,7 +307,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
                     HGLOBAL hGlobal = LoadResource(db->Instance, hRsrc);
                     if (hGlobal) {
                         //锁定资源
-                        buf = malloc(buflen);
+                        buf = ZuiMalloc(buflen);
                         if (buf)
                         {
                             void * pbuf = LockResource(hGlobal);
@@ -314,7 +317,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
                             }
                             else
                             {
-                                free(buf);
+                                ZuiFree(buf);
                                 buf = 0;
                             }
                         }
@@ -325,7 +328,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
         if (buf == 0 || buflen == 0)
             return NULL;
         //创建对应的资源类型
-        ZuiRes res = malloc(sizeof(ZRes));
+        ZuiRes res = ZuiMalloc(sizeof(ZRes));
         if (!res)
             return NULL;
         memset(res, 0, sizeof(ZRes));
@@ -334,9 +337,9 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
             ZuiImage img = ZuiLoadImageFromBinary(buf, buflen);
             res->p = img;
             //释放缓冲
-            free(buf);
+            ZuiFree(buf);
             if (!res->p) {
-                free(res);
+                ZuiFree(res);
                 return NULL;
             }
             for (size_t i = 2; i < arrnum; i++)
@@ -357,26 +360,26 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
             if (ZuiStingIsUtf8(buf, buflen))
             {
                 bufsize = ZuiUtf8ToUnicode(buf, -1, 0, 0) * sizeof(wchar_t);
-                txtbuf = malloc(bufsize + 2);
+                txtbuf = ZuiMalloc(bufsize + 2);
                 bufsize = ZuiUtf8ToUnicode(buf, buflen, txtbuf, bufsize);
                 txtbuf[bufsize] = 0;
             }
             else
             {
                 bufsize = ZuiAsciiToUnicode(buf, -1, 0, 0) * sizeof(wchar_t);
-                txtbuf = malloc(bufsize + 2);
+                txtbuf = ZuiMalloc(bufsize + 2);
                 bufsize = ZuiAsciiToUnicode(buf, buflen, txtbuf, bufsize);
                 txtbuf[bufsize] = 0;
             }
-            free(buf);
+            ZuiFree(buf);
             res->p = txtbuf;
         }
         else if (type == ZREST_ZIP)
         {
             res->p = ZuiResDBCreateFromBuf(buf, buflen, 0);
-            free(buf);
+            ZuiFree(buf);
             if (!res->p) {
-                free(res);
+                ZuiFree(res);
                 return NULL;
             }
         }
@@ -385,7 +388,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
             res->plen = buflen;
         }
         if (!res->p) {
-            free(res);
+            ZuiFree(res);
             return NULL;
         }
         //保存到资源map
@@ -406,28 +409,28 @@ ZEXPORT ZuiVoid ZCALL ZuiResDBDelRes(ZuiRes res) {
                 ZuiDestroyImage(res->p);
             }
             else if (res->type == ZREST_TXT || res->type == ZREST_STREAM) {
-                free(res->p);
+                ZuiFree(res->p);
             }
-            free(res);
+            ZuiFree(res);
         }
     }
 }
 ZEXPORT ZuiRes ZCALL ZuiResDBNewTempRes(ZuiAny b, ZuiInt buflen, ZuiInt type) {
     //创建对应的资源类型
-    ZuiRes res = malloc(sizeof(ZRes));
+    ZuiRes res = ZuiMalloc(sizeof(ZRes));
     if (!res)
         return NULL;
     memset(res, 0, sizeof(ZRes));
     res->type = type;
-    ZuiAny buf = malloc(buflen);
+    ZuiAny buf = ZuiMalloc(buflen);
     memcpy(buf, b, buflen);
     if (type == ZREST_IMG) {
         ZuiImage img = ZuiLoadImageFromBinary(buf, buflen);
         res->p = img;
         //释放缓冲
-        free(buf);
+        ZuiFree(buf);
         if (!res->p) {
-            free(res);
+            ZuiFree(res);
             return NULL;
         }
     }
@@ -437,26 +440,26 @@ ZEXPORT ZuiRes ZCALL ZuiResDBNewTempRes(ZuiAny b, ZuiInt buflen, ZuiInt type) {
         if (ZuiStingIsUtf8(buf, buflen))
         {
             bufsize = ZuiUtf8ToUnicode(buf, -1, 0, 0) * sizeof(wchar_t);
-            txtbuf = malloc(bufsize + 2);
+            txtbuf = ZuiMalloc(bufsize + 2);
             bufsize = ZuiUtf8ToUnicode(buf, buflen, txtbuf, bufsize);
             txtbuf[bufsize] = 0;
         }
         else
         {
             bufsize = ZuiAsciiToUnicode(buf, -1, 0, 0) * sizeof(wchar_t);
-            txtbuf = malloc(bufsize + 2);
+            txtbuf = ZuiMalloc(bufsize + 2);
             bufsize = ZuiAsciiToUnicode(buf, buflen, txtbuf, bufsize);
             txtbuf[bufsize] = 0;
         }
-        free(buf);
+        ZuiFree(buf);
         res->p = txtbuf;
     }
     else if (type == ZREST_ZIP)
     {
         res->p = ZuiResDBCreateFromBuf(buf, buflen, 0);
-        free(buf);
+        ZuiFree(buf);
         if (!res->p) {
-            free(res);
+            ZuiFree(res);
             return NULL;
         }
     }
@@ -465,7 +468,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBNewTempRes(ZuiAny b, ZuiInt buflen, ZuiInt type) {
         res->plen = buflen;
     }
     if (!res->p) {
-        free(res);
+        ZuiFree(res);
         return NULL;
     }
     //保存到资源map
