@@ -33,6 +33,9 @@ ZuiBool ZuiResDBInit() {
     }
     return FALSE;
 }
+ZuiVoid ZuiResDBUnInit() {
+
+}
 //打开压缩文件
 ZuiVoid ZuiResDBCallOnLoad(ZuiResDB db) {
     unz_file_info64 info;

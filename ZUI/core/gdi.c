@@ -70,6 +70,10 @@ ZuiBool ZuiGraphInitialize() {
     MAKEZRECT(ZeroRectR, 0, 0, 0, 0);
     return TRUE;
 }
+/*反初始化图形接口*/
+ZuiVoid ZuiGraphUnInitialize() {
+
+}
 /*填充矩形*/
 ZEXPORT ZuiVoid ZCALL ZuiDrawFillRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt Left, ZuiInt Top, ZuiInt Width, ZuiInt Height) {
     void *Brush;

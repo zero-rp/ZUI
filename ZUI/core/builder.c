@@ -311,3 +311,6 @@ ZuiBool ZuiBuilderInit() {
     ZuiBuilderJs(Global_Js);
     return TRUE;
 }
+ZuiVoid ZuiBuilderUnInit() {
+
+}

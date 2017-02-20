@@ -22,4 +22,5 @@ ZuiBool ZuiBuilderJs(js_State *J);
 ZuiBool ZuiBuilderJsPM(js_State *J, ZuiPaintManager p);
 ZEXPORT ZuiBool ZCALL ZuiBuilderJsLoad(js_State *J, ZuiText str, ZuiInt len);
 ZuiBool ZuiBuilderInit();
+ZuiVoid ZuiBuilderUnInit();
 #endif	//__ZUI_CORE_BUILDER_H__

@@ -15,6 +15,7 @@
 #define __TEMPLATE_H__
 
 ZuiBool ZuiTemplateInit();
+ZuiVoid ZuiTemplateUnInit();
 ZuiVoid ZuiAddTemplate(mxml_node_t *node);
 ZuiVoid ZuiLoadTemplate(mxml_node_t *node, ZuiControl p);
 #endif //__TEMPLATE_H__

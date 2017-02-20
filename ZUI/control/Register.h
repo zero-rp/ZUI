@@ -20,6 +20,7 @@
 * @return 此函数没有返回值.
 */
 ZuiBool ZuiControlRegister();
+ZuiVoid ZuiControlUnRegister();
 /**
 * 此函数用作向系统注册控件.
 * @param name 控件类名 请使用全小写注册

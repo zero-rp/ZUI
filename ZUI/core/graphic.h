@@ -93,6 +93,7 @@ typedef struct _ZStringFormat{
 * @return 此函数没有返回值.
 */
 ZuiBool ZuiGraphInitialize();
+ZuiVoid ZuiGraphUnInitialize();
 /** 此函数用作填充一个矩形区域.
 * @param Graphics ZuiGraphics对象
 * @param Color 用作填充的颜色

@@ -76,6 +76,23 @@ ZEXPORT ZuiBool ZCALL ZuiInit() {
     }
     return TRUE;
 }
+ZEXPORT ZuiBool ZCALL ZuiUnInit() {
+    /*反初始化图形层*/
+    ZuiGraphUnInitialize();
+    /*反初始化全局变量*/
+    ZuiGlobalUnInit();
+    /*反初始化绘制管理器*/
+    ZuiPaintManagerUnInitialize();
+    /*反注册全局控件*/
+    ZuiControlUnRegister();
+    /*反初始化模版管理器*/
+    ZuiTemplateUnInit();
+    /*反初始化绑定器*/
+    ZuiBuilderUnInit();
+    /*反初始化资源池*/
+    ZuiResDBUnInit();
+    return TRUE;
+}
 ZEXPORT ZuiInt ZCALL ZuiMsgLoop() {
     MSG Msg;
     while (GetMessage(&Msg, NULL, 0, 0))

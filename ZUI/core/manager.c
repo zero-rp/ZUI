@@ -101,7 +101,9 @@ ZuiBool ZuiPaintManagerInitialize() {
 
     return TRUE;
 }
+ZuiVoid ZuiPaintManagerUnInitialize() {
 
+}
 //创建消息管理器
 ZuiPaintManager NewCPaintManagerUI() {
     ZuiPaintManager p = (ZuiPaintManager)ZuiMalloc(sizeof(IZuiPaintManager));

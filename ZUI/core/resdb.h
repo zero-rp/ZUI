@@ -62,6 +62,7 @@ typedef struct _ZResDBPool
 	rb_root	*res;	//所有已经加载过的资源
 } *ZuiResDBPool, ZResDBPool;
 ZuiBool ZuiResDBInit();
+ZuiVoid ZuiResDBUnInit();
 /** 此函数用作从字节流中加载一个Zip型的资源包.
 * @param data 流指针
 * @param len 流长度

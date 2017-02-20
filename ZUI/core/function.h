@@ -23,7 +23,7 @@ void * ZCALL Zui_Hash(wchar_t* str);
 * @return 此函数没有返回值.
 */
 ZEXPORT ZuiBool ZCALL ZuiInit();
-
+ZEXPORT ZuiBool ZCALL ZuiUnInit();
 /**
 * 此函数用作Zui消息循环.
 * @return int.

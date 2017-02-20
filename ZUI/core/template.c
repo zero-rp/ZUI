@@ -6,6 +6,9 @@ ZuiBool ZuiTemplateInit()
     Global_TemplateClass = rb_new();
     return TRUE;
 }
+ZuiVoid ZuiTemplateUnInit() {
+
+}
 ZuiVoid ZuiAddTemplate(mxml_node_t *node)
 {
     ZuiText classname = NULL;

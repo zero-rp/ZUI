@@ -20,7 +20,7 @@ BOOL ZuiControlRegister()
 
 
     ZuiControlRegisterAdd(L"window", (ZCtlProc)&ZuiWindowProc);
-    //ZuiControlRegisterAdd(L"html", (ZCtlProc)&ZuiHtmlProc);
+    ZuiControlRegisterAdd(L"html", (ZCtlProc)&ZuiHtmlProc);
     ZuiControlRegisterAdd(L"scrollbar", (ZCtlProc)&ZuiScrollBarProc);
     ZuiControlRegisterAdd(L"splitterbar", (ZCtlProc)&ZuiSplitterBarProc);
     ZuiControlRegisterAdd(L"label", (ZCtlProc)&ZuiLabelProc);
@@ -34,6 +34,9 @@ BOOL ZuiControlRegister()
     /*初始化全部控件*/
     //rb_foreach(Global_ControlClass, ZuiCoreInit);
     return TRUE;
+}
+ZuiVoid ZuiControlUnRegister() {
+
 }
 ZEXPORT ZuiBool ZCALL ZuiControlRegisterAdd(ZuiText name, ZCtlProc Proc)
 {

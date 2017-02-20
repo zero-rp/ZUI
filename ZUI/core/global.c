@@ -18,3 +18,7 @@ ZuiBool ZuiGlobalInit() {
     Global_MenuClass = rb_new();
     return TRUE;
 }
+ZuiVoid ZuiGlobalUnInit() {
+
+
+}

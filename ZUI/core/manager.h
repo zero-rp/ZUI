@@ -150,6 +150,7 @@ typedef struct _ZuiPaintManager
 } *ZuiPaintManager, IZuiPaintManager;
 
 ZuiBool ZuiPaintManagerInitialize();
+ZuiVoid ZuiPaintManagerUnInitialize();
 
 //创建消息管理器
 ZuiPaintManager NewCPaintManagerUI();

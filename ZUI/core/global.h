@@ -29,6 +29,6 @@ extern ZuiReal	Global_DPI_Y;					//DPI
 * @return 成功返回TRUE.
 */
 ZuiBool ZuiGlobalInit();
-
+ZuiVoid ZuiGlobalUnInit();
 
 #endif	//__ZUI_CORE_GLOBAL_H__
