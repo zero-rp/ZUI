@@ -162,6 +162,10 @@ void* CALLBACK ZuiTileLayoutProc(int ProcId, ZuiControl cp, ZuiTileLayout p, voi
         else if (wcscmp(Param1, L"columns") == 0) ZuiControlCall(Proc_TileLayout_SetColumns, cp, _ttoi(Param2), NULL, NULL);
         break;
     }
+    case Proc_CoreUnInit: {
+        return NULL;
+        break;
+    }
     default:
         break;
     }

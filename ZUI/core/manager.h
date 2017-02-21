@@ -49,7 +49,7 @@ typedef enum EVENTTYPE_UI
     ZEVENT_TIMER,
     ZEVENT_NOTIFY,
     ZEVENT_COMMAND,
-    ZEVENT__LAST,
+    ZEVENT__LAST
 };
 
 /////////////////////////////////////////////////////////////////////////////////////

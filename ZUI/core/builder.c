@@ -312,5 +312,5 @@ ZuiBool ZuiBuilderInit() {
     return TRUE;
 }
 ZuiVoid ZuiBuilderUnInit() {
-
+    js_freestate(Global_Js);
 }

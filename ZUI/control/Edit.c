@@ -151,6 +151,10 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 		return ZFLAG_SETCURSOR;
 		break;
 	}
+    case Proc_CoreUnInit: {
+        return NULL;
+        break;
+    }
 	default:
 		break;
 	}

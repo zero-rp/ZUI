@@ -141,6 +141,10 @@ void* CALLBACK ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayou
         return 0;
         break;
     }
+    case Proc_CoreUnInit: {
+        return NULL;
+        break;
+    }
     default:
         break;
     }

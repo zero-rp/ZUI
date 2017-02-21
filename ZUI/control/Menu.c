@@ -260,6 +260,10 @@ ZEXPORT ZuiAny ZCALL ZuiMenuProc(ZuiInt ProcId, ZuiControl cp, ZuiMenu p, ZuiAny
             ShowWindow(p->m_hWnd, SW_HIDE);
         break;
     }
+    case Proc_CoreUnInit: {
+        return NULL;
+        break;
+    }
     default:
         break;
     }
@@ -365,6 +369,10 @@ ZEXPORT ZuiAny ZCALL ZuiMenuItemProc(ZuiInt ProcId, ZuiControl cp, ZuiMenuItem p
         break;
     }
     case Proc_JsCall: {
+        break;
+    }
+    case Proc_CoreUnInit: {
+        return NULL;
         break;
     }
     default:

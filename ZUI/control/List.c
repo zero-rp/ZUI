@@ -30,6 +30,10 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
 
         break;
     }
+    case Proc_CoreUnInit: {
+        return NULL;
+        break;
+    }
     default:
         break;
     }

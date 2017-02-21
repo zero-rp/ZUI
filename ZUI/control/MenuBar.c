@@ -27,6 +27,10 @@ ZEXPORT ZuiAny ZCALL ZuiMenuBarProc(ZuiInt ProcId, ZuiControl cp, ZuiMenuBar p, 
         ZuiDrawString(gp, Global_StringFormat, cp->m_sText, &r);
         break;
     }
+    case Proc_CoreUnInit: {
+        return NULL;
+        break;
+    }
     default:
         break;
     }

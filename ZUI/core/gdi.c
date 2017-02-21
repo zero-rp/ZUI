@@ -11,6 +11,7 @@ typedef struct
 extern "C" {
 #endif
     int __stdcall GdiplusStartup(int *token, GdiplusStartupInput *input, void *output);
+    int __stdcall GdiplusShutdown(int token);
     int __stdcall GdipCreateFromHDC(HDC hdc, void **graphics);
     int __stdcall GdipSetTextRenderingHint(void *graphics, int a);
     int __stdcall GdipDeleteGraphics(void *graphics);
@@ -60,10 +61,10 @@ extern "C" {
 #endif
 
 ZRectR ZeroRectR;//零坐标矩形
+ZuiInt pGdiToken;
 /*初始化图形接口*/
 ZuiBool ZuiGraphInitialize() {
     GdiplusStartupInput gdiplusStartupInput;
-    ZuiInt pGdiToken;
     memset(&gdiplusStartupInput, 0, sizeof(GdiplusStartupInput));
     gdiplusStartupInput.GdiplusVersion = 1;
     GdiplusStartup(&pGdiToken, &gdiplusStartupInput, NULL);//初始化GDI+
@@ -72,7 +73,7 @@ ZuiBool ZuiGraphInitialize() {
 }
 /*反初始化图形接口*/
 ZuiVoid ZuiGraphUnInitialize() {
-
+    GdiplusShutdown(pGdiToken);
 }
 /*填充矩形*/
 ZEXPORT ZuiVoid ZCALL ZuiDrawFillRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt Left, ZuiInt Top, ZuiInt Width, ZuiInt Height) {

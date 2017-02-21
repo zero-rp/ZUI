@@ -175,6 +175,10 @@ void* CALLBACK ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void*
         if (wcscmp(Param1, L"selectitem") == 0) ZuiControlCall(Proc_Layout_Tab_SelectItem, cp, (ZuiAny)js_toint32(J, -1), NULL, NULL);
         break;
     }
+    case Proc_CoreUnInit: {
+        return NULL;
+        break;
+    }
     default:
         break;
     }

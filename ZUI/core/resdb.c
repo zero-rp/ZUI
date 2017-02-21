@@ -33,8 +33,12 @@ ZuiBool ZuiResDBInit() {
     }
     return FALSE;
 }
+ZuiVoid ZuiResDBUnInitCallBack(void *data) {
+    ZuiResDBDestroy((ZuiResDB)data);
+}
 ZuiVoid ZuiResDBUnInit() {
-
+    rb_foreach(Global_ResDB->resdb, ZuiResDBUnInitCallBack);
+    rb_free(Global_ResDB->resdb);
 }
 //打开压缩文件
 ZuiVoid ZuiResDBCallOnLoad(ZuiResDB db) {

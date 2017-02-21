@@ -6,8 +6,12 @@ ZuiBool ZuiTemplateInit()
     Global_TemplateClass = rb_new();
     return TRUE;
 }
+ZuiVoid ZuiTemplateUnInitCallBack(void *data) {
+    mxmlDelete((mxml_node_t*)data);
+}
 ZuiVoid ZuiTemplateUnInit() {
-
+    rb_foreach(Global_TemplateClass, ZuiTemplateUnInitCallBack);
+    rb_free(Global_TemplateClass);
 }
 ZuiVoid ZuiAddTemplate(mxml_node_t *node)
 {

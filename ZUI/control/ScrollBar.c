@@ -508,6 +508,10 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         if (p->m_nScrollPos > p->m_nRange) p->m_nScrollPos = p->m_nRange;
         ZuiControlCall(Proc_SetPos, cp, &cp->m_rcItem, NULL, NULL);
     }
+    case Proc_CoreUnInit: {
+        return NULL;
+        break;
+    }
     default:
         break;
     }

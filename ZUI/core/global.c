@@ -19,6 +19,7 @@ ZuiBool ZuiGlobalInit() {
     return TRUE;
 }
 ZuiVoid ZuiGlobalUnInit() {
-
+    ZuiFree(Global_DefaultFontName);
+    ZuiDestroyStringFormat(Global_StringFormat);
 
 }

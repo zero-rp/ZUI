@@ -520,7 +520,9 @@ void rb_delete(key_t key, rb_root*root) {
 }
 
 void rb_free(rb_root*root) {
-    rb_delete(root, root->rb_node);
+    if (root->rb_node)
+        rb_delete(root, root->rb_node);
+    free(root);
 }
 
 void rb_foreach_c(rb_node *node, TreeVisitFunc visitfunc) {

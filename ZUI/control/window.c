@@ -1,7 +1,7 @@
 #include <ZUI.h>
 
 static rb_root *m_window = NULL;
-
+static DArray *m_window_array = NULL;
 static LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     ZuiWindow pThis = NULL;
@@ -101,7 +101,6 @@ static LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
         return DefWindowProc(hWnd, uMsg, wParam, lParam);
     }
 }
-
 ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
@@ -119,7 +118,19 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         wc.lpszClassName = L"ZUI";
         RegisterClass(&wc);
         m_window = rb_new();
+        m_window_array = darray_create();
         return TRUE;
+        break;
+    }
+    case Proc_CoreUnInit: {
+        //这里销毁掉所有窗口
+        rb_free(m_window);
+        for (size_t i = 0; i < m_window_array->count; i++)
+        {
+            FreeZuiControl(m_window_array->data[i], FALSE);
+        }
+        darray_destroy(m_window_array);
+        return NULL;
         break;
     }
     case Proc_OnDestroy: {
@@ -156,6 +167,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
             ZuiPaintManagerAttachDialog(p->m_pm, cp);
             if (!Param1)
                 ShowWindow(p->m_hWnd, SW_SHOW);
+            darray_append(m_window_array, cp);
             return p;
         }
         return NULL;
