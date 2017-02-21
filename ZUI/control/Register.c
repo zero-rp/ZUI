@@ -20,7 +20,7 @@ BOOL ZuiControlRegister()
 
 
     ZuiControlRegisterAdd(L"window", (ZCtlProc)&ZuiWindowProc);
-    ZuiControlRegisterAdd(L"html", (ZCtlProc)&ZuiHtmlProc);
+    //ZuiControlRegisterAdd(L"html", (ZCtlProc)&ZuiHtmlProc);
     ZuiControlRegisterAdd(L"scrollbar", (ZCtlProc)&ZuiScrollBarProc);
     ZuiControlRegisterAdd(L"splitterbar", (ZCtlProc)&ZuiSplitterBarProc);
     ZuiControlRegisterAdd(L"label", (ZCtlProc)&ZuiLabelProc);
