@@ -9,6 +9,8 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
     case Proc_CoreInit:
         return TRUE;
     case Proc_OnDestroy: {
+        ZCtlProc old_call = p->old_call;
+        ZuiAny old_udata = p->old_udata;
         if (p->m_ResNormal)
             ZuiResDBDelRes(p->m_ResNormal);
         if (p->m_ResHot)
@@ -19,9 +21,6 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
             ZuiResDBDelRes(p->m_ResFocused);
         if (p->m_ResDisabled)
             ZuiResDBDelRes(p->m_ResDisabled);
-
-        ZCtlProc old_call = p->old_call;
-        ZuiAny old_udata = p->old_udata;
 
         ZuiFree(p);
 

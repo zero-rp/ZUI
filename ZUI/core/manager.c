@@ -416,11 +416,12 @@ ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetFocusNeeded(ZuiPaintManager p, ZuiContro
 //创建时钟
 ZEXPORT ZuiBool ZCALL ZuiPaintManagerSetTimer(ZuiControl pControl, UINT nTimerID, UINT uElapse)
 {
+    TIMERINFO* pTimer;
     ASSERT(pControl != NULL);
     ASSERT(uElapse > 0);
     if (pControl->m_pManager) {
         for (int i = 0; i < darray_len(pControl->m_pManager->m_aTimers); i++) {
-            TIMERINFO* pTimer = (TIMERINFO*)(pControl->m_pManager->m_aTimers->data[i]);
+            pTimer = (TIMERINFO*)(pControl->m_pManager->m_aTimers->data[i]);
             if (pTimer->pSender == pControl
                 && pTimer->hWnd == pControl->m_pManager->m_hWndPaint
                 && pTimer->nLocalID == nTimerID) {
@@ -437,7 +438,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerSetTimer(ZuiControl pControl, UINT nTimerID
 
         pControl->m_pManager->m_uTimerID = (++pControl->m_pManager->m_uTimerID) % 0xFF;
         if (!SetTimer(pControl->m_pManager->m_hWndPaint, pControl->m_pManager->m_uTimerID, uElapse, NULL)) return FALSE;
-        TIMERINFO* pTimer = ZuiMalloc(sizeof(TIMERINFO));
+        pTimer = ZuiMalloc(sizeof(TIMERINFO));
         memset(pTimer, 0, sizeof(TIMERINFO));
         if (pTimer == NULL) return FALSE;
         pTimer->hWnd = pControl->m_pManager->m_hWndPaint;
@@ -642,8 +643,8 @@ ZuiControl CALLBACK __FindControlFromTab(ZuiControl pThis, LPVOID pData)
 
 ZuiControl CALLBACK __FindControlFromShortcut(ZuiControl pThis, LPVOID pData)
 {
-    if (!pThis->m_bVisible) return NULL;
     FINDSHORTCUT* pFS = (FINDSHORTCUT*)(pData);
+    if (!pThis->m_bVisible) return NULL;
     if (pFS->ch == toupper(pThis->m_chShortcut)) pFS->bPickNext = TRUE;
     return pFS->bPickNext ? pThis : NULL;
 }
@@ -1304,11 +1305,11 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
     break;
     case WM_SETCURSOR:
     {
+        ZPoint pt = { 0 };
         if (p->m_pRoot == NULL) break;
         if (LOWORD(lParam) != HTCLIENT) break;
         if (p->m_bMouseCapture) return TRUE;
 
-        ZPoint pt = { 0 };
         GetCursorPos(&pt);
         ScreenToClient(p->m_hWndPaint, &pt);
         ZuiControl pControl = ZuiPaintManagerFindControl(p, pt);

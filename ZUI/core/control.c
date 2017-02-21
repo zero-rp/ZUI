@@ -84,9 +84,9 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         if (!p->m_bEnabled) return FALSE;
     }
     case Proc_SetVisible: {
+        BOOL v = p->m_bVisible;
         if (p->m_bVisible == (BOOL)Param1)
             return 0;
-        BOOL v = p->m_bVisible;
         p->m_bVisible = (BOOL)Param1;
         if (p->m_bFocused)
             p->m_bFocused = FALSE;
@@ -135,10 +135,10 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     case Proc_SetPos: {// 只有控件为float的时候，外部调用SetPos和Move才是有效的，位置参数是相对父控件的位置
         RECT *rc = (RECT *)Param1;
         BOOL bNeedInvalidate = (BOOL)Param2;
+        RECT invalidateRc = p->m_rcItem;
         if (rc->right < rc->left) rc->right = rc->left;
         if (rc->bottom < rc->top) rc->bottom = rc->top;
 
-        RECT invalidateRc = p->m_rcItem;
         if (IsRectEmpty(&invalidateRc)) invalidateRc = *rc;
 
         if (p->m_bFloat) {
@@ -504,10 +504,11 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         else if (wcscmp(Param1, L"maxwidth") == 0) ZuiControlCall(Proc_SetMaxWidth, p, _wtoi(Param2), NULL, NULL);
         else if (wcscmp(Param1, L"maxheight") == 0) ZuiControlCall(Proc_SetMaxHeight, p, _wtoi(Param2), NULL, NULL);
         else if (wcscmp(Param1, L"bkcolor") == 0) {
+            LPTSTR pstr = NULL;
+            DWORD clrColor;
             while (*(wchar_t *)Param2 > L'\0' && *(wchar_t *)Param2 <= L' ') (wchar_t *)Param2 = CharNext((wchar_t *)Param2);
             if (*(wchar_t *)Param2 == L'#') (wchar_t *)Param2 = CharNext((wchar_t *)Param2);
-            LPTSTR pstr = NULL;
-            DWORD clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);
+            clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);
             ZuiControlCall(Proc_SetBkColor, p, clrColor, NULL, NULL);
         }
         else if (wcscmp(Param1, L"drag") == 0) ZuiControlCall(Proc_SetDrag, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
@@ -522,10 +523,11 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             ZuiControlCall(Proc_SetPadding, p, &rcPadding, NULL, NULL);
         }
         else if (wcscmp(Param1, L"bordercolor") == 0) {
+            LPTSTR pstr = NULL;
+            DWORD clrColor;
             while (*(wchar_t *)Param2 > L'\0' && *(wchar_t *)Param2 <= L' ') (wchar_t *)Param2 = CharNext((wchar_t *)Param2);
             if (*(wchar_t *)Param2 == L'#') (wchar_t *)Param2 = CharNext((wchar_t *)Param2);
-            LPTSTR pstr = NULL;
-            DWORD clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);
+            clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);
             ZuiControlCall(Proc_SetBorderColor, p, clrColor, NULL, NULL);
         }
         else if (wcscmp(Param1, L"name") == 0) ZuiControlCall(Proc_SetName, p, Param2, NULL, NULL);
@@ -795,26 +797,26 @@ ZEXPORT ZuiControl ZCALL ZuiControlFindName(ZuiControl p, ZuiText Name) {
 
 ZEXPORT ZuiVoid ZCALL ZuiControlInvalidate(ZuiControl p, ZuiBool ResetAnimation)
 {
-    if (!p->m_bVisible) return;
-
     RECT invalidateRc = p->m_rcItem;
-
-    ZuiControl pParent = p;
-    RECT rcTemp;
-    RECT *rcParent;
-    while (pParent = pParent->m_pParent)
+    if (!p->m_bVisible) return;
     {
-        rcTemp = invalidateRc;
-        rcParent = (RECT *)ZuiControlCall(Proc_GetPos, pParent, NULL, NULL, NULL);
-        if (!IntersectRect(&invalidateRc, &rcTemp, rcParent))
+        ZuiControl pParent = p;
+        RECT rcTemp;
+        RECT *rcParent;
+        while (pParent = pParent->m_pParent)
         {
-            return;
+            rcTemp = invalidateRc;
+            rcParent = (RECT *)ZuiControlCall(Proc_GetPos, pParent, NULL, NULL, NULL);
+            if (!IntersectRect(&invalidateRc, &rcTemp, rcParent))
+            {
+                return;
+            }
         }
+        //重置动画
+        if (ResetAnimation && p->m_aAnime)
+            p->m_aAnime->steup = NULL;
+        if (p->m_pManager != NULL) ZuiPaintManagerInvalidateRect(p->m_pManager, &invalidateRc);
     }
-    //重置动画
-    if (ResetAnimation && p->m_aAnime)
-        p->m_aAnime->steup = NULL;
-    if (p->m_pManager != NULL) ZuiPaintManagerInvalidateRect(p->m_pManager, &invalidateRc);
 }
 
 ZEXPORT ZuiVoid ZCALL ZuiControlNeedUpdate(ZuiControl p)

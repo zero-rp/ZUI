@@ -36,9 +36,9 @@ ZEXPORT ZuiAny ZCALL ZuiVirtualProc(ZuiInt ProcId, ZuiControl cp, ZuiVirtual p, 
     }
                        break;
     case Proc_OnDestroy: {
+        ZCtlProc old_call = p->old_call;
         if (p->m_hwnd)
             DestroyWindow(p->m_hwnd);
-        ZCtlProc old_call = p->old_call;
 
         ZuiFree(p);
 

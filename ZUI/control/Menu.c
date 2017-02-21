@@ -266,9 +266,10 @@ ZEXPORT ZuiAny ZCALL ZuiMenuProc(ZuiInt ProcId, ZuiControl cp, ZuiMenu p, ZuiAny
     return p->old_call(ProcId, cp, p->old_udata, Param1, Param2, Param3);
 }
 ZuiDestroyMenu(ZuiMenu p) {
-    if (!p)
+	ZuiMenu next;
+	if (!p)
         return;
-    ZuiMenu next = p;
+	next = p;
     while (next)
     {
         if (!next->m_aSubMenu)

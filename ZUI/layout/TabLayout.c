@@ -67,10 +67,11 @@ void* CALLBACK ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void*
                 sz.cy = MAX(0, szAvailable.cy);
             }
             if (sz.cy < (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0)) sz.cy = (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0);
-            if (sz.cy > (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0)) sz.cy = (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0);
-
-            RECT rcCtrl = { rc.left, rc.top, rc.left + sz.cx, rc.top + sz.cy };
-            ZuiControlCall(Proc_SetPos, pControl, &rcCtrl, FALSE, 0);
+			if (sz.cy >(LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0)) sz.cy = (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0);
+			{
+				RECT rcCtrl = { rc.left, rc.top, rc.left + sz.cx, rc.top + sz.cy };
+				ZuiControlCall(Proc_SetPos, pControl, &rcCtrl, FALSE, 0);
+			}
         }
         return 0;
         break;

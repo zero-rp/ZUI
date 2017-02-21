@@ -311,6 +311,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         case ZEVENT_RBUTTONDOWN:
         case ZEVENT_LDBLCLICK:
         case ZEVENT_MOUSEMOVE: {
+            UINT uMsg = 0;
             if (event->Type == ZEVENT_LBUTTONDOWN)
             {
                 ZuiPaintManagerSetCapture(cp->m_pManager);
@@ -332,7 +333,6 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
             if (event->wParam & MK_RBUTTON)
                 flags |= WKE_RBUTTON;
 
-            UINT uMsg = 0;
             switch (event->Type)
             {
             case ZEVENT_LBUTTONDOWN:    uMsg = WM_LBUTTONDOWN; break;
@@ -362,7 +362,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
                 flags |= WKE_MBUTTON;
             if (event->wParam & MK_RBUTTON)
                 flags |= WKE_RBUTTON;
-            ZuiBool handled = wkeFireMouseWheelEvent(p->view, pt.x, pt.y, delta, flags);
+            int handled = wkeFireMouseWheelEvent(p->view, pt.x, pt.y, delta, flags);
             if (handled)
                 return 0;
             break;

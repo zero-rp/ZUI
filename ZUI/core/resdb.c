@@ -144,6 +144,7 @@ ZEXPORT ZuiVoid ZCALL ZuiResDBDestroy(ZuiResDB db)
 }
 ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
     if (Path) {
+		rb_node *node;
         _ZuiText pathbuf[1024];
         ZuiText arr[20];
         ZuiInt arrnum = 20;
@@ -152,7 +153,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
         if (arrnum < 2)
             return NULL;
         //先查找已经加载过的资源里面是否存在
-        rb_node *node = rb_search(Zui_Hash(Path), Global_ResDB->res);
+        node = rb_search(Zui_Hash(Path), Global_ResDB->res);
         if (node) {
             ((ZuiRes)node->data)->ref++;//增加引用计数
             return (ZuiRes)node->data;
@@ -329,76 +330,78 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
             }
         }
         if (buf == 0 || buflen == 0)
-            return NULL;
-        //创建对应的资源类型
-        ZuiRes res = ZuiMalloc(sizeof(ZRes));
-        if (!res)
-            return NULL;
-        memset(res, 0, sizeof(ZRes));
-        res->type = type;
-        if (type == ZREST_IMG) {
-            ZuiImage img = ZuiLoadImageFromBinary(buf, buflen);
-            res->p = img;
-            //释放缓冲
-            ZuiFree(buf);
-            if (!res->p) {
-                ZuiFree(res);
-                return NULL;
-            }
-            for (size_t i = 2; i < arrnum; i++)
-            {
-                if (wcsncmp(arr[i], L"src='", 5) == 0) {
-                    LPTSTR pstr = NULL;
-                    img->src.Left = _tcstol(arr[i] + 5, &pstr, 10);  ASSERT(pstr);
-                    img->src.Top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
-                    img->src.Width = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
-                    img->src.Height = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
-                }
-            }
+			return NULL;
+		{
+			//创建对应的资源类型
+			ZuiRes res = ZuiMalloc(sizeof(ZRes));
+			if (!res)
+				return NULL;
+			memset(res, 0, sizeof(ZRes));
+			res->type = type;
+			if (type == ZREST_IMG) {
+				ZuiImage img = ZuiLoadImageFromBinary(buf, buflen);
+				res->p = img;
+				//释放缓冲
+				ZuiFree(buf);
+				if (!res->p) {
+					ZuiFree(res);
+					return NULL;
+				}
+				for (size_t i = 2; i < arrnum; i++)
+				{
+					if (wcsncmp(arr[i], L"src='", 5) == 0) {
+						LPTSTR pstr = NULL;
+						img->src.Left = _tcstol(arr[i] + 5, &pstr, 10);  ASSERT(pstr);
+						img->src.Top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+						img->src.Width = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+						img->src.Height = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+					}
+				}
 
-        }
-        else if (type == ZREST_TXT) {
-            int bufsize;
-            wchar_t *txtbuf;
-            if (ZuiStingIsUtf8(buf, buflen))
-            {
-                bufsize = ZuiUtf8ToUnicode(buf, -1, 0, 0) * sizeof(wchar_t);
-                txtbuf = ZuiMalloc(bufsize + 2);
-                bufsize = ZuiUtf8ToUnicode(buf, buflen, txtbuf, bufsize);
-                txtbuf[bufsize] = 0;
-            }
-            else
-            {
-                bufsize = ZuiAsciiToUnicode(buf, -1, 0, 0) * sizeof(wchar_t);
-                txtbuf = ZuiMalloc(bufsize + 2);
-                bufsize = ZuiAsciiToUnicode(buf, buflen, txtbuf, bufsize);
-                txtbuf[bufsize] = 0;
-            }
-            ZuiFree(buf);
-            res->p = txtbuf;
-        }
-        else if (type == ZREST_ZIP)
-        {
-            res->p = ZuiResDBCreateFromBuf(buf, buflen, 0);
-            ZuiFree(buf);
-            if (!res->p) {
-                ZuiFree(res);
-                return NULL;
-            }
-        }
-        else if (type == ZREST_STREAM) {
-            res->p = buf;
-            res->plen = buflen;
-        }
-        if (!res->p) {
-            ZuiFree(res);
-            return NULL;
-        }
-        //保存到资源map
-        res->ref++;////增加引用计数
-        res->hash = Zui_Hash(Path);
-        rb_insert(res->hash, res, Global_ResDB->res);
-        return res;
+			}
+			else if (type == ZREST_TXT) {
+				int bufsize;
+				wchar_t *txtbuf;
+				if (ZuiStingIsUtf8(buf, buflen))
+				{
+					bufsize = ZuiUtf8ToUnicode(buf, -1, 0, 0) * sizeof(wchar_t);
+					txtbuf = ZuiMalloc(bufsize + 2);
+					bufsize = ZuiUtf8ToUnicode(buf, buflen, txtbuf, bufsize);
+					txtbuf[bufsize] = 0;
+				}
+				else
+				{
+					bufsize = ZuiAsciiToUnicode(buf, -1, 0, 0) * sizeof(wchar_t);
+					txtbuf = ZuiMalloc(bufsize + 2);
+					bufsize = ZuiAsciiToUnicode(buf, buflen, txtbuf, bufsize);
+					txtbuf[bufsize] = 0;
+				}
+				ZuiFree(buf);
+				res->p = txtbuf;
+			}
+			else if (type == ZREST_ZIP)
+			{
+				res->p = ZuiResDBCreateFromBuf(buf, buflen, 0);
+				ZuiFree(buf);
+				if (!res->p) {
+					ZuiFree(res);
+					return NULL;
+				}
+			}
+			else if (type == ZREST_STREAM) {
+				res->p = buf;
+				res->plen = buflen;
+			}
+			if (!res->p) {
+				ZuiFree(res);
+				return NULL;
+			}
+			//保存到资源map
+			res->ref++;////增加引用计数
+			res->hash = Zui_Hash(Path);
+			rb_insert(res->hash, res, Global_ResDB->res);
+			return res;
+		}
     }
     return NULL;
 }

@@ -333,9 +333,10 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 }
 
 ZEXPORT ZuiControl ZCALL ZuiWindowFindName(ZuiText Name) {
+	rb_node*node;
     if (!Name)
         return NULL;
-    rb_node*node = rb_search(Zui_Hash(Name), m_window);
+    node = rb_search(Zui_Hash(Name), m_window);
     if (!node)
         return NULL;
     return (ZuiControl)(node->data);

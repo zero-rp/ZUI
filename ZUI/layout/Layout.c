@@ -129,36 +129,39 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
         break;
     }
     case Proc_Layout_SetFloatPos: {
+		ZuiControl pControl;
         if ((int)Param1 < 0 || (int)Param1 >= darray_len(p->m_items))
             return 0;
 
-        ZuiControl pControl = (ZuiControl)(p->m_items->data[(int)Param1]);
+        pControl = (ZuiControl)(p->m_items->data[(int)Param1]);
 
         if (!pControl->m_bVisible)
             return 0;
         if (!pControl->m_bFloat)
             //不是浮动控件
-            return 0;
-
-        SIZE *szXY = (SIZE *)ZuiControlCall(Proc_GetFixedXY, pControl, 0, 0, 0);
-        SIZE sz = { (LONG)ZuiControlCall(Proc_GetFixedWidth, pControl, 0, 0, 0), (LONG)ZuiControlCall(Proc_GetFixedHeight, pControl, 0, 0, 0) };
-        TPercentInfo rcPercent = { 0 };// pControl->GetFloatPercent();
-        LONG width = cp->m_rcItem.right - cp->m_rcItem.left;
-        LONG height = cp->m_rcItem.bottom - cp->m_rcItem.top;
-        RECT rcCtrl = { 0 };
-        rcCtrl.left = (LONG)(width*rcPercent.left) + szXY->cx;
-        rcCtrl.top = (LONG)(height*rcPercent.top) + szXY->cy;
-        rcCtrl.right = (LONG)(width*rcPercent.right) + szXY->cx + sz.cx;
-        rcCtrl.bottom = (LONG)(height*rcPercent.bottom) + szXY->cy + sz.cy;
-        ZuiControlCall(Proc_SetPos, pControl, &rcCtrl, FALSE, 0);
+			return 0;
+		{
+			SIZE *szXY = (SIZE *)ZuiControlCall(Proc_GetFixedXY, pControl, 0, 0, 0);
+			SIZE sz = { (LONG)ZuiControlCall(Proc_GetFixedWidth, pControl, 0, 0, 0), (LONG)ZuiControlCall(Proc_GetFixedHeight, pControl, 0, 0, 0) };
+			TPercentInfo rcPercent = { 0 };// pControl->GetFloatPercent();
+			LONG width = cp->m_rcItem.right - cp->m_rcItem.left;
+			LONG height = cp->m_rcItem.bottom - cp->m_rcItem.top;
+			RECT rcCtrl = { 0 };
+			rcCtrl.left = (LONG)(width*rcPercent.left) + szXY->cx;
+			rcCtrl.top = (LONG)(height*rcPercent.top) + szXY->cy;
+			rcCtrl.right = (LONG)(width*rcPercent.right) + szXY->cx + sz.cx;
+			rcCtrl.bottom = (LONG)(height*rcPercent.bottom) + szXY->cy + sz.cy;
+			ZuiControlCall(Proc_SetPos, pControl, &rcCtrl, FALSE, 0);
+		}
         break;
     }
     case Proc_SetPos: {
+		RECT rc;
         p->old_call(ProcId, cp, 0, Param1, Param2, Param3);
         if (darray_isempty(p->m_items))
             return 0;
 
-        RECT rc = cp->m_rcItem;
+        rc = cp->m_rcItem;
         rc.left += p->m_rcInset.left;
         rc.top += p->m_rcInset.top;
         rc.right -= p->m_rcInset.right;
@@ -172,25 +175,30 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
                 ZuiControlCall(Proc_Layout_SetFloatPos, cp, (void *)it, 0, 0);
             }
             else {
+				RECT rcCtrl;
                 SIZE sz = { rc.right - rc.left, rc.bottom - rc.top };
                 if (sz.cx < (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0)) sz.cx = (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0);
                 if (sz.cx > (LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0)) sz.cx = (LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0);
                 if (sz.cy < (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0)) sz.cy = (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0);
                 if (sz.cy > (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0)) sz.cy = (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0);
-                RECT rcCtrl = { rc.left, rc.top, rc.left + sz.cx, rc.top + sz.cy };
+				rcCtrl.left = rc.left;
+				rcCtrl.top = rc.top;
+				rcCtrl.right = rc.left + sz.cx;
+				rcCtrl.bottom = rc.top + sz.cy;
                 ZuiControlCall(Proc_SetPos, pControl, &rcCtrl, FALSE, 0);
             }
         }
         break;
     }
     case Proc_FindControl: {
+		ZuiControl pResult = NULL;
         // Check if this guy is valid
         if (((UINT)Param3 & ZFIND_VISIBLE) != 0 && !cp->m_bVisible) return NULL;
         if (((UINT)Param3 & ZFIND_ENABLED) != 0 && !cp->m_bEnabled) return NULL;
         if (((UINT)Param3 & ZFIND_HITTEST) != 0 && !ZuiIsPointInRect(&cp->m_rcItem, Param2)) return NULL;
         if (((UINT)Param3 & ZFIND_UPDATETEST) != 0 && ((FINDCONTROLPROC)Param1)(cp, Param2) != NULL) return NULL;
 
-        ZuiControl pResult = NULL;
+        
         if (p->m_pVerticalScrollBar != NULL) pResult = (ZuiControl)ZuiControlCall(Proc_FindControl, p->m_pVerticalScrollBar, Param1, Param2, Param3);
         if (pResult == NULL && p->m_pHorizontalScrollBar != NULL) pResult = (ZuiControl)ZuiControlCall(Proc_FindControl, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
         if (pResult != NULL) return pResult;
@@ -243,11 +251,12 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
     case Proc_OnPaint: {
         //这里是所有绘制的调度中心
         RECT rcTemp = { 0 };
+		ZuiRegion OldRgn;
         if (!IntersectRect(&rcTemp, (RECT *)Param2, &cp->m_rcItem))
             //不在绘制区域
             return 0;
         //保存原始剪裁区
-        ZuiRegion OldRgn = ZuiCreateRegion();
+        OldRgn = ZuiCreateRegion();
         ZuiGraphicsGetClipRegion((ZuiGraphics)Param1, OldRgn);
         //设置新剪裁区
 
@@ -442,6 +451,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
     }
     case Proc_Layout_SetScrollPos: {
         SIZE *szPos = Param1;
+		RECT rcPos;
         int cx = 0;
         int cy = 0;
         if (p->m_pVerticalScrollBar && p->m_pVerticalScrollBar->m_bVisible) {
@@ -458,7 +468,6 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 
         if (cx == 0 && cy == 0) return;
 
-        RECT rcPos;
         for (int it2 = 0; it2 < darray_len(p->m_items); it2++) {
             ZuiControl pControl = (ZuiControl)(p->m_items->data[it2]);
             if (!pControl->m_bVisible) continue;

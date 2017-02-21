@@ -243,8 +243,8 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 }
             }
             else {
+				ZPoint pt = { 0 };
                 if (p->m_nScrollRepeatDelay <= 5) return;
-                ZPoint pt = { 0 };
                 GetCursorPos(&pt);
                 ZuiScreenToClient(cp, &pt);
                 if (!p->m_bHorizontal) {
