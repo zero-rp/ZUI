@@ -34,6 +34,7 @@ typedef struct
 extern "C" {
 #endif
 	int __stdcall GdiplusStartup(int *token, GdiplusStartupInput *input, void *output);
+    int __stdcall GdiplusShutdown(int token);
 	int __stdcall GdipCreateFromHDC(HDC hdc, void **graphics);
 	int __stdcall GdipDeleteGraphics(void *graphics);
 	int __stdcall GdipDrawImageI(void *graphics, void *image, int x, int y);
@@ -89,16 +90,19 @@ struct ZuiAggFont{
 
 ZRectR ZeroRectR;//零坐标矩形
 agg::scanline_u8 sl;//扫描线
-				 
+ZuiInt pGdiToken;
 /*初始化图形接口*/
 ZuiBool ZuiGraphInitialize(){
 	GdiplusStartupInput gdiplusStartupInput;
-	ZuiInt pGdiToken;
 	memset(&gdiplusStartupInput, 0, sizeof(GdiplusStartupInput));
 	gdiplusStartupInput.GdiplusVersion = 1;
 	GdiplusStartup(&pGdiToken, &gdiplusStartupInput, NULL);//初始化GDI+
 	MAKEZRECT(ZeroRectR, 0, 0, 0, 0);
 	return TRUE;
+}
+/*反初始化图形接口*/
+ZuiVoid ZuiGraphUnInitialize() {
+    GdiplusShutdown(pGdiToken);
 }
 /*填充矩形*/
 ZEXPORT ZuiVoid ZCALL ZuiDrawFillRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt Left, ZuiInt Top, ZuiInt Width, ZuiInt Height) {
@@ -252,7 +256,8 @@ ZEXPORT ZuiVoid ZCALL ZuiDrawImageEx(ZuiGraphics Graphics, ZuiImage Image, ZuiIn
 /*复制位图*/
 ZEXPORT ZuiVoid ZCALL ZuiAlphaBlend(ZuiGraphics Dest, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiGraphics Src, ZuiInt xSrc, ZuiInt ySrc, ZuiByte Alpha) {
 	if (Dest && Src){
-
+        agg::rect_i sr(xSrc, ySrc, Width, Height);
+        Dest->graphics->renb->blend_from(agg::pixfmt_bgra32(*Src->graphics->rbuf), &sr, x, y, unsigned(Alpha));
 	}
 }
 /*清除图形*/
