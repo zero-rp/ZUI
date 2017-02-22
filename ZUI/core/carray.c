@@ -72,7 +72,7 @@ static BOOL darray_expand(DArray *darray, int needone)
     {
         newallocsize = darray->count + 1;
     }
-    void **data = (void **)realloc(darray->data, sizeof(void *) * newallocsize);
+    void **data = (void **)ZuiRealloc(darray->data, sizeof(void *) * newallocsize);
     if (data != NULL)
     {
         darray->data = data;
@@ -87,7 +87,7 @@ BOOL darray_shrink(DArray *darray)
     if ((darray->count >> 1) < darray->size && (darray->size > DEFAULT_A_SIZE))
     {
         int newallocsize = darray->count + darray->count >> 1;
-        void **data = (void **)realloc(darray->data, sizeof(void *) * newallocsize);
+        void **data = (void **)ZuiRealloc(darray->data, sizeof(void *) * newallocsize);
         if (data != NULL)
         {
             darray->data = data;
