@@ -164,7 +164,7 @@ VOID CALLBACK MEMTIME(HWND H, UINT U, UINT_PTR Pt, DWORD D) {
 void *zui_malloc(unsigned int _Size, const char *_Func, const char *_File, unsigned int _Line) {
     if (!mem) {
         mem = marray_create();
-        printf("MEMStart..\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+        printf("MEMStart..\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
         SetTimer(0, 0, 500, MEMTIME);
     }
     EnterCriticalSection(&mem->cs);       // 进入临界区
@@ -179,8 +179,14 @@ void zui_free(void *_Ptr) {
     if (!_Ptr)
         return;
     EnterCriticalSection(&mem->cs);       // 进入临界区
-    marray_delete(mem, marray_find(mem, _Ptr));
-    free((char *)_Ptr - sizeof(MEM));
+    //检查效验数据
+    if (memcmp((char*)_Ptr + ((MEM*)((char *)_Ptr - sizeof(MEM)))->_Size, "checkmem", 8) == 0) {
+        marray_delete(mem, marray_find(mem, _Ptr));
+        free((char *)_Ptr - sizeof(MEM));
+    }
+    else {
+        MessageBoxA(NULL, ((MEM*)((char *)_Ptr - sizeof(MEM)))->_Func, "memory write-overflow", MB_ICONWARNING);
+    }
     LeaveCriticalSection(&mem->cs);       // 离开临界区
 }
 
@@ -198,7 +204,7 @@ char* __cdecl zui_strdup(char const* _Source, const char *_Func, const char *_Fi
     char *new = zui_malloc(len * 2, _Func, _File, _Line);
     if (new == NULL)
         return NULL;
-    new[len] = L"\0";
+    new[len-1] = L"\0";
     return (char *)memcpy(new, _Source, len);
 }
 wchar_t* __cdecl zui_wcsdup(wchar_t const* _String, const char *_Func, const char *_File, unsigned int _Line) {
@@ -206,7 +212,7 @@ wchar_t* __cdecl zui_wcsdup(wchar_t const* _String, const char *_Func, const cha
     wchar_t *new = zui_malloc(len * 2, _Func, _File, _Line);
     if (new == NULL)
         return NULL;
-    new[len] = L"\0";
+    new[len-1] = L"\0";
     return (char *)memcpy(new, _String, len * 2);
 }
 
