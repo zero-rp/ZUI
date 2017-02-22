@@ -1,4 +1,5 @@
 ﻿#include "tree.h"
+#include "memory.h"
 
 #define		RB_RED       0
 #define		RB_BLACK     1
@@ -453,7 +454,7 @@ void rb_replace_node(rb_node *victim, rb_node *new, rb_root *root)
 }
 
 rb_root *rb_new() {
-    rb_root* new = (rb_root *)malloc(sizeof(rb_root));
+    rb_root* new = (rb_root *)ZuiMalloc(sizeof(rb_root));
     if (new) {
         memset(new, 0, sizeof(rb_root));
         return new;
@@ -464,7 +465,7 @@ rb_root *rb_new() {
 BOOL rb_insert(key_t key, data_t data, rb_root *root) {
     rb_node **new = &(root->rb_node);
     rb_node  *parent = 0;
-    rb_node  *rbt = (rb_node *)malloc(sizeof(rb_node));
+    rb_node  *rbt = (rb_node *)ZuiMalloc(sizeof(rb_node));
     memset(rbt, 0, sizeof(rb_node));
     rbt->data = data;
     rbt->key = key;
@@ -515,14 +516,14 @@ void rb_delete(key_t key, rb_root*root) {
     if (!find)
         return;
     rb_erase(find, root);
-    free(find);
+    ZuiFree(find);
     return;
 }
 
 void rb_free(rb_root*root) {
     if (root->rb_node)
         rb_delete(root, root->rb_node);
-    free(root);
+    ZuiFree(root);
 }
 
 void rb_foreach_c(rb_node *node, TreeVisitFunc visitfunc) {
@@ -551,18 +552,18 @@ void rb_print(rb_root *root) {
     printf("]\r\n");
 }
 #endif
-/*
-//查找最小最小结点
-Node *rbMinKey(RBTree T){
-Node *x = T;
-Node *p = nil;
-while (x != nil){
-p = x;
-x = x->left;
-}
-return p == nil ? NULL : p;
-}
 
+//查找最小最小结点
+rb_node *rb_minkey(rb_root *root) {
+    rb_node *x = root->rb_node;
+    rb_node *p = NULL;
+    while (x != NULL) {
+        p = x;
+        x = x->rb_left;
+    }
+    return p;
+}
+/*
 //查找最大结点
 Node *rbMaxKey(RBTree T){
 Node *x = T;

@@ -1,7 +1,7 @@
 ﻿#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include "../core/memory.h"
 
 
 #ifdef STDC
@@ -13,8 +13,8 @@
 #define UNZ_BUFSIZE (16384)
 #define UNZ_MAXFILENAMEINZIP (256)
 
-# define ALLOC(size) (malloc(size))
-# define TRYFREE(p) {if (p) free(p);}
+# define ALLOC  ZuiMalloc
+# define TRYFREE ZuiFree
 
 #define SIZECENTRALDIRITEM (0x2e)
 #define SIZEZIPLOCALHEADER (0x1e)
@@ -358,7 +358,8 @@ static long ZCALLBACK fseek64_stream_func(unz64_stream *stream, ZPOS64_T offset,
 
 static int ZCALLBACK fclose_stream_func(unz64_stream *stream)
 {
-	free(stream->buff);
+    TRYFREE(stream->buff);
+    TRYFREE(stream);
 	return 0;
 }
 
@@ -751,9 +752,9 @@ unzFile unzOpen(const wchar_t *path, void *buff, int len)
 		us.z_filefunc.zclose_file = fclose_stream_func;
 		us.z_filefunc.zerror_file = ferror_stream_func;
 
-		unz64_stream *p = malloc(sizeof(unz64_stream));
+		unz64_stream *p = ALLOC(sizeof(unz64_stream));
 		memset(p, 0, sizeof(unz64_stream));
-		p->buff = malloc(len);
+		p->buff = ALLOC(len);
 		p->len = len;
 		memcpy(p->buff, buff, len);
 		us.filestream = (void *)p;

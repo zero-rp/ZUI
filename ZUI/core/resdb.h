@@ -20,15 +20,15 @@
 
 */
 /*资源类型*/
-typedef enum ZREST
+enum ZREST
 {
 	ZREST_IMG = 1,
 	ZREST_TXT,
 	ZREST_STREAM,
-	ZREST_ZIP
+	ZREST_ZIP               ///此类型比较特殊,如果压缩包包含备注信息则作为资源包打开,由ResDB管理,反之则作为普通资源由Res管理
 };
 /*资源包类型*/
-typedef enum ZRESDBT
+enum ZRESDBT
 {
 	ZRESDBT_ZIP_FILE = 1,	///压缩文件,来自文件
 	ZRESDBT_ZIP_STREAM,		///压缩文件,来着字节流

@@ -169,10 +169,10 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define ZuiControlSetBkImage(Control, ...) ZProc(Control, SetBkImage, __VA_ARGS__);
 #define ZuiControlSetBorderColor(Control, ...) ZProc(Control, SetBorderColor, __VA_ARGS__);
 
-typedef enum ZAttType
+enum ZAttType
 {
     ZAttType_JsCall = 1,
-    ZAttType_String,
+    ZAttType_String
 };
 /**属性结构*/
 typedef struct _ZAttribute

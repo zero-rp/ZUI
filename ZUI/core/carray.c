@@ -1,16 +1,16 @@
 #include "carray.h"
 
-#include <malloc.h>
+#include "memory.h"
 
 DArray *darray_create()
 {
     int i = 0;
-    DArray *darray = (DArray *)malloc(sizeof(DArray));
+    DArray *darray = (DArray *)ZuiMalloc(sizeof(DArray));
     if (darray != NULL)
     {
         darray->count = 0;
         darray->size = 0;
-        darray->data = (void **)malloc(sizeof(void *) * DEFAULT_A_SIZE);
+        darray->data = (void **)ZuiMalloc(sizeof(void *) * DEFAULT_A_SIZE);
 
         if (darray->data != NULL)
         {
@@ -198,10 +198,10 @@ BOOL darray_destroy(DArray *darray)
         return TRUE;
     }
 
-    free(darray->data);
+    ZuiFree(darray->data);
     darray->data = NULL;
 
-    free(darray);
+    ZuiFree(darray);
     darray = NULL;
     return TRUE;
 }

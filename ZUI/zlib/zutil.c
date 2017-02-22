@@ -1,5 +1,5 @@
 #include "zutil.h"
-
+#include "../core/memory.h"
 #ifndef Z_SOLO
 
 z_const char * const z_errmsg[10] = {
@@ -22,15 +22,15 @@ voidpf ZLIB_INTERNAL zcalloc (opaque, items, size)
     unsigned size;
 {
     if (opaque) items += size - size; /* make compiler happy */
-    return sizeof(uInt) > 2 ? (voidpf)malloc(items * size) :
-                              (voidpf)calloc(items, size);
+    return sizeof(uInt) > 2 ? (voidpf)ZuiMalloc(items * size) :
+                              (voidpf)memset(ZuiMalloc(items*size),0,size*items);
 }
 
 void ZLIB_INTERNAL zcfree (opaque, ptr)
     voidpf opaque;
     voidpf ptr;
 {
-    free(ptr);
+    ZuiFree(ptr);
     if (opaque) return; /* make compiler happy */
 }
 

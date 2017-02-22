@@ -21,7 +21,7 @@ typedef struct _ZControl *ZuiControl, ZControl;
 /////////////////////////////////////////////////////////////////////////////////////
 //
 //事件类型定义
-typedef enum EVENTTYPE_UI
+enum EVENTTYPE_UI
 {
     ZEVENT__FIRST = 1,
     ZEVENT__KEYBEGIN,

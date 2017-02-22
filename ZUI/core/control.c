@@ -3,7 +3,7 @@
 extern rb_root *Global_ControlClass;
 //创建控件
 ZuiControl NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
-    ZuiControl p = (ZuiControl)malloc(sizeof(ZControl));
+    ZuiControl p = (ZuiControl)ZuiMalloc(sizeof(ZControl));
     if (p) {
         memset(p, 0, sizeof(ZControl));
         p->m_pManager = NULL;
@@ -567,7 +567,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 ZuiFree(att->v);
             }
             else {
-                att = malloc(sizeof(ZAttribute));
+                att = ZuiMalloc(sizeof(ZAttribute));
                 rb_insert((key_t)Zui_Hash(Param1), att, p->m_rAttribute);
             }
             att->type = ZAttType_String;
@@ -648,7 +648,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 ZuiFree(att->v);
             }
             else {
-                att = malloc(sizeof(ZAttribute));
+                att = ZuiMalloc(sizeof(ZAttribute));
                 rb_insert((key_t)Zui_Hash(Param1), att, p->m_rAttribute);
             }
 

@@ -35,8 +35,13 @@ BOOL ZuiControlRegister()
     //rb_foreach(Global_ControlClass, ZuiCoreInit);
     return TRUE;
 }
+void ZuiControlUnRegisterCallBack(void *data) {
+    ((ZCtlProc)data)(Proc_CoreUnInit, NULL, NULL, NULL, NULL, NULL);
+}
 ZuiVoid ZuiControlUnRegister() {
-
+    //通知全部控件释放数据
+    rb_foreach(Global_ControlClass, ZuiControlUnRegisterCallBack);
+    rb_free(Global_ControlClass);
 }
 ZEXPORT ZuiBool ZCALL ZuiControlRegisterAdd(ZuiText name, ZCtlProc Proc)
 {

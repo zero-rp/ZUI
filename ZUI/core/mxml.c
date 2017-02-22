@@ -1,5 +1,6 @@
 ﻿#include <ZUI.h>
 
+#define strdup		ZuiWcsdup
 #define mxml_bad_char(ch) ((ch) < L' ' && (ch) != L'\n' && (ch) != L'\r' && (ch) != L'\t')
 
 /*判断字符是否为空白字符*/
@@ -24,7 +25,7 @@ static int mxml_set_attr(mxml_node_t *node, const wchar_t  *name, wchar_t *value
             */
 
             if (attr->value)
-                free(attr->value);
+                ZuiFree(attr->value);
 
             attr->value = value;
 
@@ -32,9 +33,9 @@ static int mxml_set_attr(mxml_node_t *node, const wchar_t  *name, wchar_t *value
         }
 
     if (node->value.num_attrs == 0)
-        attr = (mxml_attr_t *)malloc(sizeof(mxml_attr_t));
+        attr = (mxml_attr_t *)ZuiMalloc(sizeof(mxml_attr_t));
     else
-        attr = (mxml_attr_t *)realloc(node->value.attrs,
+        attr = (mxml_attr_t *)ZuiRealloc(node->value.attrs,
         (node->value.num_attrs + 1) * sizeof(mxml_attr_t));
 
     if (!attr)
@@ -92,7 +93,7 @@ void mxmlElementSetAttr(mxml_node_t *node, const wchar_t  *name, const wchar_t  
         valuec = NULL;
 
     if (mxml_set_attr(node, name, valuec))
-        free(valuec);
+        ZuiFree(valuec);
 }
 //-------节点操作
 void mxmlRemove(mxml_node_t *node)
@@ -213,7 +214,7 @@ static mxml_node_t *mxml_new(mxml_node_t *parent)
 {
     mxml_node_t	*node;			/* New node */
 
-    if ((node = (mxml_node_t *)calloc(1, sizeof(mxml_node_t))) == NULL)
+    if ((node = (mxml_node_t *)memset(ZuiMalloc(sizeof(mxml_node_t)),0, sizeof(mxml_node_t))) == NULL)
     {
         return (NULL);
     }
@@ -238,22 +239,22 @@ void mxmlDelete(mxml_node_t *node)
         mxmlDelete(node->child);
 
     if (node->value.name)
-        free(node->value.name);
+        ZuiFree(node->value.name);
 
     if (node->value.num_attrs)
     {
         for (i = 0; i < node->value.num_attrs; i++)
         {
             if (node->value.attrs[i].name)
-                free(node->value.attrs[i].name);
+                ZuiFree(node->value.attrs[i].name);
             if (node->value.attrs[i].value)
-                free(node->value.attrs[i].value);
+                ZuiFree(node->value.attrs[i].value);
         }
 
-        free(node->value.attrs);
+        ZuiFree(node->value.attrs);
     }
     //释放节点内存
-    free(node);
+    ZuiFree(node);
 }
 mxml_node_t *mxmlClone(mxml_node_t *node, mxml_node_t *parent) {
     mxml_node_t *new_node = mxml_new(parent);
@@ -261,7 +262,7 @@ mxml_node_t *mxmlClone(mxml_node_t *node, mxml_node_t *parent) {
     new_node->user_data = node->user_data;
     new_node->value.name = strdup(node->value.name);
     new_node->value.num_attrs = node->value.num_attrs;
-    new_node->value.attrs = (mxml_attr_t *)malloc((node->value.num_attrs + 1) * sizeof(mxml_attr_t));
+    new_node->value.attrs = (mxml_attr_t *)ZuiMalloc((node->value.num_attrs + 1) * sizeof(mxml_attr_t));
     for (size_t i = 0; i < node->value.num_attrs; i++)
     {
         new_node->value.attrs[i].name = strdup(node->value.attrs[i].name);
@@ -347,9 +348,9 @@ static int mxml_add_char(wchar_t ch, wchar_t **bufptr, wchar_t **buffer, int  *b
         else
             (*bufsize) += 1024;
 
-        if ((newbuffer = (wchar_t *)realloc(*buffer, (*bufsize) * sizeof(wchar_t))) == NULL)
+        if ((newbuffer = (wchar_t *)ZuiRealloc(*buffer, (*bufsize) * sizeof(wchar_t))) == NULL)
         {
-            free(*buffer);
+            ZuiFree(*buffer);
             return (-1);
         }
 
@@ -724,16 +725,16 @@ static int mxml_parse_element(mxml_node_t *node, void *p, mxml_getc mxml_string_
     * Initialize the name and value buffers...
     */
 
-    if ((name = (wchar_t *)malloc(64 * sizeof(wchar_t))) == NULL)
+    if ((name = (wchar_t *)ZuiMalloc(64 * sizeof(wchar_t))) == NULL)
     {
         return (WEOF);
     }
 
     namesize = 64;
 
-    if ((value = (wchar_t *)malloc(64 * sizeof(wchar_t))) == NULL)
+    if ((value = (wchar_t *)ZuiMalloc(64 * sizeof(wchar_t))) == NULL)
     {
-        free(name);
+        ZuiFree(name);
         return (WEOF);
     }
 
@@ -939,15 +940,15 @@ static int mxml_parse_element(mxml_node_t *node, void *p, mxml_getc mxml_string_
     * Free the name and value buffers and return...
     */
 
-    free(name);
-    free(value);
+    ZuiFree(name);
+    ZuiFree(value);
 
     return (ch);
 
 error:
 
-    free(name);
-    free(value);
+    ZuiFree(name);
+    ZuiFree(value);
 
     return (WEOF);
 }
@@ -965,14 +966,14 @@ mxml_node_t *mxmlLoadString(mxml_node_t *top, const char *s, int len)
     if (ZuiStingIsUtf8(s, len))
     {
         bufsize = ZuiUtf8ToUnicode(s, -1, 0, 0) * sizeof(wchar_t);
-        txtbuf = malloc(bufsize + 2);
+        txtbuf = ZuiMalloc(bufsize + 2);
         bufsize = ZuiUtf8ToUnicode(s, len, txtbuf, bufsize);
         txtbuf[bufsize] = 0;
     }
     else
     {
         bufsize = ZuiAsciiToUnicode(s, -1, 0, 0) * sizeof(wchar_t);
-        txtbuf = malloc(bufsize + 2);
+        txtbuf = ZuiMalloc(bufsize + 2);
         bufsize = ZuiAsciiToUnicode(s, len, txtbuf, bufsize);
         txtbuf[bufsize] = 0;
     }
@@ -981,7 +982,7 @@ mxml_node_t *mxmlLoadString(mxml_node_t *top, const char *s, int len)
     buf.len = bufsize;
     buf.pos = 0;
     mxml_buf_t	*p = &buf;
-    if ((buffer = (wchar_t *)malloc(64 * sizeof(wchar_t))) == NULL)
+    if ((buffer = (wchar_t *)ZuiMalloc(64 * sizeof(wchar_t))) == NULL)
         return (NULL);
     bufsize = 64 * sizeof(wchar_t);
     bufptr = buffer;
@@ -1246,9 +1247,9 @@ mxml_node_t *mxmlLoadString(mxml_node_t *top, const char *s, int len)
         }
     }
 
-    free(buffer);
+    ZuiFree(buffer);
     if (txtbuf)
-        free(txtbuf);
+        ZuiFree(txtbuf);
     if (parent)
     {
         node = parent;
@@ -1269,7 +1270,7 @@ mxml_node_t *mxmlLoadString(mxml_node_t *top, const char *s, int len)
 error:
 
     mxmlDelete(first);
-    free(buffer);
+    ZuiFree(buffer);
     return (NULL);
 }
 //-------节点查找

@@ -63,6 +63,7 @@
 	void rb_free(rb_root*root);
 	/*遍历树*/
 	void rb_foreach(rb_root *root, TreeVisitFunc visitfunc);
+    rb_node *rb_minkey(rb_root *root);
 #if (defined DEBUG_BORDER) && (DEBUG_BORDER == 1)
 	void rb_print(rb_root *root);
 #endif
