@@ -28,10 +28,9 @@ void* CALLBACK ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalL
         break;
     }
     case Proc_SetPos: {
-		SIZE szAvailable, szRemaining;
+        ZuiDefaultControlProc(ProcId, cp, 0, Param1, Param2, Param3);
         RECT rc = cp->m_rcItem;
         ZuiLayout op = (ZuiLayout)p->old_udata;
-		ZuiDefaultControlProc(ProcId, cp, 0, Param1, Param2, Param3);
         // Adjust for inset
         rc.left += op->m_rcInset.left;
         rc.top += op->m_rcInset.top;
@@ -42,12 +41,11 @@ void* CALLBACK ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalL
             return 0;
         }
 
-        if (op->m_pVerticalScrollBar && op->m_pVerticalScrollBar->m_bVisible) rc.right -= (ZuiInt)ZuiControlCall(Proc_GetFixedWidth, op->m_pVerticalScrollBar, NULL, NULL, NULL);
-        if (op->m_pHorizontalScrollBar && op->m_pHorizontalScrollBar->m_bVisible) rc.bottom -= (ZuiInt)ZuiControlCall(Proc_GetFixedHeight, op->m_pHorizontalScrollBar, NULL, NULL, NULL);
+        if (op->m_pVerticalScrollBar && op->m_pVerticalScrollBar->m_bVisible) { rc.right -= (ZuiInt)ZuiControlCall(Proc_GetFixedWidth, op->m_pVerticalScrollBar, NULL, NULL, NULL); }
+        if (op->m_pHorizontalScrollBar && op->m_pHorizontalScrollBar->m_bVisible) { rc.bottom -= (ZuiInt)ZuiControlCall(Proc_GetFixedHeight, op->m_pHorizontalScrollBar, NULL, NULL, NULL); }
 
         // Determine the minimum size
-		szAvailable.cx = rc.right - rc.left;
-		szAvailable.cy = rc.bottom - rc.top;
+        SIZE szAvailable = { rc.right - rc.left, rc.bottom - rc.top };
         if (op->m_pHorizontalScrollBar && op->m_pHorizontalScrollBar->m_bVisible)
             szAvailable.cx += (ZuiInt)ZuiControlCall(Proc_ScrollBar_GetScrollRange, op->m_pHorizontalScrollBar, NULL, NULL, NULL);
 
@@ -83,10 +81,10 @@ void* CALLBACK ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalL
         int cxExpand = 0;
         //cxExpand保存需要自动计算宽度的子控件的宽度
         int cyNeeded = 0;
-        if (nAdjustables > 0) cxExpand = MAX(0, (szAvailable.cx - cxFixed) / nAdjustables);
+        if (nAdjustables > 0) { cxExpand = MAX(0, (szAvailable.cx - cxFixed) / nAdjustables); }
         // Position the elements
         //szRemaining保存除已被布局的子控件以外的剩余空间
-        szRemaining = szAvailable;
+        SIZE szRemaining = szAvailable;
 
         int iPosX = rc.left;
         if (op->m_pHorizontalScrollBar && op->m_pHorizontalScrollBar->m_bVisible) {
@@ -130,12 +128,11 @@ void* CALLBACK ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalL
             sz.cy = (LONG)ZuiControlCall(Proc_GetFixedHeight, pControl, 0, 0, 0);
             if (sz.cy == 0) sz.cy = rc.bottom - rc.top - rcPadding->top - rcPadding->bottom;
             if (sz.cy < 0) sz.cy = 0;
-            if (sz.cy < (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0)) sz.cy = (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0);
-			if (sz.cy >(LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0)) sz.cy = (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0);
-			{
-				RECT rcCtrl = { iPosX + rcPadding->left, rc.top + rcPadding->top, iPosX + sz.cx + rcPadding->left, rc.top + rcPadding->top + sz.cy };
-				ZuiControlCall(Proc_SetPos, pControl, &rcCtrl, FALSE, 0);
-			}
+            if (sz.cy < (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0)) { sz.cy = (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0); }
+            if (sz.cy > (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0)) { sz.cy = (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0); }
+            RECT rcCtrl = { iPosX + rcPadding->left, rc.top + rcPadding->top, iPosX + sz.cx + rcPadding->left , rc.top + rcPadding->top + sz.cy };
+            ZuiControlCall(Proc_SetPos, pControl, &rcCtrl, FALSE, 0);
+
             iPosX += sz.cx + op->m_iChildPadding + rcPadding->left + rcPadding->right;
             cxNeeded += sz.cx + rcPadding->left + rcPadding->right;
             szRemaining.cx -= sz.cx + op->m_iChildPadding + rcPadding->right;
@@ -170,8 +167,9 @@ void* CALLBACK ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalL
         return 0;
         break;
     }
-    case Proc_CoreUnInit: {
-        return NULL;
+    case Proc_OnPaint: {
+
+
         break;
     }
     default:

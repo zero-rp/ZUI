@@ -1,5 +1,6 @@
 ﻿#include <ZUI.h>
 #ifdef _DEBUG
+#define snprintf _snprintf
 typedef struct _MEM
 {
     const char *_Func;

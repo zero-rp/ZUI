@@ -129,18 +129,17 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
         break;
     }
     case Proc_Layout_SetFloatPos: {
-		ZuiControl pControl;
-        if ((int)Param1 < 0 || (int)Param1 >= darray_len(p->m_items))
+        if ((int)Param1 < 0 || (int)Param1 >= darray_len(p->m_items)) {
             return 0;
-
-        pControl = (ZuiControl)(p->m_items->data[(int)Param1]);
+        }
+        ZuiControl pControl = (ZuiControl)(p->m_items->data[(int)Param1]);
 
         if (!pControl->m_bVisible)
             return 0;
-        if (!pControl->m_bFloat)
+        if (!pControl->m_bFloat) {
             //不是浮动控件
-			return 0;
-		{
+            return 0;
+        }
 			SIZE *szXY = (SIZE *)ZuiControlCall(Proc_GetFixedXY, pControl, 0, 0, 0);
 			SIZE sz = { (LONG)ZuiControlCall(Proc_GetFixedWidth, pControl, 0, 0, 0), (LONG)ZuiControlCall(Proc_GetFixedHeight, pControl, 0, 0, 0) };
 			TPercentInfo rcPercent = { 0 };// pControl->GetFloatPercent();
@@ -152,7 +151,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
 			rcCtrl.right = (LONG)(width*rcPercent.right) + szXY->cx + sz.cx;
 			rcCtrl.bottom = (LONG)(height*rcPercent.bottom) + szXY->cy + sz.cy;
 			ZuiControlCall(Proc_SetPos, pControl, &rcCtrl, FALSE, 0);
-		}
+		
         break;
     }
     case Proc_SetPos: {

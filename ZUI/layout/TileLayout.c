@@ -67,31 +67,30 @@ void* CALLBACK ZuiTileLayoutProc(int ProcId, ZuiControl cp, ZuiTileLayout p, voi
             if ((iCount % p->m_nColumns) == 0)
             {
                 int iIndex = iCount;
-				for (int it2 = it1; it2 < darray_len(op->m_items); it2++) {
-					ZuiControl pLineControl = (ZuiControl)(op->m_items->data[it2]);
-					if (!pLineControl->m_bVisible) continue;
-					if (pLineControl->m_bFloat) continue;
+                for (int it2 = it1; it2 < darray_len(op->m_items); it2++) {
+                    ZuiControl pLineControl = (ZuiControl)(op->m_items->data[it2]);
+                    if (!pLineControl->m_bVisible) continue;
+                    if (pLineControl->m_bFloat) continue;
 
-					RECT *rcPadding = (RECT *)(ZuiControlCall(Proc_GetPadding, pLineControl, 0, 0, 0));
-					SIZE szAvailable = { rcTile.right - rcTile.left - rcPadding->left - rcPadding->right, 9999 };
+                    RECT *rcPadding = (RECT *)(ZuiControlCall(Proc_GetPadding, pLineControl, 0, 0, 0));
+                    SIZE szAvailable = { rcTile.right - rcTile.left - rcPadding->left - rcPadding->right, 9999 };
 
-					if (szAvailable.cx < (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0)) szAvailable.cx = (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0);
-					if (szAvailable.cx >(LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0)) szAvailable.cx = (LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0);
+                    if (szAvailable.cx < (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0)) { szAvailable.cx = (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0); }
+                    if (szAvailable.cx > (LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0)) { szAvailable.cx = (LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0); }
 
-					{
-						SIZE *pszTile = (SIZE *)ZuiControlCall(Proc_EstimateSize, pLineControl, (void *)&szAvailable, 0, 0);
-						SIZE szTile;
-						szTile.cx = pszTile->cx;
-						szTile.cy = pszTile->cy;
-						if (szTile.cx == 0) szTile.cx = p->m_szItem.cx;
-						if (szTile.cy == 0) szTile.cy = p->m_szItem.cy;
-						if (szTile.cx < (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0)) szTile.cx = (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0);
-						if (szTile.cx >(LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0)) szTile.cx = (LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0);
-						if (szTile.cy < (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0)) szTile.cy = (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0);
-						if (szTile.cy >(LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0)) szTile.cy = (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0);
 
-						cyHeight = MAX(cyHeight, szTile.cy + rcPadding->top + rcPadding->bottom);
-					}
+                    SIZE *pszTile = (SIZE *)ZuiControlCall(Proc_EstimateSize, pLineControl, (void *)&szAvailable, 0, 0);
+                    SIZE szTile;
+                    szTile.cx = pszTile->cx;
+                    szTile.cy = pszTile->cy;
+                    if (szTile.cx == 0) szTile.cx = p->m_szItem.cx;
+                    if (szTile.cy == 0) szTile.cy = p->m_szItem.cy;
+                    if (szTile.cx < (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0)) szTile.cx = (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0);
+                    if (szTile.cx > (LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0)) szTile.cx = (LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0);
+                    if (szTile.cy < (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0)) szTile.cy = (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0);
+                    if (szTile.cy > (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0)) szTile.cy = (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0);
+
+                    cyHeight = MAX(cyHeight, szTile.cy + rcPadding->top + rcPadding->bottom);
                     if ((++iIndex % p->m_nColumns) == 0) break;
                 }
             }
@@ -115,15 +114,13 @@ void* CALLBACK ZuiTileLayoutProc(int ProcId, ZuiControl cp, ZuiTileLayout p, voi
             if (szTile.cy == 0) szTile.cy = p->m_szItem.cy;
             if (szTile.cx == 0) szTile.cx = szAvailable.cx;
             if (szTile.cy == 0) szTile.cy = szAvailable.cy;
-            if (szTile.cx < (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0)) szTile.cx = (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0);
-            if (szTile.cx > (LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0)) szTile.cx = (LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0);
-            if (szTile.cy < (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0)) szTile.cy = (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0);
-			if (szTile.cy >(LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0)) szTile.cy = (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0);
-			{
-				RECT rcPos = { (rcTile.left + rcTile.right - szTile.cx) / 2, (rcTile.top + rcTile.bottom - szTile.cy) / 2,
-					(rcTile.left + rcTile.right - szTile.cx) / 2 + szTile.cx, (rcTile.top + rcTile.bottom - szTile.cy) / 2 + szTile.cy };
-				ZuiControlCall(Proc_SetPos, pControl, &rcPos, FALSE, 0);
-			}
+            if (szTile.cx < (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0)) { szTile.cx = (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0); }
+            if (szTile.cx > (LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0)) { szTile.cx = (LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0); }
+            if (szTile.cy < (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0)) { szTile.cy = (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0); }
+            if (szTile.cy > (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0)) { szTile.cy = (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0); }
+            RECT rcPos = { (rcTile.left + rcTile.right - szTile.cx) / 2, (rcTile.top + rcTile.bottom - szTile.cy) / 2,
+                (rcTile.left + rcTile.right - szTile.cx) / 2 + szTile.cx, (rcTile.top + rcTile.bottom - szTile.cy) / 2 + szTile.cy };
+            ZuiControlCall(Proc_SetPos, pControl, &rcPos, FALSE, 0);
             if ((++iCount % p->m_nColumns) == 0) {
                 ptTile.x = iPosX;
                 ptTile.y += cyHeight + op->m_iChildPadding;
