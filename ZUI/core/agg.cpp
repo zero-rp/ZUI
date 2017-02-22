@@ -264,7 +264,7 @@ ZEXPORT ZuiVoid ZCALL ZuiAlphaBlend(ZuiGraphics Dest, ZuiInt x, ZuiInt y, ZuiInt
 ZEXPORT ZuiVoid ZCALL ZuiGraphicsClear(ZuiGraphics Graphics, ZuiColor Color) {
 	if (Graphics)
 	{
-
+        Graphics->graphics->renb->clear(ARGBTORGBA8(Color));
 	}
 }
 /*创建字体格式*/
