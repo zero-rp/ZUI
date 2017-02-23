@@ -67,7 +67,10 @@ typedef BOOL(__stdcall *PFUNCUPDATELAYEREDWINDOW)(HWND, HDC, POINT*, SIZE*, HDC,
 PFUNCUPDATELAYEREDWINDOW g_fUpdateLayeredWindow = NULL;	//UpdateLayeredWindow函数指针
 
 HPEN m_hUpdateRectPen = NULL;
-
+#if RUN_DEBUG
+ZuiControl ShowDebugRect = NULL;
+ZuiPaintManager ShowDebugRectManager = NULL;
+#endif
 
 #define LAYEREDUPDATE_TIMERID	0x2000
 
@@ -883,6 +886,14 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
                 Rectangle(p->m_hDcPaint, rcPaint.left, rcPaint.top, rcPaint.right, rcPaint.bottom);
                 SelectObject(p->m_hDcPaint, hOldPen);
             }
+#if RUN_DEBUG
+            if (ShowDebugRectManager == p) {    //绘制Spy矩形
+                HPEN hOldPen = (HPEN)SelectObject(p->m_hDcPaint, m_hUpdateRectPen);
+                SelectObject(p->m_hDcPaint, GetStockObject(HOLLOW_BRUSH));
+                Rectangle(p->m_hDcPaint, ShowDebugRect->m_rcItem.left, ShowDebugRect->m_rcItem.top, ShowDebugRect->m_rcItem.right, ShowDebugRect->m_rcItem.bottom);
+                SelectObject(p->m_hDcPaint, hOldPen);
+            }
+#endif
         }
         else
         {

@@ -4,13 +4,18 @@
 
 extern MArray *mem;
 extern DArray *m_window_array;
+extern ZuiControl ShowDebugRect;
+extern ZuiPaintManager ShowDebugRectManager;
 HWND hDlg_intab[2]; //两个要载入到TAB控件中的对话框句柄
 HWND MemList;
 HWND ControlTree;
+HWND AttList;
+ZuiControl SelectControl;
 BOOL WINAPI tab1_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);//两个子窗口的窗口处理过程函数申明  
 BOOL WINAPI tab2_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 BOOL WINAPI tab3_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void UpdateControlTree();
+void SetSelectControl(ZuiControl p);
 typedef BOOL(WINAPI *DIALOGPROC)(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam); //定义一个 函数指针  
 DIALOGPROC DlgProc[3] = { tab1_dlg_proc,tab2_dlg_proc,tab3_dlg_proc };
 
@@ -134,13 +139,71 @@ BOOL WINAPI tab3_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
         }
         break;
+    case WM_NOTIFY:      //TAB控件切换发生时传送的消息  
+    {
+        if ((INT)wParam == IDC_TREE1)
+        {
+            LPNMTREEVIEW pTree = (NM_TREEVIEW *)lParam;
+            //pTree->hdr.code = abs(pTree->hdr.code + TVN_FIRST);
+            //pTree->hdr.code++;
+            if (pTree->hdr.code == TVN_ITEMCHANGINGW) {
+                wchar_t buf[15];
+                NMTVITEMCHANGE *pnm = (NMTVITEMCHANGE *)lParam;
+                TV_ITEM tvi;
+                tvi.mask = TVIF_PARAM;
+                tvi.hItem = pnm->hItem;
+                TreeView_GetItem(ControlTree, &tvi);
+                wsprintf(buf, L"%p", tvi.lParam);
+                SetWindowText(GetDlgItem(hwnd, IDC_EDIT1), buf);
+                SetSelectControl(tvi.lParam);
+            }
+            else if (pTree->hdr.code == 0xffffffef) {
+                TVHITTESTINFO tsi;
+                GetCursorPos(&tsi.pt);
+                ScreenToClient(ControlTree, &tsi.pt);
+                tsi.flags = TVHT_ONITEMLABEL;
+                HTREEITEM hItem = SendMessage(ControlTree, TVM_HITTEST, 0, &tsi);
+                if (hItem) {
+                    TV_ITEM tvi;
+                    tvi.mask = TVIF_PARAM;
+                    tvi.hItem = hItem;
+                    TreeView_GetItem(ControlTree, &tvi);
+                    if (ShowDebugRect != tvi.lParam && tvi.lParam) {
+                        ShowDebugRect = tvi.lParam;
+                        ShowDebugRectManager = ShowDebugRect->m_pManager;
+                        ZuiPaintManagerInvalidate(ShowDebugRect->m_pManager);
+                    }
+                }
+                else
+                {
+                    if (ShowDebugRectManager) {
+                        ZuiPaintManager oldShowDebugRectManager = ShowDebugRectManager;
+                        ShowDebugRect = NULL;
+                        ShowDebugRectManager = NULL;
+                        ZuiPaintManagerInvalidate(oldShowDebugRectManager);
+                        break;
+                    }
+                    ShowDebugRect = NULL;
+                    ShowDebugRectManager = NULL;
+                }
+
+            }
+            break;
+        }
+        break;
+    }
     case WM_CLOSE:
         EndDialog(hwnd, 0);
         return FALSE;
     }
     return FALSE;
 }
+void SetSelectControl(ZuiControl p) {
+    SetWindowText(GetDlgItem(hDlg_intab[2], IDC_EDIT2), p->m_sText);
 
+
+
+}
 void InsertColumn(void)
 {
     LV_COLUMN lvc;
@@ -164,6 +227,12 @@ void InsertColumn(void)
     lvc.cx = 50;
     SendMessage(MemList, LVM_INSERTCOLUMN, 5, (long)&lvc);
 
+    lvc.pszText = L"属性";
+    lvc.cx = 100;
+    SendMessage(AttList, LVM_INSERTCOLUMN, 0, (long)&lvc);
+    lvc.pszText = L"数据";
+    lvc.cx = 100;
+    SendMessage(AttList, LVM_INSERTCOLUMN, 1, (long)&lvc);
 }
 
 
@@ -242,10 +311,10 @@ ZuiControl CALLBACK __FindControlFromAll(ZuiControl pThis, LPVOID pData)
 {
     TVINSERTSTRUCT pis;
     WCHAR buf[1024];
-    wsprintf(buf, L"%s|%s", pThis->m_sClassName, pThis->m_sText?pThis->m_sText:L"NULL");
+    wsprintf(buf, L"%s|%s", pThis->m_sClassName, pThis->m_sText ? pThis->m_sText : L"NULL");
     pis.hParent = pThis->m_pParent ? pThis->m_pParent->m_aTreeHwndl : TVI_ROOT;
     pis.hInsertAfter = TVI_LAST;
-    pis.item.mask = TVIF_TEXT | TVIF_PARAM |TVIF_STATE;
+    pis.item.mask = TVIF_TEXT | TVIF_PARAM | TVIF_STATE;
     pis.item.pszText = buf;
     pis.item.lParam = pThis;
     pis.item.state = TVIS_EXPANDED;
@@ -254,7 +323,7 @@ ZuiControl CALLBACK __FindControlFromAll(ZuiControl pThis, LPVOID pData)
 }
 
 void UpdateControlTree() {
-    
+
     TreeView_DeleteAllItems(ControlTree);
 
     for (size_t i = 0; i < m_window_array->count; i++)
@@ -286,15 +355,18 @@ ZuiVoid ZuiStartDebug() {
         MoveWindow(hDlg_intab[i], 2, 23, rect.right - rect.left - 6, rect.bottom - rect.top - 26, FALSE);
     }
     if (hDlg_intab[0]) {
-        MemList = CreateWindowEx(LVS_EX_GRIDLINES | LVS_EX_CHECKBOXES | WS_EX_CLIENTEDGE | WS_EX_OVERLAPPEDWINDOW, TEXT("SysListView32"), NULL, LVS_REPORT | LVS_SINGLESEL | WS_CHILD | WS_VISIBLE, 0, 0, rect.right - rect.left - 6, rect.bottom - rect.top - 35, hDlg_intab[0], NULL, m_hInstance, NULL);
+        MemList = GetDlgItem(hDlg_intab[0], IDC_LIST1);
+        SendMessage(MemList, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_UNDERLINEHOT);
         ShowWindow(MemList, SW_SHOW);
-        InsertColumn();
         SetTimer(0, 0, 1000, UPDATEMEMTIME);
     }
     if (hDlg_intab[2]) {
         ControlTree = GetDlgItem(hDlg_intab[2], IDC_TREE1);
+        AttList = GetDlgItem(hDlg_intab[2], IDC_LIST1);
+        SendMessage(AttList, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_UNDERLINEHOT);
         UpdateControlTree();
     }
+    InsertColumn();
     ShowWindow(hDlg_intab[0], SW_SHOW);
     UpdateWindow(hwnd);
 
