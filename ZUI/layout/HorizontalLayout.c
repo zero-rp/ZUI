@@ -172,6 +172,9 @@ void* CALLBACK ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalL
 
         break;
     }
+    case Proc_CoreUnInit: {
+        return NULL;
+    }
     default:
         break;
     }

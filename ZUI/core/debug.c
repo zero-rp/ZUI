@@ -337,7 +337,7 @@ ZuiVoid ZuiStartDebug() {
 
     HWND htabctrl = GetDlgItem(hwnd, IDC_TAB1);
     TCITEM tie;//设置tab标签的属性  
-    LPWSTR tabname[4] = { L"内存跟踪",L"资源管理",L"控件Spy",L"脚本调试" };
+    LPWSTR tabname[5] = { L"内存跟踪",L"资源管理",L"控件Spy",L"脚本调试",L"日志" };
     tie.mask = TCIF_TEXT | TCIF_IMAGE;//psztext字段有效  
     tie.iImage = -1;
     for (INT i = 0; i < 3; i++)

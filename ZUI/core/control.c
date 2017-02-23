@@ -1,6 +1,13 @@
 ﻿#include <ZUI.h>
 
 extern rb_root *Global_ControlClass;
+ZuiVoid ZuiFreeAttributeCallBack(void *data) {
+    ZuiAttribute att = data;
+    if (att->type == ZAttType_String) {
+        ZuiFree(att->v);
+    }
+    ZuiFree(att);
+}
 //创建控件
 ZuiControl NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     ZuiControl p = (ZuiControl)ZuiMalloc(sizeof(ZControl));
@@ -487,6 +494,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     case Proc_OnDestroy: {
         if (p->m_sText)
             ZuiFree(p->m_sText);
+        if (p->m_sName)
+            ZuiFree(p->m_sName);
         if (p->m_sToolTip)
             ZuiFree(p->m_sToolTip);
         if (p->m_BkgImg)
@@ -495,6 +504,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             ZuiControlCall(Proc_Layout_Remove, p->m_pParent, p, TRUE, NULL);
         if (p->m_pManager != NULL)
             ZuiPaintManagerReapObjects(p->m_pManager, p);
+        rb_foreach(p->m_rAttribute, ZuiFreeAttributeCallBack);
+        rb_free(p->m_rAttribute);
 #if RUN_DEBUG
         ZuiFree(p->m_sClassName);
 #endif // RUN_DEBUG
