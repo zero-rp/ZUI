@@ -221,7 +221,7 @@ void InsertColumn(void)
     lvc.cx = 180;
     SendMessage(MemList, LVM_INSERTCOLUMN, 3, (long)&lvc);
     lvc.pszText = L"文件";
-    lvc.cx = 180;
+    lvc.cx = 280;
     SendMessage(MemList, LVM_INSERTCOLUMN, 4, (long)&lvc);
     lvc.pszText = L"行号";
     lvc.cx = 50;
@@ -337,7 +337,7 @@ ZuiVoid ZuiStartDebug() {
 
     HWND htabctrl = GetDlgItem(hwnd, IDC_TAB1);
     TCITEM tie;//设置tab标签的属性  
-    LPWSTR tabname[3] = { L"内存跟踪",L"资源管理",L"控件Spy" };
+    LPWSTR tabname[4] = { L"内存跟踪",L"资源管理",L"控件Spy",L"脚本调试" };
     tie.mask = TCIF_TEXT | TCIF_IMAGE;//psztext字段有效  
     tie.iImage = -1;
     for (INT i = 0; i < 3; i++)

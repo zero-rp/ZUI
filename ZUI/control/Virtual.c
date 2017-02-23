@@ -31,7 +31,7 @@ ZEXPORT ZuiAny ZCALL ZuiVirtualProc(ZuiInt ProcId, ZuiControl cp, ZuiVirtual p, 
                           break;
     case Proc_OnPaint: {
         if (p->m_hwnd)
-            InvalidateRect(p->m_hwnd, NULL, TRUE);
+            UpdateWindow(p->m_hwnd);
         return 0;
     }
                        break;
