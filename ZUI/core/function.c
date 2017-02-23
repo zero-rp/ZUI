@@ -42,7 +42,10 @@ void * ZCALL Zui_Hash(wchar_t* str) {
     return hash;
 }
 
-ZEXPORT ZuiBool ZCALL ZuiInit() {
+ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
+    if (config && config->m_hInstance) {
+        m_hInstance = config->m_hInstance;
+    }
     /*初始化图形层*/
     if (!ZuiGraphInitialize()) {
         return FALSE;
@@ -73,6 +76,10 @@ ZEXPORT ZuiBool ZCALL ZuiInit() {
     /*初始化资源池*/
     if (!ZuiResDBInit()) {
         return FALSE;
+    }
+    if (config && config->debug) {
+        //启动调试器
+        ZuiStartDebug();
     }
     return TRUE;
 }

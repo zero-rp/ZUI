@@ -1,7 +1,7 @@
 #include <ZUI.h>
 
 static rb_root *m_window = NULL;
-static DArray *m_window_array = NULL;
+DArray *m_window_array = NULL;
 static LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     ZuiWindow pThis = NULL;

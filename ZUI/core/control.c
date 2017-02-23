@@ -32,6 +32,10 @@ ZuiControl NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny
 
         p->m_rAttribute = rb_new();
 
+#if RUN_DEBUG
+        p->m_sClassName = ZuiWcsdup(classname);
+#endif // RUN_DEBUG
+
         //通知重载的对象开始创建
         //没有重载的
         /*查找类名*/
@@ -491,6 +495,9 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             ZuiControlCall(Proc_Layout_Remove, p->m_pParent, p, TRUE, NULL);
         if (p->m_pManager != NULL)
             ZuiPaintManagerReapObjects(p->m_pManager, p);
+#if RUN_DEBUG
+        ZuiFree(p->m_sClassName);
+#endif // RUN_DEBUG
         ZuiFree(p);
         break;
     }

@@ -15,6 +15,24 @@
 #define __ZUI_CORE_MEMORY_H__
 
 #ifdef _DEBUG
+#include <Windows.h>
+typedef struct _MEM
+{
+    const char *_Func;
+    const char *_File;
+    unsigned int _Line;
+    size_t _Size;
+    DWORD timer;
+    void *ptr;
+}MEM;
+typedef struct _MArray
+{
+    int size;
+    int count;
+    size_t msize;
+    CRITICAL_SECTION cs;
+    void **data;
+}MArray;
 //开启内存跟踪和检查
 void *zui_malloc(unsigned int _Size, const char *_Func, const char *_File, unsigned int _Line);
 void zui_free(void *_Ptr);

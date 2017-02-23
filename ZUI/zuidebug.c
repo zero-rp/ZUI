@@ -64,7 +64,10 @@ ZEXPORT ZuiAny ZCALL ZuiFFTProcEx(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zui
 */
 #endif
 void __stdcall DLLDebug(){
-	ZuiInit();
+    ZInitConfig config = { 0 };
+    config.debug = TRUE;
+    config.m_hInstance = GetModuleHandle(NULL);
+    ZuiInit(&config);
 	
 #if 1
     ZuiControl win = NewZuiControl(L"Window", 0, 0, 0);
@@ -77,7 +80,7 @@ void __stdcall DLLDebug(){
     //ZuiControlSetBkColor(html, -1);
     //ZuiControlSetDrag(html, TRUE);
     //ZuiLayoutAdd(win, html);
-
+    //ZuiMsgLoop();
     ZuiControl bt1 = NewZuiControl(L"Button", 0, 0, 0);
     ZuiControlSetFixedHeight(bt1, 50);
     bt1->m_aAnime = ZuiAnimationNew();
@@ -93,6 +96,7 @@ void __stdcall DLLDebug(){
     ZuiLayoutAdd(win, bt2);
 
     ZuiControlSetDrag(win, TRUE);
+    //ZuiUnInit();
     ZuiMsgLoop();
 #endif
 

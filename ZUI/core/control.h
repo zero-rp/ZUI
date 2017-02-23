@@ -224,6 +224,10 @@ typedef struct _ZControl
     ZuiAnimation m_aAnime;          //控件动画
 
     int m_nTooltipWidth;			//多行ToolTip单行最长宽度
+#if RUN_DEBUG
+    ZuiText m_sClassName;           //控件类名
+    ZuiAny  m_aTreeHwndl;           //在调试器中的树控件句柄
+#endif
 }*ZuiControl, ZControl;
 
 //控件默认处理函数

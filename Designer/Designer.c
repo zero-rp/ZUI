@@ -4,7 +4,10 @@
 ZuiControl Designer;
 
 int _stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
-	ZuiInit();
+    ZInitConfig config = { 0 };
+    config.debug = TRUE;
+    config.m_hInstance = GetModuleHandle(NULL);
+    ZuiInit(&config);
 	ZuiControlRegisterAdd(L"codeedit", (ZCtlProc)&ZuiCodeEditProc);
 
 	FILE*fp;

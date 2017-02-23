@@ -168,8 +168,10 @@ typedef struct tagSIZE
 
 
 #define	DEBUG_BORDER	1
-
+#define MEM_DEBUG   1       //开启内存调试功能
+#define RUN_DEBUG   1       //开启运行时调试功能
 #include "core/memory.h"
+#include "core/debug.h"
 
 #include "mujs/mujs.h"
 /*基础辅助函数*/

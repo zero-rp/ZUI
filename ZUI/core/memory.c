@@ -1,23 +1,7 @@
 ﻿#include <ZUI.h>
 #ifdef _DEBUG
 #define snprintf _snprintf
-typedef struct _MEM
-{
-    const char *_Func;
-    const char *_File;
-    unsigned int _Line;
-    size_t _Size;
-    DWORD timer;
-    void *ptr;
-}MEM;
-typedef struct _MArray
-{
-    int size;
-    int count;
-    size_t msize;
-    CRITICAL_SECTION cs;
-    void **data;
-}MArray;
+
 MArray *marray_create()
 {
     int i = 0;

@@ -55,6 +55,30 @@
     <Filter Include="源文件\libjpeg">
       <UniqueIdentifier>{57c14423-de2e-4488-9873-48b04b4df8e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\control\html">
+      <UniqueIdentifier>{df80dd9d-3c08-4da3-bd52-11861925b1f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\control\html\dw">
+      <UniqueIdentifier>{5c5efdbe-ff45-4f3a-8b05-732d30d0838c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\control\html\lout">
+      <UniqueIdentifier>{8f6c0a57-3855-46c8-b3a4-1a52fd44ae2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\control\html">
+      <UniqueIdentifier>{795fdb1f-a606-4194-821a-68ea7528fe8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\control\html\lout">
+      <UniqueIdentifier>{058493f7-332e-4f67-b5c9-b9470a8baff3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\control\html\dw_ok">
+      <UniqueIdentifier>{a737d0b0-2eee-46a7-8280-b53ce6afd6ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\control\html\dw">
+      <UniqueIdentifier>{bff60bc4-f767-4483-bd2a-439736c59178}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\control\html\dw\NewFilter1">
+      <UniqueIdentifier>{391fbb00-4846-461c-8b23-284f3ce9eb4d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="zlib\adler32.c">
@@ -224,9 +248,6 @@
     </ClCompile>
     <ClCompile Include="control\Label.c">
       <Filter>源文件\control</Filter>
-    </ClCompile>
-    <ClCompile Include="debug.c">
-      <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="vc6.cpp">
       <Filter>源文件</Filter>
@@ -459,6 +480,90 @@
     <ClCompile Include="core\agg.cpp">
       <Filter>源文件\core</Filter>
     </ClCompile>
+    <ClCompile Include="control\html\lout\container.cc">
+      <Filter>源文件\control\html\lout</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\lout\identity.cc">
+      <Filter>源文件\control\html\lout</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\lout\lmisc.cc">
+      <Filter>源文件\control\html\lout</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\lout\object.cc">
+      <Filter>源文件\control\html\lout</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\lout\signal.cc">
+      <Filter>源文件\control\html\lout</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\widget.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\types.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\textblock.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\tablecell.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\style.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\selection.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\ruler.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\listitem.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\iterator.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\dwui.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\bullet.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\alignedtextblock.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\dwimage.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\dwtable.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\findtext.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\dwlayout.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\Html.cpp">
+      <Filter>源文件\control\html</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\zuiplatform.cc">
+      <Filter>源文件\control\html\dw</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\zuiviewport.cc">
+      <Filter>源文件\control\html\dw</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\zuiviewbase.cc">
+      <Filter>源文件\control\html\dw</Filter>
+    </ClCompile>
+    <ClCompile Include="core\memory.c">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\debug.c">
+      <Filter>源文件\core</Filter>
+    </ClCompile>
+    <ClCompile Include="zuidebug.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZUI.h">
@@ -621,6 +726,108 @@
       <Filter>头文件\control</Filter>
     </ClInclude>
     <ClInclude Include="core\animation.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\lout\container.hh">
+      <Filter>头文件\control\html\lout</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\lout\debug.hh">
+      <Filter>头文件\control\html\lout</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\lout\identity.hh">
+      <Filter>头文件\control\html\lout</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\lout\misc.hh">
+      <Filter>头文件\control\html\lout</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\lout\msg.h">
+      <Filter>头文件\control\html\lout</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\lout\object.hh">
+      <Filter>头文件\control\html\lout</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\lout\signal.hh">
+      <Filter>头文件\control\html\lout</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\alignedtextblock.hh">
+      <Filter>头文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\iterator.hh">
+      <Filter>头文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\layout.hh">
+      <Filter>头文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\ruler.hh">
+      <Filter>头文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\listitem.hh">
+      <Filter>头文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\types.hh">
+      <Filter>头文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\widget.hh">
+      <Filter>头文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\textblock.hh">
+      <Filter>头文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\style.hh">
+      <Filter>头文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\selection.hh">
+      <Filter>头文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\tablecell.hh">
+      <Filter>头文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\core.hh">
+      <Filter>头文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\bullet.hh">
+      <Filter>头文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\image.hh">
+      <Filter>头文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\imgbuf.hh">
+      <Filter>头文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\view.hh">
+      <Filter>头文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\table.hh">
+      <Filter>头文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\findtext.hh">
+      <Filter>头文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\events.hh">
+      <Filter>源文件\control\html\dw\NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\platform.hh">
+      <Filter>源文件\control\html\dw\NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\ui.hh">
+      <Filter>源文件\control\html\dw\NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="control\Html.h">
+      <Filter>头文件\control</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\zuiplatform.hh">
+      <Filter>源文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\zuiviewport.hh">
+      <Filter>源文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="control\html\dw\zuiviewbase.hh">
+      <Filter>源文件\control\html\dw</Filter>
+    </ClInclude>
+    <ClInclude Include="core\memory.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\debug.h">
       <Filter>头文件\core</Filter>
     </ClInclude>
   </ItemGroup>
