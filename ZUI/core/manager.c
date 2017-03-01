@@ -129,7 +129,7 @@ ZuiPaintManager NewCPaintManagerUI() {
 
         p->m_ptLastMousePos.x = p->m_ptLastMousePos.y = -1;
 
-        p->m_js = js_newstate(NULL, NULL, JS_STRICT);
+        p->m_js = js_newstate(JS_STRICT);
         js_setcontext(p->m_js, p);
         ZuiBuilderJs(p->m_js);
         ZuiBuilderJsPM(p->m_js, p);

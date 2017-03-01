@@ -27,7 +27,6 @@
 typedef struct js_State js_State;
 typedef struct js_Object js_Object;
 
-typedef void *(*js_Alloc)(void *memctx, void *ptr, int size);
 typedef void (*js_Panic)(js_State *J);
 typedef void (*js_CFunction)(js_State *J);
 typedef void (*js_Finalize)(js_State *J, void *p);
@@ -36,7 +35,7 @@ typedef int (*js_Put)(js_State *J, void *p, const wchar_t *name);
 typedef int (*js_Delete)(js_State *J, void *p, const wchar_t *name);
 
 /* Basic functions */
-js_State *js_newstate(js_Alloc alloc, void *actx, int flags);
+js_State *js_newstate(int flags);
 void js_setcontext(js_State *J, void *uctx);
 void *js_getcontext(js_State *J);
 js_Panic js_atpanic(js_State *J, js_Panic panic);

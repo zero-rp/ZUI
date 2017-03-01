@@ -6,7 +6,7 @@ extern MArray *mem;
 extern DArray *m_window_array;
 extern ZuiControl ShowDebugRect;
 extern ZuiPaintManager ShowDebugRectManager;
-HWND hDlg_intab[2]; //两个要载入到TAB控件中的对话框句柄
+HWND hDlg_intab[3]; //两个要载入到TAB控件中的对话框句柄
 HWND MemList;
 HWND ControlTree;
 HWND AttList;

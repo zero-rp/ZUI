@@ -307,7 +307,7 @@ ZEXPORT ZuiBool ZCALL ZuiBuilderJsLoad(js_State *J, ZuiText str, ZuiInt len) {
     js_dostring(J, str);
 }
 ZuiBool ZuiBuilderInit() {
-    Global_Js = js_newstate(NULL, NULL, JS_STRICT);
+    Global_Js = js_newstate(JS_STRICT);
     ZuiBuilderJs(Global_Js);
     return TRUE;
 }
