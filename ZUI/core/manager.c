@@ -177,6 +177,7 @@ void FreeCPaintManagerUI(ZuiPaintManager p) {
             FreeZuiControl(cp, NULL);
     };
     darray_destroy(p->m_aDelayedCleanup);
+    ZuiBuilderJsUn(p->m_js);
     js_freestate(p->m_js);
     ZuiFree(p);
 }

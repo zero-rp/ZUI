@@ -166,10 +166,14 @@ typedef struct tagSIZE
 } SIZE, *PSIZE, *LPSIZE;
 #endif
 
+//config
 
-#define	DEBUG_BORDER	1
+#define	LOG_DEBUG	1       //打印调试日志
 #define MEM_DEBUG   1       //开启内存调试功能
 #define RUN_DEBUG   1       //开启运行时调试功能
+
+#define JS_GCTIMER  10      //js内存回收间隔 s
+
 #include "core/memory.h"
 #include "core/debug.h"
 

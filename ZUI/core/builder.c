@@ -1,7 +1,7 @@
 ﻿#include <ZUI.h>
 
 js_State *Global_Js;
-
+static DArray *js_array = NULL;
 ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
     mxml_node_t *node;
     ZuiText ClassName = NULL;
@@ -12,7 +12,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
         {
         LoadNodeBedin:
             ClassName = node->value.name;
-#if !(defined NDEBUG)
+#if (defined LOG_DEBUG) && (LOG_DEBUG == 1)
             printf("layout创建控件: 类名:%ls\r\n", ClassName);
 #endif
             if (wcscmp(ClassName, L"Template") == 0) {//模版类
@@ -298,7 +298,11 @@ ZuiBool ZuiBuilderJs(js_State *J) {
 
     ZuiBuilderJs_Control(J);
     ZuiBuilderJs_Graphic(J);
+    darray_append(js_array, J);
     return TRUE;
+}
+ZuiBool ZuiBuilderJsUn(js_State *J) {
+    darray_delete(js_array, darray_find(js_array, J));
 }
 ZuiBool ZuiBuilderJsPM(js_State *J, ZuiPaintManager p) {
 
@@ -306,11 +310,21 @@ ZuiBool ZuiBuilderJsPM(js_State *J, ZuiPaintManager p) {
 ZEXPORT ZuiBool ZCALL ZuiBuilderJsLoad(js_State *J, ZuiText str, ZuiInt len) {
     js_dostring(J, str);
 }
+VOID CALLBACK ZuiGcTimerProc(HWND h, UINT u, UINT_PTR p, DWORD d) {
+    for (size_t i = 0; i < js_array->count; i++)
+    {
+        js_gc(js_array->data[i], LOG_DEBUG);
+    }
+}
 ZuiBool ZuiBuilderInit() {
+    js_array = darray_create();
     Global_Js = js_newstate(JS_STRICT);
     ZuiBuilderJs(Global_Js);
+    SetTimer(0, 0, 1000 * JS_GCTIMER, ZuiGcTimerProc);
     return TRUE;
 }
 ZuiVoid ZuiBuilderUnInit() {
+    ZuiBuilderJsUn(Global_Js);
     js_freestate(Global_Js);
+    darray_destroy(js_array);
 }

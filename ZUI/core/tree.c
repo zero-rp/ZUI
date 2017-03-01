@@ -537,7 +537,7 @@ void rb_foreach(rb_root *root, TreeVisitFunc visitfunc) {
     rb_foreach_c(root->rb_node, visitfunc);
 }
 
-#if (defined DEBUG_BORDER) && (DEBUG_BORDER == 1)
+#if (defined LOG_DEBUG) && (LOG_DEBUG == 1)
 void rb_print_c(rb_node *node) {
     if (node != NULL) {
         rb_print_c(node->rb_left);

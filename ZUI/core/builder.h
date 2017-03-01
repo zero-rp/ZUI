@@ -19,6 +19,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len);
 ZuiVoid ZuiBuilderJs_pushControl(js_State *J, ZuiControl cp);
 ZuiControl ZuiBuilderJs_toControl(js_State *J, ZuiInt idx);
 ZuiBool ZuiBuilderJs(js_State *J);
+ZuiBool ZuiBuilderJsUn(js_State *J);
 ZuiBool ZuiBuilderJsPM(js_State *J, ZuiPaintManager p);
 ZEXPORT ZuiBool ZCALL ZuiBuilderJsLoad(js_State *J, ZuiText str, ZuiInt len);
 ZuiBool ZuiBuilderInit();

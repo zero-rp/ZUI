@@ -51,6 +51,7 @@ ZuiVoid ZuiResDBUnInit() {
     } while (node);
 
     rb_free(Global_ResDB->res);
+    ZuiFree(Global_ResDB);
 }
 //打开压缩文件
 ZuiVoid ZuiResDBCallOnLoad(ZuiResDB db) {
