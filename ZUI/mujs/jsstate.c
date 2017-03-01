@@ -6,18 +6,8 @@
 #include "jsbuiltin.h"
 
 #include <assert.h>
-
-static void *js_defaultalloc(void *actx, void *ptr, int size)
-{
-	if (size == 0) {
-		free(ptr);
-		return NULL;
-	}
-	if (!ptr)
-		return malloc((size_t)size);
-	return realloc(ptr, (size_t)size);
-}
-
+#include "../core/memory.h"
+#include <ZUI.h>
 static void js_defaultpanic(js_State *J)
 {
 	fprintf(stderr, L"uncaught exception: %ls\n", js_tostring(J, -1));
@@ -98,7 +88,7 @@ void js_loadfile(js_State *J, const wchar_t *filename)
 		js_error(J, L"cannot seek in file: '%ls'", filename);
 	}
 
-	s = js_malloc(J, n + 1); /* add space for string terminator */
+	s = ZuiMalloc(n + 1); /* add space for string terminator */
 	if (!s) {
 		fclose(f);
 		js_error(J, L"cannot allocate storage for file contents: '%ls'", filename);
@@ -106,7 +96,7 @@ void js_loadfile(js_State *J, const wchar_t *filename)
 
 	t = fread(s, 1, (size_t)n, f);
 	if (t != n) {
-		js_free(J, s);
+		ZuiFree(s);
 		fclose(f);
 		js_error(J, L"cannot read data from file: '%ls'", filename);
 	}
@@ -114,14 +104,14 @@ void js_loadfile(js_State *J, const wchar_t *filename)
 	s[n] = 0; /* zero-terminate string containing file data */
 
 	if (js_try(J)) {
-		js_free(J, s);
+		ZuiFree(s);
 		fclose(f);
 		js_throw(J);
 	}
 
 	js_loadstring(J, filename, s);
 
-	js_free(J, s);
+	ZuiFree(s);
 	fclose(f);
 	js_endtry(J);
 }
@@ -173,22 +163,17 @@ void *js_getcontext(js_State *J)
 	return J->uctx;
 }
 
-js_State *js_newstate(js_Alloc alloc, void *actx, int flags)
+js_State *js_newstate(int flags)
 {
 	js_State *J;
 
 	assert(sizeof(js_Value) == 32);
 	assert(soffsetof(js_Value, type) == 30);
 
-	if (!alloc)
-		alloc = js_defaultalloc;
-
-	J = alloc(actx, NULL, sizeof *J);
+	J = ZuiMalloc(sizeof *J);
 	if (!J)
 		return NULL;
 	memset(J, 0, sizeof(*J));
-	J->actx = actx;
-	J->alloc = alloc;
 
 	if (flags & JS_STRICT)
 		J->strict = 1;
@@ -199,11 +184,7 @@ js_State *js_newstate(js_Alloc alloc, void *actx, int flags)
 
 	J->panic = js_defaultpanic;
 
-	J->stack = alloc(actx, NULL, JS_STACKSIZE * sizeof *J->stack);
-	if (!J->stack) {
-		alloc(actx, NULL, 0);
-		return NULL;
-	}
+	J->stack = ZuiMalloc(JS_STACKSIZE * sizeof *J->stack);
 
 	J->gcmark = 1;
 	J->nextref = 0;

@@ -2,7 +2,7 @@
 #include "jsvalue.h"
 #include "jsbuiltin.h"
 #include "regexp.h"
-
+#include <ZUI.h>
 void js_newregexp(js_State *J, const wchar_t *pattern, int flags)
 {
 	const wchar_t *error;
@@ -21,7 +21,7 @@ void js_newregexp(js_State *J, const wchar_t *pattern, int flags)
 		js_syntaxerror(J, L"regular expression: %ls", error);
 
 	obj->u.r.prog = prog;
-	obj->u.r.source = js_strdup(J, pattern);
+	obj->u.r.source = ZuiWcsdup(pattern);
 	obj->u.r.flags = flags;
 	obj->u.r.last = 0;
 	js_pushobject(J, obj);
@@ -158,7 +158,7 @@ static void Rp_toString(js_State *J)
 
 	re = js_toregexp(J, 0);
 
-	out = js_malloc(J, (wcslen(re->source) + 6)*sizeof(wchar_t)); /* extra space for //gim */
+	out = ZuiMalloc((wcslen(re->source) + 6)*sizeof(wchar_t)); /* extra space for //gim */
 	wcscpy(out, L"/");
 	wcscat(out, re->source);
 	wcscat(out, L"/");
@@ -167,13 +167,13 @@ static void Rp_toString(js_State *J)
 	if (re->flags & JS_REGEXP_M) wcscat(out, L"m");
 
 	if (js_try(J)) {
-		js_free(J, out);
+		ZuiFree(out);
 		js_throw(J);
 	}
 	js_pop(J, 0);
 	js_pushstring(J, out);
 	js_endtry(J);
-	js_free(J, out);
+	ZuiFree(out);
 }
 
 static void Rp_exec(js_State *J)

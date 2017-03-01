@@ -3,7 +3,7 @@
 #include "jscompile.h"
 #include "jsvalue.h"
 #include "jsbuiltin.h"
-
+#include <ZUI.h>
 static void jsB_globalf(js_State *J, const wchar_t *name, js_CFunction cfun, int n)
 {
 	js_newcfunction(J, cfun, name, n);
@@ -116,12 +116,12 @@ static void Encode(js_State *J, const wchar_t *str, const wchar_t *unescaped)
 	js_putc(J, &sb, 0);
 
 	if (js_try(J)) {
-		js_free(J, sb);
+		ZuiFree(sb);
 		js_throw(J);
 	}
 	js_pushstring(J, sb ? sb->s : L"");
 	js_endtry(J);
-	js_free(J, sb);
+	ZuiFree(sb);
 }
 
 static void Decode(js_State *J, const char *str, const char *reserved)
@@ -153,12 +153,12 @@ static void Decode(js_State *J, const char *str, const char *reserved)
 	js_putc(J, &sb, 0);
 
 	if (js_try(J)) {
-		js_free(J, sb);
+		ZuiFree(sb);
 		js_throw(J);
 	}
 	js_pushstring(J, sb ? sb->s : L"");
 	js_endtry(J);
-	js_free(J, sb);
+	ZuiFree(sb);
 }
 
 #define URIRESERVED ";/?:@&=+$,"

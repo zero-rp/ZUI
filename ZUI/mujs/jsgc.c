@@ -4,29 +4,29 @@
 #include "jsrun.h"
 
 #include "regexp.h"
-
+#include <ZUI.h>
 static void jsG_markobject(js_State *J, int mark, js_Object *obj);
 
 static void jsG_freeenvironment(js_State *J, js_Environment *env)
 {
-	js_free(J, env);
+	ZuiFree(env);
 }
 
 static void jsG_freefunction(js_State *J, js_Function *fun)
 {
-	js_free(J, fun->funtab);
-	js_free(J, fun->numtab);
-	js_free(J, fun->strtab);
-	js_free(J, fun->vartab);
-	js_free(J, fun->code);
-	js_free(J, fun);
+	ZuiFree(fun->funtab);
+	ZuiFree(fun->numtab);
+	ZuiFree(fun->strtab);
+	ZuiFree(fun->vartab);
+	ZuiFree(fun->code);
+	ZuiFree(fun);
 }
 
 static void jsG_freeproperty(js_State *J, js_Property *node)
 {
 	while (node) {
 		js_Property *next = node->next;
-		js_free(J, node);
+		ZuiFree(node);
 		node = next;
 	}
 }
@@ -35,7 +35,7 @@ static void jsG_freeiterator(js_State *J, js_Iterator *node)
 {
 	while (node) {
 		js_Iterator *next = node->next;
-		js_free(J, node);
+		ZuiFree(node);
 		node = next;
 	}
 }
@@ -45,14 +45,14 @@ static void jsG_freeobject(js_State *J, js_Object *obj)
 	if (obj->head)
 		jsG_freeproperty(J, obj->head);
 	if (obj->type == JS_CREGEXP) {
-		js_free(J, obj->u.r.source);
+		ZuiFree(obj->u.r.source);
 		js_regfree(obj->u.r.prog);
 	}
 	if (obj->type == JS_CITERATOR)
 		jsG_freeiterator(J, obj->u.iter.head);
 	if (obj->type == JS_CUSERDATA && obj->u.user.finalize)
 		obj->u.user.finalize(J, obj->u.user.data);
-	js_free(J, obj);
+	ZuiFree(obj);
 }
 
 static void jsG_markfunction(js_State *J, int mark, js_Function *fun)
@@ -204,7 +204,7 @@ void js_gc(js_State *J, int report)
 		nextstr = str->gcnext;
 		if (str->gcmark != mark) {
 			*prevnextstr = nextstr;
-			js_free(J, str);
+			ZuiFree(str);
 			++gstr;
 		} else {
 			prevnextstr = &str->gcnext;
@@ -231,11 +231,11 @@ void js_freestate(js_State *J)
 	for (obj = J->gcobj; obj; obj = nextobj)
 		nextobj = obj->gcnext, jsG_freeobject(J, obj);
 	for (str = J->gcstr; str; str = nextstr)
-		nextstr = str->gcnext, js_free(J, str);
+		nextstr = str->gcnext, ZuiFree(str);
 
 	jsS_freestrings(J);
 
-	js_free(J, J->lexbuf.text);
-	J->alloc(J->actx, J->stack, 0);
-	J->alloc(J->actx, J, 0);
+	ZuiFree(J->lexbuf.text);
+	ZuiFree(J->stack);
+    ZuiFree(J);
 }

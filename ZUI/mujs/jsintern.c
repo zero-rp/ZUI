@@ -1,5 +1,5 @@
 #include "jsi.h"
-
+#include <ZUI.h>
 /* Use an AA-tree to quickly look up interned strings. */
 
 struct js_StringNode
@@ -14,7 +14,7 @@ static js_StringNode jsS_sentinel = { &jsS_sentinel, &jsS_sentinel, 0, L""};
 static js_StringNode *jsS_newstringnode(js_State *J, const wchar_t *string, const wchar_t **result)
 {
 	int n = wcslen(string);
-	js_StringNode *node = js_malloc(J, soffsetof(js_StringNode, string) + n*sizeof(wchar_t) + 2);
+	js_StringNode *node = ZuiMalloc(soffsetof(js_StringNode, string) + n*sizeof(wchar_t) + 2);
 	node->left = node->right = &jsS_sentinel;
 	node->level = 1;
 	memcpy(node->string, string, n*sizeof(wchar_t) + 2);
@@ -87,7 +87,7 @@ static void jsS_freestringnode(js_State *J, js_StringNode *node)
 {
 	if (node->left != &jsS_sentinel) jsS_freestringnode(J, node->left);
 	if (node->right != &jsS_sentinel) jsS_freestringnode(J, node->right);
-	js_free(J, node);
+	ZuiFree(node);
 }
 
 void jsS_freestrings(js_State *J)

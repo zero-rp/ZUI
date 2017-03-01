@@ -2,7 +2,7 @@
 #include "jsparse.h"
 #include "jscompile.h"
 #include "jsvalue.h" /* for jsV_numbertostring */
-
+#include <ZUI.h>
 #define cexp jsC_cexp /* collision with math.h */
 
 #define JF js_State *J, js_Function *F
@@ -33,7 +33,7 @@ void jsC_error(js_State *J, js_Ast *node, const wchar_t *fmt, ...)
 
 static js_Function *newfun(js_State *J, js_Ast *name, js_Ast *params, js_Ast *body, int script)
 {
-	js_Function *F = js_malloc(J, sizeof *F);
+	js_Function *F = ZuiMalloc(sizeof *F);
 	memset(F, 0, sizeof *F);
 	F->gcmark = 0;
 	F->gcnext = J->gcfun;
@@ -58,7 +58,7 @@ static void emitraw(JF, int value)
 		js_syntaxerror(J, L"integer overflow in instruction coding");
 	if (F->codelen >= F->codecap) {
 		F->codecap = F->codecap ? F->codecap * 2 : 64;
-		F->code = js_realloc(J, F->code, F->codecap * sizeof *F->code);
+		F->code = ZuiRealloc(F->code, F->codecap * sizeof *F->code);
 	}
 	F->code[F->codelen++] = value;
 }
@@ -81,7 +81,7 @@ static int addfunction(JF, js_Function *value)
 {
 	if (F->funlen >= F->funcap) {
 		F->funcap = F->funcap ? F->funcap * 2 : 16;
-		F->funtab = js_realloc(J, F->funtab, F->funcap * sizeof *F->funtab);
+		F->funtab = ZuiRealloc(F->funtab, F->funcap * sizeof *F->funtab);
 	}
 	F->funtab[F->funlen] = value;
 	return F->funlen++;
@@ -95,7 +95,7 @@ static int addnumber(JF, double value)
 			return i;
 	if (F->numlen >= F->numcap) {
 		F->numcap = F->numcap ? F->numcap * 2 : 16;
-		F->numtab = js_realloc(J, F->numtab, F->numcap * sizeof *F->numtab);
+		F->numtab = ZuiRealloc(F->numtab, F->numcap * sizeof *F->numtab);
 	}
 	F->numtab[F->numlen] = value;
 	return F->numlen++;
@@ -109,7 +109,7 @@ static int addstring(JF, const wchar_t *value)
 			return i;
 	if (F->strlen >= F->strcap) {
 		F->strcap = F->strcap ? F->strcap * 2 : 16;
-		F->strtab = js_realloc(J, F->strtab, F->strcap * sizeof *F->strtab);
+		F->strtab = ZuiRealloc(F->strtab, F->strcap * sizeof *F->strtab);
 	}
 	F->strtab[F->strlen] = value;
 	return F->strlen++;
@@ -137,7 +137,7 @@ static void addlocal(JF, js_Ast *ident, int reuse)
 	}
 	if (F->varlen >= F->varcap) {
 		F->varcap = F->varcap ? F->varcap * 2 : 16;
-		F->vartab = js_realloc(J, F->vartab, F->varcap * sizeof *F->vartab);
+		F->vartab = ZuiRealloc(F->vartab, F->varcap * sizeof *F->vartab);
 	}
 	F->vartab[F->varlen++] = name;
 }
@@ -709,7 +709,7 @@ static void cexp(JF, js_Ast *exp)
 
 static void addjump(JF, enum js_AstType type, js_Ast *target, int inst)
 {
-	js_JumpList *jump = js_malloc(J, sizeof *jump);
+	js_JumpList *jump = ZuiMalloc(sizeof *jump);
 	jump->type = type;
 	jump->inst = inst;
 	jump->next = target->jumps;

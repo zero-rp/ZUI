@@ -1,7 +1,7 @@
 #include "jsi.h"
 #include "jsvalue.h"
 #include "jsbuiltin.h"
-
+#include <ZUI.h>
 int js_getlength(js_State *J, int idx)
 {
 	int len;
@@ -109,7 +109,7 @@ static void Ap_join(js_State *J)
 	}
 
 	if (js_try(J)) {
-		js_free(J, out);
+		ZuiFree(out);
 		js_throw(J);
 	}
 
@@ -123,11 +123,11 @@ static void Ap_join(js_State *J)
 		n += wcslen(r);
 
 		if (k == 0) {
-			out = js_malloc(J, n*sizeof(wchar_t));
+			out = ZuiMalloc(n*sizeof(wchar_t));
 			wcscpy(out, r);
 		} else {
 			n += seplen;
-			out = js_realloc(J, out, n*sizeof(wchar_t));
+			out = ZuiRealloc(out, n*sizeof(wchar_t));
 			wcscat(out, sep);
 			wcscat(out, r);
 		}
@@ -137,7 +137,7 @@ static void Ap_join(js_State *J)
 
 	js_pushstring(J, out);
 	js_endtry(J);
-	js_free(J, out);
+	ZuiFree(out);
 }
 
 static void Ap_pop(js_State *J)

@@ -4,7 +4,7 @@
 #include "jsrun.h"
 
 #include "utf.h"
-
+#include <ZUI.h>
 static void jsR_run(js_State *J, js_Function *F);
 
 /* Push values on stack */
@@ -21,46 +21,10 @@ static void js_stackoverflow(js_State *J)
 	js_throw(J);
 }
 
-static void js_outofmemory(js_State *J)
-{
-	STACK[TOP].type = JS_TLITSTR;
-	STACK[TOP].u.litstr = L"out of memory";
-	++TOP;
-	js_throw(J);
-}
-
-void *js_malloc(js_State *J, int size)
-{
-	void *ptr = J->alloc(J->actx, NULL, size);
-	if (!ptr)
-		js_outofmemory(J);
-	return ptr;
-}
-
-void *js_realloc(js_State *J, void *ptr, int size)
-{
-	ptr = J->alloc(J->actx, ptr, size);
-	if (!ptr)
-		js_outofmemory(J);
-	return ptr;
-}
-
-wchar_t *js_strdup(js_State *J, const wchar_t *s)
-{
-	int n = wcslen(s) + 1;
-	wchar_t *p = js_malloc(J, n*sizeof(wchar_t));
-	memcpy(p, s, n*sizeof(wchar_t));
-	return p;
-}
-
-void js_free(js_State *J, void *ptr)
-{
-	J->alloc(J->actx, ptr, 0);
-}
 
 js_String *jsV_newmemstring(js_State *J, const wchar_t *s, int n)
 {
-	js_String *v = js_malloc(J, soffsetof(js_String, p) + n*sizeof(wchar_t) + 2);
+	js_String *v = ZuiMalloc(soffsetof(js_String, p) + n*sizeof(wchar_t) + 2);
 	memcpy(v->p, s, n*sizeof(wchar_t));
 	v->p[n] = 0;
 	v->gcmark = 0;
@@ -842,7 +806,7 @@ const wchar_t *js_nextiterator(js_State *J, int idx)
 
 js_Environment *jsR_newenvironment(js_State *J, js_Object *vars, js_Environment *outer)
 {
-	js_Environment *E = js_malloc(J, sizeof *E);
+	js_Environment *E = ZuiMalloc(sizeof *E);
 	E->gcmark = 0;
 	E->gcnext = J->gcenv;
 	J->gcenv = E;

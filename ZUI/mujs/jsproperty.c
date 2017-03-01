@@ -1,6 +1,6 @@
 #include "jsi.h"
 #include "jsvalue.h"
-
+#include <ZUI.h>
 /*
 	Use an AA-tree to quickly look up properties in objects:
 
@@ -29,7 +29,7 @@ static js_Property sentinel = {
 
 static js_Property *newproperty(js_State *J, js_Object *obj, const wchar_t *name)
 {
-	js_Property *node = js_malloc(J, sizeof *node);
+	js_Property *node = ZuiMalloc(sizeof *node);
 	node->name = js_intern(J, name);
 	node->left = node->right = &sentinel;
 	node->prevp = NULL;
@@ -105,7 +105,7 @@ static void freeproperty(js_State *J, js_Object *obj, js_Property *node)
 	else
 		obj->tailp = node->prevp;
 	*node->prevp = node->next;
-	js_free(J, node);
+	ZuiFree(node);
 	--obj->count;
 }
 
@@ -156,7 +156,7 @@ static js_Property *delete(js_State *J, js_Object *obj, js_Property *node, const
 
 js_Object *jsV_newobject(js_State *J, enum js_Class type, js_Object *prototype)
 {
-	js_Object *obj = js_malloc(J, sizeof *obj);
+	js_Object *obj = ZuiMalloc(sizeof *obj);
 	memset(obj, 0, sizeof *obj);
 	obj->gcmark = 0;
 	obj->gcnext = J->gcobj;
@@ -251,7 +251,7 @@ static void itwalk(js_State *J, js_Object *io, js_Object *top, int own)
 	int k;
 
 #define ITADD(x) \
-	js_Iterator *node = js_malloc(J, sizeof *node); \
+	js_Iterator *node = ZuiMalloc(sizeof *node); \
 	node->name = x; \
 	node->next = NULL; \
 	if (!tail) { \
@@ -302,7 +302,7 @@ const wchar_t *jsV_nextiterator(js_State *J, js_Object *io)
 	while (io->u.iter.head) {
 		js_Iterator *next = io->u.iter.head->next;
 		const char *name = io->u.iter.head->name;
-		js_free(J, io->u.iter.head);
+		ZuiFree(io->u.iter.head);
 		io->u.iter.head = next;
 		if (jsV_getproperty(J, io->u.iter.target, name))
 			return name;

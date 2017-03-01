@@ -52,10 +52,6 @@ static __inline int signbit(double x) {union{double d;__int64 i;}u;u.d=x;return 
 #define soffsetof(x,y) ((int)offsetof(x,y))
 #define nelem(a) (int)(sizeof (a) / sizeof (a)[0])
 
-void *js_malloc(js_State *J, int size);
-void *js_realloc(js_State *J, void *ptr, int size);
-void js_free(js_State *J, void *ptr);
-
 typedef struct js_Regexp js_Regexp;
 typedef struct js_Value js_Value;
 typedef struct js_Object js_Object;
@@ -79,7 +75,6 @@ typedef unsigned short js_Instruction;
 
 /* String interning */
 
-wchar_t *js_strdup(js_State *J, const wchar_t *s);
 const wchar_t *js_intern(js_State *J, const wchar_t *s);
 void jsS_dumpstrings(js_State *J);
 void jsS_freestrings(js_State *J);
@@ -146,9 +141,7 @@ void *js_savetrypc(js_State *J, js_Instruction *pc);
 
 struct js_State
 {
-	void *actx;
 	void *uctx;
-	js_Alloc alloc;
 	js_Panic panic;
 
 	js_StringNode *strings;

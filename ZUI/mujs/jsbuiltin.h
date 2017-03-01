@@ -1,6 +1,6 @@
 #ifndef js_builtin_h
 #define js_builtin_h
-
+#include <ZUI.h>
 void jsB_init(js_State *J);
 void jsB_initobject(js_State *J);
 void jsB_initarray(js_State *J);
@@ -24,12 +24,12 @@ static void js_putc(js_State *J, js_Buffer **sbp, int c)
 {
 	js_Buffer *sb = *sbp;
 	if (!sb) {
-		sb = js_malloc(J, sizeof *sb);
+		sb = ZuiMalloc(sizeof *sb);
 		sb->n = 0;
 		sb->m = sizeof sb->s;
 		*sbp = sb;
 	} else if (sb->n == sb->m) {
-		sb = js_realloc(J, sb, (sb->m *= 2) + soffsetof(js_Buffer, s));
+		sb = ZuiRealloc(sb, (sb->m *= 2) + soffsetof(js_Buffer, s));
 		*sbp = sb;
 	}
 	sb->s[sb->n++] = c;

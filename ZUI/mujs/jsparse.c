@@ -1,7 +1,7 @@
 #include "jsi.h"
 #include "jslex.h"
 #include "jsparse.h"
-
+#include <ZUI.h>
 #define LIST(h)		jsP_newnode(J, AST_LIST, h, 0, 0, 0)
 
 #define EXP0(x)		jsP_newnode(J, EXP_ ## x, 0, 0, 0, 0)
@@ -52,7 +52,7 @@ static void jsP_warning(js_State *J, const wchar_t *fmt, ...)
 
 static js_Ast *jsP_newnode(js_State *J, enum js_AstType type, js_Ast *a, js_Ast *b, js_Ast *c, js_Ast *d)
 {
-	js_Ast *node = js_malloc(J, sizeof *node);
+	js_Ast *node = ZuiMalloc(sizeof *node);
 
 	node->type = type;
 	node->line = J->astline;
@@ -107,7 +107,7 @@ static void jsP_freejumps(js_State *J, js_JumpList *node)
 {
 	while (node) {
 		js_JumpList *next = node->next;
-		js_free(J, node);
+		ZuiFree(node);
 		node = next;
 	}
 }
@@ -118,7 +118,7 @@ void jsP_freeparse(js_State *J)
 	while (node) {
 		js_Ast *next = node->gcnext;
 		jsP_freejumps(J, node->jumps);
-		js_free(J, node);
+		ZuiFree(node);
 		node = next;
 	}
 	J->gcast = NULL;

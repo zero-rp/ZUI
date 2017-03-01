@@ -4,7 +4,7 @@
 #include "jsbuiltin.h"
 
 #include "utf.h"
-
+#include <ZUI.h>
 static void jsonnext(js_State *J)
 {
 	J->lookahead = jsY_lexjson(J);
@@ -204,7 +204,7 @@ static void fmtarray(js_State *J, js_Buffer **sb, const wchar_t *gap, int level)
 static int fmtvalue(js_State *J, js_Buffer **sb, const wchar_t *key, const wchar_t *gap, int level)
 {
 	if (js_try(J)) {
-		js_free(J, *sb);
+		ZuiFree(*sb);
 		js_throw(J);
 	}
 	if (js_isobject(J, -1)) {
@@ -279,12 +279,12 @@ static void JSON_stringify(js_State *J)
 		if (fmtvalue(J, &sb, L"", gap, 0)) {
 			js_putc(J, &sb, 0);
 			if (js_try(J)) {
-				js_free(J, sb);
+				ZuiFree(sb);
 				js_throw(J);
 			}
 			js_pushstring(J, sb ? sb->s : L"");
 			js_endtry(J);
-			js_free(J, sb);
+			ZuiFree(sb);
 		}
 	} else {
 		js_pushundefined(J);

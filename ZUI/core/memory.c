@@ -176,13 +176,17 @@ void zui_free(void *_Ptr) {
 }
 
 void* zui_realloc(void*  _Block, size_t _Size, const char *_Func, const char *_File, unsigned int _Line) {
-    EnterCriticalSection(&mem->cs);       // 进入临界区
-    MEM *old = (char*)_Block - sizeof(MEM);
-    void *new = (char *)zui_malloc(_Size, _Func, _File, _Line);
-    memcpy(new, _Block, old->_Size);
-    zui_free(_Block);
-    LeaveCriticalSection(&mem->cs);       // 离开临界区
-    return new;
+    if (_Block) {
+        EnterCriticalSection(&mem->cs);       // 进入临界区
+        MEM *old = (char*)_Block - sizeof(MEM);
+        void *new = (char *)zui_malloc(_Size, _Func, _File, _Line);
+        memcpy(new, _Block, old->_Size);
+        zui_free(_Block);
+        LeaveCriticalSection(&mem->cs);       // 离开临界区
+        return new;
+    }
+    else
+        return zui_malloc(_Size, _Func, _File, _Line);
 }
 char* __cdecl zui_strdup(char const* _Source, const char *_Func, const char *_File, unsigned int _Line) {
     size_t  len = strlen(_Source) + 1;

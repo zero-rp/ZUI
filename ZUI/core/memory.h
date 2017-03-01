@@ -14,7 +14,7 @@
 #ifndef __ZUI_CORE_MEMORY_H__
 #define __ZUI_CORE_MEMORY_H__
 
-#ifdef _DEBUG
+#if MEM_DEBUG
 #include <Windows.h>
 typedef struct _MEM
 {

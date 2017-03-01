@@ -3,7 +3,7 @@
 #include "jscompile.h"
 #include "jsvalue.h"
 #include "jsbuiltin.h"
-
+#include <ZUI.h>
 static void jsB_Function(js_State *J)
 {
 	int i, top = js_gettop(J);
@@ -26,7 +26,7 @@ static void jsB_Function(js_State *J)
 	body = js_isdefined(J, top - 1) ? js_tostring(J, top - 1) : L"";
 
 	if (js_try(J)) {
-		js_free(J, sb);
+		ZuiFree(sb);
 		jsP_freeparse(J);
 		js_throw(J);
 	}
@@ -35,7 +35,7 @@ static void jsB_Function(js_State *J)
 	fun = jsC_compilefunction(J, parse);
 
 	js_endtry(J);
-	js_free(J, sb);
+	ZuiFree(sb);
 	jsP_freeparse(J);
 
 	js_newfunction(J, fun, J->GE);
@@ -61,7 +61,7 @@ static void Fp_toString(js_State *J)
 		n += wcslen(F->name);
 		for (i = 0; i < F->numparams; ++i)
 			n += wcslen(F->vartab[i]) + 1;
-		s = js_malloc(J, (n + 1)*sizeof(wchar_t));
+		s = ZuiMalloc((n + 1)*sizeof(wchar_t));
 		wcscpy(s, L"function ");
 		wcscat(s, F->name);
 		wcscat(s, L"(");
@@ -71,11 +71,11 @@ static void Fp_toString(js_State *J)
 		}
 		wcscat(s, L") { ... }");
 		if (js_try(J)) {
-			js_free(J, s);
+			ZuiFree(s);
 			js_throw(J);
 		}
 		js_pushstring(J, s);
-		js_free(J, s);
+		ZuiFree(s);
 		js_endtry(J);
 	} else {
 		js_pushliteral(J, L"function () { ... }");

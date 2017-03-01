@@ -3,7 +3,7 @@
 #include "jsbuiltin.h"
 #include "utf.h"
 #include "regexp.h"
-
+#include <ZUI.h>
 static const wchar_t *checkstring(js_State *J, int idx)
 {
 	if (!js_iscoercible(J, idx))
@@ -116,24 +116,24 @@ static void Sp_concat(js_State *J)
 
 	s = checkstring(J, 0);
 	n = wcslen(s);
-	out = js_malloc(J, n + 1);
+	out = ZuiMalloc(n + 1);
 	wcscpy(out, s);
 
 	if (js_try(J)) {
-		js_free(J, out);
+		ZuiFree(out);
 		js_throw(J);
 	}
 
 	for (i = 1; i < top; ++i) {
 		s = js_tostring(J, i);
 		n += wcslen(s);
-		out = js_realloc(J, out, n + 1);
+		out = ZuiRealloc(out, n + 1);
 		wcscat(out, s);
 	}
 
 	js_pushstring(J, out);
 	js_endtry(J);
-	js_free(J, out);
+	ZuiFree(out);
 }
 
 static void Sp_indexOf(js_State *J)
@@ -229,7 +229,7 @@ static void Sp_substring(js_State *J)
 static void Sp_toLowerCase(js_State *J)
 {
 	const wchar_t *src = checkstring(J, 0);
-	wchar_t *dst = js_malloc(J, UTFmax * wcslen(src)*sizeof(wchar_t) + 2);
+	wchar_t *dst = ZuiMalloc(UTFmax * wcslen(src)*sizeof(wchar_t) + 2);
 	const wchar_t *s = src;
 	wchar_t *d = dst;
 	Rune rune;
@@ -240,18 +240,18 @@ static void Sp_toLowerCase(js_State *J)
 	}
 	*d = 0;
 	if (js_try(J)) {
-		js_free(J, dst);
+		ZuiFree(dst);
 		js_throw(J);
 	}
 	js_pushstring(J, dst);
 	js_endtry(J);
-	js_free(J, dst);
+	ZuiFree(dst);
 }
 
 static void Sp_toUpperCase(js_State *J)
 {
 	const wchar_t *src = checkstring(J, 0);
-	wchar_t *dst = js_malloc(J, UTFmax * strlen(src)*sizeof(wchar_t) + 2);
+	wchar_t *dst = ZuiMalloc(UTFmax * strlen(src)*sizeof(wchar_t) + 2);
 	const wchar_t *s = src;
 	wchar_t *d = dst;
 	Rune rune;
@@ -262,12 +262,12 @@ static void Sp_toUpperCase(js_State *J)
 	}
 	*d = 0;
 	if (js_try(J)) {
-		js_free(J, dst);
+		ZuiFree(dst);
 		js_throw(J);
 	}
 	js_pushstring(J, dst);
 	js_endtry(J);
-	js_free(J, dst);
+	ZuiFree(dst);
 }
 
 static int istrim(int c)
@@ -294,10 +294,10 @@ static void S_fromCharCode(js_State *J)
 	Rune c;
 	wchar_t *s, *p;
 
-	s = p = js_malloc(J, (top-1) * UTFmax + 1);
+	s = p = ZuiMalloc((top-1) * UTFmax + 1);
 
 	if (js_try(J)) {
-		js_free(J, s);
+		ZuiFree(s);
 		js_throw(J);
 	}
 
@@ -309,7 +309,7 @@ static void S_fromCharCode(js_State *J)
 	js_pushstring(J, s);
 
 	js_endtry(J);
-	js_free(J, s);
+	ZuiFree(s);
 }
 
 static void Sp_match(js_State *J)
@@ -474,12 +474,12 @@ end:
 	js_putc(J, &sb, 0);
 
 	if (js_try(J)) {
-		js_free(J, sb);
+		ZuiFree(sb);
 		js_throw(J);
 	}
 	js_pushstring(J, sb ? sb->s : L"");
 	js_endtry(J);
-	js_free(J, sb);
+	ZuiFree(sb);
 }
 
 static void Sp_replace_string(js_State *J)
@@ -534,12 +534,12 @@ static void Sp_replace_string(js_State *J)
 	}
 
 	if (js_try(J)) {
-		js_free(J, sb);
+		ZuiFree(sb);
 		js_throw(J);
 	}
 	js_pushstring(J, sb ? sb->s : L"");
 	js_endtry(J);
-	js_free(J, sb);
+	ZuiFree(sb);
 }
 
 static void Sp_replace(js_State *J)

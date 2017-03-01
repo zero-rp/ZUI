@@ -3,7 +3,7 @@
 #include "jscompile.h"
 #include "jsvalue.h"
 #include "utf.h"
-
+#include <ZUI.h>
 #define JSV_ISSTRING(v) (v->type==JS_TSHRSTR || v->type==JS_TMEMSTR || v->type==JS_TLITSTR)
 #define JSV_TOSTRING(v) (v->type==JS_TSHRSTR ? v->u.shrstr : v->type==JS_TLITSTR ? v->u.litstr : v->type==JS_TMEMSTR ? v->u.memstr->p : L"")
 
@@ -508,17 +508,17 @@ void js_concat(js_State *J)
 		const wchar_t *sa = js_tostring(J, -2);
 		const wchar_t *sb = js_tostring(J, -1);
 		/* TODO: create js_String directly */
-		wchar_t *sab = js_malloc(J, (wcslen(sa) + wcslen(sb))*sizeof(wchar_t) + 2);
+		wchar_t *sab = ZuiMalloc((wcslen(sa) + wcslen(sb))*sizeof(wchar_t) + 2);
 		wcscpy(sab, sa);
 		wcscat(sab, sb);
 		if (js_try(J)) {
-			js_free(J, sab);
+			ZuiFree(sab);
 			js_throw(J);
 		}
 		js_pop(J, 2);
 		js_pushstring(J, sab);
 		js_endtry(J);
-		js_free(J, sab);
+		ZuiFree(sab);
 	} else {
 		double x = js_tonumber(J, -2);
 		double y = js_tonumber(J, -1);
