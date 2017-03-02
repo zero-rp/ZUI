@@ -26,7 +26,7 @@ typedef struct _ZuiTabLayout
 	void *old_udata;
 }*ZuiTabLayout, ZTabLayout;
 
-void* CALLBACK ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Param1, void* Param2, void* Param3);
+void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Param1, void* Param2, void* Param3);
 
 
 

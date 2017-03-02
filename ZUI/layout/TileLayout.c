@@ -1,11 +1,11 @@
 ﻿#include <ZUI.h>
 
 
-void* CALLBACK ZuiTileLayoutProc(int ProcId, ZuiControl cp, ZuiTileLayout p, void* Param1, void* Param2, void* Param3) {
+void* ZCALL ZuiTileLayoutProc(int ProcId, ZuiControl cp, ZuiTileLayout p, void* Param1, void* Param2, void* Param3) {
     switch (ProcId)
     {
     case Proc_CoreInit:
-        return TRUE;
+        return (ZuiAny)TRUE;
     case Proc_OnCreate: {
         p = (ZuiTileLayout)ZuiMalloc(sizeof(ZTileLayout));
         memset(p, 0, sizeof(ZTileLayout));
@@ -37,7 +37,7 @@ void* CALLBACK ZuiTileLayoutProc(int ProcId, ZuiControl cp, ZuiTileLayout p, voi
         rc.bottom -= op->m_rcInset.bottom;
 
         if (darray_len(op->m_items) == 0) {
-            return;
+            return 0;
         }
 
         // Position the elements
@@ -136,8 +136,8 @@ void* CALLBACK ZuiTileLayoutProc(int ProcId, ZuiControl cp, ZuiTileLayout p, voi
         break;
     }
     case Proc_TileLayout_SetColumns: {
-        if (Param1 <= 0) return;
-        p->m_nColumns = Param1;
+        if (Param1 <= 0) return 0;
+        p->m_nColumns = (int)Param1;
         ZuiControlNeedUpdate(cp);
         break;
     }
@@ -154,9 +154,9 @@ void* CALLBACK ZuiTileLayoutProc(int ProcId, ZuiControl cp, ZuiTileLayout p, voi
             LPTSTR pstr = NULL;
             ZuiInt x = _tcstol(Param2, &pstr, 10);  ASSERT(pstr);
             ZuiInt y = _tcstol(pstr + 1, &pstr, 10);   ASSERT(pstr);
-            ZuiControlCall(Proc_TileLayout_SetItemSize, cp, x, y, NULL);
+            ZuiControlCall(Proc_TileLayout_SetItemSize, cp, (ZuiAny)x, (ZuiAny)y, NULL);
         }
-        else if (wcscmp(Param1, L"columns") == 0) ZuiControlCall(Proc_TileLayout_SetColumns, cp, _ttoi(Param2), NULL, NULL);
+        else if (wcscmp(Param1, L"columns") == 0) ZuiControlCall(Proc_TileLayout_SetColumns, cp, (ZuiAny)_ttoi(Param2), NULL, NULL);
         break;
     }
     case Proc_CoreUnInit: {

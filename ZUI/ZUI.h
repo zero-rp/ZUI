@@ -19,8 +19,33 @@ extern "C"
 {
 #endif
 
+//config
+
+//图形引擎配置
+#define PLATFORM_GRAPH_SKIA 0
+#define PLATFORM_GRAPH_GDI 0
+#define PLATFORM_GRAPH_CAIRO 0
+#define PLATFORM_GRAPH_AGG 1
+
+//运行平台配置
+#ifdef WIN32
+#define PLATFORM_OS_WIN
+#elif defined LINUX
+#define PLATFORM_OS_LINUX
+#elif defined MACX
+#define PLATFORM_OS_MACX
+#endif
+
+#define	LOG_DEBUG	0       //打印调试日志
+#define MEM_DEBUG   0       //开启内存调试功能
+#define RUN_DEBUG   0       //开启运行时调试功能
+
+
+#define JS_GCTIMER  10      //js内存回收间隔 s
+
+
 /*系统头文件*/
-#ifdef _WIN32
+#ifdef PLATFORM_OS_WIN
 #define WIN32_LEAN_AND_MEAN
 #include <olectl.h>
 #include <windows.h>
@@ -34,6 +59,7 @@ extern "C"
 #pragma comment(lib, "Msimg32.lib")  
 #pragma comment(lib, "Gdiplus.lib")
 #endif
+
 #include <stddef.h>
 #include <stdio.h>
 #include <assert.h>
@@ -53,24 +79,19 @@ extern "C"
 
 
 #ifdef WIN32
-
-#ifdef __cplusplus
-#define ZEXPORT extern "C" __declspec(dllexport)
+    #ifdef __cplusplus
+        #define ZEXPORT extern "C" __declspec(dllexport)
+    #else
+        #define ZEXPORT __declspec(dllexport)
+    #endif
+    #define ZCALL __stdcall
 #else
-#define ZEXPORT __declspec(dllexport)
-#endif
-
-#define ZCALL __stdcall
-
-#else
-#ifdef __cplusplus
-#define ZEXPORT extern "C" 
-#else
-#define ZEXPORT
-
-#endif
-
-#define ZCALL __attribute__((__stdcall__))
+    #ifdef __cplusplus
+        #define ZEXPORT extern "C" 
+    #else
+        #define ZEXPORT
+    #endif
+        #define ZCALL __attribute__((__stdcall__))
 #endif
 
 #define DEFARG(name, defval) ((#name[0]) ? (name + 0) : defval)
@@ -98,6 +119,7 @@ typedef float		ZuiReal;
 typedef int64_t		ZuiInt;
 #else
 typedef int			ZuiInt;
+typedef unsigned int			ZuiUInt;
 #endif
 typedef int			ZuiBool;
 typedef void		ZuiVoid;
@@ -166,13 +188,6 @@ typedef struct tagSIZE
 } SIZE, *PSIZE, *LPSIZE;
 #endif
 
-//config
-
-#define	LOG_DEBUG	1       //打印调试日志
-#define MEM_DEBUG   1       //开启内存调试功能
-#define RUN_DEBUG   1       //开启运行时调试功能
-
-#define JS_GCTIMER  10      //js内存回收间隔 s
 
 #include "core/memory.h"
 #include "core/debug.h"
@@ -185,10 +200,11 @@ typedef struct tagSIZE
 #include "core/tree.h"
 #include "zlib/unzip.h"
 #include "core/mxml.h"
-#include "core/graphic.h"
+#include "platform/platform.h"
 #include "core/resdb.h"
 #include "core/global.h"
 /*内核*/
+
 #include "core/manager.h"		//绘制管理器
 #include "core/animation.h"     //动画处理器
 #include "core/control.h"		//控件基类
@@ -198,7 +214,7 @@ typedef struct tagSIZE
 /*控件*/
 #include "control/Register.h"
 #include "control/window.h"
-#include "control/html.h"
+#include "control/Html.h"
 #include "control/Virtual.h"	//虚拟控件,用来管理原生控件
 #include "control/Menu.h"
 #include "control/MenuBar.h"

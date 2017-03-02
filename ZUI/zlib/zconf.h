@@ -41,7 +41,9 @@ typedef Z_U4 z_crc_t;
 
 
 #  define z_off_t long
-#  define z_off64_t __int64
+#  define z_off64_t long long
+
+
 
 
 #endif /* ZCONF_H */

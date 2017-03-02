@@ -43,12 +43,6 @@
     <Filter Include="头文件\mujs">
       <UniqueIdentifier>{52a5fa0a-b94d-496f-a90d-840159eb8911}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\core\AGG">
-      <UniqueIdentifier>{63d6dc0e-9e0b-4f4b-865d-a62b9f251af1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\core\AGG\src">
-      <UniqueIdentifier>{95cabec8-b0bb-4bdf-9a5b-d868697bf3a4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\libpng">
       <UniqueIdentifier>{19f6ccd9-fe4b-4ac7-bf16-6807ac1e67fa}</UniqueIdentifier>
     </Filter>
@@ -78,6 +72,30 @@
     </Filter>
     <Filter Include="源文件\control\html\dw\NewFilter1">
       <UniqueIdentifier>{391fbb00-4846-461c-8b23-284f3ce9eb4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\platform">
+      <UniqueIdentifier>{d85332cf-a553-4ec1-aa1f-7cbf33bc6a3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\platform">
+      <UniqueIdentifier>{d8f3aff9-5062-4d5b-b165-b614d0c9b732}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\platform\os">
+      <UniqueIdentifier>{dd18049f-090d-4d3e-a370-70deb1fd3e55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\platform\os">
+      <UniqueIdentifier>{7e188294-2ea9-46ce-a864-cba056cc6ecc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\platform\graph">
+      <UniqueIdentifier>{6626e0bf-5a5d-4f33-84ae-74c5a0c1dcf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\platform\graph">
+      <UniqueIdentifier>{d48a0dee-fd25-4158-b580-70a8f9338fe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\platform\graph\AGG">
+      <UniqueIdentifier>{63d6dc0e-9e0b-4f4b-865d-a62b9f251af1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\platform\graph\AGG\src">
+      <UniqueIdentifier>{95cabec8-b0bb-4bdf-9a5b-d868697bf3a4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -252,23 +270,8 @@
     <ClCompile Include="vc6.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="core\agg\src\agg_vcgen_stroke.cpp">
-      <Filter>源文件\core\AGG\src</Filter>
-    </ClCompile>
-    <ClCompile Include="core\agg\src\agg_trans_affine.cpp">
-      <Filter>源文件\core\AGG\src</Filter>
-    </ClCompile>
-    <ClCompile Include="core\agg\agg_font_win32_tt.cpp">
-      <Filter>源文件\core\AGG</Filter>
-    </ClCompile>
-    <ClCompile Include="core\agg\src\agg_curves.cpp">
-      <Filter>源文件\core\AGG\src</Filter>
-    </ClCompile>
     <ClCompile Include="control\ScrollBar.c">
       <Filter>源文件\control</Filter>
-    </ClCompile>
-    <ClCompile Include="core\gdi.c">
-      <Filter>源文件\core</Filter>
     </ClCompile>
     <ClCompile Include="control\Virtual.c">
       <Filter>源文件\control</Filter>
@@ -477,9 +480,6 @@
     <ClCompile Include="core\animation.c">
       <Filter>源文件\core</Filter>
     </ClCompile>
-    <ClCompile Include="core\agg.cpp">
-      <Filter>源文件\core</Filter>
-    </ClCompile>
     <ClCompile Include="control\html\lout\container.cc">
       <Filter>源文件\control\html\lout</Filter>
     </ClCompile>
@@ -563,6 +563,36 @@
     </ClCompile>
     <ClCompile Include="zuidebug.c">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\graph\cario.c">
+      <Filter>源文件\platform\graph</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\graph\gdi.c">
+      <Filter>源文件\platform\graph</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\graph\skia.c">
+      <Filter>源文件\platform\graph</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\graph\agg.cpp">
+      <Filter>源文件\platform\graph</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\graph\agg\agg_font_win32_tt.cpp">
+      <Filter>源文件\platform\graph\AGG</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\graph\agg\src\agg_curves.cpp">
+      <Filter>源文件\platform\graph\AGG\src</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\graph\agg\src\agg_trans_affine.cpp">
+      <Filter>源文件\platform\graph\AGG\src</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\graph\agg\src\agg_vcgen_stroke.cpp">
+      <Filter>源文件\platform\graph\AGG\src</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\os\win.c">
+      <Filter>源文件\platform\os</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\os\linux.c">
+      <Filter>源文件\platform\os</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -704,9 +734,6 @@
     <ClInclude Include="control\Label.h">
       <Filter>头文件\control</Filter>
     </ClInclude>
-    <ClInclude Include="core\graphic.h">
-      <Filter>头文件\core</Filter>
-    </ClInclude>
     <ClInclude Include="control\ScrollBar.h">
       <Filter>头文件\control</Filter>
     </ClInclude>
@@ -829,6 +856,33 @@
     </ClInclude>
     <ClInclude Include="core\debug.h">
       <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\platform.h">
+      <Filter>头文件\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\graph\agg.h">
+      <Filter>头文件\platform\graph</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\graph\cairo.h">
+      <Filter>头文件\platform\graph</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\graph\gdi.h">
+      <Filter>头文件\platform\graph</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\graph\graph.h">
+      <Filter>头文件\platform\graph</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\graph\skia.h">
+      <Filter>头文件\platform\graph</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\os\linux.h">
+      <Filter>头文件\platform\os</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\os\os.h">
+      <Filter>头文件\platform\os</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\os\win.h">
+      <Filter>头文件\platform\os</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,7 @@
 ﻿#include <ZUI.h>
 #include "../resource.h"
 #include "commctrl.h" //高级控件都要加该头文件
-
+#if RUN_DEBUG
 extern MArray *mem;
 extern DArray *m_window_array;
 extern ZuiControl ShowDebugRect;
@@ -371,3 +371,5 @@ ZuiVoid ZuiStartDebug() {
     UpdateWindow(hwnd);
 
 }
+
+#endif

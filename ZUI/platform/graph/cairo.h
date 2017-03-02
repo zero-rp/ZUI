@@ -1,0 +1,14 @@
+﻿#ifndef __ZUI_PLATFORM_GRAPH_CAIRO_H__
+#define __ZUI_PLATFORM_GRAPH_CAIRO_H__
+
+#include <ZUI.h>
+
+#if (defined PLATFORM_GRAPH_CAIRO) && (PLATFORM_GRAPH_CAIRO == 1)
+
+
+
+
+
+
+#endif //PLATFORM_GRAPH_CAIRO
+#endif //__ZUI_PLATFORM_GRAPH_CAIRO_H__

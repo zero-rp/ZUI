@@ -50,6 +50,10 @@ ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
     if (!ZuiGraphInitialize()) {
         return FALSE;
     }
+    /*初始化系统层*/
+    if (!ZuiOsInitialize()) {
+        return FALSE;
+    }
     /*初始化全局变量*/
     if (!ZuiGlobalInit()) {
         return FALSE;
@@ -77,10 +81,12 @@ ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
     if (!ZuiResDBInit()) {
         return FALSE;
     }
+#if RUN_DEBUG
     if (config && config->debug) {
         //启动调试器
         ZuiStartDebug();
     }
+#endif
     return TRUE;
 }
 ZEXPORT ZuiBool ZCALL ZuiUnInit() {
@@ -96,6 +102,8 @@ ZEXPORT ZuiBool ZCALL ZuiUnInit() {
     ZuiResDBUnInit();
     /*反初始化全局变量*/
     ZuiGlobalUnInit();
+    /*反初始化系统层*/
+    ZuiOsUnInitialize();
     /*反初始化图形层*/
     ZuiGraphUnInitialize();
     return TRUE;

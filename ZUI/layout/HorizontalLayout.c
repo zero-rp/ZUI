@@ -3,7 +3,7 @@
 
 
 
-void* CALLBACK ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalLayout p, void* Param1, void* Param2, void* Param3) {
+void* ZCALL ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalLayout p, void* Param1, void* Param2, void* Param3) {
     switch (ProcId)
     {
     case Proc_CoreInit:
@@ -145,11 +145,11 @@ void* CALLBACK ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalL
         if (op->m_pHorizontalScrollBar != NULL) {
             if (cxNeeded > rc.right - rc.left) {
                 if (op->m_pHorizontalScrollBar->m_bVisible) {
-                    ZuiControlCall(Proc_ScrollBar_SetScrollRange, op->m_pHorizontalScrollBar, cxNeeded - (rc.right - rc.left), NULL, NULL);
+                    ZuiControlCall(Proc_ScrollBar_SetScrollRange, op->m_pHorizontalScrollBar, (ZuiAny)(cxNeeded - (rc.right - rc.left)), NULL, NULL);
                 }
                 else {
-                    ZuiControlCall(Proc_SetVisible, op->m_pHorizontalScrollBar, TRUE, NULL, NULL);
-                    ZuiControlCall(Proc_ScrollBar_SetScrollRange, op->m_pHorizontalScrollBar, cxNeeded - (rc.right - rc.left), NULL, NULL);
+                    ZuiControlCall(Proc_SetVisible, op->m_pHorizontalScrollBar, (ZuiAny)TRUE, NULL, NULL);
+                    ZuiControlCall(Proc_ScrollBar_SetScrollRange, op->m_pHorizontalScrollBar, (ZuiAny)(cxNeeded - (rc.right - rc.left)), NULL, NULL);
                     ZuiControlCall(Proc_ScrollBar_SetScrollPos, op->m_pHorizontalScrollBar, 0, NULL, NULL);
                     rc.bottom -= (LONG)ZuiControlCall(Proc_GetFixedHeight, op->m_pHorizontalScrollBar, 0, 0, 0);
                 }
@@ -163,7 +163,7 @@ void* CALLBACK ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalL
                 }
             }
         }
-        ZuiControlCall(Proc_Layout_ProcessScrollBar, cp, &rc, cxNeeded, cyNeeded);
+        ZuiControlCall(Proc_Layout_ProcessScrollBar, cp, (ZuiAny)&rc, (ZuiAny)cxNeeded, (ZuiAny)cyNeeded);
         return 0;
         break;
     }

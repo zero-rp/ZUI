@@ -21,7 +21,7 @@
 #define	DEFAULT_TIMERID					10		//时钟ID
 typedef struct _ZScrollBar
 {
-	BOOL m_bHorizontal; //是否横向
+	ZuiBool m_bHorizontal; //是否横向
 	int m_nRange;
 	int m_nScrollPos;
 	int m_nLineSize;
@@ -31,18 +31,18 @@ typedef struct _ZScrollBar
 	int m_nLastScrollOffset;
 	int m_nScrollRepeatDelay;
 
-	BOOL m_bShowButton1;
+    ZuiBool m_bShowButton1;
 	RECT m_rcButton1;
-	UINT m_uButton1State;
+    ZuiUInt m_uButton1State;
 
 
-	BOOL m_bShowButton2;
+    ZuiBool m_bShowButton2;
 	RECT m_rcButton2;
-	UINT m_uButton2State;
+	ZuiUInt m_uButton2State;
 
 
 	RECT m_rcThumb;
-	UINT m_uThumbState;
+    ZuiUInt m_uThumbState;
 
 	ZCtlProc old_call;
 }*ZuiScrollBar, ZScrollBar;

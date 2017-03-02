@@ -17,7 +17,9 @@
 /**绘制管理器结构*/
 typedef struct _ZuiInitConfig
 {
+#if (defined PLATFORM_OS_WIN)
     HINSTANCE m_hInstance;  //库所在的模块句柄,动态库默认自动为当前模块,静态链接须设置此参数
+#endif
     ZuiBool debug;          //启动调试器
 } *ZuiInitConfig, ZInitConfig;
 

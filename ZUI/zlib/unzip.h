@@ -9,7 +9,7 @@ extern "C" {
 typedef void* unzFile;
 typedef unsigned long  uLong; /* 32 bits or more */
 typedef unsigned int   uInt;  /* 16 bits or more */
-typedef unsigned __int64 ZPOS64_T;
+typedef unsigned long long ZPOS64_T;
 
 typedef struct unz_global_info64_s
 {

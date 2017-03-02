@@ -3,11 +3,11 @@
 
 
 
-void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, void* Param2, void* Param3) {
+void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, void* Param2, void* Param3) {
     switch (ProcId)
     {
     case Proc_CoreInit:
-        return TRUE;
+        return (ZuiAny)TRUE;
         break;
     case Proc_OnCreate: {
         p = (ZuiLayout)ZuiMalloc(sizeof(ZLayout));
@@ -22,7 +22,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
     }
     case Proc_OnDestroy: {
         for (int it = darray_len(p->m_items) - 1; it >= 0; it--) {
-            ZuiControlCall(Proc_OnDestroy, p->m_items->data[it], TRUE, Param2, Param3);
+            ZuiControlCall(Proc_OnDestroy, p->m_items->data[it], (ZuiAny)TRUE, Param2, Param3);
         }
         ZCtlProc old_call = p->old_call;
         if (p->m_pHorizontalScrollBar)
@@ -99,16 +99,16 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
         break;
     }
     case Proc_Layout_GetCount: {
-        return darray_len(p->m_items);
+        return (ZuiAny)darray_len(p->m_items);
         break;
     }
     case Proc_Layout_GetItemIndex: {
         for (int it = 0; it < darray_len(p->m_items); it++) {
             if (p->m_items->data[it] == Param1) {
-                return it;
+                return (ZuiAny)it;
             }
         }
-        return -1;
+        return (ZuiAny)-1;
         break;
     }
     case Proc_Layout_SetItemIndex: {
@@ -116,7 +116,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
             if (p->m_items->data[it] == Param1) {
                 ZuiControlNeedUpdate(cp);
                 darray_delete(p->m_items, it);
-                return darray_insert(p->m_items, Param2, Param1);
+                return (ZuiAny)darray_insert(p->m_items, (int)Param2, Param1);
             }
         }
 
@@ -124,7 +124,7 @@ void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param
         break;
     }
     case Proc_Layout_GetItemAt: {
-        if (Param1 < 0 || Param1 >= darray_len(p->m_items)) return NULL;
+        if (Param1 < 0 || (int)Param1 >= darray_len(p->m_items)) return NULL;
         return p->m_items->data[(LONG)Param1];
         break;
     }

@@ -310,7 +310,7 @@ ZuiBool ZuiBuilderJsPM(js_State *J, ZuiPaintManager p) {
 ZEXPORT ZuiBool ZCALL ZuiBuilderJsLoad(js_State *J, ZuiText str, ZuiInt len) {
     js_dostring(J, str);
 }
-VOID CALLBACK ZuiGcTimerProc(HWND h, UINT u, UINT_PTR p, DWORD d) {
+VOID ZCALL ZuiGcTimerProc(HWND h, UINT u, UINT_PTR p, DWORD d) {
     for (size_t i = 0; i < js_array->count; i++)
     {
         js_gc(js_array->data[i], LOG_DEBUG);

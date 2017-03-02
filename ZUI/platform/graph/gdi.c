@@ -1,5 +1,9 @@
 ﻿#include <ZUI.h>
-#ifndef AGG
+#if (defined PLATFORM_GRAPH_GDI) && (PLATFORM_GRAPH_GDI == 1) && (defined PLATFORM_OS_WIN)
+
+#pragma comment(lib, "Msimg32.lib")  
+#pragma comment(lib, "Gdiplus.lib")
+
 typedef struct
 {
     ZuiInt GdiplusVersion;
@@ -436,6 +440,5 @@ ZEXPORT ZuiVoid ZCALL ZuiDestroyImage(ZuiImage Image) {
     ZuiFree(Image);
 }
 
-
-
 #endif
+

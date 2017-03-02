@@ -104,7 +104,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNodeMenu(mxml_node_t *tree, ZuiControl win
 
 
 
-static LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+static LRESULT ZCALL __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     ZuiMenu pThis = NULL;
     if (uMsg == WM_NCCREATE) {

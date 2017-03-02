@@ -98,7 +98,7 @@ typedef struct _ZuiLayout
     ZCtlProc old_call;
 }*ZuiLayout, ZLayout;
 
-void* CALLBACK ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, void* Param2, void* Param3);
+void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, void* Param2, void* Param3);
 
 
 #endif // __LAYOUT_H__

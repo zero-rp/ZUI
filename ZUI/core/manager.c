@@ -618,19 +618,19 @@ ZEXPORT ZuiControl ZCALL ZuiPaintManagerFindSubControlByPoint(ZuiPaintManager p,
 //-------------------------------------------------------------------------------------------------
 //控件查找函数
 
-ZuiControl CALLBACK __FindControlFromCount(ZuiControl pThis, LPVOID pData)
+ZuiControl ZCALL __FindControlFromCount(ZuiControl pThis, LPVOID pData)
 {
     int* pnCount = (int*)(pData);
     (*pnCount)++;
     return NULL;  // Count all controls
 }
 
-ZuiControl CALLBACK __FindControlFromPoint(ZuiControl pThis, LPVOID pData)
+ZuiControl ZCALL __FindControlFromPoint(ZuiControl pThis, LPVOID pData)
 {
     return ZuiIsPointInRect(ZuiControlCall(Proc_GetPos, pThis, NULL, NULL, NULL), pData) ? pThis : NULL;
 }
 
-ZuiControl CALLBACK __FindControlFromTab(ZuiControl pThis, LPVOID pData)
+ZuiControl ZCALL __FindControlFromTab(ZuiControl pThis, LPVOID pData)
 {
     FINDTABINFO* pInfo = (FINDTABINFO*)(pData);
     if (pInfo->pFocus == pThis) {
@@ -645,7 +645,7 @@ ZuiControl CALLBACK __FindControlFromTab(ZuiControl pThis, LPVOID pData)
     return NULL;  // Examine all controls
 }
 
-ZuiControl CALLBACK __FindControlFromShortcut(ZuiControl pThis, LPVOID pData)
+ZuiControl ZCALL __FindControlFromShortcut(ZuiControl pThis, LPVOID pData)
 {
     FINDSHORTCUT* pFS = (FINDSHORTCUT*)(pData);
     if (!pThis->m_bVisible) return NULL;
@@ -653,7 +653,7 @@ ZuiControl CALLBACK __FindControlFromShortcut(ZuiControl pThis, LPVOID pData)
     return pFS->bPickNext ? pThis : NULL;
 }
 
-ZuiControl CALLBACK __FindControlsFromUpdate(ZuiControl pThis, LPVOID pData)
+ZuiControl ZCALL __FindControlsFromUpdate(ZuiControl pThis, LPVOID pData)
 {
     if (pThis->m_bUpdateNeeded) {
         darray_append(pThis->m_pManager->m_aFoundControls, (LPVOID)pThis);
@@ -662,7 +662,7 @@ ZuiControl CALLBACK __FindControlsFromUpdate(ZuiControl pThis, LPVOID pData)
     return NULL;
 }
 
-ZuiControl CALLBACK __FindControlFromName(ZuiControl pThis, LPVOID pData)
+ZuiControl ZCALL __FindControlFromName(ZuiControl pThis, LPVOID pData)
 {
     wchar_t* pstrName = (wchar_t *)(pData);
     if (!pThis->m_sName) return NULL;

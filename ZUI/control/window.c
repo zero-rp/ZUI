@@ -2,7 +2,7 @@
 
 static rb_root *m_window = NULL;
 DArray *m_window_array = NULL;
-static LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+static LRESULT ZCALL __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     ZuiWindow pThis = NULL;
     if (uMsg == WM_NCCREATE) {

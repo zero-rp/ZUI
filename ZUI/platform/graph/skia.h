@@ -1,0 +1,14 @@
+﻿#ifndef __ZUI_PLATFORM_GRAPH_SKIA_H__
+#define __ZUI_PLATFORM_GRAPH_SKIA_H__
+
+#include <ZUI.h>
+
+#if (defined PLATFORM_GRAPH_SKIA) && (PLATFORM_GRAPH_SKIA == 1)
+
+
+
+
+
+
+#endif //PLATFORM_GRAPH_SKIA
+#endif //__ZUI_PLATFORM_GRAPH_SKIA_H__

@@ -206,12 +206,12 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
 //静态函数
 
 //-------------------------------------------------------------------------------------------------
-ZuiControl CALLBACK __FindControlFromCount(ZuiControl pThis, LPVOID pData);//计算控件数量
-ZuiControl CALLBACK __FindControlFromPoint(ZuiControl pThis, LPVOID pData);//根据点是否在区域中，查询控件
-ZuiControl CALLBACK __FindControlFromTab(ZuiControl pThis, LPVOID pData);//通过Tab信息查询控件
-ZuiControl CALLBACK __FindControlFromShortcut(ZuiControl pThis, LPVOID pData);//从快捷键查询控件
-ZuiControl CALLBACK __FindControlFromName(ZuiControl pThis, LPVOID pData);// 通过名称比较查询控件
-ZuiControl CALLBACK __FindControlsFromUpdate(ZuiControl pThis, LPVOID pData);
+ZuiControl ZCALL __FindControlFromCount(ZuiControl pThis, LPVOID pData);//计算控件数量
+ZuiControl ZCALL __FindControlFromPoint(ZuiControl pThis, LPVOID pData);//根据点是否在区域中，查询控件
+ZuiControl ZCALL __FindControlFromTab(ZuiControl pThis, LPVOID pData);//通过Tab信息查询控件
+ZuiControl ZCALL __FindControlFromShortcut(ZuiControl pThis, LPVOID pData);//从快捷键查询控件
+ZuiControl ZCALL __FindControlFromName(ZuiControl pThis, LPVOID pData);// 通过名称比较查询控件
+ZuiControl ZCALL __FindControlsFromUpdate(ZuiControl pThis, LPVOID pData);
 
 
 

@@ -2,11 +2,11 @@
 
 
 
-void* CALLBACK ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayout p, void* Param1, void* Param2, void* Param3) {
+void* ZCALL ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayout p, void* Param1, void* Param2, void* Param3) {
     switch (ProcId)
     {
     case Proc_CoreInit:
-        return TRUE;
+        return (ZuiAny)TRUE;
     case Proc_OnCreate: {
         p = (ZuiVerticalLayout)ZuiMalloc(sizeof(ZVerticalLayout));
         memset(p, 0, sizeof(ZVerticalLayout));
@@ -138,7 +138,7 @@ void* CALLBACK ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayou
         cxNeeded += (nEstimateNum - 1) * op->m_iChildPadding;
         // Process the scrollbar
 
-        ZuiControlCall(Proc_Layout_ProcessScrollBar, cp, &rc, cxNeeded, cyNeeded);
+        ZuiControlCall(Proc_Layout_ProcessScrollBar, cp, (ZuiAny)&rc, (ZuiAny)cxNeeded, (ZuiAny)cyNeeded);
         return 0;
         break;
     }
