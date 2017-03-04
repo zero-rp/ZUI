@@ -122,7 +122,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
     switch (ProcId)
     {
     case Proc_CoreInit: {
-        HMODULE dll = LoadLibrary(L"miniblink.dll");
+        HMODULE dll = LoadLibrary(L"wke.dll");
         if (!dll)
             return FALSE;
         wkeInitialize = (t_wkeInitialize)GetProcAddress(dll, "wkeInitialize");
@@ -170,9 +170,9 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         wkeFireMouseEvent = (t_wkeFireMouseEvent)GetProcAddress(dll, "wkeFireMouseEvent");
         if (!wkeFireMouseEvent)
             goto LoadLibraryErro;
-        wkeFireWindowsMessage = (t_wkeFireWindowsMessage)GetProcAddress(dll, "wkeFireWindowsMessage");
-        if (!wkeFireWindowsMessage)
-            goto LoadLibraryErro;
+        //wkeFireWindowsMessage = (t_wkeFireWindowsMessage)GetProcAddress(dll, "wkeFireWindowsMessage");
+        //if (!wkeFireWindowsMessage)
+        //    goto LoadLibraryErro;
         wkeGetCaretRect = (t_wkeGetCaretRect)GetProcAddress(dll, "wkeGetCaretRect");
         if (!wkeGetCaretRect)
             goto LoadLibraryErro;
@@ -185,21 +185,21 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         wkeGetViewDC = (t_wkeGetViewDC)GetProcAddress(dll, "wkeGetViewDC");
         if (!wkeGetViewDC)
             goto LoadLibraryErro;
-        wkeSetHandle = (t_wkeSetHandle)GetProcAddress(dll, "wkeSetHandle");
-        if (!wkeSetHandle)
-            goto LoadLibraryErro;
-        wkeSetHandleOffset = (t_wkeSetHandleOffset)GetProcAddress(dll, "wkeSetHandleOffset");
-        if (!wkeSetHandleOffset)
-            goto LoadLibraryErro;
+        //wkeSetHandle = (t_wkeSetHandle)GetProcAddress(dll, "wkeSetHandle");
+        //if (!wkeSetHandle)
+        //    goto LoadLibraryErro;
+        //wkeSetHandleOffset = (t_wkeSetHandleOffset)GetProcAddress(dll, "wkeSetHandleOffset");
+        //if (!wkeSetHandleOffset)
+        //    goto LoadLibraryErro;
         wkeLoadURLW = (t_wkeLoadURLW)GetProcAddress(dll, "wkeLoadURLW");
         if (!wkeLoadURLW)
             goto LoadLibraryErro;
         wkeLoadHTMLW = (t_wkeLoadHTMLW)GetProcAddress(dll, "wkeLoadHTMLW");
         if (!wkeLoadHTMLW)
             goto LoadLibraryErro;
-        wkeOnLoadUrlBegin = (t_wkeOnLoadUrlBegin)GetProcAddress(dll, "wkeOnLoadUrlBegin");
-        if (!wkeOnLoadUrlBegin)
-            goto LoadLibraryErro;
+        //wkeOnLoadUrlBegin = (t_wkeOnLoadUrlBegin)GetProcAddress(dll, "wkeOnLoadUrlBegin");
+        //if (!wkeOnLoadUrlBegin)
+        //    goto LoadLibraryErro;
         wkeOnNavigation = (t_wkeOnNavigation)GetProcAddress(dll, "wkeOnNavigation");
         if (!wkeOnNavigation)
             goto LoadLibraryErro;
@@ -212,9 +212,9 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         wkeLoadFileW = (t_wkeLoadFileW)GetProcAddress(dll, "wkeLoadFileW");
         if (!wkeLoadFileW)
             goto LoadLibraryErro;
-        jsToTempStringW = (t_jsToTempStringW)GetProcAddress(dll, "jsToTempStringW");
-        if (!jsToTempStringW)
-            goto LoadLibraryErro;
+        //jsToTempStringW = (t_jsToTempStringW)GetProcAddress(dll, "jsToTempStringW");
+        //if (!jsToTempStringW)
+        //    goto LoadLibraryErro;
         wkeGlobalExec = (t_wkeGlobalExec)GetProcAddress(dll, "wkeGlobalExec");
         if (!wkeGlobalExec)
             goto LoadLibraryErro;
@@ -258,7 +258,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         switch (event->Type)
         {
         case ZEVENT_TIMER: {
-            //wkeRepaintIfNeeded(p->view);
+            wkeRepaintIfNeeded(p->view);
             break;
         }
         case ZEVENT_SETFOCUS:
@@ -368,7 +368,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
             break;
         }
         case ZEVENT_SETCURSOR:
-            if (wkeFireWindowsMessage(p->view, cp->m_pManager->m_hWndPaint, WM_SETCURSOR, 0, 0, NULL))
+            //if (wkeFireWindowsMessage(p->view, cp->m_pManager->m_hWndPaint, WM_SETCURSOR, 0, 0, NULL))
                 return 0;
             break;
         default:
@@ -390,7 +390,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         break;
     }
     case Proc_SetPos: {
-        wkeSetHandleOffset(p->view, ((RECT*)Param1)->left, ((RECT*)Param1)->top);
+        //wkeSetHandleOffset(p->view, ((RECT*)Param1)->left, ((RECT*)Param1)->top);
         break;
     }
     case Proc_Browser_LoadUrl: {
@@ -457,8 +457,8 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         break;
     }
     case Proc_OnInit: {
-        wkeSetHandle(p->view, cp->m_pManager->m_hWndPaint);
-        //ZuiPaintManagerSetTimer(cp, 1000, 20);
+        //wkeSetHandle(p->view, cp->m_pManager->m_hWndPaint);
+        ZuiPaintManagerSetTimer(cp, 1000, 20);
         break;
     }
     case Proc_GetControlFlags: {

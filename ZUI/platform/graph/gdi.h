@@ -7,11 +7,7 @@
 
 /**图像*/
 typedef struct _ZImage {
-#ifdef AGG
-    struct ZuiAggImage *image;	///图形句柄
-#else
     void *image;	///图形句柄
-#endif
     ZuiInt Width;
     ZuiInt Height;
     ZRect src;	//源矩形
@@ -21,15 +17,9 @@ typedef struct _ZImage {
 typedef struct _ZGraphics {
     ZuiInt Width;
     ZuiInt Height;
-#ifdef AGG
-    struct ZuiAggGraphics *graphics;	///图形句柄
-#else
     void *graphics;	///图形句柄
-#endif
-#ifdef WIN32
     HDC hdc;		///内存场景
     HBITMAP HBitmap;///位图句柄
-#endif
     void* Bits;		///内存指针
 }*ZuiGraphics, ZGraphics;
 
@@ -43,15 +33,11 @@ typedef struct _ZRegion {
 typedef struct _ZStringFormat {
     ZuiColor TextColor;
     ZuiColor ShadowColor;
-#ifdef AGG
-    struct ZuiAggFont *font;	///图形句柄
-#else
     void *font;///字体
     void *StringFormat;///文本格式
     void *FontFamily;///字体族
     void *BrushShadow;
     void *Brush;
-#endif
 }*ZuiStringFormat, ZStringFromat;
 
 #endif //PLATFORM_GRAPH_GDI

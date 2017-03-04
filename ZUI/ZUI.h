@@ -23,9 +23,12 @@ extern "C"
 
 //图形引擎配置
 #define PLATFORM_GRAPH_SKIA 0
-#define PLATFORM_GRAPH_GDI 0
+#define PLATFORM_GRAPH_GDI 1
 #define PLATFORM_GRAPH_CAIRO 0
-#define PLATFORM_GRAPH_AGG 1
+#define PLATFORM_GRAPH_AGG 0
+//图像解码器
+#define PLATFORM_GRAPH_IMAGE_PNG 0
+#define PLATFORM_GRAPH_IMAGE_JPEG 0
 
 //运行平台配置
 #ifdef WIN32
