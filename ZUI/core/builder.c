@@ -177,7 +177,11 @@ static void ZuiJsBind_Call_GetByName(js_State *J) {
         if (p && p->m_pRoot)
         {
             ZuiControl cp = ZuiControlFindName(p->m_pRoot, js_tostring(J, 1));
-            if (cp)
+#if (defined LOG_DEBUG) && (LOG_DEBUG == 1)
+			if (!cp)
+				printf("GetByName失败: Name:%ls\r\n", js_tostring(J, 1));
+#endif
+			if (cp)
             {
                 js_newobject(J);
                 js_getproperty(J, -1, L"prototype");
