@@ -124,7 +124,7 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
         break;
     }
     case Proc_Layout_GetItemAt: {
-        if (Param1 < 0 || (int)Param1 >= darray_len(p->m_items)) return NULL;
+        if ((int)Param1 < 0 || (int)Param1 >= darray_len(p->m_items)) return NULL;
         return p->m_items->data[(LONG)Param1];
         break;
     }
