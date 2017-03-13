@@ -89,3 +89,7 @@ bin/Win32/Debug/ZUI.exe
 *.ipch
 *.opendb
 *.VC.db
+*.iobj
+*.lib
+*.ipdb
+bin/Win32/Debug/wkeStorage
