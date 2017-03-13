@@ -1,4 +1,4 @@
-#include <ZUI.h>
+Ôªø#include <ZUI.h>
 
 static rb_root *m_window = NULL;
 DArray *m_window_array = NULL;
@@ -6,7 +6,6 @@ static LRESULT ZCALL __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 {
     ZuiWindow pThis = NULL;
     if (uMsg == WM_NCCREATE) {
-
         LPCREATESTRUCT lpcs = (LPCREATESTRUCT)(lParam);
         pThis = (ZuiWindow)(lpcs->lpCreateParams);
         pThis->m_hWnd = hWnd;
@@ -104,78 +103,30 @@ static LRESULT ZCALL __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
-    case Proc_CoreInit: {
-        WNDCLASS wc = { 0 };
-        wc.style = 8;
-        wc.cbClsExtra = 0;
-        wc.cbWndExtra = 0;
-        wc.hIcon = NULL;
-        wc.lpfnWndProc = __WndProc;
-        wc.hInstance = GetModuleHandleA(NULL);
-        wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-        wc.hbrBackground = NULL;
-        wc.lpszMenuName = NULL;
-        wc.lpszClassName = L"ZUI";
-        RegisterClass(&wc);
-        m_window = rb_new();
-        m_window_array = darray_create();
-        return TRUE;
+    case Proc_JsHas: {
+        if (wcscmp(Param1, L"SetWindowMin") == 0) return 1;
+        else if (wcscmp(Param1, L"SetWindowMax") == 0) return 1;
+        else if (wcscmp(Param1, L"SetWindowRestor") == 0) return 1;
+        else if (wcscmp(Param1, L"Popup") == 0) return 1;
         break;
     }
-    case Proc_CoreUnInit: {
-        //’‚¿Ôœ˙ªŸµÙÀ˘”–¥∞ø⁄
-        rb_free(m_window);
-        for (size_t i = 0; i < m_window_array->count; i++)
-        {
-            FreeZuiControl(m_window_array->data[i], FALSE);
+    case Proc_JsCall: {
+        if (wcscmp(Param1, L"SetWindowMin") == 0) ZuiControlCall(Proc_Window_SetWindowMin, cp, NULL, NULL, NULL);
+        else if (wcscmp(Param1, L"SetWindowMax") == 0) ZuiControlCall(Proc_Window_SetWindowMax, cp, NULL, NULL, NULL);
+        else if (wcscmp(Param1, L"SetWindowRestor") == 0) ZuiControlCall(Proc_Window_SetWindowRestor, cp, NULL, NULL, NULL);
+        else if (wcscmp(Param1, L"Popup") == 0) {
+            if (js_gettop(Param2) == 3) {
+                ZPoint pt = { js_toint32(Param2,1),js_toint32(Param2,2) };
+                ZuiControlCall(Proc_Window_Popup, cp, &pt, NULL, NULL);
+            }
+            else
+                ZuiControlCall(Proc_Window_Popup, cp, NULL, NULL, NULL);
         }
-        darray_destroy(m_window_array);
-        return NULL;
-        break;
-    }
-    case Proc_OnDestroy: {
-        ZCtlProc old_call = p->old_call;
-        ZuiAny old_udata = p->old_udata;
-
-        p->m_pm->m_pRoot = NULL;
-
-        old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
-
-        DestroyWindow(p->m_hWnd);
-        ZuiFree(p);
-        return;
-        break;
-    }
-    case Proc_OnCreate: {
-        p = (ZuiWindow)ZuiMalloc(sizeof(ZWindow));
-        if (p)
-        {
-            memset(p, 0, sizeof(ZWindow));
-            //±£¥Ê‘≠¿¥µƒªÿµ˜µÿ÷∑,¥¥Ω®≥…π¶∫Ûªÿµ˜µÿ÷∑÷∏œÚµ±«∞∫Ø ˝
-            //¥¥Ω®ºÃ≥–µƒøÿº˛ ±£¥Ê ˝æ›÷∏’Î
-            p->old_udata = ZuiVerticalLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
-            p->old_call = (ZCtlProc)&ZuiVerticalLayoutProc;
-
-            //¥¥Ω®Àﬁ÷˜¥∞ø⁄
-            //¥¥Ω®ªÊ÷∆π‹¿Ì∆˜
-            p->m_pm = NewCPaintManagerUI();
-            p->m_OldWndProc = DefWindowProc;
-            p->root = cp;
-            p->m_hWnd = CreateWindowEx(0, L"ZUI", L"", (Param2 ? WS_CHILDWINDOW : WS_POPUP) | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, Param2, NULL, GetModuleHandleA(NULL), p);
-
-            ZuiPaintManagerInit(p->m_pm, p->m_hWnd);
-            ZuiPaintManagerAttachDialog(p->m_pm, cp);
-            if (!Param1)
-                ShowWindow(p->m_hWnd, SW_SHOW);
-            darray_append(m_window_array, cp);
-            return p;
-        }
-        return NULL;
         break;
     }
     case Proc_SetBorderColor: {
         if (!cp->m_dwBorderColor) {
-            //“‘«∞√ª”–±ﬂøÚ¡À,º”…œ±ﬂæ‡
+            //‰ª•ÂâçÊ≤°ÊúâËæπÊ°Ü‰∫Ü,Âä†‰∏äËæπË∑ù
             ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.left += 1;
             ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.bottom += 1;
             ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.right += 1;
@@ -185,7 +136,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
     }
     case Proc_Layout_SetInset: {
         if (!cp->m_dwBorderColor) {
-            //“‘«∞√ª”–±ﬂøÚ¡À,º”…œ±ﬂæ‡
+            //‰ª•ÂâçÊ≤°ÊúâËæπÊ°Ü‰∫Ü,Âä†‰∏äËæπË∑ù
             ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.left = 1;
             ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.bottom = 1;
             ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.right = 1;
@@ -261,6 +212,16 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         SetWindowLong(p->m_hWnd, GWL_EXSTYLE, dwStyle);
         break;
     }
+    case Proc_Window_Popup: {
+        cp->m_bVisible = TRUE;
+        if (Param1)
+        {
+            SetWindowPos(p->m_hWnd, NULL, ((ZuiPoint)Param1)->x, ((ZuiPoint)Param1)->y, p->m_rect.Width, p->m_rect.Height, SWP_NOZORDER | SWP_NOACTIVATE);
+        }
+        ShowWindow(p->m_hWnd, SW_SHOWNORMAL);
+        SetFocus(p->m_hWnd);
+        break;
+    }
     case Proc_SetAttribute: {
         if (wcscmp(Param1, L"nobox") == 0) ZuiControlCall(Proc_Window_SetNoBox, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
         else if (wcscmp(Param1, L"combo") == 0) ZuiControlCall(Proc_Window_SetComBo, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
@@ -293,29 +254,8 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         }
         else if (wcscmp(Param1, L"name") == 0) {
             if (cp->m_sName)
-                rb_delete(Zui_Hash(cp->m_sName), m_window);//…æ≥˝“‘«∞µƒ√˚◊÷
-            rb_insert(Zui_Hash(Param2), cp, m_window);//±£¥Êœ÷‘⁄µƒ√˚◊÷
-        }
-        break;
-    }
-    case Proc_JsHas: {
-        if (wcscmp(Param1, L"SetWindowMin") == 0) return 1;
-        else if (wcscmp(Param1, L"SetWindowMax") == 0) return 1;
-        else if (wcscmp(Param1, L"SetWindowRestor") == 0) return 1;
-        else if (wcscmp(Param1, L"Popup") == 0) return 1;
-        break;
-    }
-    case Proc_JsCall: {
-        if (wcscmp(Param1, L"SetWindowMin") == 0) ZuiControlCall(Proc_Window_SetWindowMin, cp, NULL, NULL, NULL);
-        else if (wcscmp(Param1, L"SetWindowMax") == 0) ZuiControlCall(Proc_Window_SetWindowMax, cp, NULL, NULL, NULL);
-        else if (wcscmp(Param1, L"SetWindowRestor") == 0) ZuiControlCall(Proc_Window_SetWindowRestor, cp, NULL, NULL, NULL);
-        else if (wcscmp(Param1, L"Popup") == 0) {
-            if (js_gettop(Param2) == 3) {
-                ZPoint pt = { js_toint32(Param2,1),js_toint32(Param2,2) };
-                ZuiControlCall(Proc_Window_Popup, cp, &pt, NULL, NULL);
-            }
-            else
-                ZuiControlCall(Proc_Window_Popup, cp, NULL, NULL, NULL);
+                rb_delete(Zui_Hash(cp->m_sName), m_window);//Âà†Èô§‰ª•ÂâçÁöÑÂêçÂ≠ó
+            rb_insert(Zui_Hash(Param2), cp, m_window);//‰øùÂ≠òÁé∞Âú®ÁöÑÂêçÂ≠ó
         }
         break;
     }
@@ -328,15 +268,73 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
             ShowWindow(p->m_hWnd, SW_HIDE);
         break;
     }
-    case Proc_Window_Popup: {
-        cp->m_bVisible = TRUE;
-        if (Param1)
+    case Proc_GetType: {
+        return Type_Window;
+    }
+    case Proc_OnCreate: {
+        p = (ZuiWindow)ZuiMalloc(sizeof(ZWindow));
+        if (p)
         {
-            SetWindowPos(p->m_hWnd, NULL, ((ZuiPoint)Param1)->x, ((ZuiPoint)Param1)->y, p->m_rect.Width, p->m_rect.Height, SWP_NOZORDER | SWP_NOACTIVATE);
+            memset(p, 0, sizeof(ZWindow));
+            //‰øùÂ≠òÂéüÊù•ÁöÑÂõûË∞ÉÂú∞ÂùÄ,ÂàõÂª∫ÊàêÂäüÂêéÂõûË∞ÉÂú∞ÂùÄÊåáÂêëÂΩìÂâçÂáΩÊï∞
+            //ÂàõÂª∫ÁªßÊâøÁöÑÊéß‰ª∂ ‰øùÂ≠òÊï∞ÊçÆÊåáÈíà
+            p->old_udata = ZuiVerticalLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
+            p->old_call = (ZCtlProc)&ZuiVerticalLayoutProc;
+
+            //ÂàõÂª∫ÂÆø‰∏ªÁ™óÂè£
+            //ÂàõÂª∫ÁªòÂà∂ÁÆ°ÁêÜÂô®
+            p->m_pm = NewCPaintManagerUI();
+            p->m_OldWndProc = DefWindowProc;
+            p->root = cp;
+            p->m_hWnd = CreateWindowEx(0, L"ZUI", L"", (Param2 ? WS_CHILDWINDOW : WS_POPUP) | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, Param2, NULL, GetModuleHandleA(NULL), p);
+
+            ZuiPaintManagerInit(p->m_pm, p->m_hWnd);
+            ZuiPaintManagerAttachDialog(p->m_pm, cp);
+            if (!Param1)
+                ShowWindow(p->m_hWnd, SW_SHOW);
+            darray_append(m_window_array, cp);
+            return p;
         }
-        ShowWindow(p->m_hWnd, SW_SHOWNORMAL);
-        SetFocus(p->m_hWnd);
-        break;
+        return NULL;
+    }
+    case Proc_OnDestroy: {
+        ZCtlProc old_call = p->old_call;
+        ZuiAny old_udata = p->old_udata;
+
+        p->m_pm->m_pRoot = NULL;
+
+        old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+
+        DestroyWindow(p->m_hWnd);
+        ZuiFree(p);
+        return;
+    }
+    case Proc_CoreInit: {
+        WNDCLASS wc = { 0 };
+        wc.style = 8;
+        wc.cbClsExtra = 0;
+        wc.cbWndExtra = 0;
+        wc.hIcon = NULL;
+        wc.lpfnWndProc = __WndProc;
+        wc.hInstance = GetModuleHandleA(NULL);
+        wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+        wc.hbrBackground = NULL;
+        wc.lpszMenuName = NULL;
+        wc.lpszClassName = L"ZUI";
+        RegisterClass(&wc);
+        m_window = rb_new();
+        m_window_array = darray_create();
+        return TRUE;
+    }
+    case Proc_CoreUnInit: {
+        //ËøôÈáåÈîÄÊØÅÊéâÊâÄÊúâÁ™óÂè£
+        rb_free(m_window);
+        for (size_t i = 0; i < m_window_array->count; i++)
+        {
+            FreeZuiControl(m_window_array->data[i], FALSE);
+        }
+        darray_destroy(m_window_array);
+        return NULL;
     }
     default:
         break;
@@ -345,7 +343,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 }
 
 ZEXPORT ZuiControl ZCALL ZuiWindowFindName(ZuiText Name) {
-	rb_node*node;
+    rb_node*node;
     if (!Name)
         return NULL;
     node = rb_search(Zui_Hash(Name), m_window);

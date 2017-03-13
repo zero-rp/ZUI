@@ -1,13 +1,8 @@
 ﻿#include <ZUI.h>
 
-
-
-
 ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
-    case Proc_CoreInit:
-        return TRUE;
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
@@ -164,14 +159,12 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         else if (wcscmp(Param1, L"disabledimage") == 0) ZuiControlCall(Proc_Button_SetResDisabled, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
         break;
     }
-    case Proc_OnInit: {
-
-    }
-                      break;
-    case Proc_CoreUnInit: {
+    case Proc_GetType:
+        return Type_Button;
+    case Proc_CoreInit:
+        return TRUE;
+    case Proc_CoreUnInit:
         return NULL;
-        break;
-    }
     default:
         break;
     }

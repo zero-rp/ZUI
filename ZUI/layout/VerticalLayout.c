@@ -1,33 +1,9 @@
 ﻿#include <ZUI.h>
 
-
-
 void* ZCALL ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayout p, void* Param1, void* Param2, void* Param3) {
     switch (ProcId)
     {
-    case Proc_CoreInit:
-        return (ZuiAny)TRUE;
-    case Proc_OnCreate: {
-        p = (ZuiVerticalLayout)ZuiMalloc(sizeof(ZVerticalLayout));
-        memset(p, 0, sizeof(ZVerticalLayout));
-        //创建继承的控件 保存数据指针
-        p->old_udata = ZuiLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
-        p->old_call = (ZCtlProc)&ZuiLayoutProc;
-
-        return p;
-        break;
-    }
-    case Proc_OnDestroy: {
-        ZCtlProc old_call = p->old_call;
-        ZuiAny old_udata = p->old_udata;
-
-        ZuiFree(p);
-
-        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
-        break;
-    }
     case Proc_SetPos: {
-
         ZuiDefaultControlProc(ProcId, cp, 0, Param1, Param2, Param3);
         RECT rc = cp->m_rcItem;
         ZuiLayout op = (ZuiLayout)p->old_udata;
@@ -140,12 +116,30 @@ void* ZCALL ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayout p
 
         ZuiControlCall(Proc_Layout_ProcessScrollBar, cp, (ZuiAny)&rc, (ZuiAny)cxNeeded, (ZuiAny)cyNeeded);
         return 0;
-        break;
     }
-    case Proc_CoreUnInit: {
+    case Proc_OnCreate: {
+        p = (ZuiVerticalLayout)ZuiMalloc(sizeof(ZVerticalLayout));
+        memset(p, 0, sizeof(ZVerticalLayout));
+        //创建继承的控件 保存数据指针
+        p->old_udata = ZuiLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
+        p->old_call = (ZCtlProc)&ZuiLayoutProc;
+
+        return p;
+    }
+    case Proc_OnDestroy: {
+        ZCtlProc old_call = p->old_call;
+        ZuiAny old_udata = p->old_udata;
+
+        ZuiFree(p);
+
+        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+    }
+    case Proc_GetType:
+        return (ZuiAny)Type_VerticalLayout;
+    case Proc_CoreInit:
+        return (ZuiAny)TRUE;
+    case Proc_CoreUnInit:
         return NULL;
-        break;
-    }
     default:
         break;
     }

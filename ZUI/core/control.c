@@ -80,16 +80,8 @@ void FreeZuiControl(ZuiControl p, ZuiBool Delayed)
 
 //控件默认处理函数
 ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
-
     switch (ProcId)
     {
-    case Proc_CoreInit: {
-        return TRUE;
-        break;
-    }
-    case Proc_GetControlFlags: {
-        return 0;
-    }
     case Proc_Activate: {
         if (!p->m_bVisible) return FALSE;
         if (!p->m_bEnabled) return FALSE;
@@ -690,6 +682,15 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             //FreeZuiControl(p);
         }
         break;
+    }
+    case Proc_GetType: {
+        return Type_Null;
+    }
+    case Proc_CoreInit: {
+        return TRUE;
+    }
+    case Proc_GetControlFlags: {
+        return 0;
     }
     default:
         break;

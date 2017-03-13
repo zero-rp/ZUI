@@ -1,9 +1,9 @@
 ﻿/**
-* @file		HorizontalLayout.h
-* @brief	横向布局容器.
-* @author	[Zero](22249030)
-* @version	1.0
-* @date		$date
+* @file     HorizontalLayout.h
+* @brief    横向布局容器.
+* @author   [Zero](22249030)
+* @version  1.0
+* @date     $date
 * @par History:
 *
 * [2016-10-25] <Zero> v1.0
@@ -13,12 +13,12 @@
 */
 #ifndef __HORIZONTALLAYOUT_H__
 #define __HORIZONTALLAYOUT_H__
-
+#define Type_HorizontalLayout       0xf20a2d07
 /**横向布局结构*/
 typedef struct _ZuiHorizontalLayout
 {
-	ZCtlProc old_call;
-	void *old_udata;
+    ZCtlProc old_call;
+    void *old_udata;
 }*ZuiHorizontalLayout, ZHorizontalLayout;
 
 void* ZCALL ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalLayout p, void* Param1, void* Param2, void* Param3);

@@ -25,79 +25,82 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #undef  MODULE
 #define MODULE  Control
 
-#define ZTYLE_BOX				1	//单线边框
-#define ZTYLE_BKGColor			2	//具有背景色
-//-----控件事件
-#define	Proc_CoreInit			1	//用于控件内核初始化
-#define	Proc_CoreUnInit			2	//用于控件内核反初始化
-#define	Proc_OnCreate			3	//内核创建
-#define	Proc_OnInit				4	//用户初始化
-#define	Proc_OnDestroy			5	//销毁
-#define	Proc_OnSize				6	//
-#define	Proc_OnEvent			7	//
-#define	Proc_OnNotify			8	//
-#define	Proc_OnPaint			9	// 绘制循序：背景颜色->背景图->状态图->文本->边框
-#define	Proc_OnPaintBkColor		10	//背景色
-#define	Proc_OnPaintBkImage		11	//背景图片
-#define	Proc_OnPaintStatusImage	12	//状态图片
-#define	Proc_OnPaintText		13	//文本
-#define	Proc_OnPaintBorder		14	//边框
-#define	Proc_OnPostPaint		15	//
+#define Type_Null               0xc6268d0b
 
-#define	Proc_FindControl		16	//查找控件
-#define	Proc_JsCall				17	//函数调用
-#define	Proc_JsPut				18	//
-#define	Proc_JsHas				19	//处理js对象 返回0则是变量,返回1则是call
+#define ZTYLE_BOX               1   //单线边框
+#define ZTYLE_BKGColor          2   //具有背景色
+//-----控件事件
+#define Proc_CoreInit           1   //用于控件内核初始化
+#define Proc_CoreUnInit         2   //用于控件内核反初始化
+#define Proc_GetType            3   //取控件类型
+#define Proc_OnCreate           4   //内核创建
+#define Proc_OnInit             5   //用户初始化
+#define Proc_OnDestroy          6   //销毁
+#define Proc_OnSize             7   //
+#define Proc_OnEvent            8   //
+#define Proc_OnNotify           9   //
+#define Proc_OnPaint            10  // 绘制循序：背景颜色->背景图->状态图->文本->边框
+#define Proc_OnPaintBkColor     11  //背景色
+#define Proc_OnPaintBkImage     12  //背景图片
+#define Proc_OnPaintStatusImage 13  //状态图片
+#define Proc_OnPaintText        14  //文本
+#define Proc_OnPaintBorder      15  //边框
+#define Proc_OnPostPaint        16  //
+
+#define Proc_FindControl        17  //查找控件
+#define Proc_JsCall             18  //函数调用
+#define Proc_JsPut              19  //
+#define Proc_JsHas              20  //处理js对象 返回0则是变量,返回1则是call
 
 //----控件属性
-#define	Proc_SetAttribute		20	//解析属性
-#define	Proc_GetAttribute		21	//取属性
-#define	Proc_GetControlFlags	22	//
-#define	Proc_Activate			23	//活动
-#define	Proc_SetVisible			24	//设置是否可视
-#define	Proc_SetText			25	//设置文本
-#define	Proc_GetText			26	//设置文本
-#define	Proc_SetName			27	//设置名字
-#define	Proc_SetTooltip			28	//设置提示文本
-#define	Proc_GetPos				29	//得到控件位置
-#define	Proc_SetPos				30	//设置控件位置并重绘
-#define	Proc_SetManager			31	//设置控件的绘制管理者
+#define Proc_SetAttribute       21  //解析属性
+#define Proc_GetAttribute       22  //取属性
+#define Proc_GetControlFlags    23  //
+#define Proc_Activate           24  //活动
+#define Proc_SetVisible         25  //设置是否可视
+#define Proc_SetText            26  //设置文本
+#define Proc_GetText            27  //设置文本
+#define Proc_SetName            28  //设置名字
+#define Proc_SetTooltip         29  //设置提示文本
+#define Proc_GetPos             30  //得到控件位置
+#define Proc_SetPos             31  //设置控件位置并重绘
+#define Proc_SetManager         32  //设置控件的绘制管理者
 //设置大小的限制值
-#define	Proc_GetMinWidth		32	//
-#define	Proc_SetMinWidth		33	//
-#define	Proc_GetMaxWidth		34	//
-#define	Proc_SetMaxWidth		35	//
-#define	Proc_GetMinHeight		36	//
-#define	Proc_SetMinHeight		37	//
-#define	Proc_GetMaxHeight		38	//
-#define	Proc_SetMaxHeight		39	//
-#define	Proc_GetWidth			40	//
-#define	Proc_GetHeight			41	//
-#define	Proc_GetX				42	//
-#define	Proc_GetY				43
-#define	Proc_EstimateSize		44	//获取自适应大小
-#define	Proc_SetFloatPercent	45	//
-#define	Proc_GetPadding			46
-#define	Proc_SetPadding			47	// 设置外边距，由上层窗口绘制
-#define	Proc_GetFixedXY			48	// 实际大小位置使用GetPos获取，这里得到的是预设的参考值
-#define	Proc_SetFixedXY         49	// 仅float为true时有效
-#define	Proc_GetFixedWidth		50	// 实际大小位置使用GetPos获取，这里得到的是预设的参考值
-#define	Proc_SetFixedWidth		51	// 预设的参考值
-#define	Proc_GetFixedHeight		52	// 实际大小位置使用GetPos获取，这里得到的是预设的参考值
-#define	Proc_SetFixedHeight		53	// 预设的参考值
-#define	Proc_GetRelativePos		54	// 相对(父控件)位置
-#define Proc_GetImePoint		55	// 获取输入法位置
-#define	Proc_SetFloat			56	//设置为浮动控件
-#define	Proc_SetEnabled			57	//设置可用状态
-#define	Proc_SetFocus			58	//设置焦点
-#define	Proc_SetDrag			59	//设置拖拽控件
+#define Proc_GetMinWidth        33  //
+#define Proc_SetMinWidth        34  //
+#define Proc_GetMaxWidth        35  //
+#define Proc_SetMaxWidth        36  //
+#define Proc_GetMinHeight       37  //
+#define Proc_SetMinHeight       38  //
+#define Proc_GetMaxHeight       39  //
+#define Proc_SetMaxHeight       40  //
+#define Proc_GetWidth           41  //
+#define Proc_GetHeight          42  //
+#define Proc_GetX               43  //
+#define Proc_GetY               44
+#define Proc_EstimateSize       45  //获取自适应大小
+#define Proc_SetFloatPercent    46  //
+#define Proc_GetPadding         47
+#define Proc_SetPadding         48  // 设置外边距，由上层窗口绘制
+#define Proc_GetFixedXY         49  // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
+#define Proc_SetFixedXY         50  // 仅float为true时有效
+#define Proc_GetFixedWidth      51  // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
+#define Proc_SetFixedWidth      52  // 预设的参考值
+#define Proc_GetFixedHeight     53  // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
+#define Proc_SetFixedHeight     54  // 预设的参考值
+#define Proc_GetRelativePos     55  // 相对(父控件)位置
+#define Proc_GetImePoint        56  // 获取输入法位置
+#define Proc_SetFloat           57  //设置为浮动控件
+#define Proc_SetEnabled         58  //设置可用状态
+#define Proc_SetFocus           59  //设置焦点
+#define Proc_SetDrag            60  //设置拖拽控件
 
 //-------绘图资源
-#define	Proc_SetBkColor			60	//设置背景色
-#define	Proc_SetBkImage			61	//设置背景图片
-#define	Proc_SetBorderColor		62	//设置边框颜色
+#define Proc_SetBkColor         61  //设置背景色
+#define Proc_SetBkImage         62  //设置背景图片
+#define Proc_SetBorderColor     63  //设置边框颜色
 
-#define Proc_SetAnimationType   63  //设置动画类型
+#define Proc_SetAnimationType   64  //设置动画类型
 
 //-------控件状态
 #define ZSTATE_FOCUSED      0x00000001
@@ -109,6 +112,7 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define ZSTATE_CAPTURED     0x00000040
 
 //------宏封装
+#define ZuiControlGetType(Control) ZProc(Control, GetType, NULL, NULL , NULL);
 #define ZuiControlCoreInit(Control, ...) ZProc(Control, CoreInit, __VA_ARGS__);
 #define ZuiControlOnCreate(Control, ...) ZProc(Control, OnCreate, __VA_ARGS__);
 #define ZuiControlOnInit(Control, ...) ZProc(Control, OnInit, __VA_ARGS__);
@@ -188,42 +192,42 @@ typedef struct _ZControl
     //通知接口地址
     ZNotifyProc m_pNotify;
 
-    ZuiPaintManager m_pManager;		//关联的管理器
-    struct _ZControl* m_pParent;	//父控件
-    ZuiBool m_bUpdateNeeded;		//是否需要更新布局
-    RECT m_rcItem;					//控件矩形
-    RECT m_rcPadding;				//控件
-    SIZE m_cXY;						//预设的左上角坐标
-    SIZE m_cxyFixed;				//预设的控件大小
-    SIZE m_cxyMin;					//控件最小大小
-    SIZE m_cxyMax;					//控件最大大小
-    ZuiBool m_bVisible;				//可视
-    ZuiBool m_bEnabled;				//激活
-    ZuiBool m_bMouseEnabled;		//鼠标激活
-    ZuiBool m_bKeyboardEnabled;		//键盘激活
-    ZuiBool m_bFocused;				//焦点
-    ZuiBool m_bFloat;				//浮动控件
+    ZuiPaintManager m_pManager;     //关联的管理器
+    struct _ZControl* m_pParent;    //父控件
+    ZuiBool m_bUpdateNeeded;        //是否需要更新布局
+    RECT m_rcItem;                  //控件矩形
+    RECT m_rcPadding;               //控件
+    SIZE m_cXY;                     //预设的左上角坐标
+    SIZE m_cxyFixed;                //预设的控件大小
+    SIZE m_cxyMin;                  //控件最小大小
+    SIZE m_cxyMax;                  //控件最大大小
+    ZuiBool m_bVisible;             //可视
+    ZuiBool m_bEnabled;             //激活
+    ZuiBool m_bMouseEnabled;        //鼠标激活
+    ZuiBool m_bKeyboardEnabled;     //键盘激活
+    ZuiBool m_bFocused;             //焦点
+    ZuiBool m_bFloat;               //浮动控件
     TPercentInfo m_piFloatPercent;
-    ZuiBool m_bSetPos;				// 防止SetPos循环调用
-    ZuiBool m_drag;					//用于窗口拖拽
-    ZuiText m_sText;				//
-    ZuiText m_sName;				//控件名 主要用于查找xml对象
-    ZuiText m_sToolTip;				//提示文本
-    _ZuiText m_chShortcut;			//快捷键
-    void *m_sUserData;				//
+    ZuiBool m_bSetPos;              // 防止SetPos循环调用
+    ZuiBool m_drag;                 //用于窗口拖拽
+    ZuiText m_sText;                //
+    ZuiText m_sName;                //控件名 主要用于查找xml对象
+    ZuiText m_sToolTip;             //提示文本
+    _ZuiText m_chShortcut;          //快捷键
+    void *m_sUserData;              //
 
-    rb_root *m_rAttribute;			//属性map
+    rb_root *m_rAttribute;          //属性map
 
     //控件默认样式-------------------
-    ZuiInt m_tyle;					//控件风格
-    ZuiColor m_BkgColor;			//背景颜色
-    ZuiRes m_BkgImg;				//背景图片
-    ZuiColor m_dwBorderColor;		//边框颜色
+    ZuiInt m_tyle;                  //控件风格
+    ZuiColor m_BkgColor;            //背景颜色
+    ZuiRes m_BkgImg;                //背景图片
+    ZuiColor m_dwBorderColor;       //边框颜色
     //控件默认样式-------------------
 
     ZuiAnimation m_aAnime;          //控件动画
 
-    int m_nTooltipWidth;			//多行ToolTip单行最长宽度
+    int m_nTooltipWidth;            //多行ToolTip单行最长宽度
 #if RUN_DEBUG
     ZuiText m_sClassName;           //控件类名
     ZuiAny  m_aTreeHwndl;           //在调试器中的树控件句柄
@@ -251,11 +255,11 @@ ZEXPORT ZuiVoid ZCALL ZuiScreenToClient(ZuiControl p, ZuiPoint pt);
 
 ZEXPORT ZuiControl ZCALL ZuiControlFindName(ZuiControl p, ZuiText Name);
 
-ZEXPORT ZuiVoid ZCALL ZuiControlInvalidate(ZuiControl p, ZuiBool ResetAnimation);				//刷新显示
-ZEXPORT ZuiVoid ZCALL ZuiControlNeedUpdate(ZuiControl p);				//更新布局
-ZEXPORT ZuiVoid ZCALL ZuiControlNeedParentUpdate(ZuiControl p);			//更新父控件布局
-ZEXPORT ZuiVoid ZCALL ZuiControlEvent(ZuiControl p, TEventUI *event);	//发送事件
-ZEXPORT ZuiVoid ZCALL ZuiControlMove(ZuiControl p, SIZE szOffset, BOOL bNeedInvalidate); //移动位置
+ZEXPORT ZuiVoid ZCALL ZuiControlInvalidate(ZuiControl p, ZuiBool ResetAnimation);           //刷新显示
+ZEXPORT ZuiVoid ZCALL ZuiControlNeedUpdate(ZuiControl p);                                   //更新布局
+ZEXPORT ZuiVoid ZCALL ZuiControlNeedParentUpdate(ZuiControl p);                             //更新父控件布局
+ZEXPORT ZuiVoid ZCALL ZuiControlEvent(ZuiControl p, TEventUI *event);                       //发送事件
+ZEXPORT ZuiVoid ZCALL ZuiControlMove(ZuiControl p, SIZE szOffset, BOOL bNeedInvalidate);    //移动位置
 
 
 #endif // __CONTROL_H__

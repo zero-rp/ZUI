@@ -1,9 +1,9 @@
 ﻿/**
-* @file		TabLayout.h
-* @brief	选择夹布局类.
-* @author	[Zero](22249030)
-* @version	1.0
-* @date		$date
+* @file     TabLayout.h
+* @brief    选择夹布局类.
+* @author   [Zero](22249030)
+* @version  1.0
+* @date     $date
 * @par History:
 *
 * [2016-10-25] <Zero> v1.0
@@ -13,17 +13,17 @@
 */
 #ifndef __TABLAYOUT_H__
 #define __TABLAYOUT_H__
+#define Type_TabLayout              0x61b7311c
 
-
-#define	Proc_Layout_Tab_SelectItem			1001	//当前Tab
+#define Proc_TabLayout_SelectItem  1001    //当前Tab
 
 
 /**选择夹布局结构*/
 typedef struct _ZuiTabLayout
 {
-	int m_iCurSel;
-	ZCtlProc old_call;
-	void *old_udata;
+    ZuiInt m_iCurSel;
+    ZCtlProc old_call;
+    ZuiAny old_udata;
 }*ZuiTabLayout, ZTabLayout;
 
 void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Param1, void* Param2, void* Param3);
