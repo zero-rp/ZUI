@@ -33,6 +33,8 @@ extern "C"
 //运行平台配置
 #ifdef WIN32
 #define PLATFORM_OS_WIN
+#elif defined _WIN64
+#define PLATFORM_OS_WIN
 #elif defined LINUX
 #define PLATFORM_OS_LINUX
 #elif defined MACX
@@ -120,6 +122,7 @@ typedef wchar_t*	ZuiText, _ZuiText;	//内核默认Unicode存储字符
 typedef float		ZuiReal;
 #ifdef _WIN64
 typedef int64_t		ZuiInt;
+typedef uint64_t    ZuiUInt;
 #else
 typedef int			ZuiInt;
 typedef unsigned int			ZuiUInt;
@@ -127,7 +130,7 @@ typedef unsigned int			ZuiUInt;
 typedef int			ZuiBool;
 typedef void		ZuiVoid;
 typedef void*		ZuiAny;
-typedef DWORD		ZuiColor;
+typedef int32_t		ZuiColor;
 typedef unsigned	ZuiByte;
 /**矩形*/
 typedef struct _ZRect
@@ -175,7 +178,7 @@ typedef struct _ZPointR
 	r->Width = W;\
 	r->Height = H;
 
-#ifndef WIN32
+#ifdef LINUX 
 typedef long LONG;
 typedef struct tagRECT
 {
