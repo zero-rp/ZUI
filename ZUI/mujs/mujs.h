@@ -116,7 +116,7 @@ void js_unref(js_State *J, const wchar_t *ref);
 
 void js_getregistry(js_State *J, const wchar_t *name);
 void js_setregistry(js_State *J, const wchar_t *name);
-void js_delregistry(js_State *J, const char *name);
+void js_delregistry(js_State *J, const wchar_t *name);
 
 void js_getglobal(js_State *J, const wchar_t *name);
 void js_setglobal(js_State *J, const wchar_t *name);

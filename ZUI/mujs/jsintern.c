@@ -69,7 +69,7 @@ static void dumpstringnode(js_StringNode *node, int level)
 	printf("%d: ", node->level);
 	for (i = 0; i < level; ++i)
 		putchar('\t');
-	printf("'%s'\n", node->string);
+	printf("'%ls'\n", node->string);
 	if (node->right != &jsS_sentinel)
 		dumpstringnode(node->right, level + 1);
 }

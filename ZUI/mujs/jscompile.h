@@ -134,13 +134,13 @@ struct js_Function
 	double *numtab;
 	int numcap, numlen;
 
-	const wchar_t **strtab;
+	wchar_t **strtab;
 	int strcap, strlen;
 
-	const wchar_t **vartab;
+	wchar_t **vartab;
 	int varcap, varlen;
 
-	const wchar_t *filename;
+	wchar_t *filename;
 	int line, lastline;
 
 	js_Function *gcnext;

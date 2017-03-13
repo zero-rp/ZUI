@@ -9,7 +9,6 @@
 #include <Imm.h>
 #include <Mmsystem.h>
 #include <tchar.h>
-#include <ImageHlp.h>
 
 typedef struct _ZOsWindow
 {
