@@ -93,3 +93,4 @@ bin/Win32/Debug/ZUI.exe
 *.lib
 *.ipdb
 bin/Win32/Debug/wkeStorage
+*.user
