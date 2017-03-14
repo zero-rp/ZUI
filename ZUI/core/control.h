@@ -1,9 +1,9 @@
 ﻿/**
-* @file		control.h
-* @brief	控件基类.
-* @author	[Zero](22249030)
-* @version	1.0
-* @date		$date
+* @file     control.h
+* @brief    控件基类.
+* @author   [Zero](22249030)
+* @version  1.0
+* @date     $date
 * @par History:
 *
 * [2016-10-25] <Zero> v1.0
@@ -33,6 +33,7 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define Proc_CoreInit           1   //用于控件内核初始化
 #define Proc_CoreUnInit         2   //用于控件内核反初始化
 #define Proc_GetType            3   //取控件类型
+#define Proc_GetObject          65  //获取控件被继承后某一类型的对象
 #define Proc_OnCreate           4   //内核创建
 #define Proc_OnInit             5   //用户初始化
 #define Proc_OnDestroy          6   //销毁

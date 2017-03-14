@@ -49,6 +49,10 @@ ZEXPORT ZuiAny ZCALL ZuiVirtualProc(ZuiInt ProcId, ZuiControl cp, ZuiVirtual p, 
 
         return old_call(ProcId, cp, 0, Param1, Param2, Param3);
     }
+    case Proc_GetObject:
+        if (Param1 == Type_Virtual)
+            return (ZuiAny)p;
+        break;
     case Proc_GetType:
         return (ZuiAny)Type_Virtual;
     case Proc_CoreInit:

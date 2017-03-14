@@ -242,6 +242,10 @@ ZEXPORT ZuiAny ZCALL ZuiMenuProc(ZuiInt ProcId, ZuiControl cp, ZuiMenu p, ZuiAny
             ShowWindow(p->m_hWnd, SW_SHOWNOACTIVATE);
         return p;
     }
+    case Proc_GetObject:
+        if (Param1 == Type_Menu)
+            return (ZuiAny)p;
+        break;
     case Proc_GetType:
         return (ZuiAny)Type_Menu;
     case Proc_CoreInit: {
@@ -363,6 +367,10 @@ ZEXPORT ZuiAny ZCALL ZuiMenuItemProc(ZuiInt ProcId, ZuiControl cp, ZuiMenuItem p
 
         return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
     }
+    case Proc_GetObject:
+        if (Param1 == Type_MenuItem)
+            return (ZuiAny)p;
+        break;
     case Proc_GetType:
         return (ZuiAny)Type_MenuItem;
     case Proc_CoreInit:

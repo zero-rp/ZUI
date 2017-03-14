@@ -683,6 +683,10 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         }
         break;
     }
+    case Proc_GetObject:
+        if (Param1 == Type_Null)
+            return p;
+        break;
     case Proc_GetType: {
         return Type_Null;
     }

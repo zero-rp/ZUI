@@ -359,6 +359,10 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         wkeDestroyWebView(p->view);
         break;
     }
+    case Proc_GetObject:
+        if (Param1 == Type_Browser)
+            return (ZuiAny)p;
+        break;
     case Proc_GetType:
         return (ZuiAny)Type_Browser;
     case Proc_CoreInit: {

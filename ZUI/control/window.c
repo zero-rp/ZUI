@@ -268,6 +268,10 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
             ShowWindow(p->m_hWnd, SW_HIDE);
         break;
     }
+    case Proc_GetObject:
+        if (Param1 == Type_Window)
+            return (ZuiAny)p;
+        break;
     case Proc_GetType: {
         return Type_Window;
     }

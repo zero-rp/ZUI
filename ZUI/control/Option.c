@@ -141,6 +141,10 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
 
         return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
     }
+    case Proc_GetObject:
+        if (Param1 == Type_Option)
+            return (ZuiAny)p;
+        break;
     case Proc_GetType:
         return (ZuiAny)Type_Option;
     case Proc_CoreInit:
