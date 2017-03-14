@@ -413,120 +413,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="zlib\crc32.h">
-      <Filter>头文件\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="zlib\inffast.h">
-      <Filter>头文件\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="zlib\inffixed.h">
-      <Filter>头文件\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="zlib\inflate.h">
-      <Filter>头文件\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="zlib\inftrees.h">
-      <Filter>头文件\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="zlib\zconf.h">
-      <Filter>头文件\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="zlib\zlib.h">
-      <Filter>头文件\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="zlib\zutil.h">
-      <Filter>头文件\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="core\carray.h">
-      <Filter>头文件\core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\function.h">
-      <Filter>头文件\core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\mxml.h">
-      <Filter>头文件\core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\manager.h">
-      <Filter>头文件\core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\tree.h">
-      <Filter>头文件\core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\control.h">
-      <Filter>头文件\core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\global.h">
-      <Filter>头文件\core</Filter>
-    </ClInclude>
-    <ClInclude Include="layout\Layout.h">
-      <Filter>头文件\layout</Filter>
-    </ClInclude>
-    <ClInclude Include="layout\HorizontalLayout.h">
-      <Filter>头文件\layout</Filter>
-    </ClInclude>
-    <ClInclude Include="layout\TabLayout.h">
-      <Filter>头文件\layout</Filter>
-    </ClInclude>
-    <ClInclude Include="layout\TileLayout.h">
-      <Filter>头文件\layout</Filter>
-    </ClInclude>
-    <ClInclude Include="layout\VerticalLayout.h">
-      <Filter>头文件\layout</Filter>
-    </ClInclude>
-    <ClInclude Include="core\builder.h">
-      <Filter>头文件\core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\string.h">
-      <Filter>头文件\core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\resdb.h">
-      <Filter>头文件\core</Filter>
-    </ClInclude>
-    <ClInclude Include="zlib\unzip.h">
-      <Filter>头文件\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="core\template.h">
-      <Filter>头文件\core</Filter>
-    </ClInclude>
-    <ClInclude Include="mujs\astnames.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="mujs\jsbuiltin.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="mujs\jscompile.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="mujs\jsi.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="mujs\jslex.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="mujs\jsparse.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="mujs\jsrun.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="mujs\jsvalue.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="mujs\mujs.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="mujs\opnames.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="mujs\regexp.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="mujs\utf.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="core\animation.h">
-      <Filter>头文件\core</Filter>
-    </ClInclude>
     <ClInclude Include="control\html\lout\container.hh">
       <Filter>头文件\control\html\lout</Filter>
     </ClInclude>
@@ -620,39 +506,6 @@
     <ClInclude Include="control\html\dw\zuiviewbase.hh">
       <Filter>源文件\control\html\dw</Filter>
     </ClInclude>
-    <ClInclude Include="core\memory.h">
-      <Filter>头文件\core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\debug.h">
-      <Filter>头文件\core</Filter>
-    </ClInclude>
-    <ClInclude Include="platform\platform.h">
-      <Filter>头文件\platform</Filter>
-    </ClInclude>
-    <ClInclude Include="platform\graph\agg.h">
-      <Filter>头文件\platform\graph</Filter>
-    </ClInclude>
-    <ClInclude Include="platform\graph\cairo.h">
-      <Filter>头文件\platform\graph</Filter>
-    </ClInclude>
-    <ClInclude Include="platform\graph\gdi.h">
-      <Filter>头文件\platform\graph</Filter>
-    </ClInclude>
-    <ClInclude Include="platform\graph\graph.h">
-      <Filter>头文件\platform\graph</Filter>
-    </ClInclude>
-    <ClInclude Include="platform\graph\skia.h">
-      <Filter>头文件\platform\graph</Filter>
-    </ClInclude>
-    <ClInclude Include="platform\os\linux.h">
-      <Filter>头文件\platform\os</Filter>
-    </ClInclude>
-    <ClInclude Include="platform\os\os.h">
-      <Filter>头文件\platform\os</Filter>
-    </ClInclude>
-    <ClInclude Include="platform\os\win.h">
-      <Filter>头文件\platform\os</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ZUI\control\Window.h">
       <Filter>头文件\control</Filter>
     </ClInclude>
@@ -701,6 +554,159 @@
     <ClInclude Include="..\..\ZUI\resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ZUI\layout\HorizontalLayout.h">
+      <Filter>头文件\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\layout\Layout.h">
+      <Filter>头文件\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\layout\TabLayout.h">
+      <Filter>头文件\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\layout\TileLayout.h">
+      <Filter>头文件\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\layout\VerticalLayout.h">
+      <Filter>头文件\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\mujs\astnames.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\mujs\jsbuiltin.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\mujs\jscompile.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\mujs\jsi.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\mujs\jslex.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\mujs\jsparse.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\mujs\jsrun.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\mujs\jsvalue.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\mujs\mujs.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\mujs\opnames.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\mujs\regexp.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\mujs\utf.h">
+      <Filter>头文件\mujs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\animation.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\builder.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\carray.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\control.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\debug.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\function.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\global.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\manager.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\memory.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\mxml.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\resdb.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\string.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\template.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\tree.h">
+      <Filter>头文件\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\platform.h">
+      <Filter>头文件\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\os\linux.h">
+      <Filter>头文件\platform\os</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\os\os.h">
+      <Filter>头文件\platform\os</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\os\win.h">
+      <Filter>头文件\platform\os</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\skia.h">
+      <Filter>头文件\platform\graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\graph.h">
+      <Filter>头文件\platform\graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\gdi.h">
+      <Filter>头文件\platform\graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\cairo.h">
+      <Filter>头文件\platform\graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg.h">
+      <Filter>头文件\platform\graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\zlib\crc32.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\zlib\deflate.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\zlib\inffast.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\zlib\inffixed.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\zlib\inflate.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\zlib\inftrees.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\zlib\trees.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\zlib\unzip.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\zlib\zconf.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\zlib\zlib.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\zlib\zutil.h">
+      <Filter>头文件\zlib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\ZUI\res\onload.js">
@@ -709,7 +715,6 @@
     <None Include="..\..\ZUI\res\res.zip">
       <Filter>res</Filter>
     </None>
-    <None Include="..\..\ZUI\res\default.zip" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\ZUI\Zui.rc">
