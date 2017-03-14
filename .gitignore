@@ -94,3 +94,6 @@ bin/Win32/Debug/ZUI.exe
 *.ipdb
 bin/Win32/Debug/wkeStorage
 *.user
+Designer/res.zip
+ZUI/res/default.zip
+bin/

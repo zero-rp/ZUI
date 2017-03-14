@@ -1,0 +1,581 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{BF43C9AE-4CD0-4032-AB8C-9D956E272D52}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>ZUI</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120_xp</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)..\bin\VS2013\$(Platform)\$(Configuration)</OutDir>
+    <IntDir>$(SolutionDir)..\build\VS2013\$(Platform)\$(Configuration)\$(ProjectName)</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)..\bin\VS2013\Win64\$(Configuration)</OutDir>
+    <IntDir>$(SolutionDir)..\build\VS2013\Win64\$(Configuration)\$(ProjectName)</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)..\bin\VS2013\$(Platform)\$(Configuration)</OutDir>
+    <IntDir>$(SolutionDir)..\build\VS2013\$(Platform)\$(Configuration)\$(ProjectName)</IntDir>
+    <IncludePath>$(SolutionDir)..\vc6rt\vc6include\crt;$(SolutionDir)..\vc6rt\vc6include\wnet</IncludePath>
+    <LibraryPath>$(SolutionDir)..\vc6rt\vc6lib</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)..\bin\VS2013\Win64\$(Configuration)</OutDir>
+    <IntDir>$(SolutionDir)..\build\VS2013\Win64\$(Configuration)\$(ProjectName)</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\platform\graph\agg\include;</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4091</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ModuleDefinitionFile>../../ZUI/Zui.def</ModuleDefinitionFile>
+      <AdditionalDependencies>imm32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PreBuildEvent>
+      <Command>DEL $(SolutionDir)..\$(ProjectName)\res\default.zip
+cd $(SolutionDir)..\$(ProjectName)\res 
+echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\res\default.zip ./*</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\platform\graph\agg\include;</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ModuleDefinitionFile>../../ZUI/Zui.def</ModuleDefinitionFile>
+      <AdditionalDependencies>imm32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PreBuildEvent>
+      <Command>DEL $(SolutionDir)..\$(ProjectName)\res\default.zip
+cd $(SolutionDir)..\$(ProjectName)\res 
+echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\res\default.zip ./*</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0500;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_MSC_VER=1400;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <CompileAs>Default</CompileAs>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <StringPooling>true</StringPooling>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\platform\graph\agg\include;</AdditionalIncludeDirectories>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;gdiplus.lib;wininet.lib;msvcrt.lib;oldnames.lib;comctl32.lib;ole32.lib;msimg32.lib;imm32.lib</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <MergeSections>
+      </MergeSections>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <ModuleDefinitionFile>..\..\ZUI\Zui.def</ModuleDefinitionFile>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <PreBuildEvent>
+      <Command>DEL $(SolutionDir)..\$(ProjectName)\res\default.zip
+cd $(SolutionDir)..\$(ProjectName)\res 
+echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\res\default.zip ./*</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\platform\graph\agg\include;</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ModuleDefinitionFile>..\..\ZUI\Zui.def</ModuleDefinitionFile>
+    </Link>
+    <PreBuildEvent>
+      <Command>DEL $(SolutionDir)..\$(ProjectName)\res\default.zip
+cd $(SolutionDir)..\$(ProjectName)\res 
+echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\res\default.zip ./*</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\ZUI\control\Browser.c" />
+    <ClCompile Include="..\..\ZUI\control\Button.c" />
+    <ClCompile Include="..\..\ZUI\control\Edit.c" />
+    <ClCompile Include="..\..\ZUI\control\Label.c" />
+    <ClCompile Include="..\..\ZUI\control\List.c" />
+    <ClCompile Include="..\..\ZUI\control\Menu.c" />
+    <ClCompile Include="..\..\ZUI\control\MenuBar.c" />
+    <ClCompile Include="..\..\ZUI\control\Option.c" />
+    <ClCompile Include="..\..\ZUI\control\Register.c" />
+    <ClCompile Include="..\..\ZUI\control\ScrollBar.c" />
+    <ClCompile Include="..\..\ZUI\control\SplitterBar.c" />
+    <ClCompile Include="..\..\ZUI\control\Virtual.c" />
+    <ClCompile Include="..\..\ZUI\control\window.c" />
+    <ClCompile Include="..\..\ZUI\core\animation.c" />
+    <ClCompile Include="..\..\ZUI\core\builder.c" />
+    <ClCompile Include="..\..\ZUI\core\carray.c" />
+    <ClCompile Include="..\..\ZUI\core\control.c" />
+    <ClCompile Include="..\..\ZUI\core\debug.c" />
+    <ClCompile Include="..\..\ZUI\core\function.c" />
+    <ClCompile Include="..\..\ZUI\core\global.c" />
+    <ClCompile Include="..\..\ZUI\core\manager.c" />
+    <ClCompile Include="..\..\ZUI\core\memory.c" />
+    <ClCompile Include="..\..\ZUI\core\mxml.c" />
+    <ClCompile Include="..\..\ZUI\core\resdb.c" />
+    <ClCompile Include="..\..\ZUI\core\string.c" />
+    <ClCompile Include="..\..\ZUI\core\template.c" />
+    <ClCompile Include="..\..\ZUI\core\tree.c" />
+    <ClCompile Include="..\..\ZUI\layout\HorizontalLayout.c" />
+    <ClCompile Include="..\..\ZUI\layout\Layout.c" />
+    <ClCompile Include="..\..\ZUI\layout\TabLayout.c" />
+    <ClCompile Include="..\..\ZUI\layout\TileLayout.c" />
+    <ClCompile Include="..\..\ZUI\layout\VerticalLayout.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jsarray.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jsboolean.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jsbuiltin.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jscompile.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jsdate.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jsdtoa.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jsdump.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jserror.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jsfunction.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jsgc.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jsintern.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jslex.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jsmath.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jsnumber.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jsobject.c" />
+    <ClCompile Include="..\..\ZUI\mujs\json.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jsparse.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jsproperty.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jsregexp.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jsrun.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jsstate.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jsstring.c" />
+    <ClCompile Include="..\..\ZUI\mujs\jsvalue.c" />
+    <ClCompile Include="..\..\ZUI\mujs\regexp.c" />
+    <ClCompile Include="..\..\ZUI\platform\graph\agg.cpp" />
+    <ClCompile Include="..\..\ZUI\platform\graph\agg\agg_font_win32_tt.cpp" />
+    <ClCompile Include="..\..\ZUI\platform\graph\agg\src\agg_curves.cpp" />
+    <ClCompile Include="..\..\ZUI\platform\graph\agg\src\agg_trans_affine.cpp" />
+    <ClCompile Include="..\..\ZUI\platform\graph\agg\src\agg_vcgen_stroke.cpp" />
+    <ClCompile Include="..\..\ZUI\platform\graph\cario.c" />
+    <ClCompile Include="..\..\ZUI\platform\graph\gdi.c" />
+    <ClCompile Include="..\..\ZUI\platform\graph\skia.c" />
+    <ClCompile Include="..\..\ZUI\platform\os\linux.c" />
+    <ClCompile Include="..\..\ZUI\platform\os\win.c" />
+    <ClCompile Include="..\..\ZUI\vc6.cpp">
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\zlib\adler32.c" />
+    <ClCompile Include="..\..\ZUI\zlib\crc32.c" />
+    <ClCompile Include="..\..\ZUI\zlib\deflate.c" />
+    <ClCompile Include="..\..\ZUI\zlib\inffast.c" />
+    <ClCompile Include="..\..\ZUI\zlib\inflate.c" />
+    <ClCompile Include="..\..\ZUI\zlib\inftrees.c" />
+    <ClCompile Include="..\..\ZUI\zlib\trees.c" />
+    <ClCompile Include="..\..\ZUI\zlib\unzip.c" />
+    <ClCompile Include="..\..\ZUI\zlib\zutil.c" />
+    <ClCompile Include="..\..\ZUI\zuidebug.c" />
+    <ClCompile Include="control\html\dw\alignedtextblock.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\bullet.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\dwimage.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\dwtable.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\dwui.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\findtext.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\iterator.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\dwlayout.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\listitem.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\ruler.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\selection.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\style.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\tablecell.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\textblock.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\types.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\widget.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\zuiplatform.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\zuiviewbase.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\zuiviewport.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\Html.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\lout\container.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\lout\identity.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\lout\lmisc.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\lout\object.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="control\html\lout\signal.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\ZUI\control\Browser.h" />
+    <ClInclude Include="..\..\ZUI\control\Button.h" />
+    <ClInclude Include="..\..\ZUI\control\Edit.h" />
+    <ClInclude Include="..\..\ZUI\control\Html.h" />
+    <ClInclude Include="..\..\ZUI\control\Label.h" />
+    <ClInclude Include="..\..\ZUI\control\List.h" />
+    <ClInclude Include="..\..\ZUI\control\Menu.h" />
+    <ClInclude Include="..\..\ZUI\control\MenuBar.h" />
+    <ClInclude Include="..\..\ZUI\control\Option.h" />
+    <ClInclude Include="..\..\ZUI\control\Register.h" />
+    <ClInclude Include="..\..\ZUI\control\ScrollBar.h" />
+    <ClInclude Include="..\..\ZUI\control\SplitterBar.h" />
+    <ClInclude Include="..\..\ZUI\control\Virtual.h" />
+    <ClInclude Include="..\..\ZUI\control\Window.h" />
+    <ClInclude Include="..\..\ZUI\resource.h" />
+    <ClInclude Include="..\..\ZUI\ZUI.h" />
+    <ClInclude Include="control\html\dw\alignedtextblock.hh" />
+    <ClInclude Include="control\html\dw\bullet.hh" />
+    <ClInclude Include="control\html\dw\core.hh" />
+    <ClInclude Include="control\html\dw\events.hh" />
+    <ClInclude Include="control\html\dw\findtext.hh" />
+    <ClInclude Include="control\html\dw\image.hh" />
+    <ClInclude Include="control\html\dw\imgbuf.hh" />
+    <ClInclude Include="control\html\dw\iterator.hh" />
+    <ClInclude Include="control\html\dw\layout.hh" />
+    <ClInclude Include="control\html\dw\listitem.hh" />
+    <ClInclude Include="control\html\dw\platform.hh" />
+    <ClInclude Include="control\html\dw\ruler.hh" />
+    <ClInclude Include="control\html\dw\selection.hh" />
+    <ClInclude Include="control\html\dw\style.hh" />
+    <ClInclude Include="control\html\dw\table.hh" />
+    <ClInclude Include="control\html\dw\tablecell.hh" />
+    <ClInclude Include="control\html\dw\textblock.hh" />
+    <ClInclude Include="control\html\dw\types.hh" />
+    <ClInclude Include="control\html\dw\ui.hh" />
+    <ClInclude Include="control\html\dw\view.hh" />
+    <ClInclude Include="control\html\dw\widget.hh" />
+    <ClInclude Include="control\html\dw\zuiplatform.hh" />
+    <ClInclude Include="control\html\dw\zuiviewbase.hh" />
+    <ClInclude Include="control\html\dw\zuiviewport.hh" />
+    <ClInclude Include="control\html\lout\container.hh" />
+    <ClInclude Include="control\html\lout\debug.hh" />
+    <ClInclude Include="control\html\lout\identity.hh" />
+    <ClInclude Include="control\html\lout\misc.hh" />
+    <ClInclude Include="control\html\lout\msg.h" />
+    <ClInclude Include="control\html\lout\object.hh" />
+    <ClInclude Include="control\html\lout\signal.hh" />
+    <ClInclude Include="core\animation.h" />
+    <ClInclude Include="core\builder.h" />
+    <ClInclude Include="core\carray.h" />
+    <ClInclude Include="core\control.h" />
+    <ClInclude Include="core\debug.h" />
+    <ClInclude Include="core\function.h" />
+    <ClInclude Include="core\global.h" />
+    <ClInclude Include="core\memory.h" />
+    <ClInclude Include="core\mxml.h" />
+    <ClInclude Include="core\manager.h" />
+    <ClInclude Include="core\resdb.h" />
+    <ClInclude Include="core\string.h" />
+    <ClInclude Include="core\template.h" />
+    <ClInclude Include="core\tree.h" />
+    <ClInclude Include="layout\Layout.h" />
+    <ClInclude Include="layout\HorizontalLayout.h" />
+    <ClInclude Include="layout\TabLayout.h" />
+    <ClInclude Include="layout\TileLayout.h" />
+    <ClInclude Include="layout\VerticalLayout.h" />
+    <ClInclude Include="mujs\astnames.h" />
+    <ClInclude Include="mujs\jsbuiltin.h" />
+    <ClInclude Include="mujs\jscompile.h" />
+    <ClInclude Include="mujs\jsi.h" />
+    <ClInclude Include="mujs\jslex.h" />
+    <ClInclude Include="mujs\jsparse.h" />
+    <ClInclude Include="mujs\jsrun.h" />
+    <ClInclude Include="mujs\jsvalue.h" />
+    <ClInclude Include="mujs\mujs.h" />
+    <ClInclude Include="mujs\opnames.h" />
+    <ClInclude Include="mujs\regexp.h" />
+    <ClInclude Include="mujs\utf.h" />
+    <ClInclude Include="platform\graph\agg.h" />
+    <ClInclude Include="platform\graph\cairo.h" />
+    <ClInclude Include="platform\graph\gdi.h" />
+    <ClInclude Include="platform\graph\graph.h" />
+    <ClInclude Include="platform\graph\skia.h" />
+    <ClInclude Include="platform\os\linux.h" />
+    <ClInclude Include="platform\os\os.h" />
+    <ClInclude Include="platform\os\win.h" />
+    <ClInclude Include="platform\platform.h" />
+    <ClInclude Include="zlib\crc32.h" />
+    <ClInclude Include="zlib\inffast.h" />
+    <ClInclude Include="zlib\inffixed.h" />
+    <ClInclude Include="zlib\inflate.h" />
+    <ClInclude Include="zlib\inftrees.h" />
+    <ClInclude Include="zlib\unzip.h" />
+    <ClInclude Include="zlib\zconf.h" />
+    <ClInclude Include="zlib\zlib.h" />
+    <ClInclude Include="zlib\zutil.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\ZUI\res\default.zip" />
+    <None Include="..\..\ZUI\res\onload.js" />
+    <None Include="..\..\ZUI\res\res.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\ZUI\Default.rc" />
+    <ResourceCompile Include="..\..\ZUI\Zui.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\..\ZUI\res\default.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\ZUI\res\default\1.png" />
+    <Image Include="..\..\ZUI\res\default\10.png" />
+    <Image Include="..\..\ZUI\res\default\11.png" />
+    <Image Include="..\..\ZUI\res\default\12.png" />
+    <Image Include="..\..\ZUI\res\default\13.png" />
+    <Image Include="..\..\ZUI\res\default\2.png" />
+    <Image Include="..\..\ZUI\res\default\21.png" />
+    <Image Include="..\..\ZUI\res\default\22.png" />
+    <Image Include="..\..\ZUI\res\default\23.png" />
+    <Image Include="..\..\ZUI\res\default\24.png" />
+    <Image Include="..\..\ZUI\res\default\3.png" />
+    <Image Include="..\..\ZUI\res\default\5.png" />
+    <Image Include="..\..\ZUI\res\default\6.png" />
+    <Image Include="..\..\ZUI\res\default\7.png" />
+    <Image Include="..\..\ZUI\res\default\8.png" />
+    <Image Include="..\..\ZUI\res\default\9.png" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="Zui.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
