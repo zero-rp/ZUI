@@ -71,7 +71,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNodeMenu(mxml_node_t *tree, ZuiControl win
                     //上级控件已存在且当前欲创建的子窗口不为窗口对象
                     if (Control) {
                         node->user_data = Control;//保存控件到节点
-                                                  /*添加到容器*/
+                        /*添加到容器*/
                         ZuiControlCall(Proc_Layout_Add, node->parent->user_data, Control, NULL, NULL);
                     }
                     else {
@@ -149,56 +149,28 @@ static LRESULT ZCALL __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 ZEXPORT ZuiAny ZCALL ZuiMenuProc(ZuiInt ProcId, ZuiControl cp, ZuiMenu p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
-    case Proc_CoreInit: {
-        WNDCLASS wc = { 0 };
-        wc.style = 8;
-        wc.cbClsExtra = 0;
-        wc.cbWndExtra = 0;
-        wc.hIcon = NULL;
-        wc.lpfnWndProc = __WndProc;
-        wc.hInstance = GetModuleHandleA(NULL);
-        wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-        wc.hbrBackground = NULL;
-        wc.lpszMenuName = NULL;
-        wc.lpszClassName = L"ZUI_MENU";
-        RegisterClass(&wc);
-        return TRUE;
+    case Proc_JsHas: {
         break;
     }
-    case Proc_OnDestroy: {
-        ZCtlProc old_call = p->old_call;
-        ZuiAny old_udata = p->old_udata;
-
-        p->m_pm->m_pRoot = NULL;
-
-        old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
-
-        DestroyWindow(p->m_hWnd);
-        ZuiFree(p);
-        return;
+    case Proc_JsCall: {
         break;
     }
-    case Proc_OnCreate: {
-        p = (ZuiWindow)ZuiMalloc(sizeof(ZWindow));
-        memset(p, 0, sizeof(ZWindow));
-        //保存原来的回调地址,创建成功后回调地址指向当前函数
-        //创建继承的控件 保存数据指针
-        p->old_udata = ZuiVerticalLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
-        p->old_call = (ZCtlProc)&ZuiVerticalLayoutProc;
-
-        //创建宿主窗口
-        //创建绘制管理器
-        p->m_pm = NewCPaintManagerUI();
-        p->m_pm->m_bUnfocusPaintWindow = TRUE;//菜单窗口为无焦点窗口
-        p->m_OldWndProc = DefWindowProc;
-        p->root = cp;
-        p->m_hWnd = CreateWindowEx(WS_EX_NOACTIVATE | WS_EX_TOPMOST | WS_EX_TOOLWINDOW, L"ZUI_MENU", L"", WS_POPUP | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, GetModuleHandleA(NULL), p);
-
-        ZuiPaintManagerInit(p->m_pm, p->m_hWnd);
-        ZuiPaintManagerAttachDialog(p->m_pm, cp);
-        if (!Param1)
-            ShowWindow(p->m_hWnd, SW_SHOWNOACTIVATE);
-        return p;
+    case Proc_SetAttribute: {
+        if (wcscmp(Param1, L"layered") == 0) {
+            if (wcscmp(Param2, L"true") == 0) {
+                ZuiPaintManagerSetLayered(p->m_pm, TRUE);
+            }
+            else {
+                ZuiPaintManagerSetLayered(p->m_pm, FALSE);
+            }
+        }
+        else if (wcscmp(Param1, L"opacity") == 0) ZuiPaintManagerSetLayeredOpacity(p->m_pm, _wtoi(Param2));
+        else if (wcscmp(Param1, L"size") == 0) {
+            LPTSTR pstr = NULL;
+            int cx = wcstol(Param2, &pstr, 10); ASSERT(pstr);
+            int cy = wcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+            ZuiControlCall(Proc_Window_SetSize, cp, cx, cy, NULL);
+        }
         break;
     }
     case Proc_SetBorderColor: {
@@ -227,30 +199,6 @@ ZEXPORT ZuiAny ZCALL ZuiMenuProc(ZuiInt ProcId, ZuiControl cp, ZuiMenu p, ZuiAny
         SetWindowPos(p->m_hWnd, NULL, 0, 0, Param1, Param2, SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
         break;
     }
-    case Proc_SetAttribute: {
-        if (wcscmp(Param1, L"layered") == 0) {
-            if (wcscmp(Param2, L"true") == 0) {
-                ZuiPaintManagerSetLayered(p->m_pm, TRUE);
-            }
-            else {
-                ZuiPaintManagerSetLayered(p->m_pm, FALSE);
-            }
-        }
-        else if (wcscmp(Param1, L"opacity") == 0) ZuiPaintManagerSetLayeredOpacity(p->m_pm, _wtoi(Param2));
-        else if (wcscmp(Param1, L"size") == 0) {
-            LPTSTR pstr = NULL;
-            int cx = wcstol(Param2, &pstr, 10);  ASSERT(pstr);
-            int cy = wcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
-            ZuiControlCall(Proc_Window_SetSize, cp, cx, cy, NULL);
-        }
-        break;
-    }
-    case Proc_JsHas: {
-        break;
-    }
-    case Proc_JsCall: {
-        break;
-    }
     case Proc_SetVisible: {
         if (cp->m_bVisible == (BOOL)Param1)
             return 0;
@@ -260,20 +208,71 @@ ZEXPORT ZuiAny ZCALL ZuiMenuProc(ZuiInt ProcId, ZuiControl cp, ZuiMenu p, ZuiAny
             ShowWindow(p->m_hWnd, SW_HIDE);
         break;
     }
-    case Proc_CoreUnInit: {
-        return NULL;
-        break;
+    case Proc_OnDestroy: {
+        ZCtlProc old_call = p->old_call;
+        ZuiAny old_udata = p->old_udata;
+
+        p->m_pm->m_pRoot = NULL;
+
+        old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+
+        DestroyWindow(p->m_hWnd);
+        ZuiFree(p);
+        return;
     }
+    case Proc_OnCreate: {
+        p = (ZuiWindow)ZuiMalloc(sizeof(ZWindow));
+        memset(p, 0, sizeof(ZWindow));
+        //保存原来的回调地址,创建成功后回调地址指向当前函数
+        //创建继承的控件 保存数据指针
+        p->old_udata = ZuiVerticalLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
+        p->old_call = (ZCtlProc)&ZuiVerticalLayoutProc;
+
+        //创建宿主窗口
+        //创建绘制管理器
+        p->m_pm = NewCPaintManagerUI();
+        p->m_pm->m_bUnfocusPaintWindow = TRUE;//菜单窗口为无焦点窗口
+        p->m_OldWndProc = DefWindowProc;
+        p->root = cp;
+        p->m_hWnd = CreateWindowEx(WS_EX_NOACTIVATE | WS_EX_TOPMOST | WS_EX_TOOLWINDOW, L"ZUI_MENU", L"", WS_POPUP | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, GetModuleHandleA(NULL), p);
+
+        ZuiPaintManagerInit(p->m_pm, p->m_hWnd);
+        ZuiPaintManagerAttachDialog(p->m_pm, cp);
+        if (!Param1)
+            ShowWindow(p->m_hWnd, SW_SHOWNOACTIVATE);
+        return p;
+    }
+    case Proc_GetType:
+        return (ZuiAny)Type_Menu;
+    case Proc_CoreInit: {
+        WNDCLASS wc = { 0 };
+        wc.style = 8;
+        wc.cbClsExtra = 0;
+        wc.cbWndExtra = 0;
+        wc.hIcon = NULL;
+        wc.lpfnWndProc = __WndProc;
+        wc.hInstance = GetModuleHandleA(NULL);
+        wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+        wc.hbrBackground = NULL;
+        wc.lpszMenuName = NULL;
+        wc.lpszClassName = L"ZUI_MENU";
+        RegisterClass(&wc);
+        //将辅助控件注册到系统
+        ZuiControlRegisterAdd(L"menuitem", (ZCtlProc)&ZuiMenuItemProc);
+        return (ZuiAny)TRUE;
+    }
+    case Proc_CoreUnInit:
+        return (ZuiAny)NULL;
     default:
         break;
     }
     return p->old_call(ProcId, cp, p->old_udata, Param1, Param2, Param3);
 }
 ZuiDestroyMenu(ZuiMenu p) {
-	ZuiMenu next;
-	if (!p)
+    ZuiMenu next;
+    if (!p)
         return;
-	next = p;
+    next = p;
     while (next)
     {
         if (!next->m_aSubMenu)
@@ -297,39 +296,12 @@ ZuiDestroyMenu(ZuiMenu p) {
 ZEXPORT ZuiAny ZCALL ZuiMenuItemProc(ZuiInt ProcId, ZuiControl cp, ZuiMenuItem p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
-    case Proc_CoreInit: {
-        return TRUE;
-        break;
-    }
-    case Proc_OnDestroy: {
-        ZCtlProc old_call = p->old_call;
-        ZuiAny old_udata = p->old_udata;
-
-        if (p->node)
-            mxmlDelete(p->node);//释放克隆出来的节点
-        ZuiFree(p);
-
-        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
-        break;
-    }
-    case Proc_OnCreate: {
-        p = (ZuiMenuItem)ZuiMalloc(sizeof(ZMenuItem));
-        memset(p, 0, sizeof(ZMenuItem));
-        //保存原来的回调地址,创建成功后回调地址指向当前函数
-        //创建继承的控件 保存数据指针
-        p->old_udata = ZuiVerticalLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
-        p->old_call = (ZCtlProc)&ZuiVerticalLayoutProc;
-
-        return p;
-        break;
-    }
     case Proc_OnEvent: {
         TEventUI *event = (TEventUI *)Param1;
         switch (event->Type)
         {
         case ZEVENT_MOUSELEAVE: {
             return 0;
-            break;
         }
         case ZEVENT_MOUSEENTER: {
             ZuiDestroyMenu(((ZuiMenu)cp->m_pParent->m_sUserData)->m_aSubMenu);//销毁掉上一个子菜单
@@ -362,19 +334,41 @@ ZEXPORT ZuiAny ZCALL ZuiMenuItemProc(ZuiInt ProcId, ZuiControl cp, ZuiMenuItem p
         }
         break;
     }
-    case Proc_SetAttribute: {
-        break;
-    }
     case Proc_JsHas: {
         break;
     }
     case Proc_JsCall: {
         break;
     }
-    case Proc_CoreUnInit: {
-        return NULL;
+    case Proc_SetAttribute: {
         break;
     }
+    case Proc_OnCreate: {
+        p = (ZuiMenuItem)ZuiMalloc(sizeof(ZMenuItem));
+        memset(p, 0, sizeof(ZMenuItem));
+        //保存原来的回调地址,创建成功后回调地址指向当前函数
+        //创建继承的控件 保存数据指针
+        p->old_udata = ZuiVerticalLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
+        p->old_call = (ZCtlProc)&ZuiVerticalLayoutProc;
+
+        return p;
+    }
+    case Proc_OnDestroy: {
+        ZCtlProc old_call = p->old_call;
+        ZuiAny old_udata = p->old_udata;
+
+        if (p->node)
+            mxmlDelete(p->node);//释放克隆出来的节点
+        ZuiFree(p);
+
+        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+    }
+    case Proc_GetType:
+        return (ZuiAny)Type_MenuItem;
+    case Proc_CoreInit:
+        return (ZuiAny)TRUE;
+    case Proc_CoreUnInit:
+        return (ZuiAny)NULL;
     default:
         break;
     }
@@ -469,8 +463,8 @@ ZEXPORT ZuiVoid ZCALL ZuiPopupMenu(ZuiPaintManager mp, ZuiText name, ZuiPoint pt
                         //transfer the message to menu window
                         //if (m_menus->IsKeyEvent())
                         //{
-                        //	SKILL_ASSERT(m_pKeyEvent->GetMenuWnd()->GetHWND());
-                        //	msg.hwnd = m_pKeyEvent->GetMenuWnd()->GetHWND();
+                        // SKILL_ASSERT(m_pKeyEvent->GetMenuWnd()->GetHWND());
+                        // msg.hwnd = m_pKeyEvent->GetMenuWnd()->GetHWND();
                         //}
                     }
                     else if (msg.message == WM_LBUTTONDOWN

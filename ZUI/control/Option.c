@@ -1,36 +1,8 @@
 ﻿#include <ZUI.h>
 
-
-
-
 ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
-    case Proc_CoreInit:
-        return TRUE;
-        break;
-    case Proc_OnCreate: {
-        p = (ZuiOption)ZuiMalloc(sizeof(ZOption));
-        memset(p, 0, sizeof(ZOption));
-        //保存原来的回调地址,创建成功后回调地址指向当前函数
-        //创建继承的控件 保存数据指针
-        p->old_udata = ZuiButtonProc(Proc_OnCreate, cp, 0, 0, 0, 0);
-        p->old_call = (ZCtlProc)&ZuiButtonProc;
-        p->m_ColorSelected = ARGB(200, 0, 3, 255);		//选中的普通状态
-        p->m_ColorSelectedHot = ARGB(200, 0, 255, 255);		//选中的点燃状态
-        p->m_ColorSelectedPushed = ARGB(200, 255, 255, 255);	//选中的按下状态
-        return p;
-    }
-                        break;
-    case Proc_OnDestroy: {
-        ZCtlProc old_call = p->old_call;
-        ZuiAny old_udata = p->old_udata;
-
-        ZuiFree(p);
-
-        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
-        break;
-    }
     case Proc_OnEvent: {
         TEventUI *event = (TEventUI *)Param1;
         switch (event->Type)
@@ -149,13 +121,32 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
             ZuiControlCall(Proc_Option_SetSelected, cp, (ZuiAny)js_toboolean(J, -1), NULL, NULL);
         break;
     }
-    case Proc_OnInit: {
-        break;
+    case Proc_OnCreate: {
+        p = (ZuiOption)ZuiMalloc(sizeof(ZOption));
+        memset(p, 0, sizeof(ZOption));
+        //保存原来的回调地址,创建成功后回调地址指向当前函数
+        //创建继承的控件 保存数据指针
+        p->old_udata = ZuiButtonProc(Proc_OnCreate, cp, 0, 0, 0, 0);
+        p->old_call = (ZCtlProc)&ZuiButtonProc;
+        p->m_ColorSelected = ARGB(200, 0, 3, 255);		//选中的普通状态
+        p->m_ColorSelectedHot = ARGB(200, 0, 255, 255);		//选中的点燃状态
+        p->m_ColorSelectedPushed = ARGB(200, 255, 255, 255);	//选中的按下状态
+        return p;
     }
-    case Proc_CoreUnInit: {
-        return NULL;
-        break;
+    case Proc_OnDestroy: {
+        ZCtlProc old_call = p->old_call;
+        ZuiAny old_udata = p->old_udata;
+
+        ZuiFree(p);
+
+        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
     }
+    case Proc_GetType:
+        return (ZuiAny)Type_Option;
+    case Proc_CoreInit:
+        return (ZuiAny)TRUE;
+    case Proc_CoreUnInit:
+        return (ZuiAny)TRUE;
     default:
         break;
     }

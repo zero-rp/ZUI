@@ -3,40 +3,6 @@
 ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
-    case Proc_CoreInit:
-        return TRUE;
-    case Proc_OnCreate: {
-        p = (ZuiScrollBar)ZuiMalloc(sizeof(ZScrollBar));
-        memset(p, 0, sizeof(ZScrollBar));
-        //保存原来的回调地址,创建成功后回调地址指向当前函数
-        p->old_call = cp->call;
-
-        p->m_nRange = 100;
-        p->m_nLineSize = 8;
-        p->m_bShowButton1 = TRUE;
-        p->m_bShowButton2 = TRUE;
-        cp->m_cxyFixed.cx = DEFAULT_SCROLLBAR_SIZE;
-        return p;
-    }
-                        break;
-    case Proc_OnDestroy: {
-        ZCtlProc old_call = p->old_call;
-
-        ZuiFree(p);
-
-        return old_call(ProcId, cp, 0, Param1, Param2, Param3);
-        break;
-    }
-    case Proc_OnPaint: {
-        //调整绘制顺序
-        ZuiControlCall(Proc_OnPaintBkColor, cp, Param1, Param2, NULL);
-        ZuiControlCall(Proc_OnPaintStatusImage, cp, Param1, Param2, NULL);
-        ZuiControlCall(Proc_OnPaintBkImage, cp, Param1, Param2, NULL);
-        ZuiControlCall(Proc_OnPaintText, cp, Param1, Param2, NULL);
-        ZuiControlCall(Proc_OnPaintBorder, cp, Param1, Param2, NULL);
-        return 0;
-    }
-                       break;
     case Proc_OnEvent: {
         TEventUI *event = (TEventUI *)Param1;
         if (!cp->m_bMouseEnabled && event->Type > ZEVENT__MOUSEBEGIN && event->Type < ZEVENT__MOUSEEND) {
@@ -243,7 +209,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 }
             }
             else {
-				ZPoint pt = { 0 };
+                ZPoint pt = { 0 };
                 if (p->m_nScrollRepeatDelay <= 5) return;
                 GetCursorPos(&pt);
                 ZuiScreenToClient(cp, &pt);
@@ -304,8 +270,17 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
             ZuiControlCall(Proc_OnEvent, p->m_pOwner, Param1, NULL, NULL);
         else
             ZuiDefaultControlProc(Proc_OnEvent, cp, 0, Param1, NULL, NULL);
+        break;
     }
-                       break;
+    case Proc_OnPaint: {
+        //调整绘制顺序
+        ZuiControlCall(Proc_OnPaintBkColor, cp, Param1, Param2, NULL);
+        ZuiControlCall(Proc_OnPaintStatusImage, cp, Param1, Param2, NULL);
+        ZuiControlCall(Proc_OnPaintBkImage, cp, Param1, Param2, NULL);
+        ZuiControlCall(Proc_OnPaintText, cp, Param1, Param2, NULL);
+        ZuiControlCall(Proc_OnPaintBorder, cp, Param1, Param2, NULL);
+        return 0;
+    }
     case Proc_SetPos: {
         ZuiDefaultControlProc(ProcId, cp, 0, Param1, Param2, Param3);
         RECT rc = cp->m_rcItem;
@@ -456,8 +431,8 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 memset(&p->m_rcThumb, 0, sizeof(p->m_rcThumb));
             }
         }
+        break;
     }
-                      break;
     case Proc_ScrollBar_SetHorizontal: {
         if (p->m_bHorizontal == Param1) return;
 
@@ -479,8 +454,8 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
             ZuiControlNeedUpdate(p->m_pOwner);
         else
             ZuiControlNeedParentUpdate(cp);
+        break;
     }
-                                       break;
     case Proc_ScrollBar_SetScrollPos: {
         if (p->m_nScrollPos == Param1) return;
 
@@ -488,8 +463,8 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         if (p->m_nScrollPos < 0) p->m_nScrollPos = 0;
         if (p->m_nScrollPos > p->m_nRange) p->m_nScrollPos = p->m_nRange;
         ZuiControlCall(Proc_SetPos, cp, &cp->m_rcItem, NULL, NULL);
+        break;
     }
-                                      break;
     case Proc_ScrollBar_GetScrollPos: {
         return p->m_nScrollPos;
     }
@@ -507,11 +482,34 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         if (p->m_nRange < 0) p->m_nRange = 0;
         if (p->m_nScrollPos > p->m_nRange) p->m_nScrollPos = p->m_nRange;
         ZuiControlCall(Proc_SetPos, cp, &cp->m_rcItem, NULL, NULL);
-    }
-    case Proc_CoreUnInit: {
-        return NULL;
         break;
     }
+    case Proc_OnCreate: {
+        p = (ZuiScrollBar)ZuiMalloc(sizeof(ZScrollBar));
+        memset(p, 0, sizeof(ZScrollBar));
+        //保存原来的回调地址,创建成功后回调地址指向当前函数
+        p->old_call = cp->call;
+
+        p->m_nRange = 100;
+        p->m_nLineSize = 8;
+        p->m_bShowButton1 = TRUE;
+        p->m_bShowButton2 = TRUE;
+        cp->m_cxyFixed.cx = DEFAULT_SCROLLBAR_SIZE;
+        return p;
+    }
+    case Proc_OnDestroy: {
+        ZCtlProc old_call = p->old_call;
+
+        ZuiFree(p);
+
+        return old_call(ProcId, cp, 0, Param1, Param2, Param3);
+    }
+    case Proc_GetType:
+        return (ZuiAny)Type_ScrollBar;
+    case Proc_CoreInit:
+        return (ZuiAny)TRUE;
+    case Proc_CoreUnInit:
+        return (ZuiAny)NULL;
     default:
         break;
     }

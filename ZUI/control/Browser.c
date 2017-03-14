@@ -121,131 +121,6 @@ BOOL _staticOnNavigation(wkeWebView webView, void* param, int navigationType, vo
 ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
-    case Proc_CoreInit: {
-        HMODULE dll = LoadLibrary(L"wke.dll");
-        if (!dll)
-            return FALSE;
-        wkeInitialize = (t_wkeInitialize)GetProcAddress(dll, "wkeInitialize");
-        if (!wkeInitialize)
-            goto LoadLibraryErro;
-        wkeDestroyWebView = (t_wkeDestroyWebView)GetProcAddress(dll, "wkeDestroyWebView");
-        if (!wkeDestroyWebView)
-            goto LoadLibraryErro;
-        wkeOnTitleChanged = (t_wkeOnTitleChanged)GetProcAddress(dll, "wkeOnTitleChanged");
-        if (!wkeOnTitleChanged)
-            goto LoadLibraryErro;
-        wkeOnURLChanged = (t_wkeOnURLChanged)GetProcAddress(dll, "wkeOnURLChanged");
-        if (!wkeOnURLChanged)
-            goto LoadLibraryErro;
-        wkeOnPaintUpdated = (t_wkeOnPaintUpdated)GetProcAddress(dll, "wkeOnPaintUpdated");
-        if (!wkeOnPaintUpdated)
-            goto LoadLibraryErro;
-        wkeOnCreateView = (t_wkeOnCreateView)GetProcAddress(dll, "wkeOnCreateView");
-        if (!wkeOnCreateView)
-            goto LoadLibraryErro;
-        wkeRepaintIfNeeded = (t_wkeRepaintIfNeeded)GetProcAddress(dll, "wkeRepaintIfNeeded");
-        if (!wkeRepaintIfNeeded)
-            goto LoadLibraryErro;
-        wkeResize = (t_wkeResize)GetProcAddress(dll, "wkeResize");
-        if (!wkeResize)
-            goto LoadLibraryErro;
-        wkeSetFocus = (t_wkeSetFocus)GetProcAddress(dll, "wkeSetFocus");
-        if (!wkeSetFocus)
-            goto LoadLibraryErro;
-        wkeKillFocus = (t_wkeKillFocus)GetProcAddress(dll, "wkeKillFocus");
-        if (!wkeKillFocus)
-            goto LoadLibraryErro;
-        wkeFireMouseWheelEvent = (t_wkeFireMouseWheelEvent)GetProcAddress(dll, "wkeFireMouseWheelEvent");
-        if (!wkeFireMouseWheelEvent)
-            goto LoadLibraryErro;
-        wkeFireKeyUpEvent = (t_wkeFireKeyUpEvent)GetProcAddress(dll, "wkeFireKeyUpEvent");
-        if (!wkeFireKeyUpEvent)
-            goto LoadLibraryErro;
-        wkeFireKeyDownEvent = (t_wkeFireKeyDownEvent)GetProcAddress(dll, "wkeFireKeyDownEvent");
-        if (!wkeFireKeyDownEvent)
-            goto LoadLibraryErro;
-        wkeFireKeyPressEvent = (t_wkeFireKeyPressEvent)GetProcAddress(dll, "wkeFireKeyPressEvent");
-        if (!wkeFireKeyPressEvent)
-            goto LoadLibraryErro;
-        wkeFireMouseEvent = (t_wkeFireMouseEvent)GetProcAddress(dll, "wkeFireMouseEvent");
-        if (!wkeFireMouseEvent)
-            goto LoadLibraryErro;
-        //wkeFireWindowsMessage = (t_wkeFireWindowsMessage)GetProcAddress(dll, "wkeFireWindowsMessage");
-        //if (!wkeFireWindowsMessage)
-        //    goto LoadLibraryErro;
-        wkeGetCaretRect = (t_wkeGetCaretRect)GetProcAddress(dll, "wkeGetCaretRect");
-        if (!wkeGetCaretRect)
-            goto LoadLibraryErro;
-        wkeGetStringW = (t_wkeGetStringW)GetProcAddress(dll, "wkeGetStringW");
-        if (!wkeGetStringW)
-            goto LoadLibraryErro;
-        wkeCreateWebView = (t_wkeCreateWebView)GetProcAddress(dll, "wkeCreateWebView");
-        if (!wkeCreateWebView)
-            goto LoadLibraryErro;
-        wkeGetViewDC = (t_wkeGetViewDC)GetProcAddress(dll, "wkeGetViewDC");
-        if (!wkeGetViewDC)
-            goto LoadLibraryErro;
-        //wkeSetHandle = (t_wkeSetHandle)GetProcAddress(dll, "wkeSetHandle");
-        //if (!wkeSetHandle)
-        //    goto LoadLibraryErro;
-        //wkeSetHandleOffset = (t_wkeSetHandleOffset)GetProcAddress(dll, "wkeSetHandleOffset");
-        //if (!wkeSetHandleOffset)
-        //    goto LoadLibraryErro;
-        wkeLoadURLW = (t_wkeLoadURLW)GetProcAddress(dll, "wkeLoadURLW");
-        if (!wkeLoadURLW)
-            goto LoadLibraryErro;
-        wkeLoadHTMLW = (t_wkeLoadHTMLW)GetProcAddress(dll, "wkeLoadHTMLW");
-        if (!wkeLoadHTMLW)
-            goto LoadLibraryErro;
-        //wkeOnLoadUrlBegin = (t_wkeOnLoadUrlBegin)GetProcAddress(dll, "wkeOnLoadUrlBegin");
-        //if (!wkeOnLoadUrlBegin)
-        //    goto LoadLibraryErro;
-        wkeOnNavigation = (t_wkeOnNavigation)GetProcAddress(dll, "wkeOnNavigation");
-        if (!wkeOnNavigation)
-            goto LoadLibraryErro;
-        wkeSetUserAgentW = (t_wkeSetUserAgentW)GetProcAddress(dll, "wkeSetUserAgentW");
-        if (!wkeSetUserAgentW)
-            goto LoadLibraryErro;
-        wkeRunJSW = (t_wkeRunJSW)GetProcAddress(dll, "wkeRunJSW");
-        if (!wkeRunJSW)
-            goto LoadLibraryErro;
-        wkeLoadFileW = (t_wkeLoadFileW)GetProcAddress(dll, "wkeLoadFileW");
-        if (!wkeLoadFileW)
-            goto LoadLibraryErro;
-        //jsToTempStringW = (t_jsToTempStringW)GetProcAddress(dll, "jsToTempStringW");
-        //if (!jsToTempStringW)
-        //    goto LoadLibraryErro;
-        wkeGlobalExec = (t_wkeGlobalExec)GetProcAddress(dll, "wkeGlobalExec");
-        if (!wkeGlobalExec)
-            goto LoadLibraryErro;
-
-        wkeInitialize();
-        return TRUE;
-    LoadLibraryErro:
-        FreeLibrary(dll);
-        return FALSE;
-        break;
-    }
-    case Proc_OnDestroy: {
-        wkeDestroyWebView(p->view);
-        break;
-    }
-    case Proc_OnCreate: {
-        p = (ZuiBrowser)ZuiMalloc(sizeof(ZBrowser));
-        memset(p, 0, sizeof(ZBrowser));
-        //保存原来的回调地址,创建成功后回调地址指向当前函数
-        p->old_call = cp->call;
-        p->cp = cp;
-        p->view = wkeCreateWebView();
-        wkeOnPaintUpdated(p->view, _staticOnPaintUpdated, p);//界面刷新
-        wkeOnTitleChanged(p->view, _staticOnTitleChanged, p);
-        wkeOnCreateView(p->view, _staticOnCreateView, p);
-        wkeOnURLChanged(p->view, _staticOnURLChanged, p);
-        wkeOnNavigation(p->view, _staticOnNavigation, p);
-        //wkeSetUserAgentW(p->view, L"Mozilla/5.0 (Linux; Android 4.4.2; Nexus 4 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.114 Mobile Safari/537.36");
-        return p;
-        break;
-    }
     case Proc_OnSize: {
         wkeResize(p->view, (int)Param1, (int)Param2);
         if (cp->m_bVisible) {
@@ -465,6 +340,133 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         return (ZuiAny)ZFLAG_SETCURSOR;
         break;
     }
+    case Proc_OnCreate: {
+        p = (ZuiBrowser)ZuiMalloc(sizeof(ZBrowser));
+        memset(p, 0, sizeof(ZBrowser));
+        //保存原来的回调地址,创建成功后回调地址指向当前函数
+        p->old_call = cp->call;
+        p->cp = cp;
+        p->view = wkeCreateWebView();
+        wkeOnPaintUpdated(p->view, _staticOnPaintUpdated, p);//界面刷新
+        wkeOnTitleChanged(p->view, _staticOnTitleChanged, p);
+        wkeOnCreateView(p->view, _staticOnCreateView, p);
+        wkeOnURLChanged(p->view, _staticOnURLChanged, p);
+        wkeOnNavigation(p->view, _staticOnNavigation, p);
+        //wkeSetUserAgentW(p->view, L"Mozilla/5.0 (Linux; Android 4.4.2; Nexus 4 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.114 Mobile Safari/537.36");
+        return p;
+    }
+    case Proc_OnDestroy: {
+        wkeDestroyWebView(p->view);
+        break;
+    }
+    case Proc_GetType:
+        return (ZuiAny)Type_Browser;
+    case Proc_CoreInit: {
+        HMODULE dll = LoadLibrary(L"wke.dll");
+        if (!dll)
+            return FALSE;
+        wkeInitialize = (t_wkeInitialize)GetProcAddress(dll, "wkeInitialize");
+        if (!wkeInitialize)
+            goto LoadLibraryErro;
+        wkeDestroyWebView = (t_wkeDestroyWebView)GetProcAddress(dll, "wkeDestroyWebView");
+        if (!wkeDestroyWebView)
+            goto LoadLibraryErro;
+        wkeOnTitleChanged = (t_wkeOnTitleChanged)GetProcAddress(dll, "wkeOnTitleChanged");
+        if (!wkeOnTitleChanged)
+            goto LoadLibraryErro;
+        wkeOnURLChanged = (t_wkeOnURLChanged)GetProcAddress(dll, "wkeOnURLChanged");
+        if (!wkeOnURLChanged)
+            goto LoadLibraryErro;
+        wkeOnPaintUpdated = (t_wkeOnPaintUpdated)GetProcAddress(dll, "wkeOnPaintUpdated");
+        if (!wkeOnPaintUpdated)
+            goto LoadLibraryErro;
+        wkeOnCreateView = (t_wkeOnCreateView)GetProcAddress(dll, "wkeOnCreateView");
+        if (!wkeOnCreateView)
+            goto LoadLibraryErro;
+        wkeRepaintIfNeeded = (t_wkeRepaintIfNeeded)GetProcAddress(dll, "wkeRepaintIfNeeded");
+        if (!wkeRepaintIfNeeded)
+            goto LoadLibraryErro;
+        wkeResize = (t_wkeResize)GetProcAddress(dll, "wkeResize");
+        if (!wkeResize)
+            goto LoadLibraryErro;
+        wkeSetFocus = (t_wkeSetFocus)GetProcAddress(dll, "wkeSetFocus");
+        if (!wkeSetFocus)
+            goto LoadLibraryErro;
+        wkeKillFocus = (t_wkeKillFocus)GetProcAddress(dll, "wkeKillFocus");
+        if (!wkeKillFocus)
+            goto LoadLibraryErro;
+        wkeFireMouseWheelEvent = (t_wkeFireMouseWheelEvent)GetProcAddress(dll, "wkeFireMouseWheelEvent");
+        if (!wkeFireMouseWheelEvent)
+            goto LoadLibraryErro;
+        wkeFireKeyUpEvent = (t_wkeFireKeyUpEvent)GetProcAddress(dll, "wkeFireKeyUpEvent");
+        if (!wkeFireKeyUpEvent)
+            goto LoadLibraryErro;
+        wkeFireKeyDownEvent = (t_wkeFireKeyDownEvent)GetProcAddress(dll, "wkeFireKeyDownEvent");
+        if (!wkeFireKeyDownEvent)
+            goto LoadLibraryErro;
+        wkeFireKeyPressEvent = (t_wkeFireKeyPressEvent)GetProcAddress(dll, "wkeFireKeyPressEvent");
+        if (!wkeFireKeyPressEvent)
+            goto LoadLibraryErro;
+        wkeFireMouseEvent = (t_wkeFireMouseEvent)GetProcAddress(dll, "wkeFireMouseEvent");
+        if (!wkeFireMouseEvent)
+            goto LoadLibraryErro;
+        //wkeFireWindowsMessage = (t_wkeFireWindowsMessage)GetProcAddress(dll, "wkeFireWindowsMessage");
+        //if (!wkeFireWindowsMessage)
+        //    goto LoadLibraryErro;
+        wkeGetCaretRect = (t_wkeGetCaretRect)GetProcAddress(dll, "wkeGetCaretRect");
+        if (!wkeGetCaretRect)
+            goto LoadLibraryErro;
+        wkeGetStringW = (t_wkeGetStringW)GetProcAddress(dll, "wkeGetStringW");
+        if (!wkeGetStringW)
+            goto LoadLibraryErro;
+        wkeCreateWebView = (t_wkeCreateWebView)GetProcAddress(dll, "wkeCreateWebView");
+        if (!wkeCreateWebView)
+            goto LoadLibraryErro;
+        wkeGetViewDC = (t_wkeGetViewDC)GetProcAddress(dll, "wkeGetViewDC");
+        if (!wkeGetViewDC)
+            goto LoadLibraryErro;
+        //wkeSetHandle = (t_wkeSetHandle)GetProcAddress(dll, "wkeSetHandle");
+        //if (!wkeSetHandle)
+        //    goto LoadLibraryErro;
+        //wkeSetHandleOffset = (t_wkeSetHandleOffset)GetProcAddress(dll, "wkeSetHandleOffset");
+        //if (!wkeSetHandleOffset)
+        //    goto LoadLibraryErro;
+        wkeLoadURLW = (t_wkeLoadURLW)GetProcAddress(dll, "wkeLoadURLW");
+        if (!wkeLoadURLW)
+            goto LoadLibraryErro;
+        wkeLoadHTMLW = (t_wkeLoadHTMLW)GetProcAddress(dll, "wkeLoadHTMLW");
+        if (!wkeLoadHTMLW)
+            goto LoadLibraryErro;
+        //wkeOnLoadUrlBegin = (t_wkeOnLoadUrlBegin)GetProcAddress(dll, "wkeOnLoadUrlBegin");
+        //if (!wkeOnLoadUrlBegin)
+        //    goto LoadLibraryErro;
+        wkeOnNavigation = (t_wkeOnNavigation)GetProcAddress(dll, "wkeOnNavigation");
+        if (!wkeOnNavigation)
+            goto LoadLibraryErro;
+        wkeSetUserAgentW = (t_wkeSetUserAgentW)GetProcAddress(dll, "wkeSetUserAgentW");
+        if (!wkeSetUserAgentW)
+            goto LoadLibraryErro;
+        wkeRunJSW = (t_wkeRunJSW)GetProcAddress(dll, "wkeRunJSW");
+        if (!wkeRunJSW)
+            goto LoadLibraryErro;
+        wkeLoadFileW = (t_wkeLoadFileW)GetProcAddress(dll, "wkeLoadFileW");
+        if (!wkeLoadFileW)
+            goto LoadLibraryErro;
+        //jsToTempStringW = (t_jsToTempStringW)GetProcAddress(dll, "jsToTempStringW");
+        //if (!jsToTempStringW)
+        //    goto LoadLibraryErro;
+        wkeGlobalExec = (t_wkeGlobalExec)GetProcAddress(dll, "wkeGlobalExec");
+        if (!wkeGlobalExec)
+            goto LoadLibraryErro;
+
+        wkeInitialize();
+        return TRUE;
+    LoadLibraryErro:
+        FreeLibrary(dll);
+        return FALSE;
+    }
+    case Proc_CoreUnInit:
+        return (ZuiAny)TRUE;
     default:
         break;
     }

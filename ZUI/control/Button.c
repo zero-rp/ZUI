@@ -3,35 +3,6 @@
 ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
-    case Proc_OnDestroy: {
-        ZCtlProc old_call = p->old_call;
-        ZuiAny old_udata = p->old_udata;
-        if (p->m_ResNormal)
-            ZuiResDBDelRes(p->m_ResNormal);
-        if (p->m_ResHot)
-            ZuiResDBDelRes(p->m_ResHot);
-        if (p->m_ResPushed)
-            ZuiResDBDelRes(p->m_ResPushed);
-        if (p->m_ResFocused)
-            ZuiResDBDelRes(p->m_ResFocused);
-        if (p->m_ResDisabled)
-            ZuiResDBDelRes(p->m_ResDisabled);
-
-        ZuiFree(p);
-
-        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
-        break;
-    }
-    case Proc_OnCreate: {
-        p = (ZuiButton)ZuiMalloc(sizeof(ZButton));
-        memset(p, 0, sizeof(ZButton));
-
-        //保存原来的回调地址,创建成功后回调地址指向当前函数
-        p->old_udata = ZuiLabelProc(Proc_OnCreate, cp, 0, 0, 0, 0);
-        p->old_call = (ZCtlProc)&ZuiLabelProc;
-        return p;
-    }
-                        break;
     case Proc_OnEvent: {
         TEventUI *event = (TEventUI *)Param1;
         switch (event->Type)
@@ -60,8 +31,8 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         default:
             break;
         }
+        break;
     }
-                       break;
     case Proc_OnPaint: {
         //调整绘制顺序
         ZuiControlCall(Proc_OnPaintBkColor, cp, Param1, Param2, NULL);
@@ -71,7 +42,21 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         ZuiControlCall(Proc_OnPaintBorder, cp, Param1, Param2, NULL);
         return 0;
     }
-                       break;
+    case Proc_JsPut: {
+        js_State *J = Param2;
+        if (wcscmp(Param1, L"normalimage") == 0) {
+            ZuiText str = js_tostring(J, -1);
+            ZuiRes res = ZuiResDBGetRes(str, ZREST_IMG);
+            ZuiControlCall(Proc_Button_SetResNormal, cp,
+                res,
+                NULL, NULL);
+        }
+        else if (wcscmp(Param1, L"hotimage") == 0) ZuiControlCall(Proc_Button_SetResHot, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
+        else if (wcscmp(Param1, L"pushedimage") == 0) ZuiControlCall(Proc_Button_SetResPushed, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
+        else if (wcscmp(Param1, L"focusedimage") == 0) ZuiControlCall(Proc_Button_SetResFocused, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
+        else if (wcscmp(Param1, L"disabledimage") == 0) ZuiControlCall(Proc_Button_SetResDisabled, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
+        break;
+    }
     case Proc_OnPaintStatusImage: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
         RECT *rc = (RECT *)Param2;
@@ -144,27 +129,39 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         else if (wcscmp(Param1, L"disabledimage") == 0) ZuiControlCall(Proc_Button_SetResDisabled, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         break;
     }
-    case Proc_JsPut: {
-        js_State *J = Param2;
-        if (wcscmp(Param1, L"normalimage") == 0) {
-            ZuiText str = js_tostring(J, -1);
-            ZuiRes res = ZuiResDBGetRes(str, ZREST_IMG);
-            ZuiControlCall(Proc_Button_SetResNormal, cp,
-                res,
-                NULL, NULL);
-        }
-        else if (wcscmp(Param1, L"hotimage") == 0) ZuiControlCall(Proc_Button_SetResHot, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
-        else if (wcscmp(Param1, L"pushedimage") == 0) ZuiControlCall(Proc_Button_SetResPushed, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
-        else if (wcscmp(Param1, L"focusedimage") == 0) ZuiControlCall(Proc_Button_SetResFocused, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
-        else if (wcscmp(Param1, L"disabledimage") == 0) ZuiControlCall(Proc_Button_SetResDisabled, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
-        break;
+    case Proc_OnCreate: {
+        p = (ZuiButton)ZuiMalloc(sizeof(ZButton));
+        memset(p, 0, sizeof(ZButton));
+
+        //保存原来的回调地址,创建成功后回调地址指向当前函数
+        p->old_udata = ZuiLabelProc(Proc_OnCreate, cp, 0, 0, 0, 0);
+        p->old_call = (ZCtlProc)&ZuiLabelProc;
+        return p;
+    }
+    case Proc_OnDestroy: {
+        ZCtlProc old_call = p->old_call;
+        ZuiAny old_udata = p->old_udata;
+        if (p->m_ResNormal)
+            ZuiResDBDelRes(p->m_ResNormal);
+        if (p->m_ResHot)
+            ZuiResDBDelRes(p->m_ResHot);
+        if (p->m_ResPushed)
+            ZuiResDBDelRes(p->m_ResPushed);
+        if (p->m_ResFocused)
+            ZuiResDBDelRes(p->m_ResFocused);
+        if (p->m_ResDisabled)
+            ZuiResDBDelRes(p->m_ResDisabled);
+
+        ZuiFree(p);
+
+        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
     }
     case Proc_GetType:
-        return Type_Button;
+        return (ZuiAny)Type_Button;
     case Proc_CoreInit:
-        return TRUE;
+        return (ZuiAny)TRUE;
     case Proc_CoreUnInit:
-        return NULL;
+        return (ZuiAny)TRUE;
     default:
         break;
     }

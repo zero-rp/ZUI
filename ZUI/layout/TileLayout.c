@@ -4,27 +4,6 @@
 void* ZCALL ZuiTileLayoutProc(int ProcId, ZuiControl cp, ZuiTileLayout p, void* Param1, void* Param2, void* Param3) {
     switch (ProcId)
     {
-    case Proc_CoreInit:
-        return (ZuiAny)TRUE;
-    case Proc_OnCreate: {
-        p = (ZuiTileLayout)ZuiMalloc(sizeof(ZTileLayout));
-        memset(p, 0, sizeof(ZTileLayout));
-        //创建继承的控件 保存数据指针
-        p->old_udata = ZuiLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
-        p->old_call = (ZCtlProc)&ZuiLayoutProc;
-
-        return p;
-        break;
-    }
-    case Proc_OnDestroy: {
-        ZCtlProc old_call = p->old_call;
-        ZuiAny old_udata = p->old_udata;
-
-        ZuiFree(p);
-
-        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
-        break;
-    }
     case Proc_SetPos: {
         ZuiDefaultControlProc(ProcId, cp, 0, Param1, Param2, Param3);
         RECT rc = cp->m_rcItem;
@@ -133,6 +112,15 @@ void* ZCALL ZuiTileLayoutProc(int ProcId, ZuiControl cp, ZuiTileLayout p, void* 
             //if (m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible()) cyNeeded += m_pVerticalScrollBar->GetScrollPos();
         }
         return 0;
+    }
+    case Proc_SetAttribute: {
+        if (wcscmp(Param1, L"itemsize") == 0) {
+            LPTSTR pstr = NULL;
+            ZuiInt x = _tcstol(Param2, &pstr, 10);  ASSERT(pstr);
+            ZuiInt y = _tcstol(pstr + 1, &pstr, 10);   ASSERT(pstr);
+            ZuiControlCall(Proc_TileLayout_SetItemSize, cp, (ZuiAny)x, (ZuiAny)y, NULL);
+        }
+        else if (wcscmp(Param1, L"columns") == 0) ZuiControlCall(Proc_TileLayout_SetColumns, cp, (ZuiAny)_ttoi(Param2), NULL, NULL);
         break;
     }
     case Proc_TileLayout_SetColumns: {
@@ -149,20 +137,29 @@ void* ZCALL ZuiTileLayoutProc(int ProcId, ZuiControl cp, ZuiTileLayout p, void* 
         }
         break;
     }
-    case Proc_SetAttribute: {
-        if (wcscmp(Param1, L"itemsize") == 0) {
-            LPTSTR pstr = NULL;
-            ZuiInt x = _tcstol(Param2, &pstr, 10);  ASSERT(pstr);
-            ZuiInt y = _tcstol(pstr + 1, &pstr, 10);   ASSERT(pstr);
-            ZuiControlCall(Proc_TileLayout_SetItemSize, cp, (ZuiAny)x, (ZuiAny)y, NULL);
-        }
-        else if (wcscmp(Param1, L"columns") == 0) ZuiControlCall(Proc_TileLayout_SetColumns, cp, (ZuiAny)_ttoi(Param2), NULL, NULL);
-        break;
+    case Proc_OnCreate: {
+        p = (ZuiTileLayout)ZuiMalloc(sizeof(ZTileLayout));
+        memset(p, 0, sizeof(ZTileLayout));
+        //创建继承的控件 保存数据指针
+        p->old_udata = ZuiLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
+        p->old_call = (ZCtlProc)&ZuiLayoutProc;
+
+        return p;
     }
-    case Proc_CoreUnInit: {
+    case Proc_OnDestroy: {
+        ZCtlProc old_call = p->old_call;
+        ZuiAny old_udata = p->old_udata;
+
+        ZuiFree(p);
+
+        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+    }
+    case Proc_GetType:
+        return (ZuiAny)Type_TileLayout;
+    case Proc_CoreInit:
+        return (ZuiAny)TRUE;
+    case Proc_CoreUnInit:
         return NULL;
-        break;
-    }
     default:
         break;
     }
