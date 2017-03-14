@@ -32,7 +32,7 @@ ZuiBool ZuiResDBInit() {
         rb_insert(Zui_Hash(L"pe_zui"), p, Global_ResDB->resdb);
 
         //加载默认资源包
-        ZuiResDBGetRes(L"pe_zui:zip:106", ZREST_ZIP);
+        ZuiResDBGetRes(L"pe_zui:zip:6666", ZREST_ZIP);
         return TRUE;
     }
     return FALSE;

@@ -95,7 +95,13 @@ void __stdcall DLLDebug(){
     //bt2->m_aAnime = ZuiAnimationNew();
     ZuiLayoutAdd(win, bt2);
 
-    ZuiControlSetDrag(win, TRUE);
+
+    ZuiControl List = NewZuiControl(L"List", 0, 0, 0);
+    ZuiControlSetBkColor(List, -1);
+    ZuiControlSetDrag(List, TRUE);
+    ZuiLayoutAdd(win, List);
+
+    ZuiControlSetDrag(null1, TRUE);
     //ZuiUnInit();
     ZuiMsgLoop();
 #endif

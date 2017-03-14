@@ -16,7 +16,6 @@ BOOL ZuiControlRegister()
     ZuiControlRegisterAdd(L"virtual", (ZCtlProc)&ZuiVirtualProc);
     ZuiControlRegisterAdd(L"menubar", (ZCtlProc)&ZuiMenuBarProc);
     ZuiControlRegisterAdd(L"menu", (ZCtlProc)&ZuiMenuProc);
-    ZuiControlRegisterAdd(L"menuitem", (ZCtlProc)&ZuiMenuItemProc);
 
 
     ZuiControlRegisterAdd(L"window", (ZCtlProc)&ZuiWindowProc);
@@ -29,7 +28,7 @@ BOOL ZuiControlRegister()
     ZuiControlRegisterAdd(L"edit", (ZCtlProc)&ZuiEditProc);
     ZuiControlRegisterAdd(L"option", (ZCtlProc)&ZuiOptionProc);
     ZuiControlRegisterAdd(L"list", (ZCtlProc)&ZuiListProc);
-    ZuiControlRegisterAdd(L"listitem", (ZCtlProc)&ZuiListItemProc);
+    
 
     /*初始化全部控件*/
     //rb_foreach(Global_ControlClass, ZuiCoreInit);
