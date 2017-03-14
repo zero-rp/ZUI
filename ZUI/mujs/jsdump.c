@@ -219,13 +219,14 @@ static void pobject(int d, js_Ast *list)
     ps("}");
 }
 
-static void pstr(const char *s)
+static void pstr(const wchar_t *s)
 {
     static const char *HEX = "0123456789ABCDEF";
     Rune c;
     pc('"');
     while (*s) {
-        s += chartorune(&c, s);
+        c = *s;
+        s++;
         switch (c) {
         case '"': ps("\\\""); break;
         case '\\': ps("\\\\"); break;

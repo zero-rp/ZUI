@@ -106,9 +106,11 @@ static int isunicodeletter(int c)
 
 static int nextrune(struct cstate *g)
 {
-    g->source += chartorune(&g->yychar, g->source);
+    g->yychar = *g->source;
+    g->source++;
     if (g->yychar == '\\') {
-        g->source += chartorune(&g->yychar, g->source);
+        g->yychar = *g->source;
+        g->source++;
         switch (g->yychar) {
         case 0: die(g, L"unterminated escape sequence");
         case 'f': g->yychar = '\f'; return 0;
@@ -927,8 +929,10 @@ static int strncmpcanon(const wchar_t *a, const wchar_t *b, int n)
     while (n--) {
         if (!*a) return -1;
         if (!*b) return 1;
-        a += chartorune(&ra, a);
-        b += chartorune(&rb, b);
+        ra = *a;
+        a++;
+        rb = *b;
+        b++;
         c = canon(ra) - canon(rb);
         if (c)
             return c;
@@ -1001,19 +1005,22 @@ static int match(Reinst *pc, const wchar_t *sp, const wchar_t *bol, int flags, R
                 continue;
 
             case I_ANYNL:
-                sp += chartorune(&c, sp);
+                c = *sp;
+                sp++;
                 if (c == 0)
                     goto dead;
                 break;
             case I_ANY:
-                sp += chartorune(&c, sp);
+                c = *sp;
+                sp++;
                 if (c == 0)
                     goto dead;
                 if (isnewline(c))
                     goto dead;
                 break;
             case I_CHAR:
-                sp += chartorune(&c, sp);
+                c = *sp;
+                sp++;
                 if (c == 0)
                     goto dead;
                 if (flags & REG_ICASE)
@@ -1022,7 +1029,8 @@ static int match(Reinst *pc, const wchar_t *sp, const wchar_t *bol, int flags, R
                     goto dead;
                 break;
             case I_CCLASS:
-                sp += chartorune(&c, sp);
+                c = *sp;
+                sp++;
                 if (c == 0)
                     goto dead;
                 if (flags & REG_ICASE) {
@@ -1035,7 +1043,8 @@ static int match(Reinst *pc, const wchar_t *sp, const wchar_t *bol, int flags, R
                 }
                 break;
             case I_NCCLASS:
-                sp += chartorune(&c, sp);
+                c = *sp;
+                sp++;
                 if (c == 0)
                     goto dead;
                 if (flags & REG_ICASE) {

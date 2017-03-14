@@ -21,8 +21,10 @@ int js_runeat(js_State *J, const wchar_t *s, int i)
                 return 0;
             ++s;
         }
-        else
-            s += chartorune(&rune, s);
+        else {
+            rune = *s;
+            s++;
+        }
     }
     return rune;
 }
@@ -37,8 +39,10 @@ const wchar_t *js_utfidxtoptr(const wchar_t *s, int i)
                 return NULL;
             ++s;
         }
-        else
-            s += chartorune(&rune, s);
+        else {
+            rune = *s;
+            s++;
+        }
     }
     return s;
 }
@@ -50,8 +54,10 @@ int js_utfptrtoidx(const wchar_t *s, const wchar_t *p)
     while (s < p) {
         if (*(unsigned char *)s < Runeself)
             ++s;
-        else
-            s += chartorune(&rune, s);
+        else {
+            rune = *s;
+            s++;
+        }
         ++i;
     }
     return i;
@@ -83,12 +89,13 @@ static void Sp_valueOf(js_State *J)
 
 static void Sp_charAt(js_State *J)
 {
-    wchar_t buf[UTFmax + 1];
+    wchar_t buf[sizeof(wchar_t) + 1];
     const wchar_t *s = checkstring(J, 0);
     int pos = js_tointeger(J, 1);
     Rune rune = js_runeat(J, s, pos);
     if (rune > 0) {
-        buf[runetochar(buf, &rune)] = 0;
+        buf[0] = rune;
+        buf[1] = 0;
         js_pushstring(J, buf);
     }
     else {
@@ -152,7 +159,8 @@ static void Sp_indexOf(js_State *J)
             js_pushnumber(J, k);
             return;
         }
-        haystack += chartorune(&rune, haystack);
+        rune = *haystack;
+        haystack++;
         ++k;
     }
     js_pushnumber(J, -1);
@@ -169,7 +177,8 @@ static void Sp_lastIndexOf(js_State *J)
     while (*haystack && k <= pos) {
         if (!wcsncmp(haystack, needle, len))
             last = k;
-        haystack += chartorune(&rune, haystack);
+        rune = *haystack;
+        haystack++;
         ++k;
     }
     js_pushnumber(J, last);
@@ -234,14 +243,13 @@ static void Sp_substring(js_State *J)
 static void Sp_toLowerCase(js_State *J)
 {
     const wchar_t *src = checkstring(J, 0);
-    wchar_t *dst = ZuiMalloc(UTFmax * wcslen(src) * sizeof(wchar_t) + 2);
+    wchar_t *dst = ZuiMalloc(wcslen(src) * sizeof(wchar_t) + 2);
     const wchar_t *s = src;
     wchar_t *d = dst;
-    Rune rune;
     while (*s) {
-        s += chartorune(&rune, s);
-        rune = tolowerrune(rune);
-        d += runetochar(d, &rune);
+        d += tolowerrune(*s);
+        d++;
+        s++;
     }
     *d = 0;
     if (js_try(J)) {
@@ -256,14 +264,13 @@ static void Sp_toLowerCase(js_State *J)
 static void Sp_toUpperCase(js_State *J)
 {
     const wchar_t *src = checkstring(J, 0);
-    wchar_t *dst = ZuiMalloc(UTFmax * wcslen(src) * sizeof(wchar_t) + 2);
+    wchar_t *dst = ZuiMalloc(wcslen(src) * sizeof(wchar_t) + 2);
     const wchar_t *s = src;
     wchar_t *d = dst;
-    Rune rune;
     while (*s) {
-        s += chartorune(&rune, s);
-        rune = toupperrune(rune);
-        d += runetochar(d, &rune);
+        d += toupperrune(*s);
+        d++;
+        s++;
     }
     *d = 0;
     if (js_try(J)) {
@@ -296,10 +303,9 @@ static void Sp_trim(js_State *J)
 static void S_fromCharCode(js_State *J)
 {
     int i, top = js_gettop(J);
-    Rune c;
     wchar_t *s, *p;
 
-    s = p = ZuiMalloc((top - 1) * UTFmax + 1);
+    s = p = ZuiMalloc((top - 1) * sizeof(wchar_t) + 2);
 
     if (js_try(J)) {
         ZuiFree(s);
@@ -307,8 +313,8 @@ static void S_fromCharCode(js_State *J)
     }
 
     for (i = 1; i < top; ++i) {
-        c = js_touint16(J, i);
-        p += runetochar(p, &c);
+        *p = js_touint16(J, i);
+        p++;
     }
     *p = 0;
     js_pushstring(J, s);
@@ -635,10 +641,10 @@ static void Sp_split_string(js_State *J)
     if (n == 0) {
         Rune rune;
         for (i = 0; *str && i < limit; ++i) {
-            n = chartorune(&rune, str);
-            js_pushlstring(J, str, n);
+            rune = *str;
+            js_pushlstring(J, str, 1);
             js_setindex(J, -2, i);
-            str += n;
+            str++;
         }
         return;
     }

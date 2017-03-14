@@ -165,8 +165,8 @@ int jsY_tohex(int c)
 
 static void jsY_next(js_State *J)
 {
-    Rune c;
-    J->source += chartorune(&c, J->source);
+    Rune c = *J->source;
+    J->source++;
     /* consume CR LF as one unit */
     if (c == '\r' && *J->source == '\n')
         ++J->source;
@@ -213,7 +213,8 @@ static void textpush(js_State *J, Rune c)
         J->lexbuf.cap = J->lexbuf.cap * 2;
         J->lexbuf.text = ZuiRealloc(J->lexbuf.text, J->lexbuf.cap);
     }
-    J->lexbuf.len += runetochar(J->lexbuf.text + J->lexbuf.len, &c);
+    *(J->lexbuf.text + J->lexbuf.len) = c;
+    J->lexbuf.len++;
 }
 
 static wchar_t *textend(js_State *J)

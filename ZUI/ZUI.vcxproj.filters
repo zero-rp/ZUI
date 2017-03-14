@@ -258,12 +258,6 @@
     <ClCompile Include="mujs\regexp.c">
       <Filter>源文件\mujs</Filter>
     </ClCompile>
-    <ClCompile Include="mujs\utftype.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="mujs\utf.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
     <ClCompile Include="control\Label.c">
       <Filter>源文件\control</Filter>
     </ClCompile>
@@ -495,54 +489,6 @@
     <ClCompile Include="control\html\lout\signal.cc">
       <Filter>源文件\control\html\lout</Filter>
     </ClCompile>
-    <ClCompile Include="control\html\dw\widget.cc">
-      <Filter>源文件\control\html\dw_ok</Filter>
-    </ClCompile>
-    <ClCompile Include="control\html\dw\types.cc">
-      <Filter>源文件\control\html\dw_ok</Filter>
-    </ClCompile>
-    <ClCompile Include="control\html\dw\textblock.cc">
-      <Filter>源文件\control\html\dw_ok</Filter>
-    </ClCompile>
-    <ClCompile Include="control\html\dw\tablecell.cc">
-      <Filter>源文件\control\html\dw_ok</Filter>
-    </ClCompile>
-    <ClCompile Include="control\html\dw\style.cc">
-      <Filter>源文件\control\html\dw_ok</Filter>
-    </ClCompile>
-    <ClCompile Include="control\html\dw\selection.cc">
-      <Filter>源文件\control\html\dw_ok</Filter>
-    </ClCompile>
-    <ClCompile Include="control\html\dw\ruler.cc">
-      <Filter>源文件\control\html\dw_ok</Filter>
-    </ClCompile>
-    <ClCompile Include="control\html\dw\listitem.cc">
-      <Filter>源文件\control\html\dw_ok</Filter>
-    </ClCompile>
-    <ClCompile Include="control\html\dw\iterator.cc">
-      <Filter>源文件\control\html\dw_ok</Filter>
-    </ClCompile>
-    <ClCompile Include="control\html\dw\dwui.cc">
-      <Filter>源文件\control\html\dw_ok</Filter>
-    </ClCompile>
-    <ClCompile Include="control\html\dw\bullet.cc">
-      <Filter>源文件\control\html\dw_ok</Filter>
-    </ClCompile>
-    <ClCompile Include="control\html\dw\alignedtextblock.cc">
-      <Filter>源文件\control\html\dw_ok</Filter>
-    </ClCompile>
-    <ClCompile Include="control\html\dw\dwimage.cc">
-      <Filter>源文件\control\html\dw_ok</Filter>
-    </ClCompile>
-    <ClCompile Include="control\html\dw\dwtable.cc">
-      <Filter>源文件\control\html\dw_ok</Filter>
-    </ClCompile>
-    <ClCompile Include="control\html\dw\findtext.cc">
-      <Filter>源文件\control\html\dw_ok</Filter>
-    </ClCompile>
-    <ClCompile Include="control\html\dw\dwlayout.cc">
-      <Filter>源文件\control\html\dw_ok</Filter>
-    </ClCompile>
     <ClCompile Include="control\html\Html.cpp">
       <Filter>源文件\control\html</Filter>
     </ClCompile>
@@ -593,6 +539,54 @@
     </ClCompile>
     <ClCompile Include="platform\os\linux.c">
       <Filter>源文件\platform\os</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\alignedtextblock.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\bullet.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\dwimage.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\dwlayout.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\dwtable.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\dwui.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\findtext.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\iterator.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\listitem.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\ruler.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\selection.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\style.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\tablecell.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\textblock.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\types.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
+    </ClCompile>
+    <ClCompile Include="control\html\dw\widget.cc">
+      <Filter>源文件\control\html\dw_ok</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
