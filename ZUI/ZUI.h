@@ -1,9 +1,9 @@
 ﻿/**
-* @file		ZUI.h
-* @brief	公共头文件.
-* @author	[Zero](22249030)
-* @version	1.0
-* @date		$date
+* @file     ZUI.h
+* @brief    公共头文件.
+* @author   [Zero](22249030)
+* @version  1.0
+* @date     $date
 * @par History:
 *
 * [2016-10-25] <Zero> v1.0
@@ -32,38 +32,22 @@ extern "C"
 
 //运行平台配置
 #ifdef WIN32
-#define PLATFORM_OS_WIN
+    #define PLATFORM_OS_WIN
 #elif defined _WIN64
-#define PLATFORM_OS_WIN
+    #define PLATFORM_OS_WIN
 #elif defined LINUX
-#define PLATFORM_OS_LINUX
+    #define PLATFORM_OS_LINUX
 #elif defined MACX
-#define PLATFORM_OS_MACX
+    #define PLATFORM_OS_MACX
 #endif
 
-#define	LOG_DEBUG	0       //打印调试日志
+#define LOG_DEBUG   0       //打印调试日志
 #define MEM_DEBUG   0       //开启内存调试功能
 #define RUN_DEBUG   0       //开启运行时调试功能
 
 
 #define JS_GCTIMER  10      //js内存回收间隔 s
 
-
-/*系统头文件*/
-#ifdef PLATFORM_OS_WIN
-#define WIN32_LEAN_AND_MEAN
-#include <olectl.h>
-#include <windows.h>
-#include <windowsx.h>
-#include <commctrl.h>
-#include <tchar.h>
-#include <crtdbg.h>
-
-#pragma comment( lib, "winmm.lib" )
-#pragma comment( lib, "comctl32.lib" )
-#pragma comment(lib, "Msimg32.lib")  
-#pragma comment(lib, "Gdiplus.lib")
-#endif
 
 #include <stddef.h>
 #include <stdio.h>
@@ -72,18 +56,8 @@ extern "C"
 #include <stdint.h>
 #include <stdlib.h>
 
-#if defined _M_IX86
-#	pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
-#elif defined _M_IA64
-#	pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='ia64' publicKeyToken='6595b64144ccf1df' language='*'\"")
-#elif defined _M_X64
-#	pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='amd64' publicKeyToken='6595b64144ccf1df' language='*'\"")
-#else
-#	pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
-#endif
 
-
-#ifdef WIN32
+#ifdef PLATFORM_OS_WIN
     #ifdef __cplusplus
         #define ZEXPORT extern "C" __declspec(dllexport)
     #else
@@ -101,12 +75,7 @@ extern "C"
 
 #define DEFARG(name, defval) ((#name[0]) ? (name + 0) : defval)
 #define ZProc(Control,Proc,Param1,Param2,Param3) ZuiControlCall(Proc_##Proc,Control,(ZuiAny)DEFARG(Param1, NULL), (ZuiAny)DEFARG(Param2, NULL), (ZuiAny)DEFARG(Param3, NULL));
-#define ARGB(A,R,G,B) ((int32_t)((((A)&0xff)<<24)|(((R)&0xff)<<16)|(((G)&0xff)<<8)|((B)&0xff)))
-#define RGBA(R,G,B,A) ARGB(A,R,G,B)
-#define RGB2ARGB(COLOR,A) RGBA(((COLOR) >> 16 & 0xFF), ((COLOR) >> 8 & 0xFF), ((COLOR) & 0xFF), (A))
-#ifdef LINUX
-#define RGB(r,g,b) ((ZuiInt)(((ZuiByte)(r)|((short)((ZuiByte)(g))<<8))|(((ZuiInt)(ZuiByte)(b))<<16)))
-#endif
+
 
 #define lengthof(x) (sizeof(x)/sizeof(*x))
 #define MAX max
@@ -118,79 +87,79 @@ extern "C"
 #endif
 
 
-typedef wchar_t*	ZuiText, _ZuiText;	//内核默认Unicode存储字符
-typedef float		ZuiReal;
+typedef wchar_t*    ZuiText, _ZuiText;	//内核默认Unicode存储字符
+typedef float       ZuiReal;
 #ifdef _WIN64
-typedef int64_t		ZuiInt;
+typedef int64_t     ZuiInt;
 typedef uint64_t    ZuiUInt;
 #else
-typedef int			ZuiInt;
-typedef unsigned int			ZuiUInt;
+typedef int32_t     ZuiInt;
+typedef uint32_t    ZuiUInt;
 #endif
-typedef int			ZuiBool;
-typedef void		ZuiVoid;
-typedef void*		ZuiAny;
-typedef int32_t		ZuiColor;
-typedef unsigned	ZuiByte;
+typedef int32_t     ZuiBool;
+typedef void        ZuiVoid;
+typedef void*       ZuiAny;
+typedef int32_t     ZuiColor;
+typedef unsigned    ZuiByte;
 /**矩形*/
 typedef struct _ZRect
 {
-	int Left;	///左边
-	int Top;		///顶边
-	int Width;	///宽度
-	int Height;	///高度
+    int Left;   ///左边
+    int Top;    ///顶边
+    int Width;  ///宽度
+    int Height; ///高度
 } *ZuiRect, ZRect;
 /**矩形(浮点)*/
 typedef struct _ZRectR
 {
-	ZuiReal Left;///左边
-	ZuiReal Top;///顶边
-	ZuiReal Width;///宽度
-	ZuiReal Height;///高度
+    ZuiReal Left;///左边
+    ZuiReal Top;///顶边
+    ZuiReal Width;///宽度
+    ZuiReal Height;///高度
 } *ZuiRectR, ZRectR;
 /**点*/
 typedef struct _ZPoint
 {
-	int x;
-	int y;
+    int x;
+    int y;
 } *ZuiPoint, ZPoint;
 /**大小*/
 typedef struct _ZSize
 {
-	int Width;	///宽度
-	int Height;	///高度
+    int Width;	///宽度
+    int Height;	///高度
 } *ZuiSize, ZSize;
 /**点(浮点)*/
 typedef struct _ZPointR
 {
-	ZuiReal x;
-	ZuiReal y;
+    ZuiReal x;
+    ZuiReal y;
 } *ZuiPointR, ZPointR;
 
 #define MAKEZRECT(r, L, T, W, H) \
-	r.Left = L; \
-	r.Top = T;\
-	r.Width = W;\
-	r.Height = H;
+    r.Left = L; \
+    r.Top = T;\
+    r.Width = W;\
+    r.Height = H;
 #define MAKEZRECTP(r, L, T, W, H) \
-	r->Left = L; \
-	r->Top = T;\
-	r->Width = W;\
-	r->Height = H;
+    r->Left = L; \
+    r->Top = T;\
+    r->Width = W;\
+    r->Height = H;
 
 #ifdef LINUX 
 typedef long LONG;
 typedef struct tagRECT
 {
-	LONG    left;
-	LONG    top;
-	LONG    right;
-	LONG    bottom;
+    LONG    left;
+    LONG    top;
+    LONG    right;
+    LONG    bottom;
 } RECT, *PRECT, *NPRECT, *LPRECT;
 typedef struct tagSIZE
 {
-	LONG        cx;
-	LONG        cy;
+    LONG        cx;
+    LONG        cy;
 } SIZE, *PSIZE, *LPSIZE;
 #endif
 
@@ -211,9 +180,9 @@ typedef struct tagSIZE
 #include "core/global.h"
 /*内核*/
 
-#include "core/manager.h"		//绘制管理器
+#include "core/manager.h"       //绘制管理器
 #include "core/animation.h"     //动画处理器
-#include "core/control.h"		//控件基类
+#include "core/control.h"       //控件基类
 #include "core/template.h"
 #include "core/builder.h"
 
@@ -221,7 +190,7 @@ typedef struct tagSIZE
 #include "control/Register.h"
 #include "control/window.h"
 #include "control/Html.h"
-#include "control/Virtual.h"	//虚拟控件,用来管理原生控件
+#include "control/Virtual.h"    //虚拟控件,用来管理原生控件
 #include "control/Menu.h"
 #include "control/MenuBar.h"
 
@@ -237,11 +206,11 @@ typedef struct tagSIZE
 #include "control/List.h"
 
 /*布局*/
-#include "layout/Layout.h"				//容器基类
-#include "layout/VerticalLayout.h"		//纵向布局
-#include "layout/HorizontalLayout.h"	//横向布局
-#include "layout/TileLayout.h"			//列表布局
-#include "layout/TabLayout.h"			//选择夹布局
+#include "layout/Layout.h"              //容器基类
+#include "layout/VerticalLayout.h"      //纵向布局
+#include "layout/HorizontalLayout.h"    //横向布局
+#include "layout/TileLayout.h"          //列表布局
+#include "layout/TabLayout.h"           //选择夹布局
 
 
 
