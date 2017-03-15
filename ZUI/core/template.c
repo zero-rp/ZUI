@@ -75,7 +75,7 @@ ZuiVoid ZuiLoadTemplate(mxml_node_t *n, ZuiControl p, ZuiAny Param1, ZuiAny Para
     for (node = mxmlFindElement(node, node, NULL, NULL, NULL, MXML_DESCEND); node != NULL; node = mxmlWalkNext(node, NULL, MXML_DESCEND))
     {
         ClassName = node->value.name;
-#if !(defined NDEBUG)
+#if (defined LOG_DEBUG) && (LOG_DEBUG == 1)
         printf("Template创建控件: 类名:%ls\r\n", ClassName);
 #endif
         Control = NewZuiControl(ClassName, NULL, NULL, NULL);

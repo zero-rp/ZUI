@@ -17,7 +17,7 @@
 
 #define Proc_Layout_Add                 501 ///添加控件
 #define Proc_Layout_AddAt               502 ///插入控件
-#define Proc_Layout_Remove              503 ///移除指定控件
+#define Proc_Layout_Remove              503 ///移除指定控件, 参数1为真由调用方销毁成员
 #define Proc_Layout_RemoveAt            504 ///移除指定位置控件
 #define Proc_Layout_RemoveAll           505 ///移除全部控件
 #define Proc_Layout_GetCount            506 ///取容器控件数量

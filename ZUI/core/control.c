@@ -39,6 +39,7 @@ ZuiControl NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny
 
         p->m_rAttribute = rb_new();
 
+        //p->m_dwBorderColor = ARGB(255, 255, 0, 0);
 #if RUN_DEBUG
         p->m_sClassName = ZuiWcsdup(classname);
 #endif // RUN_DEBUG
@@ -409,7 +410,6 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     }
     case Proc_EstimateSize: {
         return (void *)&p->m_cxyFixed;
-        break;
     }
     case Proc_FindControl: {
         if (((UINT)Param3 & ZFIND_VISIBLE) != 0 && !p->m_bVisible)
@@ -683,10 +683,11 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         }
         break;
     }
-    case Proc_GetObject:
+    case Proc_GetObject: {
         if (Param1 == Type_Null)
             return p;
         break;
+    }
     case Proc_GetType: {
         return Type_Null;
     }

@@ -1,5 +1,5 @@
 ﻿#include <ZUI.h>
-#if MEM_DEBUG
+#if MEM_DEBUG || RUN_DEBUG
 #define snprintf _snprintf
 
 MArray *marray_create()
