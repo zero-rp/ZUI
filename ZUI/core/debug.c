@@ -199,6 +199,11 @@ BOOL WINAPI tab3_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     return FALSE;
 }
 void SetSelectControl(ZuiControl p) {
+    wchar_t buf[255];
+    RECT *pos = ZuiControlCall(Proc_GetPos, p, NULL, NULL, NULL);
+    swprintf(buf, L"%d,%d,%d,%d", pos->left, pos->top, pos->right, pos->bottom);
+    SetWindowText(GetDlgItem(hDlg_intab[2], IDC_EDIT3), buf);
+
     SetWindowText(GetDlgItem(hDlg_intab[2], IDC_EDIT2), p->m_sText);
 
 
@@ -237,6 +242,7 @@ void InsertColumn(void)
 
 
 VOID CALLBACK UPDATEMEMTIME(HWND H, UINT U, UINT_PTR Pt, DWORD D) {
+    return;
     LVITEM lvItem = { 0 };
     WCHAR buf[1024];
     int hash = 0;

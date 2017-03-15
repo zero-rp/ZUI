@@ -260,7 +260,7 @@ ZEXPORT ZuiVoid ZCALL ZuiControlInvalidate(ZuiControl p, ZuiBool ResetAnimation)
 ZEXPORT ZuiVoid ZCALL ZuiControlNeedUpdate(ZuiControl p);                                   //更新布局
 ZEXPORT ZuiVoid ZCALL ZuiControlNeedParentUpdate(ZuiControl p);                             //更新父控件布局
 ZEXPORT ZuiVoid ZCALL ZuiControlEvent(ZuiControl p, TEventUI *event);                       //发送事件
-ZEXPORT ZuiVoid ZCALL ZuiControlMove(ZuiControl p, SIZE szOffset, BOOL bNeedInvalidate);    //移动位置
+ZEXPORT ZuiVoid ZCALL ZuiControlMove(ZuiControl p, SIZE *szOffset, BOOL bNeedInvalidate);    //移动位置
 
 
 #endif // __CONTROL_H__

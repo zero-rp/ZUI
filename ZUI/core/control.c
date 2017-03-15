@@ -872,13 +872,13 @@ ZEXPORT ZuiVoid ZCALL ZuiControlEvent(ZuiControl p, TEventUI *event)
     ZuiControlCall(Proc_OnEvent, p, event, NULL, NULL);
 }
 
-ZEXPORT ZuiVoid ZCALL ZuiControlMove(ZuiControl p, SIZE szOffset, BOOL bNeedInvalidate)
+ZEXPORT ZuiVoid ZCALL ZuiControlMove(ZuiControl p, SIZE *szOffset, BOOL bNeedInvalidate)
 {
     RECT invalidateRc = p->m_rcItem;
-    p->m_rcItem.left += szOffset.cx;
-    p->m_rcItem.top += szOffset.cy;
-    p->m_rcItem.right += szOffset.cx;
-    p->m_rcItem.bottom += szOffset.cy;
+    p->m_rcItem.left += szOffset->cx;
+    p->m_rcItem.top += szOffset->cy;
+    p->m_rcItem.right += szOffset->cx;
+    p->m_rcItem.bottom += szOffset->cy;
 
     if (bNeedInvalidate && p->m_pManager == NULL && p->m_bVisible) {
         Rect_Join(&invalidateRc, &p->m_rcItem);
