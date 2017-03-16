@@ -121,6 +121,12 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         p->m_ResDisabled = Param1;
         break;
     }
+    case Proc_SetAnimation: {
+        if (cp->m_aAnime)
+            ZuiAnimationFree(cp->m_aAnime);
+        cp->m_aAnime = ZuiAnimationNew(Param1, Param2, Param3);
+        break;
+    }
     case Proc_SetAttribute: {
         if (wcscmp(Param1, L"normalimage") == 0) ZuiControlCall(Proc_Button_SetResNormal, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         else if (wcscmp(Param1, L"hotimage") == 0) ZuiControlCall(Proc_Button_SetResHot, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);

@@ -451,7 +451,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     }
     case Proc_OnPaintBkColor: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        RECT *rc = &p->m_rcItem;
+        RECT *rc = (RECT *)Param2;
         if (p->m_BkgColor)
             ZuiDrawFillRect(gp, p->m_BkgColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
         break;
@@ -484,6 +484,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         break;
     }
     case Proc_OnDestroy: {
+        if (p->m_aAnime)
+            ZuiAnimationFree(p->m_aAnime);
         if (p->m_sText)
             ZuiFree(p->m_sText);
         if (p->m_sName)

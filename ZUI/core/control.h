@@ -33,75 +33,76 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define Proc_CoreInit           1   //用于控件内核初始化
 #define Proc_CoreUnInit         2   //用于控件内核反初始化
 #define Proc_GetType            3   //取控件类型
-#define Proc_GetObject          65  //获取控件被继承后某一类型的对象
-#define Proc_OnCreate           4   //内核创建
-#define Proc_OnInit             5   //用户初始化
-#define Proc_OnDestroy          6   //销毁
-#define Proc_OnSize             7   //
-#define Proc_OnEvent            8   //
-#define Proc_OnNotify           9   //
-#define Proc_OnPaint            10  // 绘制循序：背景颜色->背景图->状态图->文本->边框
-#define Proc_OnPaintBkColor     11  //背景色
-#define Proc_OnPaintBkImage     12  //背景图片
-#define Proc_OnPaintStatusImage 13  //状态图片
-#define Proc_OnPaintText        14  //文本
-#define Proc_OnPaintBorder      15  //边框
-#define Proc_OnPostPaint        16  //
+#define Proc_GetObject          4  //获取控件被继承后某一类型的对象
+#define Proc_OnCreate           5   //内核创建
+#define Proc_OnInit             6   //用户初始化
+#define Proc_OnDestroy          7   //销毁
+#define Proc_OnSize             8   //
+#define Proc_OnEvent            9   //
+#define Proc_OnNotify           10   //
+#define Proc_OnPaint            11  // 绘制循序：背景颜色->背景图->状态图->文本->边框
+#define Proc_OnPaintBkColor     12  //背景色
+#define Proc_OnPaintBkImage     13  //背景图片
+#define Proc_OnPaintStatusImage 14  //状态图片
+#define Proc_OnPaintText        15  //文本
+#define Proc_OnPaintBorder      16  //边框
+#define Proc_OnPostPaint        17  //
 
-#define Proc_FindControl        17  //查找控件
-#define Proc_JsCall             18  //函数调用
-#define Proc_JsPut              19  //
-#define Proc_JsHas              20  //处理js对象 返回0则是变量,返回1则是call
+#define Proc_FindControl        18  //查找控件
+#define Proc_JsCall             19  //函数调用
+#define Proc_JsPut              20  //
+#define Proc_JsHas              21  //处理js对象 返回0则是变量,返回1则是call
 
 //----控件属性
-#define Proc_SetAttribute       21  //解析属性
-#define Proc_GetAttribute       22  //取属性
-#define Proc_GetControlFlags    23  //
-#define Proc_Activate           24  //活动
-#define Proc_SetVisible         25  //设置是否可视
-#define Proc_SetText            26  //设置文本
-#define Proc_GetText            27  //设置文本
-#define Proc_SetName            28  //设置名字
-#define Proc_SetTooltip         29  //设置提示文本
-#define Proc_GetPos             30  //得到控件位置
-#define Proc_SetPos             31  //设置控件位置并重绘
-#define Proc_SetManager         32  //设置控件的绘制管理者
+#define Proc_SetAttribute       22  //解析属性
+#define Proc_GetAttribute       23  //取属性
+#define Proc_GetControlFlags    24  //
+#define Proc_Activate           25  //活动
+#define Proc_SetVisible         26  //设置是否可视
+#define Proc_SetText            27  //设置文本
+#define Proc_GetText            28  //设置文本
+#define Proc_SetName            29  //设置名字
+#define Proc_SetTooltip         30  //设置提示文本
+#define Proc_GetPos             31  //得到控件位置
+#define Proc_SetPos             32  //设置控件位置并重绘
+#define Proc_SetManager         33  //设置控件的绘制管理者
+#define Proc_SetAnimation       34  //设置动画类型
 //设置大小的限制值
-#define Proc_GetMinWidth        33  //
-#define Proc_SetMinWidth        34  //
-#define Proc_GetMaxWidth        35  //
-#define Proc_SetMaxWidth        36  //
-#define Proc_GetMinHeight       37  //
-#define Proc_SetMinHeight       38  //
-#define Proc_GetMaxHeight       39  //
-#define Proc_SetMaxHeight       40  //
-#define Proc_GetWidth           41  //
-#define Proc_GetHeight          42  //
-#define Proc_GetX               43  //
-#define Proc_GetY               44
-#define Proc_EstimateSize       45  //获取自适应大小
-#define Proc_SetFloatPercent    46  //
-#define Proc_GetPadding         47
-#define Proc_SetPadding         48  // 设置外边距，由上层窗口绘制
-#define Proc_GetFixedXY         49  // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
-#define Proc_SetFixedXY         50  // 仅float为true时有效
-#define Proc_GetFixedWidth      51  // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
-#define Proc_SetFixedWidth      52  // 预设的参考值
-#define Proc_GetFixedHeight     53  // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
-#define Proc_SetFixedHeight     54  // 预设的参考值
-#define Proc_GetRelativePos     55  // 相对(父控件)位置
-#define Proc_GetImePoint        56  // 获取输入法位置
-#define Proc_SetFloat           57  //设置为浮动控件
-#define Proc_SetEnabled         58  //设置可用状态
-#define Proc_SetFocus           59  //设置焦点
-#define Proc_SetDrag            60  //设置拖拽控件
+#define Proc_GetMinWidth        35  //
+#define Proc_SetMinWidth        36  //
+#define Proc_GetMaxWidth        37  //
+#define Proc_SetMaxWidth        38  //
+#define Proc_GetMinHeight       39  //
+#define Proc_SetMinHeight       40  //
+#define Proc_GetMaxHeight       41  //
+#define Proc_SetMaxHeight       42  //
+#define Proc_GetWidth           43  //
+#define Proc_GetHeight          44  //
+#define Proc_GetX               45  //
+#define Proc_GetY               46
+#define Proc_EstimateSize       47  //获取自适应大小
+#define Proc_SetFloatPercent    48  //
+#define Proc_GetPadding         49
+#define Proc_SetPadding         50  // 设置外边距，由上层窗口绘制
+#define Proc_GetFixedXY         51  // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
+#define Proc_SetFixedXY         52  // 仅float为true时有效
+#define Proc_GetFixedWidth      53  // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
+#define Proc_SetFixedWidth      54  // 预设的参考值
+#define Proc_GetFixedHeight     55  // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
+#define Proc_SetFixedHeight     56  // 预设的参考值
+#define Proc_GetRelativePos     57  // 相对(父控件)位置
+#define Proc_GetImePoint        58  // 获取输入法位置
+#define Proc_SetFloat           59  //设置为浮动控件
+#define Proc_SetEnabled         60  //设置可用状态
+#define Proc_SetFocus           61  //设置焦点
+#define Proc_SetDrag            62  //设置拖拽控件
 
 //-------绘图资源
-#define Proc_SetBkColor         61  //设置背景色
-#define Proc_SetBkImage         62  //设置背景图片
-#define Proc_SetBorderColor     63  //设置边框颜色
+#define Proc_SetBkColor         63  //设置背景色
+#define Proc_SetBkImage         64  //设置背景图片
+#define Proc_SetBorderColor     65  //设置边框颜色
 
-#define Proc_SetAnimationType   64  //设置动画类型
+#define Proc_SetAnimationType   66  //设置动画类型
 
 //-------控件状态
 #define ZSTATE_FOCUSED      0x00000001
@@ -173,7 +174,7 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define ZuiControlSetBkColor(Control, ...) ZProc(Control, SetBkColor, __VA_ARGS__);
 #define ZuiControlSetBkImage(Control, ...) ZProc(Control, SetBkImage, __VA_ARGS__);
 #define ZuiControlSetBorderColor(Control, ...) ZProc(Control, SetBorderColor, __VA_ARGS__);
-
+#define ZuiControlSetAnimation(Control, ...) ZProc(Control, SetAnimation, __VA_ARGS__);
 enum ZAttType
 {
     ZAttType_JsCall = 1,
