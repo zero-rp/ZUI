@@ -67,13 +67,19 @@ function AddDesignTab(type){
 		var i =DesignTabHead.GetItemIndex(a);
 		c.parent.clos();
 		DesignTab.GetItemAt(i).clos();
+		if (DesignTab.count == 0) {
+		    Design.GetItemAt(1).bkcolor = 0xFF293A56;
+		    Design.GetItemAt(2).bkcolor = 0xFF293A56;
+		}
 		if(i+1<=DesignTabSelectIndex)
 			DesignTabSelectIndex--;
 		DesignTabSelect(DesignTabSelectIndex);
 	}//关闭标签
 	clos.visible=false;
 	TabHead.Add(clos);
-	
+	Design.GetItemAt(1).bkcolor = 0xFFFFF29D;
+	Design.GetItemAt(2).bkcolor = 0xFFBDC5D8;
+
 	DesignTabHead.AddAt(TabHead);//添加到父控件
 	
 	if(type=="js"){
@@ -138,7 +144,7 @@ function AttTabSelect(Index){
 
 //------------初始化代码
 AddDesignTab("window");
-//AddDesignTab("xml");
+AddDesignTab("xml");
 
 
 
