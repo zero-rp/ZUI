@@ -28,7 +28,7 @@ BOOL ZuiControlRegister()
     ZuiControlRegisterAdd(L"edit", (ZCtlProc)&ZuiEditProc);
     ZuiControlRegisterAdd(L"option", (ZCtlProc)&ZuiOptionProc);
     ZuiControlRegisterAdd(L"list", (ZCtlProc)&ZuiListProc);
-    
+    ZuiControlRegisterAdd(L"treeview", (ZCtlProc)&ZuiTreeViewProc);
 
     /*初始化全部控件*/
     //rb_foreach(Global_ControlClass, ZuiCoreInit);

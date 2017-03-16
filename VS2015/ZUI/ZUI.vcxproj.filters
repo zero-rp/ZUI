@@ -411,6 +411,9 @@
     <ClCompile Include="..\..\ZUI\platform\graph\agg\src\agg_vcgen_stroke.cpp">
       <Filter>源文件\platform\graph\AGG\src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\TreeView.c">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="control\html\lout\container.hh">
@@ -706,6 +709,9 @@
     </ClInclude>
     <ClInclude Include="..\..\ZUI\zlib\zutil.h">
       <Filter>头文件\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\control\TreeView.h">
+      <Filter>头文件\control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -97,3 +97,4 @@ bin/Win32/Debug/wkeStorage
 Designer/res.zip
 ZUI/res/default.zip
 bin/
+*.aps
