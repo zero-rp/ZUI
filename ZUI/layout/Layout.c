@@ -253,6 +253,90 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
         }
         break;
     }
+    case Proc_OnEvent: {
+        TEventUI *event = (TEventUI *)Param1;
+        //不响应鼠标消息
+        if (!cp->m_bMouseEnabled && event->Type > ZEVENT__MOUSEBEGIN && event->Type < ZEVENT__MOUSEEND) {
+            if (cp->m_pParent != NULL) 
+                ZuiControlCall(Proc_OnEvent, cp->m_pParent, Param1, NULL, NULL);
+            else 
+                ZuiDefaultControlProc(Proc_OnEvent, cp, 0, Param1, NULL, NULL);
+            return;
+        }
+
+        if (event->Type == ZEVENT_SETFOCUS)
+        {
+            p->m_bFocused = TRUE;
+            return NULL;
+        }
+        if (event->Type == ZEVENT_KILLFOCUS)
+        {
+            p->m_bFocused = FALSE;
+            return NULL;
+        }
+        if (p->m_pVerticalScrollBar != NULL && p->m_pVerticalScrollBar->m_bVisible && p->m_pVerticalScrollBar->m_bEnabled)
+        {
+            if (event->Type == ZEVENT_KEYDOWN)
+            {
+                switch (event->chKey) {
+                case VK_DOWN:
+                    return ZuiControlCall(Proc_Layout_LineDown, cp, NULL, NULL, NULL);
+                case VK_UP:
+                    return ZuiControlCall(Proc_Layout_LineUp, cp, NULL, NULL, NULL);
+                case VK_NEXT:
+                    return ZuiControlCall(Proc_Layout_PageDown, cp, NULL, NULL, NULL);
+                case VK_PRIOR:
+                    return ZuiControlCall(Proc_Layout_PageUp, cp, NULL, NULL, NULL);
+                case VK_HOME:
+                    return ZuiControlCall(Proc_Layout_HomeUp, cp, NULL, NULL, NULL);
+                case VK_END:
+                    return ZuiControlCall(Proc_Layout_EndDown, cp, NULL, NULL, NULL);
+                case VK_LEFT:
+                    return ZuiControlCall(Proc_Layout_LineLeft, cp, NULL, NULL, NULL);
+                case VK_RIGHT:
+                    return ZuiControlCall(Proc_Layout_LineRight, cp, NULL, NULL, NULL);
+                }
+            }
+            else if (event->Type == ZEVENT_SCROLLWHEEL)
+            {
+                switch (LOWORD(event->wParam)) {
+                case SB_LINEUP:
+                    return ZuiControlCall(Proc_Layout_LineUp, cp, NULL, NULL, NULL);
+                case SB_LINEDOWN:
+                    return ZuiControlCall(Proc_Layout_LineDown, cp, NULL, NULL, NULL);
+                }
+            }
+        }
+        else if (p->m_pHorizontalScrollBar != NULL && p->m_pHorizontalScrollBar->m_bVisible && p->m_pHorizontalScrollBar->m_bEnabled) {
+            if (event->Type == ZEVENT_KEYDOWN)
+            {
+                switch (event->chKey) {
+                case VK_DOWN:
+                    return ZuiControlCall(Proc_Layout_LineRight, cp, NULL, NULL, NULL);
+                case VK_UP:
+                    return ZuiControlCall(Proc_Layout_LineLeft, cp, NULL, NULL, NULL);
+                case VK_NEXT:
+                    return ZuiControlCall(Proc_Layout_PageRight, cp, NULL, NULL, NULL);
+                case VK_PRIOR:
+                    return ZuiControlCall(Proc_Layout_PageLeft, cp, NULL, NULL, NULL);
+                case VK_HOME:
+                    return ZuiControlCall(Proc_Layout_HomeLeft, cp, NULL, NULL, NULL);
+                case VK_END:
+                    return ZuiControlCall(Proc_Layout_EndRight, cp, NULL, NULL, NULL);
+                }
+            }
+            else if (event->Type == ZEVENT_SCROLLWHEEL)
+            {
+                switch (LOWORD(event->wParam)) {
+                case SB_LINEUP:
+                    return ZuiControlCall(Proc_Layout_LineLeft, cp, NULL, NULL, NULL);
+                case SB_LINEDOWN:
+                    return ZuiControlCall(Proc_Layout_LineRight, cp, NULL, NULL, NULL);
+                }
+            }
+        }
+        break;
+    }
     case Proc_SetAttribute: {
         if (wcscmp(Param1, _T("inset")) == 0) {
             RECT rcInset = { 0 };

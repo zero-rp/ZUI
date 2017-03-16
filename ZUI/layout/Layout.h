@@ -89,10 +89,11 @@ typedef struct _ZuiLayout
 {
     DArray *m_items;            /// 控件数组
     RECT m_rcInset;             /// 内边距
-    BOOL m_bMouseChildEnabled;
-    int m_iChildPadding;
-    BOOL m_bScrollProcess;      //  防止SetPos循环调用
-    int  m_nScrollStepSize;
+    ZuiBool m_bMouseChildEnabled;
+    ZuiInt m_iChildPadding;
+    ZuiBool m_bFocused;            //是焦点状态
+    ZuiBool m_bScrollProcess;      //  防止SetPos循环调用
+    ZuiInt  m_nScrollStepSize;
     ZuiControl m_pVerticalScrollBar;    //纵向滚动条
     ZuiControl m_pHorizontalScrollBar;  //横向滚动条
 
