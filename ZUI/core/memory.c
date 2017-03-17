@@ -112,45 +112,9 @@ int marray_find(MArray * darray, void * data) {
 }
 
 MArray *mem = NULL;
-VOID CALLBACK MEMTIME(HWND H, UINT U, UINT_PTR Pt, DWORD D) {
-    HANDLE hd;
-    COORD pos;
-    char buf[120];
-    pos.X = 0;
-    pos.Y = 0;
-    hd = GetStdHandle(STD_OUTPUT_HANDLE);   /*获取标准输出的句柄*/
-
-    SetConsoleCursorPosition(hd, pos);      /*设置控制台光标输出的位置*/
-
-    snprintf(buf, 120, "┌─────────────────────────────────────────────────────────┐");
-    printf("%-118s\r\n", buf);
-    snprintf(buf, 120, "│ObjectNum:%d,MemNun:%d", mem->count, mem->msize);
-    printf("%-116s│\r\n", buf);
-    snprintf(buf, 120, "├────┬───┬────┬─────────────┬──────────────────────────┬──┤");
-    printf("%-118s\r\n", buf);
-    snprintf(buf, 120, "│  Ptr   │ Size │ Timer  │           Proc           │   File                                             │Line│");
-    printf("%-118s\r\n", buf);
-    snprintf(buf, 120, "├────┼───┼────┼─────────────┼──────────────────────────┼──┤");
-    printf("%-118s\r\n", buf);
-    //显示最近15条分配记录
-    for (size_t i = 0; i < 15; i++)
-    {
-        MEM* p = ((MEM *)((char *)mem->data[mem->count - i - 1] - sizeof(MEM)));
-        if (mem->count - i < 1)
-            break;
-        snprintf(buf, 120, "│%p│%-6d│%-8d│%-26s│%-52s│%d", p->ptr, p->_Size,
-            (GetTickCount() - p->timer) / 1000,
-            p->_Func, p->_File, p->_Line);
-        printf("%-116s│\r\n", buf);
-    }
-    snprintf(buf, 120, "└────┴───┴────┴─────────────┴──────────────────────────┴──┘");
-    printf("%-118s\r\n", buf);
-}
 void *zui_malloc(unsigned int _Size, const char *_Func, const char *_File, unsigned int _Line) {
     if (!mem) {
         mem = marray_create();
-        printf("MEMStart..\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
-        SetTimer(0, 0, 500, MEMTIME);
     }
     EnterCriticalSection(&mem->cs);       // 进入临界区
     void *p = (char *)malloc(_Size + sizeof(MEM) + 8) + sizeof(MEM);

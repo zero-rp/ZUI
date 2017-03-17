@@ -1,5 +1,29 @@
 ﻿#include <ZUI.h>
 
+
+BOOL __stdcall enumUserWindowsCB(HWND hwnd, LPARAM lParam)
+{
+    long wflags = GetWindowLong(hwnd, GWL_STYLE);
+    if (!(wflags & WS_VISIBLE)) return TRUE;
+
+    HWND sndWnd;
+    if (!(sndWnd = FindWindowEx(hwnd, NULL, L"SHELLDLL_DefView", NULL))) return TRUE;
+    HWND targetWnd;
+    if (!(targetWnd = FindWindowEx(sndWnd, NULL, L"SysListView32", L"FolderView"))) return TRUE;
+
+    HWND* resultHwnd = (HWND*)lParam;
+    *resultHwnd = targetWnd;
+    return FALSE;
+}
+
+
+HWND findDesktopIconWnd()
+{
+    HWND resultHwnd = NULL;
+    EnumWindows((WNDENUMPROC)enumUserWindowsCB, (LPARAM)&resultHwnd);
+    return resultHwnd;
+}
+
 static rb_root *m_window = NULL;
 DArray *m_window_array = NULL;
 static LRESULT ZCALL __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -285,6 +309,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
             p->old_udata = ZuiVerticalLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
             p->old_call = (ZCtlProc)&ZuiVerticalLayoutProc;
 
+            Param2 = findDesktopIconWnd();
             //创建宿主窗口
             //创建绘制管理器
             p->m_pm = NewCPaintManagerUI();

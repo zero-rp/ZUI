@@ -317,7 +317,7 @@ ZEXPORT ZuiBool ZCALL ZuiBuilderJsLoad(js_State *J, ZuiText str, ZuiInt len) {
 VOID ZCALL ZuiGcTimerProc(HWND h, UINT u, UINT_PTR p, DWORD d) {
     for (size_t i = 0; i < js_array->count; i++)
     {
-        js_gc(js_array->data[i], LOG_DEBUG);
+        //js_gc(js_array->data[i], LOG_DEBUG);
     }
 }
 ZuiBool ZuiBuilderInit() {

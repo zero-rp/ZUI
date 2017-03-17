@@ -28,6 +28,12 @@ ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
     if (config && config->m_hInstance) {
         m_hInstance = config->m_hInstance;
     }
+#if RUN_DEBUG
+    if (config && config->debug) {
+        //启动调试器
+        ZuiStartDebug();
+    }
+#endif
     /*初始化图形层*/
     if (!ZuiGraphInitialize()) {
         return FALSE;
@@ -63,12 +69,7 @@ ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
     if (!ZuiResDBInit()) {
         return FALSE;
     }
-#if RUN_DEBUG
-    if (config && config->debug) {
-        //启动调试器
-        ZuiStartDebug();
-    }
-#endif
+
     return TRUE;
 }
 ZEXPORT ZuiBool ZCALL ZuiUnInit() {

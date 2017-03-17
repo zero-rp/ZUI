@@ -4,12 +4,48 @@
 ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
+
     case Proc_SetPos: {
         RECT rc;
         //拿到父组件数据
         ZuiLayout op = (ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata;
         //通知父容器调整布局
         ZuiVerticalLayoutProc(ProcId, cp, p->old_udata, Param1, Param2, Param3);
+
+        if (p->m_pHeader != NULL) { // 设置header各子元素x坐标,因为有些listitem的setpos
+            //int iLeft = rc.left + m_rcInset.left;
+            //int iRight = rc.right - m_rcInset.right;
+
+            //m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
+
+            //if (!m_pHeader->IsVisible()) {
+            //    for (int it = m_pHeader->GetCount() - 1; it >= 0; it--) {
+            //        static_cast<CControlUI*>(m_pHeader->GetItemAt(it))->SetInternVisible(true);
+            //    }
+            //}
+            //m_pHeader->SetPos(CDuiRect(iLeft, 0, iRight, 0), false);
+            //int iOffset = m_pList->GetScrollPos().cx;
+            //for (int i = 0; i < m_ListInfo.nColumns; i++) {
+            //    CControlUI* pControl = static_cast<CControlUI*>(m_pHeader->GetItemAt(i));
+            //    if (!pControl->IsVisible()) continue;
+            //    if (pControl->IsFloat()) continue;
+
+            //    RECT rcPos = pControl->GetPos();
+            //    if (iOffset > 0) {
+            //        rcPos.left -= iOffset;
+            //        rcPos.right -= iOffset;
+            //        pControl->SetPos(rcPos, false);
+            //    }
+            //    m_ListInfo.rcColumn[i] = pControl->GetPos();
+            //}
+            //if (!m_pHeader->IsVisible()) {
+            //    for (int it = m_pHeader->GetCount() - 1; it >= 0; it--) {
+            //        static_cast<CControlUI*>(m_pHeader->GetItemAt(it))->SetInternVisible(false);
+            //    }
+            //    m_pHeader->SetInternVisible(false);
+            //}
+        }
+
 
         if (p->m_pHeader == NULL) return;
 
@@ -226,6 +262,8 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         p->m_pList = NewZuiControl(L"ListBody", NULL, NULL, NULL);
         ZuiVerticalLayoutProc(Proc_Layout_Add, cp, p->old_udata, p->m_pList, NULL, NULL);
         ZuiControlCall(Proc_ListBody_SetOwner, p->m_pList, cp, NULL, NULL);
+
+        p->m_ListInfo.dwLineColor = 0xFF004488;
         return p;
     }
     case Proc_OnDestroy: {
@@ -500,7 +538,15 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
 ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListElement p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
-
+    case Proc_OnPaintBkColor: {
+        ZuiGraphics gp = (ZuiGraphics)Param1;
+        RECT *rc = (RECT*)Param2;
+        ZuiListInfo pInfo = ZuiControlCall(Proc_List_GetListInfo, p->m_pOwner, cp, NULL, NULL);
+        if (pInfo->dwLineColor != 0) {
+            ZuiDrawLine(gp, pInfo->dwLineColor, rc->left, rc->bottom - 1, rc->right, rc->bottom - 1, 1);
+        }
+        break;
+    }
     case Proc_ListElement_SetOwner: {
         if (Param1)
             p->m_pOwner = Param1;
@@ -612,6 +658,110 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderProc(ZuiInt ProcId, ZuiControl cp, ZuiListHead
 ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiListHeaderItem p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
+    case Proc_OnEvent: {
+        TEventUI *event = (TEventUI *)Param1;
+        //不响应鼠标消息
+        if (!cp->m_bMouseEnabled && event->Type > ZEVENT__MOUSEBEGIN && event->Type < ZEVENT__MOUSEEND) {
+            if (cp->m_pParent != NULL)
+                ZuiControlCall(Proc_OnEvent, cp->m_pParent, Param1, NULL, NULL);
+            else
+                ZuiLayoutProc(Proc_OnEvent, cp, 0, Param1, NULL, NULL);
+            return;
+        }
+
+        if (event->Type == ZEVENT_SETFOCUS)
+        {
+            ZuiControlInvalidate(cp, TRUE);
+        }
+        if (event->Type == ZEVENT_KILLFOCUS)
+        {
+            ZuiControlInvalidate(cp, TRUE);
+        }
+        if (event->Type == ZEVENT_LBUTTONDOWN || event->Type == ZEVENT_LDBLCLICK)
+        {
+            if (!cp->m_bEnabled) return;
+            //RECT rcSeparator = GetThumbRect();
+            //if (p->m_iSepWidth >= 0)//111024 by cddjr, 增加分隔符区域，方便用户拖动
+            //    rcSeparator.left -= 4;
+            //else
+            //    rcSeparator.right += 4;
+            //if (PtInRect(&rcSeparator, *(POINT *)&event->ptMouse)) {
+            //    if (p->m_bDragable) {
+            //        p->m_uButtonState |= ZSTATE_CAPTURED;
+            //        ptLastMouse = event->ptMouse;
+            //    }
+            //}
+            //else {
+            //    p->m_uButtonState |= ZSTATE_PUSHED;
+            //    //表头单击事件
+            //    //m_pManager->SendNotify(this, DUI_MSGTYPE_HEADERCLICK);
+            //    ZuiControlInvalidate(cp, TRUE);
+            //}
+            return;
+        }
+        if (event->Type == ZEVENT_LBUTTONUP)
+        {
+            if ((p->m_uButtonState & ZSTATE_CAPTURED) != 0) {
+                p->m_uButtonState &= ~ZSTATE_CAPTURED;
+                if (cp->m_pParent)
+                    ZuiControlNeedParentUpdate(cp->m_pParent);
+            }
+            else if ((p->m_uButtonState & ZSTATE_PUSHED) != 0) {
+                p->m_uButtonState &= ~ZSTATE_PUSHED;
+                ZuiControlInvalidate(cp, TRUE);
+            }
+            return;
+        }
+        if (event->Type == ZEVENT_MOUSEMOVE)
+        {
+            if ((p->m_uButtonState & ZSTATE_CAPTURED) != 0) {
+                RECT rc = cp->m_rcItem;
+                //if (p->m_iSepWidth >= 0) {
+                //    rc.right -= ptLastMouse.x - event.ptMouse.x;
+                //}
+                //else {
+                //    rc.left -= ptLastMouse.x - event->ptMouse.x;
+                //}
+
+                //if (rc.right - rc.left > GetMinWidth()) {
+                //    m_cxyFixed.cx = rc.right - rc.left;
+                //    ptLastMouse = event->ptMouse;
+                //    if (GetParent())
+                //        GetParent()->NeedParentUpdate();
+                //}
+            }
+            return;
+        }
+        if (event->Type == ZEVENT_SETCURSOR)
+        {
+            RECT rcSeparator = {0};// = GetThumbRect();
+            if (p->m_iSepWidth >= 0)//111024 by cddjr, 增加分隔符区域，方便用户拖动
+                rcSeparator.left -= 4;
+            else
+                rcSeparator.right += 4;
+            if (cp->m_bEnabled && p->m_bDragable && PtInRect(&rcSeparator, *(POINT *)&event->ptMouse)) {
+                SetCursor(LoadCursor(NULL, MAKEINTRESOURCE(IDC_SIZEWE)));
+                return;
+            }
+        }
+        if (event->Type == ZEVENT_MOUSEENTER)
+        {
+            if (cp->m_bEnabled) {
+                p->m_uButtonState |= ZSTATE_HOT;
+                ZuiControlInvalidate(cp, TRUE);
+            }
+            return;
+        }
+        if (event->Type == ZEVENT_MOUSELEAVE)
+        {
+            if (cp->m_bEnabled) {
+                p->m_uButtonState &= ~ZSTATE_HOT;
+                ZuiControlInvalidate(cp, TRUE);
+            }
+            return;
+        }
+        break;
+    }
     case Proc_OnPaintText: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
         RECT *rc = Param2;

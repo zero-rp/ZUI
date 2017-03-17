@@ -1,4 +1,7 @@
 ﻿#include <ZUI.h>
+#include <io.h>
+#include <fcntl.h>  
+#include <stdio.h>  
 #include "../resource.h"
 #include "commctrl.h" //高级控件都要加该头文件
 #if RUN_DEBUG
@@ -6,21 +9,24 @@ extern MArray *mem;
 extern DArray *m_window_array;
 extern ZuiControl ShowDebugRect;
 extern ZuiPaintManager ShowDebugRectManager;
-HWND hDlg_intab[3]; //两个要载入到TAB控件中的对话框句柄
+HWND hDlg_intab[6]; //两个要载入到TAB控件中的对话框句柄
 HWND MemList;
 HWND ControlTree;
 HWND AttList;
 ZuiControl SelectControl;
-BOOL WINAPI tab1_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);//两个子窗口的窗口处理过程函数申明  
+BOOL WINAPI tab1_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 BOOL WINAPI tab2_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 BOOL WINAPI tab3_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+BOOL WINAPI tab4_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+BOOL WINAPI tab5_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+BOOL WINAPI tab6_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void UpdateControlTree();
 void SetSelectControl(ZuiControl p);
 typedef BOOL(WINAPI *DIALOGPROC)(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam); //定义一个 函数指针  
-DIALOGPROC DlgProc[3] = { tab1_dlg_proc,tab2_dlg_proc,tab3_dlg_proc };
+DIALOGPROC DlgProc[6] = { tab1_dlg_proc,tab2_dlg_proc,tab3_dlg_proc,tab4_dlg_proc,tab5_dlg_proc,tab6_dlg_proc };
 
 
-void Main_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
+static void Main_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
 {
     switch (id)
     {
@@ -28,7 +34,7 @@ void Main_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
         break;
     }
 }
-void Main_OnClose(HWND hwnd)
+static void Main_OnClose(HWND hwnd)
 {
     EndDialog(hwnd, 0);
 }
@@ -44,34 +50,14 @@ static LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
         {
             if (((LPNMHDR)lParam)->code == TCN_SELCHANGE) //当TAB标签转换的时候发送TCN_SELCHANGE消息  
             {
-
                 int sel = TabCtrl_GetCurSel(GetDlgItem(hWnd, IDC_TAB1));
-                switch (sel)   //根据索引值查找相应的标签值，干相应的事情  
+                for (size_t i = 0; i < 6; i++)
                 {
-
-                case 0: //TAB1标签时，我们要显示 tab1标签页面  
-                {
-                    ShowWindow(hDlg_intab[0], TRUE); //显示窗口用ShowWindow函数  
-                    ShowWindow(hDlg_intab[1], FALSE);
-                    ShowWindow(hDlg_intab[2], FALSE);
-                    break;
+                    if(i==sel)
+                        ShowWindow(hDlg_intab[i], TRUE); //显示窗口用ShowWindow函数
+                    else
+                        ShowWindow(hDlg_intab[i], FALSE); //显示窗口用ShowWindow函数
                 }
-                case 1://TAB2标签时，我们要显示 tab2标签页面  
-                {
-                    ShowWindow(hDlg_intab[0], FALSE);
-                    ShowWindow(hDlg_intab[1], TRUE);
-                    ShowWindow(hDlg_intab[2], FALSE);
-                    break;
-                }
-                case 2://TAB2标签时，我们要显示 tab2标签页面  
-                {
-                    ShowWindow(hDlg_intab[0], FALSE);
-                    ShowWindow(hDlg_intab[1], FALSE);
-                    ShowWindow(hDlg_intab[2], TRUE);
-                    break;
-                }
-                }
-
             }
         }
         break;
@@ -79,7 +65,7 @@ static LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
     }
     return FALSE;
 }
-BOOL WINAPI tab1_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+static BOOL WINAPI tab1_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
     {
@@ -101,7 +87,7 @@ BOOL WINAPI tab1_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     }
     return FALSE;
 }
-BOOL WINAPI tab2_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+static BOOL WINAPI tab2_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
     {
@@ -123,7 +109,7 @@ BOOL WINAPI tab2_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     }
     return FALSE;
 }
-BOOL WINAPI tab3_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+static BOOL WINAPI tab3_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
     {
@@ -198,7 +184,74 @@ BOOL WINAPI tab3_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     }
     return FALSE;
 }
-void SetSelectControl(ZuiControl p) {
+static BOOL WINAPI tab4_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (uMsg)
+    {
+    case WM_INITDIALOG:
+        return TRUE;
+    case WM_COMMAND:
+        switch (wParam)
+        {
+        case 0:
+        {
+            //MessageBox(hwnd, TEXT("你按了tab1标签问好"), TEXT(""), MB_OK);
+            break;
+        }
+        }
+        break;
+    case WM_CLOSE:
+        EndDialog(hwnd, 0);
+        return FALSE;
+    }
+    return FALSE;
+}
+static BOOL WINAPI tab5_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (uMsg)
+    {
+    case WM_INITDIALOG:
+        return TRUE;
+    case WM_COMMAND:
+        switch (wParam)
+        {
+        case 0:
+        {
+            //MessageBox(hwnd, TEXT("你按了tab1标签问好"), TEXT(""), MB_OK);
+            break;
+        }
+        }
+        break;
+    case WM_CLOSE:
+        EndDialog(hwnd, 0);
+        return FALSE;
+    }
+    return FALSE;
+}
+static BOOL WINAPI tab6_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (uMsg)
+    {
+    case WM_INITDIALOG:
+        return TRUE;
+    case WM_COMMAND:
+        switch (wParam)
+        {
+        case 0:
+        {
+            //MessageBox(hwnd, TEXT("你按了tab1标签问好"), TEXT(""), MB_OK);
+            break;
+        }
+        }
+        break;
+    case WM_CLOSE:
+        EndDialog(hwnd, 0);
+        return FALSE;
+    }
+    return FALSE;
+}
+
+static void SetSelectControl(ZuiControl p) {
     wchar_t buf[255];
     RECT *pos = ZuiControlCall(Proc_GetPos, p, NULL, NULL, NULL);
     swprintf(buf, L"%d,%d,%d,%d", pos->left, pos->top, pos->right, pos->bottom);
@@ -209,7 +262,7 @@ void SetSelectControl(ZuiControl p) {
 
 
 }
-void InsertColumn(void)
+static void InsertColumn(void)
 {
     LV_COLUMN lvc;
     lvc.mask = LVCF_TEXT | LVCF_WIDTH;
@@ -240,8 +293,35 @@ void InsertColumn(void)
     SendMessage(AttList, LVM_INSERTCOLUMN, 1, (long)&lvc);
 }
 
+//刷新控件树
+static ZuiControl CALLBACK __FindControlFromAll(ZuiControl pThis, LPVOID pData)
+{
+    TVINSERTSTRUCT pis;
+    WCHAR buf[1024];
+    wsprintf(buf, L"%s|%s", pThis->m_sClassName, pThis->m_sText ? pThis->m_sText : L"NULL");
+    pis.hParent = pThis->m_pParent ? pThis->m_pParent->m_aTreeHwndl : TVI_ROOT;
+    pis.hInsertAfter = TVI_LAST;
+    pis.item.mask = TVIF_TEXT | TVIF_PARAM | TVIF_STATE;
+    pis.item.pszText = buf;
+    pis.item.lParam = pThis;
+    pis.item.state = TVIS_EXPANDED;
+    pThis->m_aTreeHwndl = TreeView_InsertItem(ControlTree, &pis);
+    TreeView_Expand(ControlTree, pis.hParent, TVE_EXPAND);
+    return NULL;
+}
+static void UpdateControlTree() {
 
-VOID CALLBACK UPDATEMEMTIME(HWND H, UINT U, UINT_PTR Pt, DWORD D) {
+    TreeView_DeleteAllItems(ControlTree);
+    if (!m_window_array)
+        return;
+    for (size_t i = 0; i < m_window_array->count; i++)
+    {
+        ZuiControlCall(Proc_FindControl, m_window_array->data[i], __FindControlFromAll, NULL, (void *)(ZFIND_ME_FIRST));
+    }
+}
+
+//刷新数据时钟 1s
+static VOID CALLBACK UPDATETIME(HWND H, UINT U, UINT_PTR Pt, DWORD D) {
     return;
     LVITEM lvItem = { 0 };
     WCHAR buf[1024];
@@ -312,41 +392,17 @@ VOID CALLBACK UPDATEMEMTIME(HWND H, UINT U, UINT_PTR Pt, DWORD D) {
         SendMessageA(MemList, LVM_SETITEMTEXT, 0, (LPARAM)(LV_ITEM *)&lvItem);
     }
 }
-//刷新控件树
-ZuiControl CALLBACK __FindControlFromAll(ZuiControl pThis, LPVOID pData)
-{
-    TVINSERTSTRUCT pis;
-    WCHAR buf[1024];
-    wsprintf(buf, L"%s|%s", pThis->m_sClassName, pThis->m_sText ? pThis->m_sText : L"NULL");
-    pis.hParent = pThis->m_pParent ? pThis->m_pParent->m_aTreeHwndl : TVI_ROOT;
-    pis.hInsertAfter = TVI_LAST;
-    pis.item.mask = TVIF_TEXT | TVIF_PARAM | TVIF_STATE;
-    pis.item.pszText = buf;
-    pis.item.lParam = pThis;
-    pis.item.state = TVIS_EXPANDED;
-    pThis->m_aTreeHwndl = TreeView_InsertItem(ControlTree, &pis);
-    return NULL;
-}
 
-void UpdateControlTree() {
-
-    TreeView_DeleteAllItems(ControlTree);
-
-    for (size_t i = 0; i < m_window_array->count; i++)
-    {
-        ZuiControlCall(Proc_FindControl, m_window_array->data[i], __FindControlFromAll, NULL, (void *)(ZFIND_ME_FIRST));
-    }
-}
 ZuiVoid ZuiStartDebug() {
     InitCommonControls();
     HWND hwnd = CreateDialog(m_hInstance, MAKEINTRESOURCE(IDD_DEBUG), GetDesktopWindow(), __WndProc);
 
     HWND htabctrl = GetDlgItem(hwnd, IDC_TAB1);
     TCITEM tie;//设置tab标签的属性  
-    LPWSTR tabname[5] = { L"内存跟踪",L"资源管理",L"控件Spy",L"脚本调试",L"日志" };
+    LPWSTR tabname[6] = { L"内存跟踪",L"资源管理",L"控件Spy",L"脚本调试",L"日志",L"工具" };
     tie.mask = TCIF_TEXT | TCIF_IMAGE;//psztext字段有效  
     tie.iImage = -1;
-    for (INT i = 0; i < 3; i++)
+    for (INT i = 0; i < 6; i++)
     {
         tie.pszText = tabname[i];
         TabCtrl_InsertItem(htabctrl, i, &tie);
@@ -355,16 +411,16 @@ ZuiVoid ZuiStartDebug() {
     RECT rect;//存放tab控件的区域位置  
     GetClientRect(htabctrl, &rect);
     // 将两个窗口往 tab控件位置移动  
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 6; i++)
     {
-        hDlg_intab[i] = CreateDialog(m_hInstance, MAKEINTRESOURCE(IDD_FORMVIEW + i), htabctrl, DlgProc[i]);
+        hDlg_intab[i] = CreateDialog(m_hInstance, MAKEINTRESOURCE(IDD_MEM + i), htabctrl, DlgProc[i]);
         MoveWindow(hDlg_intab[i], 2, 23, rect.right - rect.left - 6, rect.bottom - rect.top - 26, FALSE);
     }
     if (hDlg_intab[0]) {
         MemList = GetDlgItem(hDlg_intab[0], IDC_LIST1);
         SendMessage(MemList, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_UNDERLINEHOT);
         ShowWindow(MemList, SW_SHOW);
-        SetTimer(0, 0, 1000, UPDATEMEMTIME);
+        SetTimer(0, 0, 1000, UPDATETIME);
     }
     if (hDlg_intab[2]) {
         ControlTree = GetDlgItem(hDlg_intab[2], IDC_TREE1);

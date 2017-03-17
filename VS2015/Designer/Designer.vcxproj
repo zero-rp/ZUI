@@ -266,12 +266,14 @@ echo res| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\re
     <ResourceCompile Include="..\..\ZUI\Default.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\ZUI\resource.h" />
     <ClInclude Include="..\ZUI\resource.h" />
     <ClInclude Include="CodeEdit.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Designer\res\Designer.js" />
     <None Include="..\..\Designer\res\onload.js" />
+    <None Include="..\..\ZUI\res\default.zip" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\..\Designer\res\Designer.xml" />

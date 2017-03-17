@@ -274,6 +274,9 @@
     <ClInclude Include="..\ZUI\resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ZUI\resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Designer\res\Designer.js">
@@ -282,6 +285,7 @@
     <None Include="..\..\Designer\res\onload.js">
       <Filter>res</Filter>
     </None>
+    <None Include="..\..\ZUI\res\default.zip" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\..\Designer\res\Designer.xml">

@@ -46,6 +46,11 @@
 /**列表头元素结构*/
 typedef struct _ZListHeaderItem
 {
+    POINT ptLastMouse;
+    ZuiBool m_bDragable;
+    UINT m_uButtonState;
+    int m_iSepWidth;
+
     ZuiAny old_udata;
     ZCtlProc old_call;
 }*ZuiListHeaderItem, ZListHeaderItem;
