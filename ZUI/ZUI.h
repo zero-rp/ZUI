@@ -53,7 +53,6 @@ extern "C"
 #include <stdio.h>
 #include <assert.h>
 #include <malloc.h>
-#include <stdint.h>
 #include <stdlib.h>
 
 
@@ -87,20 +86,20 @@ extern "C"
 #endif
 
 
-typedef wchar_t*    ZuiText, _ZuiText;	//内核默认Unicode存储字符
-typedef float       ZuiReal;
+typedef wchar_t*        ZuiText, _ZuiText;	//内核默认Unicode存储字符
+typedef float           ZuiReal;
 #ifdef _WIN64
-typedef int64_t     ZuiInt;
-typedef uint64_t    ZuiUInt;
+typedef int64_t         ZuiInt;
+typedef uint64_t        ZuiUInt;
 #else
-typedef int32_t     ZuiInt;
-typedef uint32_t    ZuiUInt;
+typedef int             ZuiInt;
+typedef unsigned int    ZuiUInt;
 #endif
-typedef int32_t     ZuiBool;
-typedef void        ZuiVoid;
-typedef void*       ZuiAny;
-typedef int32_t     ZuiColor;
-typedef unsigned    ZuiByte;
+typedef int             ZuiBool;
+typedef void            ZuiVoid;
+typedef void*           ZuiAny;
+typedef int             ZuiColor;
+typedef unsigned        ZuiByte;
 /**矩形*/
 typedef struct _ZRect
 {
