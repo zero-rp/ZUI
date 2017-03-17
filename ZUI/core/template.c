@@ -75,9 +75,7 @@ ZuiVoid ZuiLoadTemplate(mxml_node_t *n, ZuiControl p, ZuiAny Param1, ZuiAny Para
     for (node = mxmlFindElement(node, node, NULL, NULL, NULL, MXML_DESCEND); node != NULL; node = mxmlWalkNext(node, NULL, MXML_DESCEND))
     {
         ClassName = node->value.name;
-#if (defined LOG_DEBUG) && (LOG_DEBUG == 1)
-        printf("Template创建控件: 类名:%ls\r\n", ClassName);
-#endif
+        LOG_DEGUB(L"Template创建控件: 类名:%ls\r\n", ClassName);
         Control = NewZuiControl(ClassName, NULL, NULL, NULL);
         if (Control) {
             node->user_data = Control;//保存控件到节点

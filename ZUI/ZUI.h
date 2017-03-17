@@ -41,7 +41,7 @@ extern "C"
     #define PLATFORM_OS_MACX
 #endif
 
-#define LOG_DEBUG   1       //打印调试日志
+#define LOG_DEBUG   1       //打印调试日志 有运行时调试功能则打印到日志窗口
 #define MEM_DEBUG   0       //开启内存调试功能
 #define RUN_DEBUG   1       //开启运行时调试功能
 

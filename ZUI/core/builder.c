@@ -12,9 +12,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
         {
         LoadNodeBedin:
             ClassName = node->value.name;
-#if (defined LOG_DEBUG) && (LOG_DEBUG == 1)
-            printf("layout创建控件: 类名:%ls\r\n", ClassName);
-#endif
+            LOG_DEGUB(L"layout创建控件: 类名:%ls\r\n", ClassName);
             if (wcscmp(ClassName, L"Template") == 0) {//模版类
                 ZuiAddTemplate(node);
                 node = node->next;
@@ -118,9 +116,9 @@ static void ZuiJsBind_Call_exit(js_State *J) {
 static void ZuiJsBind_Call_print(js_State *J) {
     for (size_t i = 0; i < js_gettop(J) - 1; i++)
     {
-        printf("%ls", js_tostring(J, i + 1));
+        LOG_DEGUB(L"%ls", js_tostring(J, i + 1));
     }
-    printf("\r\n");
+    LOG_DEGUB(L"\r\n");
     js_pushundefined(J);
 }
 
@@ -177,10 +175,8 @@ static void ZuiJsBind_Call_GetByName(js_State *J) {
         if (p && p->m_pRoot)
         {
             ZuiControl cp = ZuiControlFindName(p->m_pRoot, js_tostring(J, 1));
-#if (defined LOG_DEBUG) && (LOG_DEBUG == 1)
 			if (!cp)
-				printf("GetByName失败: Name:%ls\r\n", js_tostring(J, 1));
-#endif
+                LOG_ERROR("GetByName失败: Name:%ls\r\n", js_tostring(J, 1));
 			if (cp)
             {
                 js_newobject(J);

@@ -392,7 +392,15 @@ static VOID CALLBACK UPDATETIME(HWND H, UINT U, UINT_PTR Pt, DWORD D) {
         SendMessageA(MemList, LVM_SETITEMTEXT, 0, (LPARAM)(LV_ITEM *)&lvItem);
     }
 }
+ZuiVoid ZuiDebugLog(ZuiInt type, const wchar_t *fmt) {
 
+    /* 以下两条语句为在edit中追加字符串 */
+    SendMessage(GetDlgItem(hDlg_intab[4], IDC_EDIT2), EM_SETSEL, -2, -1);
+    SendMessage(GetDlgItem(hDlg_intab[4], IDC_EDIT2), EM_REPLACESEL, TRUE, (long)fmt);
+
+    /* 设置滚轮到末尾，这样就可以看到最新信息 */
+    SendMessage(GetDlgItem(hDlg_intab[4], IDC_EDIT2), WM_VSCROLL, SB_BOTTOM, 0);
+}
 ZuiVoid ZuiStartDebug() {
     InitCommonControls();
     HWND hwnd = CreateDialog(m_hInstance, MAKEINTRESOURCE(IDD_DEBUG), GetDesktopWindow(), __WndProc);

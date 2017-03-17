@@ -12,9 +12,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNodeMenu(mxml_node_t *tree, ZuiControl win
         {
         LoadNodeBedin:
             ClassName = node->value.name;
-#if !(defined NDEBUG)
-            printf("layout创建控件: 类名:%ls\r\n", ClassName);
-#endif
+            LOG_DEGUB(L"layout创建控件: 类名:%ls\r\n", ClassName);
             if (wcscmp(ClassName, L"Template") == 0) {//模版类
                 ZuiAddTemplate(node);
                 node = node->next;

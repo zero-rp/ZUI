@@ -1,6 +1,6 @@
 ﻿#include <ZUI.h>
 
-
+//查找桌面句柄
 BOOL __stdcall enumUserWindowsCB(HWND hwnd, LPARAM lParam)
 {
     long wflags = GetWindowLong(hwnd, GWL_STYLE);
@@ -15,8 +15,6 @@ BOOL __stdcall enumUserWindowsCB(HWND hwnd, LPARAM lParam)
     *resultHwnd = targetWnd;
     return FALSE;
 }
-
-
 HWND findDesktopIconWnd()
 {
     HWND resultHwnd = NULL;
@@ -281,6 +279,16 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
                 rb_delete(Zui_Hash(cp->m_sName), m_window);//删除以前的名字
             rb_insert(Zui_Hash(Param2), cp, m_window);//保存现在的名字
         }
+        else if (wcscmp(Param1, L"desktop") == 0) {
+            //嵌入桌面
+            if (wcscmp(Param2, L"true") == 0) {
+                SetParent(p->m_hWnd, findDesktopIconWnd());
+            }
+            else
+            {
+                SetParent(p->m_hWnd, NULL);
+            }
+        }
         break;
     }
     case Proc_SetVisible: {
@@ -309,7 +317,6 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
             p->old_udata = ZuiVerticalLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
             p->old_call = (ZCtlProc)&ZuiVerticalLayoutProc;
 
-            Param2 = findDesktopIconWnd();
             //创建宿主窗口
             //创建绘制管理器
             p->m_pm = NewCPaintManagerUI();
