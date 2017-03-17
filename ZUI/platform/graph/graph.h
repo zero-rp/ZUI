@@ -6,7 +6,7 @@ extern "C"
 {
 #endif
 
-    #define ARGB(A,R,G,B) ((int32_t)((((A)&0xff)<<24)|(((R)&0xff)<<16)|(((G)&0xff)<<8)|((B)&0xff)))
+    #define ARGB(A,R,G,B) ((int)((((A)&0xff)<<24)|(((R)&0xff)<<16)|(((G)&0xff)<<8)|((B)&0xff)))
     #define RGBA(R,G,B,A) ARGB(A,R,G,B)
     #define RGB2ARGB(COLOR,A) RGBA(((COLOR) >> 16 & 0xFF), ((COLOR) >> 8 & 0xFF), ((COLOR) & 0xFF), (A))
     #ifdef LINUX
