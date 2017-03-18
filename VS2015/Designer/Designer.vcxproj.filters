@@ -258,6 +258,9 @@
     <ClCompile Include="..\..\ZUI\vc6.cpp">
       <Filter>源文件\ZUI</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\TreeView.c">
+      <Filter>源文件\ZUI\control</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\Designer\Designer.rc">

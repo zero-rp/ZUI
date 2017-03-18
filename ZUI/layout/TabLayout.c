@@ -54,11 +54,11 @@ void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Pa
         }
         return 0;
     }
-    case Proc_JsPut: {
-        js_State *J = Param2;
-        if (wcscmp(Param1, L"selectitem") == 0) ZuiControlCall(Proc_TabLayout_SelectItem, cp, (ZuiAny)js_toint32(J, -1), NULL, NULL);
-        break;
-    }
+    //case Proc_JsPut: {
+    //    js_State *J = Param2;
+    //    if (wcscmp(Param1, L"selectitem") == 0) ZuiControlCall(Proc_TabLayout_SelectItem, cp, (ZuiAny)js_toint32(J, -1), NULL, NULL);
+    //    break;
+    //}
     case Proc_Layout_Add: {
         ZuiBool ret = (ZuiBool)ZuiLayoutProc(Proc_Layout_Add, cp, p->old_udata, Param1, Param2, Param3);
         if (!ret)

@@ -24,7 +24,7 @@
 #define Proc_Window_SetSize         1007
 #define Proc_Window_SetComBo        1008
 #define Proc_Window_Popup           1009
-
+#define Proc_Window_SetToolWindow   1010
 //------宏封装
 #define ZuiWindowSetNoBox(Control, ...) ZProc(Control, Window_SetNoBox, __VA_ARGS__);
 #define ZuiWindowSetWindowMin(Control, ...) ZProc(Control, Window_SetWindowMin, __VA_ARGS__);

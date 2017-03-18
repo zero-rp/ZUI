@@ -191,68 +191,68 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
         }
         break;
     }
-    case Proc_JsPut: {
-        js_State *J = Param2;
-        if (wcscmp(Param1, L"inset") == 0) {
-            RECT rcPadding = { 0 };
-            LPTSTR pstr = NULL;
-            rcPadding.left = _tcstol(js_tostring(J, -1), &pstr, 10);  ASSERT(pstr);
-            rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
-            rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
-            rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
-            ZuiControlCall(Proc_Layout_SetInset, cp, &rcPadding, NULL, NULL);
-        }
+    //case Proc_JsPut: {
+    //    js_State *J = Param2;
+    //    if (wcscmp(Param1, L"inset") == 0) {
+    //        RECT rcPadding = { 0 };
+    //        LPTSTR pstr = NULL;
+    //        rcPadding.left = _tcstol(js_tostring(J, -1), &pstr, 10);  ASSERT(pstr);
+    //        rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+    //        rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+    //        rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+    //        ZuiControlCall(Proc_Layout_SetInset, cp, &rcPadding, NULL, NULL);
+    //    }
 
-        break;
-    }
-    case Proc_JsHas: {
-        js_State *J = Param2;
-        if (wcscmp(Param1, L"Add") == 0)
-            return (ZuiAny)1;
-        else if (wcscmp(Param1, L"AddAt") == 0)
-            return (ZuiAny)1;
-        else if (wcscmp(Param1, L"GetItemIndex") == 0)
-            return (ZuiAny)1;
-        else if (wcscmp(Param1, L"GetItemAt") == 0)
-            return (ZuiAny)1;
-        else if (wcscmp(Param1, L"count") == 0) js_pushnumber(J, (int)ZuiControlCall(Proc_Layout_GetCount, cp, NULL, NULL, NULL));
-        else {
-            for (int it = darray_len(p->m_items) - 1; it >= 0; it--) {
-                if (((ZuiControl)(p->m_items->data[it]))->m_sName)
-                {
-                    if (wcscmp(Param1, ((ZuiControl)(p->m_items->data[it]))->m_sName) == 0) {
-                        ZuiBuilderJs_pushControl(Param2, p->m_items->data[it]);
-                        return 0;
-                        continue;
-                    }
-                }
-            }
-        }
-        break;
-    }
-    case Proc_JsCall: {
-        if (wcscmp(Param1, L"Add") == 0) {
-            ZuiControl ite = ZuiBuilderJs_toControl(Param2, -1);
-            ZuiControlCall(Proc_Layout_Add, cp, ite, NULL, NULL);
-        }
-        else if (wcscmp(Param1, L"AddAt") == 0) {
-            ZuiControl ite = ZuiBuilderJs_toControl(Param2, 1);
-            ZuiControlCall(Proc_Layout_AddAt, cp, ite, (ZuiAny)js_toint32(Param2, 2), NULL);
-        }
-        else if (wcscmp(Param1, L"GetItemIndex") == 0) {
-            ZuiControl ite = ZuiBuilderJs_toControl(Param2, -1);
-            ZuiInt index = ZuiControlCall(Proc_Layout_GetItemIndex, cp, ite, NULL, NULL);
-            js_pushnumber(Param2, index);
-        }
-        else if (wcscmp(Param1, L"GetItemAt") == 0) {
-            ZuiControl ite = ZuiControlCall(Proc_Layout_GetItemAt, cp, (ZuiAny)js_toint32(Param2, -1), NULL, NULL);
-            if (ite)
-                ZuiBuilderJs_pushControl(Param2, ite);
-            else
-                js_pushundefined(Param2);
-        }
-        break;
-    }
+    //    break;
+    //}
+    //case Proc_JsHas: {
+    //    js_State *J = Param2;
+    //    if (wcscmp(Param1, L"Add") == 0)
+    //        return (ZuiAny)1;
+    //    else if (wcscmp(Param1, L"AddAt") == 0)
+    //        return (ZuiAny)1;
+    //    else if (wcscmp(Param1, L"GetItemIndex") == 0)
+    //        return (ZuiAny)1;
+    //    else if (wcscmp(Param1, L"GetItemAt") == 0)
+    //        return (ZuiAny)1;
+    //    else if (wcscmp(Param1, L"count") == 0) js_pushnumber(J, (int)ZuiControlCall(Proc_Layout_GetCount, cp, NULL, NULL, NULL));
+    //    else {
+    //        for (int it = darray_len(p->m_items) - 1; it >= 0; it--) {
+    //            if (((ZuiControl)(p->m_items->data[it]))->m_sName)
+    //            {
+    //                if (wcscmp(Param1, ((ZuiControl)(p->m_items->data[it]))->m_sName) == 0) {
+    //                    ZuiBuilderJs_pushControl(Param2, p->m_items->data[it]);
+    //                    return 0;
+    //                    continue;
+    //                }
+    //            }
+    //        }
+    //    }
+    //    break;
+    //}
+    //case Proc_JsCall: {
+    //    if (wcscmp(Param1, L"Add") == 0) {
+    //        ZuiControl ite = ZuiBuilderJs_toControl(Param2, -1);
+    //        ZuiControlCall(Proc_Layout_Add, cp, ite, NULL, NULL);
+    //    }
+    //    else if (wcscmp(Param1, L"AddAt") == 0) {
+    //        ZuiControl ite = ZuiBuilderJs_toControl(Param2, 1);
+    //        ZuiControlCall(Proc_Layout_AddAt, cp, ite, (ZuiAny)js_toint32(Param2, 2), NULL);
+    //    }
+    //    else if (wcscmp(Param1, L"GetItemIndex") == 0) {
+    //        ZuiControl ite = ZuiBuilderJs_toControl(Param2, -1);
+    //        ZuiInt index = ZuiControlCall(Proc_Layout_GetItemIndex, cp, ite, NULL, NULL);
+    //        js_pushnumber(Param2, index);
+    //    }
+    //    else if (wcscmp(Param1, L"GetItemAt") == 0) {
+    //        ZuiControl ite = ZuiControlCall(Proc_Layout_GetItemAt, cp, (ZuiAny)js_toint32(Param2, -1), NULL, NULL);
+    //        if (ite)
+    //            ZuiBuilderJs_pushControl(Param2, ite);
+    //        else
+    //            js_pushundefined(Param2);
+    //    }
+    //    break;
+    //}
     case Proc_OnEvent: {
         TEventUI *event = (TEventUI *)Param1;
         //不响应鼠标消息

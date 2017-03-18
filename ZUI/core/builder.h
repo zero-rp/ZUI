@@ -16,12 +16,12 @@
 ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win);
 ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len);
 //绑定js对象
-ZuiVoid ZuiBuilderJs_pushControl(js_State *J, ZuiControl cp);
-ZuiControl ZuiBuilderJs_toControl(js_State *J, ZuiInt idx);
-ZuiBool ZuiBuilderJs(js_State *J);
-ZuiBool ZuiBuilderJsUn(js_State *J);
-ZuiBool ZuiBuilderJsPM(js_State *J, ZuiPaintManager p);
-ZEXPORT ZuiBool ZCALL ZuiBuilderJsLoad(js_State *J, ZuiText str, ZuiInt len);
+//ZuiVoid ZuiBuilderJs_pushControl(js_State *J, ZuiControl cp);
+//ZuiControl ZuiBuilderJs_toControl(js_State *J, ZuiInt idx);
+ZuiBool ZuiBuilderJs(duk_context *ctx);
+ZuiBool ZuiBuilderJsUn(duk_context *ctx);
+//ZuiBool ZuiBuilderJsPM(js_State *J, ZuiPaintManager p);
+ZEXPORT ZuiBool ZCALL ZuiBuilderJsLoad(duk_context *ctx, ZuiText str, ZuiInt len);
 ZuiBool ZuiBuilderInit();
 ZuiVoid ZuiBuilderUnInit();
 #endif	//__ZUI_CORE_BUILDER_H__

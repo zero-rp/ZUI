@@ -59,7 +59,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNodeMenu(mxml_node_t *tree, ZuiControl win
                 ZuiRes res = ZuiResDBGetRes(src, ZREST_TXT);
                 if (res)
                 {
-                    ZuiBuilderJsLoad(win->m_pManager->m_js, res->p, res->plen);
+                    ZuiBuilderJsLoad(win->m_pManager->m_ctx, res->p, res->plen);
                     ZuiResDBDelRes(res);
                 }
             }

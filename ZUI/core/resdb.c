@@ -85,7 +85,7 @@ ZuiVoid ZuiResDBCallOnLoad(ZuiResDB db) {
             txtbuf[bufsize] = 0;
         }
         ZuiFree(buf);
-        ZuiBuilderJsLoad(Global_Js, txtbuf, bufsize);
+        ZuiBuilderJsLoad(Global_ctx, txtbuf, bufsize);
         ZuiFree(txtbuf);
     }
 }

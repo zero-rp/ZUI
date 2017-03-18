@@ -129,10 +129,8 @@ ZuiPaintManager NewCPaintManagerUI() {
 
         p->m_ptLastMousePos.x = p->m_ptLastMousePos.y = -1;
 
-        p->m_js = js_newstate(JS_STRICT);
-        js_setcontext(p->m_js, p);
-        ZuiBuilderJs(p->m_js);
-        ZuiBuilderJsPM(p->m_js, p);
+        p->m_ctx = duk_create_heap_default();
+        ZuiBuilderJs(p->m_ctx);
 
         p->m_aTimers = darray_create();
         p->m_aPostPaintControls = darray_create();
@@ -177,8 +175,8 @@ void FreeCPaintManagerUI(ZuiPaintManager p) {
             FreeZuiControl(cp, NULL);
     };
     darray_destroy(p->m_aDelayedCleanup);
-    ZuiBuilderJsUn(p->m_js);
-    js_freestate(p->m_js);
+    ZuiBuilderJsUn(p->m_ctx);
+    duk_destroy_heap(p->m_ctx);
     ZuiFree(p);
 }
 //-------------------------------------------------------------------------------------------------

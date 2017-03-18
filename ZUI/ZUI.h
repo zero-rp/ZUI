@@ -14,6 +14,8 @@
 #ifndef __ZUI_H__
 #define __ZUI_H__
 
+#include "duktape/duktape.h"
+
 #if defined(__cplusplus)
 extern "C"
 {
@@ -166,7 +168,6 @@ typedef struct tagSIZE
 #include "core/memory.h"
 #include "core/debug.h"
 
-#include "mujs/mujs.h"
 /*基础辅助函数*/
 #include "core/carray.h"
 #include "core/string.h"

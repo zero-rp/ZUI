@@ -37,12 +37,6 @@
     <Filter Include="源文件\control">
       <UniqueIdentifier>{001350cb-58cc-48cf-9b30-e8316f91daa3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\mujs">
-      <UniqueIdentifier>{b0621af7-5a68-418c-a8c2-1137e5388e1d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="头文件\mujs">
-      <UniqueIdentifier>{52a5fa0a-b94d-496f-a90d-840159eb8911}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\libpng">
       <UniqueIdentifier>{19f6ccd9-fe4b-4ac7-bf16-6807ac1e67fa}</UniqueIdentifier>
     </Filter>
@@ -102,6 +96,12 @@
     </Filter>
     <Filter Include="res\default">
       <UniqueIdentifier>{007214d0-191f-45bd-873d-b67ee434595f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\duktape">
+      <UniqueIdentifier>{a149be62-6453-4211-8e69-e86df1420784}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\duktape">
+      <UniqueIdentifier>{e5efa697-dfd4-4ad0-88a0-7ccec9b13113}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -276,78 +276,6 @@
     <ClCompile Include="..\..\ZUI\layout\VerticalLayout.c">
       <Filter>源文件\layout</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jsarray.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jsboolean.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jsbuiltin.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jscompile.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jsdate.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jsdtoa.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jsdump.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jserror.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jsfunction.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jsgc.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jsintern.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jslex.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jsmath.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jsnumber.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jsobject.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\json.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jsparse.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jsproperty.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jsregexp.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jsrun.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jsstate.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jsstring.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\jsvalue.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\mujs\regexp.c">
-      <Filter>源文件\mujs</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\platform\graph\cario.c">
       <Filter>源文件\platform\graph</Filter>
     </ClCompile>
@@ -413,6 +341,282 @@
     </ClCompile>
     <ClCompile Include="..\..\ZUI\control\TreeView.c">
       <Filter>源文件\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_alloc_default.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_api_buffer.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_api_bytecode.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_api_call.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_api_codec.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_api_compile.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_api_debug.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_api_heap.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_api_inspect.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_api_memory.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_api_object.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_api_stack.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_api_string.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_api_time.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_array.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_boolean.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_buffer.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_date.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_date_unix.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_date_windows.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_duktape.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_encoding.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_error.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_function.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_global.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_json.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_math.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_number.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_object.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_pointer.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_proxy.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_reflect.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_regexp.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_string.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_symbol.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_thread.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_bi_thrower.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_builtins.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_debug_fixedbuffer.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_debug_macros.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_debug_vsnprintf.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_debugger.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_error_augment.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_error_longjmp.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_error_macros.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_error_misc.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_error_throw.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_hbuffer_alloc.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_hbuffer_ops.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_hbufobj_misc.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_heap_alloc.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_heap_hashstring.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_heap_markandsweep.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_heap_memory.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_heap_misc.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_heap_refcount.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_heap_stringcache.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_heap_stringtable.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_hobject_alloc.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_hobject_class.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_hobject_enum.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_hobject_finalizer.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_hobject_misc.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_hobject_pc2line.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_hobject_props.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_hstring_misc.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_hthread_alloc.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_hthread_builtins.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_hthread_misc.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_hthread_stacks.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_js_arith.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_js_call.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_js_compiler.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_js_executor.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_js_ops.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_js_var.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_lexer.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_numconv.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_regexp_compiler.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_regexp_executor.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_replacements.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_selftest.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_tval.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_unicode_support.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_unicode_tables.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_util_bitdecoder.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_util_bitencoder.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_util_bufwriter.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_util_hashbytes.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_util_hashprime.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_util_misc.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_util_tinyrandom.c">
+      <Filter>源文件\duktape</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -572,42 +776,6 @@
     <ClInclude Include="..\..\ZUI\layout\VerticalLayout.h">
       <Filter>头文件\layout</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ZUI\mujs\astnames.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\mujs\jsbuiltin.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\mujs\jscompile.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\mujs\jsi.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\mujs\jslex.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\mujs\jsparse.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\mujs\jsrun.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\mujs\jsvalue.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\mujs\mujs.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\mujs\opnames.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\mujs\regexp.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\mujs\utf.h">
-      <Filter>头文件\mujs</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ZUI\core\animation.h">
       <Filter>头文件\core</Filter>
     </ClInclude>
@@ -712,6 +880,111 @@
     </ClInclude>
     <ClInclude Include="..\..\ZUI\control\TreeView.h">
       <Filter>头文件\control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_api_internal.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_bi_protos.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_builtins.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_config.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_debug.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_debugger.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_error.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_exception.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_forwdecl.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_harray.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_hbuffer.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_hbufobj.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_hcompfunc.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_heap.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_heaphdr.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_hnatfunc.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_hobject.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_hstring.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_hthread.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_internal.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_jmpbuf.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_js.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_js_bytecode.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_js_compiler.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_json.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_lexer.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_numconv.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_regexp.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_replacements.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_selftest.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_strings.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_tval.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_unicode.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duk_util.h">
+      <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\duktape\duktape.h">
+      <Filter>头文件\duktape</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

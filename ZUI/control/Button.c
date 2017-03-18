@@ -25,7 +25,7 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         case ZEVENT_LBUTTONUP: {
             p->type = 1;
             ZuiControlInvalidate(cp, TRUE);
-            return ZuiControlNotify(L"onclick", cp, event->ptMouse.x, JS_TNUMBER, event->ptMouse.y, JS_TNUMBER, NULL, NULL);
+            //return ZuiControlNotify(L"onclick", cp, event->ptMouse.x, JS_TNUMBER, event->ptMouse.y, JS_TNUMBER, NULL, NULL);
         }
                                break;
         default:
@@ -42,21 +42,21 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         ZuiControlCall(Proc_OnPaintBorder, cp, Param1, Param2, NULL);
         return 0;
     }
-    case Proc_JsPut: {
-        js_State *J = Param2;
-        if (wcscmp(Param1, L"normalimage") == 0) {
-            ZuiText str = js_tostring(J, -1);
-            ZuiRes res = ZuiResDBGetRes(str, ZREST_IMG);
-            ZuiControlCall(Proc_Button_SetResNormal, cp,
-                res,
-                NULL, NULL);
-        }
-        else if (wcscmp(Param1, L"hotimage") == 0) ZuiControlCall(Proc_Button_SetResHot, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
-        else if (wcscmp(Param1, L"pushedimage") == 0) ZuiControlCall(Proc_Button_SetResPushed, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
-        else if (wcscmp(Param1, L"focusedimage") == 0) ZuiControlCall(Proc_Button_SetResFocused, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
-        else if (wcscmp(Param1, L"disabledimage") == 0) ZuiControlCall(Proc_Button_SetResDisabled, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
-        break;
-    }
+    //case Proc_JsPut: {
+    //    js_State *J = Param2;
+    //    if (wcscmp(Param1, L"normalimage") == 0) {
+    //        ZuiText str = js_tostring(J, -1);
+    //        ZuiRes res = ZuiResDBGetRes(str, ZREST_IMG);
+    //        ZuiControlCall(Proc_Button_SetResNormal, cp,
+    //            res,
+    //            NULL, NULL);
+    //    }
+    //    else if (wcscmp(Param1, L"hotimage") == 0) ZuiControlCall(Proc_Button_SetResHot, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
+    //    else if (wcscmp(Param1, L"pushedimage") == 0) ZuiControlCall(Proc_Button_SetResPushed, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
+    //    else if (wcscmp(Param1, L"focusedimage") == 0) ZuiControlCall(Proc_Button_SetResFocused, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
+    //    else if (wcscmp(Param1, L"disabledimage") == 0) ZuiControlCall(Proc_Button_SetResDisabled, cp, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
+    //    break;
+    //}
     case Proc_OnPaintStatusImage: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
         RECT *rc = (RECT *)Param2;

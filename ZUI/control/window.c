@@ -125,27 +125,27 @@ static LRESULT ZCALL __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
-    case Proc_JsHas: {
-        if (wcscmp(Param1, L"SetWindowMin") == 0) return 1;
-        else if (wcscmp(Param1, L"SetWindowMax") == 0) return 1;
-        else if (wcscmp(Param1, L"SetWindowRestor") == 0) return 1;
-        else if (wcscmp(Param1, L"Popup") == 0) return 1;
-        break;
-    }
-    case Proc_JsCall: {
-        if (wcscmp(Param1, L"SetWindowMin") == 0) ZuiControlCall(Proc_Window_SetWindowMin, cp, NULL, NULL, NULL);
-        else if (wcscmp(Param1, L"SetWindowMax") == 0) ZuiControlCall(Proc_Window_SetWindowMax, cp, NULL, NULL, NULL);
-        else if (wcscmp(Param1, L"SetWindowRestor") == 0) ZuiControlCall(Proc_Window_SetWindowRestor, cp, NULL, NULL, NULL);
-        else if (wcscmp(Param1, L"Popup") == 0) {
-            if (js_gettop(Param2) == 3) {
-                ZPoint pt = { js_toint32(Param2,1),js_toint32(Param2,2) };
-                ZuiControlCall(Proc_Window_Popup, cp, &pt, NULL, NULL);
-            }
-            else
-                ZuiControlCall(Proc_Window_Popup, cp, NULL, NULL, NULL);
-        }
-        break;
-    }
+    //case Proc_JsHas: {
+    //    if (wcscmp(Param1, L"SetWindowMin") == 0) return 1;
+    //    else if (wcscmp(Param1, L"SetWindowMax") == 0) return 1;
+    //    else if (wcscmp(Param1, L"SetWindowRestor") == 0) return 1;
+    //    else if (wcscmp(Param1, L"Popup") == 0) return 1;
+    //    break;
+    //}
+    //case Proc_JsCall: {
+    //    if (wcscmp(Param1, L"SetWindowMin") == 0) ZuiControlCall(Proc_Window_SetWindowMin, cp, NULL, NULL, NULL);
+    //    else if (wcscmp(Param1, L"SetWindowMax") == 0) ZuiControlCall(Proc_Window_SetWindowMax, cp, NULL, NULL, NULL);
+    //    else if (wcscmp(Param1, L"SetWindowRestor") == 0) ZuiControlCall(Proc_Window_SetWindowRestor, cp, NULL, NULL, NULL);
+    //    else if (wcscmp(Param1, L"Popup") == 0) {
+    //        if (js_gettop(Param2) == 3) {
+    //            ZPoint pt = { js_toint32(Param2,1),js_toint32(Param2,2) };
+    //            ZuiControlCall(Proc_Window_Popup, cp, &pt, NULL, NULL);
+    //        }
+    //        else
+    //            ZuiControlCall(Proc_Window_Popup, cp, NULL, NULL, NULL);
+    //    }
+    //    break;
+    //}
     case Proc_SetBorderColor: {
         if (!cp->m_dwBorderColor) {
             //以前没有边框了,加上边距
@@ -234,6 +234,17 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         SetWindowLong(p->m_hWnd, GWL_EXSTYLE, dwStyle);
         break;
     }
+    case Proc_Window_SetToolWindow: {
+        DWORD dwStyle = GetWindowLong(p->m_hWnd, GWL_EXSTYLE);
+        if (Param1) {
+            dwStyle |= WS_EX_TOOLWINDOW;
+        }
+        else {
+            dwStyle &= ~WS_EX_TOOLWINDOW;
+        }
+        SetWindowLong(p->m_hWnd, GWL_EXSTYLE, dwStyle);
+        break;
+    }
     case Proc_Window_Popup: {
         cp->m_bVisible = TRUE;
         if (Param1)
@@ -247,6 +258,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
     case Proc_SetAttribute: {
         if (wcscmp(Param1, L"nobox") == 0) ZuiControlCall(Proc_Window_SetNoBox, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
         else if (wcscmp(Param1, L"combo") == 0) ZuiControlCall(Proc_Window_SetComBo, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
+        else if (wcscmp(Param1, L"toolwindow") == 0) ZuiControlCall(Proc_Window_SetToolWindow, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
         else if (wcscmp(Param1, L"layered") == 0) {
             if (wcscmp(Param2, L"true") == 0) {
                 ZuiPaintManagerSetLayered(p->m_pm, TRUE);

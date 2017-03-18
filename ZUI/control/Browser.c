@@ -98,25 +98,25 @@ void _staticOnPaintUpdated(wkeWebView webView, void* param, const HDC hdc, int x
 // 回调：页面标题改变
 void _staticOnTitleChanged(wkeWebView webWindow, void* param, void *title)
 {
-    ZuiControlNotify(L"titlechanged", ((ZuiBrowser)param)->cp, wkeGetStringW(title), JS_TSHRSTR, NULL, NULL, NULL, NULL);
+    //ZuiControlNotify(L"titlechanged", ((ZuiBrowser)param)->cp, wkeGetStringW(title), JS_TSHRSTR, NULL, NULL, NULL, NULL);
 }
 // 回调：创建新的页面，比如说调用了 window.open 或者点击了 <a target="_blank" .../>
 wkeWebView _staticOnCreateView(wkeWebView webWindow, void* param, int navType, void *url, void* features)
 {
-    ZuiControl bro = ZuiControlNotify(L"newwindow", ((ZuiBrowser)param)->cp, (void *)navType, JS_TNUMBER, wkeGetStringW(url), JS_TSHRSTR, NULL, NULL);
-    if (bro)
-        return ZuiControlCall(Proc_Browser_GetView, bro, NULL, NULL, NULL);//重定向到当前页面
-    return 0;
+    //ZuiControl bro = ZuiControlNotify(L"newwindow", ((ZuiBrowser)param)->cp, (void *)navType, JS_TNUMBER, wkeGetStringW(url), JS_TSHRSTR, NULL, NULL);
+    //if (bro)
+    //    return ZuiControlCall(Proc_Browser_GetView, bro, NULL, NULL, NULL);//重定向到当前页面
+    //return 0;
 }
 // 回调：url改变
 wkeWebView _staticOnURLChanged(wkeWebView webView, void* param, void *url)
 {
-    ((ZuiBrowser)param)->url = ZuiWcsdup(wkeGetStringW(url));
-    ZuiControlNotify(L"urlchanged", ((ZuiBrowser)param)->cp, wkeGetStringW(url), JS_TSHRSTR, NULL, NULL, NULL, NULL);
+    //((ZuiBrowser)param)->url = ZuiWcsdup(wkeGetStringW(url));
+    //ZuiControlNotify(L"urlchanged", ((ZuiBrowser)param)->cp, wkeGetStringW(url), JS_TSHRSTR, NULL, NULL, NULL, NULL);
 }
 // 回调：转跳
 BOOL _staticOnNavigation(wkeWebView webView, void* param, int navigationType, void *url) {
-    return !ZuiControlNotify(L"navigation", ((ZuiBrowser)param)->cp, wkeGetStringW(url), JS_TSHRSTR, NULL, NULL, NULL, NULL);
+    //return !ZuiControlNotify(L"navigation", ((ZuiBrowser)param)->cp, wkeGetStringW(url), JS_TSHRSTR, NULL, NULL, NULL, NULL);
 }
 ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
@@ -187,6 +187,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         case ZEVENT_LDBLCLICK:
         case ZEVENT_MOUSEMOVE: {
             UINT uMsg = 0;
+            unsigned int flags = 0;
             if (event->Type == ZEVENT_LBUTTONDOWN)
             {
                 ZuiPaintManagerSetCapture(cp->m_pManager);
@@ -194,7 +195,6 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
             else if (event->Type == ZEVENT_LBUTTONUP)
                 ZuiPaintManagerReleaseCapture(cp->m_pManager);
 
-            unsigned int flags = 0;
 
             if (event->wParam & MK_CONTROL)
                 flags |= WKE_CONTROL;
@@ -222,11 +222,11 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         }
         case ZEVENT_SCROLLWHEEL: {
             POINT pt;
-            pt.x = LOWORD(event->lParam);
-            pt.y = HIWORD(event->lParam);
             int nFlag = GET_X_LPARAM(event->wParam);
             int delta = (nFlag == SB_LINEDOWN) ? -120 : 120;
             unsigned int flags = 0;
+            pt.x = LOWORD(event->lParam);
+            pt.y = HIWORD(event->lParam);
             if (event->wParam & MK_CONTROL)
                 flags |= WKE_CONTROL;
             if (event->wParam & MK_SHIFT)
@@ -237,8 +237,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
                 flags |= WKE_MBUTTON;
             if (event->wParam & MK_RBUTTON)
                 flags |= WKE_RBUTTON;
-            int handled = wkeFireMouseWheelEvent(p->view, pt.x, pt.y, delta, flags);
-            if (handled)
+            if (wkeFireMouseWheelEvent(p->view, pt.x, pt.y, delta, flags))
                 return 0;
             break;
         }
@@ -313,16 +312,16 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         return NULL;
         break;
     }
-    case Proc_JsPut: {
-        js_State *J = Param2;
-        if (wcscmp(Param1, L"url") == 0) ZuiControlCall(Proc_Browser_LoadUrl, cp, (ZuiAny)js_tostring(J, -1), NULL, NULL);
+    //case Proc_JsPut: {
+    //    js_State *J = Param2;
+    //    if (wcscmp(Param1, L"url") == 0) ZuiControlCall(Proc_Browser_LoadUrl, cp, (ZuiAny)js_tostring(J, -1), NULL, NULL);
 
-        break;
-    }
-    case Proc_JsHas: {
-        if (wcscmp(Param1, L"url") == 0) js_pushstring(Param2, p->url);
-        break;
-    }
+    //    break;
+    //}
+    //case Proc_JsHas: {
+    //    if (wcscmp(Param1, L"url") == 0) js_pushstring(Param2, p->url);
+    //    break;
+    //}
     case Proc_GetImePoint: {
         wkeRect caret = wkeGetCaretRect(p->view);
         ZPoint pt;

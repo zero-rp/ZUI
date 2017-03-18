@@ -199,6 +199,7 @@ echo res| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\re
     <ClCompile Include="..\..\ZUI\control\Register.c" />
     <ClCompile Include="..\..\ZUI\control\ScrollBar.c" />
     <ClCompile Include="..\..\ZUI\control\SplitterBar.c" />
+    <ClCompile Include="..\..\ZUI\control\TreeView.c" />
     <ClCompile Include="..\..\ZUI\control\Virtual.c" />
     <ClCompile Include="..\..\ZUI\control\window.c" />
     <ClCompile Include="..\..\ZUI\core\animation.c" />

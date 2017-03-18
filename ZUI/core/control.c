@@ -227,23 +227,23 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             return 0;
         }
         case ZEVENT_MOUSELEAVE: {
-            ZuiControlNotify(L"onmouseleave", p, NULL, NULL, NULL, NULL, NULL, NULL);
+            //ZuiControlNotify(L"onmouseleave", p, NULL, NULL, NULL, NULL, NULL, NULL);
         }
                                 break;
         case ZEVENT_MOUSEENTER: {
-            ZuiControlNotify(L"onmouseenter", p, ((TEventUI *)Param1)->ptMouse.x, JS_TNUMBER, ((TEventUI *)Param1)->ptMouse.y, JS_TNUMBER, NULL, NULL);
+            //ZuiControlNotify(L"onmouseenter", p, ((TEventUI *)Param1)->ptMouse.x, JS_TNUMBER, ((TEventUI *)Param1)->ptMouse.y, JS_TNUMBER, NULL, NULL);
         }
                                 break;
         case ZEVENT_LBUTTONDOWN: {
-            ZuiControlNotify(L"onlbuttondown", p, ((TEventUI *)Param1)->ptMouse.x, JS_TNUMBER, ((TEventUI *)Param1)->ptMouse.y, JS_TNUMBER, NULL, NULL);
+            //ZuiControlNotify(L"onlbuttondown", p, ((TEventUI *)Param1)->ptMouse.x, JS_TNUMBER, ((TEventUI *)Param1)->ptMouse.y, JS_TNUMBER, NULL, NULL);
         }
                                  break;
         case ZEVENT_LBUTTONUP: {
-            ZuiControlNotify(L"onclick", p, ((TEventUI *)Param1)->ptMouse.x, JS_TNUMBER, ((TEventUI *)Param1)->ptMouse.y, JS_TNUMBER, NULL, NULL);
+            //ZuiControlNotify(L"onclick", p, ((TEventUI *)Param1)->ptMouse.x, JS_TNUMBER, ((TEventUI *)Param1)->ptMouse.y, JS_TNUMBER, NULL, NULL);
             break;
         }
         case ZEVENT_CHAR: {
-            ZuiControlNotify(L"onchar", p, &((TEventUI *)Param1)->wParam, JS_TSHRSTR, NULL, NULL, NULL, NULL);
+            //ZuiControlNotify(L"onchar", p, &((TEventUI *)Param1)->wParam, JS_TSHRSTR, NULL, NULL, NULL, NULL);
         }
                           break;
         default:
@@ -592,99 +592,99 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 
         break;
     }
-    case Proc_JsHas: {
-        if (wcscmp(Param1, L"root") == 0) ZuiBuilderJs_pushControl(Param2, p->m_pManager->m_pRoot);
-        else if (wcscmp(Param1, L"parent") == 0)
-            ZuiBuilderJs_pushControl(Param2, p->m_pParent);
-        else if (wcscmp(Param1, L"text") == 0) js_pushstring(Param2, ZuiControlCall(Proc_GetText, p, NULL, NULL, NULL));
-        else if (wcscmp(Param1, L"tooltip") == 0) js_pushstring(Param2, p->m_sToolTip);
-        else if (wcscmp(Param1, L"width") == 0) js_pushnumber(Param2, p->m_cxyFixed.cx);
-        else if (wcscmp(Param1, L"height") == 0) js_pushnumber(Param2, p->m_cxyFixed.cy);
-        else if (wcscmp(Param1, L"minwidth") == 0) js_pushnumber(Param2, p->m_cxyMin.cx);
-        else if (wcscmp(Param1, L"minheight") == 0) js_pushnumber(Param2, p->m_cxyMin.cy);
-        else if (wcscmp(Param1, L"maxwidth") == 0) js_pushnumber(Param2, p->m_cxyMax.cx);
-        else if (wcscmp(Param1, L"maxheight") == 0) js_pushnumber(Param2, p->m_cxyMax.cy);
-        else if (wcscmp(Param1, L"bkcolor") == 0) js_pushnumber(Param2, p->m_BkgColor);
-        else if (wcscmp(Param1, L"drag") == 0) js_pushboolean(Param2, p->m_drag);
-        else if (wcscmp(Param1, L"clos") == 0) return 1;
-        else if (wcscmp(Param1, L"rect") == 0) {
-            js_newobject(Param2);
-            js_pushnumber(Param2, p->m_rcItem.left);
-            js_setproperty(Param2, -2, L"left");
-            js_pushnumber(Param2, p->m_rcItem.top);
-            js_setproperty(Param2, -2, L"top");
-            js_pushnumber(Param2, p->m_rcItem.bottom);
-            js_setproperty(Param2, -2, L"bottom");
-            js_pushnumber(Param2, p->m_rcItem.right);
-            js_setproperty(Param2, -2, L"right");
-        }
-        else if (wcscmp(Param1, L"enabled") == 0) js_pushboolean(Param2, p->m_bEnabled);
-        else if (wcscmp(Param1, L"visible") == 0) js_pushboolean(Param2, p->m_bVisible);
-        break;
-    }
-    case Proc_JsPut: {
-        js_State *J = Param2;
-        if (wcscmp(Param1, L"text") == 0) ZuiControlCall(Proc_SetText, p, js_tostring(J, -1), NULL, NULL);
-        else if (wcscmp(Param1, L"tooltip") == 0) ZuiControlCall(Proc_SetTooltip, p, js_tostring(J, -1), NULL, NULL);
-        else if (wcscmp(Param1, L"width") == 0) ZuiControlCall(Proc_SetFixedWidth, p, js_toint32(J, -1), NULL, NULL);
-        else if (wcscmp(Param1, L"height") == 0) ZuiControlCall(Proc_SetFixedHeight, p, js_toint32(J, -1), NULL, NULL);
-        else if (wcscmp(Param1, L"minwidth") == 0) ZuiControlCall(Proc_SetMinWidth, p, js_toint32(J, -1), NULL, NULL);
-        else if (wcscmp(Param1, L"minheight") == 0) ZuiControlCall(Proc_SetMinHeight, p, js_toint32(J, -1), NULL, NULL);
-        else if (wcscmp(Param1, L"maxwidth") == 0) ZuiControlCall(Proc_SetMaxWidth, p, js_toint32(J, -1), NULL, NULL);
-        else if (wcscmp(Param1, L"maxheight") == 0) ZuiControlCall(Proc_SetMaxHeight, p, js_toint32(J, -1), NULL, NULL);
-        else if (wcscmp(Param1, L"bkcolor") == 0) ZuiControlCall(Proc_SetBkColor, p, js_toint32(J, -1), NULL, NULL);
-        else if (wcscmp(Param1, L"drag") == 0) ZuiControlCall(Proc_SetDrag, p, js_toboolean(J, -1), NULL, NULL);
-        else if (wcscmp(Param1, L"bkimage") == 0) ZuiControlCall(Proc_SetBkImage, p, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
-        else if (wcscmp(Param1, L"padding") == 0) {
-            RECT rcPadding = { 0 };
-            LPTSTR pstr = NULL;
-            rcPadding.left = _tcstol(js_tostring(J, -1), &pstr, 10);  ASSERT(pstr);
-            rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
-            rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
-            rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
-            ZuiControlCall(Proc_SetPadding, p, &rcPadding, NULL, NULL);
-        }
-        else if (wcscmp(Param1, L"bordercolor") == 0) ZuiControlCall(Proc_SetBorderColor, p, js_toint32(J, -1), NULL, NULL);
-        else if (wcscmp(Param1, L"name") == 0) ZuiControlCall(Proc_SetName, p, js_tostring(J, -1), NULL, NULL);
-        else if (wcscmp(Param1, L"float") == 0) {
+    //case Proc_JsHas: {
+    //    if (wcscmp(Param1, L"root") == 0) ZuiBuilderJs_pushControl(Param2, p->m_pManager->m_pRoot);
+    //    else if (wcscmp(Param1, L"parent") == 0)
+    //        ZuiBuilderJs_pushControl(Param2, p->m_pParent);
+    //    else if (wcscmp(Param1, L"text") == 0) js_pushstring(Param2, ZuiControlCall(Proc_GetText, p, NULL, NULL, NULL));
+    //    else if (wcscmp(Param1, L"tooltip") == 0) js_pushstring(Param2, p->m_sToolTip);
+    //    else if (wcscmp(Param1, L"width") == 0) js_pushnumber(Param2, p->m_cxyFixed.cx);
+    //    else if (wcscmp(Param1, L"height") == 0) js_pushnumber(Param2, p->m_cxyFixed.cy);
+    //    else if (wcscmp(Param1, L"minwidth") == 0) js_pushnumber(Param2, p->m_cxyMin.cx);
+    //    else if (wcscmp(Param1, L"minheight") == 0) js_pushnumber(Param2, p->m_cxyMin.cy);
+    //    else if (wcscmp(Param1, L"maxwidth") == 0) js_pushnumber(Param2, p->m_cxyMax.cx);
+    //    else if (wcscmp(Param1, L"maxheight") == 0) js_pushnumber(Param2, p->m_cxyMax.cy);
+    //    else if (wcscmp(Param1, L"bkcolor") == 0) js_pushnumber(Param2, p->m_BkgColor);
+    //    else if (wcscmp(Param1, L"drag") == 0) js_pushboolean(Param2, p->m_drag);
+    //    else if (wcscmp(Param1, L"clos") == 0) return 1;
+    //    else if (wcscmp(Param1, L"rect") == 0) {
+    //        js_newobject(Param2);
+    //        js_pushnumber(Param2, p->m_rcItem.left);
+    //        js_setproperty(Param2, -2, L"left");
+    //        js_pushnumber(Param2, p->m_rcItem.top);
+    //        js_setproperty(Param2, -2, L"top");
+    //        js_pushnumber(Param2, p->m_rcItem.bottom);
+    //        js_setproperty(Param2, -2, L"bottom");
+    //        js_pushnumber(Param2, p->m_rcItem.right);
+    //        js_setproperty(Param2, -2, L"right");
+    //    }
+    //    else if (wcscmp(Param1, L"enabled") == 0) js_pushboolean(Param2, p->m_bEnabled);
+    //    else if (wcscmp(Param1, L"visible") == 0) js_pushboolean(Param2, p->m_bVisible);
+    //    break;
+    //}
+    //case Proc_JsPut: {
+    //    js_State *J = Param2;
+    //    if (wcscmp(Param1, L"text") == 0) ZuiControlCall(Proc_SetText, p, js_tostring(J, -1), NULL, NULL);
+    //    else if (wcscmp(Param1, L"tooltip") == 0) ZuiControlCall(Proc_SetTooltip, p, js_tostring(J, -1), NULL, NULL);
+    //    else if (wcscmp(Param1, L"width") == 0) ZuiControlCall(Proc_SetFixedWidth, p, js_toint32(J, -1), NULL, NULL);
+    //    else if (wcscmp(Param1, L"height") == 0) ZuiControlCall(Proc_SetFixedHeight, p, js_toint32(J, -1), NULL, NULL);
+    //    else if (wcscmp(Param1, L"minwidth") == 0) ZuiControlCall(Proc_SetMinWidth, p, js_toint32(J, -1), NULL, NULL);
+    //    else if (wcscmp(Param1, L"minheight") == 0) ZuiControlCall(Proc_SetMinHeight, p, js_toint32(J, -1), NULL, NULL);
+    //    else if (wcscmp(Param1, L"maxwidth") == 0) ZuiControlCall(Proc_SetMaxWidth, p, js_toint32(J, -1), NULL, NULL);
+    //    else if (wcscmp(Param1, L"maxheight") == 0) ZuiControlCall(Proc_SetMaxHeight, p, js_toint32(J, -1), NULL, NULL);
+    //    else if (wcscmp(Param1, L"bkcolor") == 0) ZuiControlCall(Proc_SetBkColor, p, js_toint32(J, -1), NULL, NULL);
+    //    else if (wcscmp(Param1, L"drag") == 0) ZuiControlCall(Proc_SetDrag, p, js_toboolean(J, -1), NULL, NULL);
+    //    else if (wcscmp(Param1, L"bkimage") == 0) ZuiControlCall(Proc_SetBkImage, p, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
+    //    else if (wcscmp(Param1, L"padding") == 0) {
+    //        RECT rcPadding = { 0 };
+    //        LPTSTR pstr = NULL;
+    //        rcPadding.left = _tcstol(js_tostring(J, -1), &pstr, 10);  ASSERT(pstr);
+    //        rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+    //        rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+    //        rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+    //        ZuiControlCall(Proc_SetPadding, p, &rcPadding, NULL, NULL);
+    //    }
+    //    else if (wcscmp(Param1, L"bordercolor") == 0) ZuiControlCall(Proc_SetBorderColor, p, js_toint32(J, -1), NULL, NULL);
+    //    else if (wcscmp(Param1, L"name") == 0) ZuiControlCall(Proc_SetName, p, js_tostring(J, -1), NULL, NULL);
+    //    else if (wcscmp(Param1, L"float") == 0) {
 
-        }
-        else if (wcscmp(Param1, L"visible") == 0) ZuiControlCall(Proc_SetVisible, p, js_toboolean(J, -1), NULL, NULL);
-        else if (wcscmp(Param1, L"enabled") == 0) ZuiControlCall(Proc_SetEnabled, p, js_toboolean(J, -1), NULL, NULL);
-        else
-        {
-            ZuiAttribute att;
-            rb_node *old = rb_search((key_t)Zui_Hash(Param1), p->m_rAttribute);
-            if (old) {
-                att = (ZuiAttribute)old->data;
-                ZuiFree(att->v);
-            }
-            else {
-                att = ZuiMalloc(sizeof(ZAttribute));
-                rb_insert((key_t)Zui_Hash(Param1), att, p->m_rAttribute);
-            }
+    //    }
+    //    else if (wcscmp(Param1, L"visible") == 0) ZuiControlCall(Proc_SetVisible, p, js_toboolean(J, -1), NULL, NULL);
+    //    else if (wcscmp(Param1, L"enabled") == 0) ZuiControlCall(Proc_SetEnabled, p, js_toboolean(J, -1), NULL, NULL);
+    //    else
+    //    {
+    //        ZuiAttribute att;
+    //        rb_node *old = rb_search((key_t)Zui_Hash(Param1), p->m_rAttribute);
+    //        if (old) {
+    //            att = (ZuiAttribute)old->data;
+    //            ZuiFree(att->v);
+    //        }
+    //        else {
+    //            att = ZuiMalloc(sizeof(ZAttribute));
+    //            rb_insert((key_t)Zui_Hash(Param1), att, p->m_rAttribute);
+    //        }
 
-            if (js_iscallable(J, -1)) {
-                att->type = ZAttType_JsCall;
-                js_Object *obj = js_toobject(J, -1);
-                att->v = obj;
-            }
-            else
-            {
-                att->type = ZAttType_String;
-                att->v = ZuiWcsdup(js_tostring(J, -1));
-                att->vlen = wcslen(att->v);
-            }
-        }
-        break;
-    }
-    case Proc_JsCall: {
-        if (wcscmp(Param1, L"clos") == 0) {
-            ZuiPaintManagerAddDelayedCleanup(p->m_pManager, p);
-            //FreeZuiControl(p);
-        }
-        break;
-    }
+    //        if (js_iscallable(J, -1)) {
+    //            att->type = ZAttType_JsCall;
+    //            js_Object *obj = js_toobject(J, -1);
+    //            att->v = obj;
+    //        }
+    //        else
+    //        {
+    //            att->type = ZAttType_String;
+    //            att->v = ZuiWcsdup(js_tostring(J, -1));
+    //            att->vlen = wcslen(att->v);
+    //        }
+    //    }
+    //    break;
+    //}
+    //case Proc_JsCall: {
+    //    if (wcscmp(Param1, L"clos") == 0) {
+    //        ZuiPaintManagerAddDelayedCleanup(p->m_pManager, p);
+    //        //FreeZuiControl(p);
+    //    }
+    //    break;
+    //}
     case Proc_GetObject: {
         if (Param1 == Type_Null)
             return p;
@@ -716,73 +716,73 @@ ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, 
     return NULL;
 }
 
-ZuiBool ZuiControlNotifyPushJs(js_State *J, ZuiAny Param, ZuiInt Type)
-{
-    switch (Type)
-    {
-    case JS_TSHRSTR:
-    case JS_TLITSTR:
-    case JS_TMEMSTR:
-        js_pushstring(J, Param);
-        break;
-    case JS_TBOOLEAN:
-        js_pushboolean(J, Param);
-        break;
-    case JS_TNUMBER:
-        js_pushnumber(J, (int)Param);
-        break;
-    case JS_TOBJECT:
-        js_pushobject(J, Param);
-        break;
-    default:
-        return FALSE;
-        break;
-    }
-    return TRUE;
-}
+//ZuiBool ZuiControlNotifyPushJs(js_State *J, ZuiAny Param, ZuiInt Type)
+//{
+//    switch (Type)
+//    {
+//    case JS_TSHRSTR:
+//    case JS_TLITSTR:
+//    case JS_TMEMSTR:
+//        js_pushstring(J, Param);
+//        break;
+//    case JS_TBOOLEAN:
+//        js_pushboolean(J, Param);
+//        break;
+//    case JS_TNUMBER:
+//        js_pushnumber(J, (int)Param);
+//        break;
+//    case JS_TOBJECT:
+//        js_pushobject(J, Param);
+//        break;
+//    default:
+//        return FALSE;
+//        break;
+//    }
+//    return TRUE;
+//}
 ZEXPORT ZuiAny ZCALL ZuiControlNotify(ZuiText msg, ZuiControl p, ZuiAny Param1, ZuiInt p1Type, ZuiAny Param2, ZuiInt p2Type, ZuiAny Param3, ZuiInt p3Type) {
     //先通知js
     rb_node * node = rb_search((key_t)Zui_Hash(msg), p->m_rAttribute);
-    if (node) {
-        ZuiAttribute att = node->data;
-        if (att->type == ZAttType_String)
-        {
-            ZuiBuilderJs_pushControl(p->m_pManager->m_js, p);
-            js_setglobal(p->m_pManager->m_js, L"ec");
-            ZuiBuilderJsLoad(p->m_pManager->m_js, att->v, att->vlen);
-        }
-        else {
-            int ret = 1;
-            js_pushobject(p->m_pManager->m_js, att->v);
-            ZuiBuilderJs_pushControl(p->m_pManager->m_js, p);
-            if (Param1)
-            {
-                if (ZuiControlNotifyPushJs(p->m_pManager->m_js, Param1, p1Type))
-                    ret++;
-            }
-            if (Param2)
-            {
-                if (ZuiControlNotifyPushJs(p->m_pManager->m_js, Param2, p2Type))
-                    ret++;
-            }
-            if (Param3)
-            {
-                if (ZuiControlNotifyPushJs(p->m_pManager->m_js, Param3, p3Type))
-                    ret++;
-            }
-            js_pcall(p->m_pManager->m_js, ret);
-            if (!js_isundefined(p->m_pManager->m_js, -1)) {
-                ZuiAny r = 0;
-                if (js_isuserdata(p->m_pManager->m_js, -1, NULL)) {
-                    r = js_touserdata(p->m_pManager->m_js, -1, NULL);
-                }
-                js_pop(p->m_pManager->m_js, 1);
-                return r;
-            }
-            js_pop(p->m_pManager->m_js, 1);
-        }
+    //if (node) {
+    //    ZuiAttribute att = node->data;
+    //    if (att->type == ZAttType_String)
+    //    {
+    //        ZuiBuilderJs_pushControl(p->m_pManager->m_js, p);
+    //        js_setglobal(p->m_pManager->m_js, L"ec");
+    //        ZuiBuilderJsLoad(p->m_pManager->m_js, att->v, att->vlen);
+    //    }
+    //    else {
+    //        int ret = 1;
+    //        js_pushobject(p->m_pManager->m_js, att->v);
+    //        ZuiBuilderJs_pushControl(p->m_pManager->m_js, p);
+    //        if (Param1)
+    //        {
+    //            if (ZuiControlNotifyPushJs(p->m_pManager->m_js, Param1, p1Type))
+    //                ret++;
+    //        }
+    //        if (Param2)
+    //        {
+    //            if (ZuiControlNotifyPushJs(p->m_pManager->m_js, Param2, p2Type))
+    //                ret++;
+    //        }
+    //        if (Param3)
+    //        {
+    //            if (ZuiControlNotifyPushJs(p->m_pManager->m_js, Param3, p3Type))
+    //                ret++;
+    //        }
+    //        js_pcall(p->m_pManager->m_js, ret);
+    //        if (!js_isundefined(p->m_pManager->m_js, -1)) {
+    //            ZuiAny r = 0;
+    //            if (js_isuserdata(p->m_pManager->m_js, -1, NULL)) {
+    //                r = js_touserdata(p->m_pManager->m_js, -1, NULL);
+    //            }
+    //            js_pop(p->m_pManager->m_js, 1);
+    //            return r;
+    //        }
+    //        js_pop(p->m_pManager->m_js, 1);
+    //    }
 
-    }
+    //}
     if (p->m_pNotify)
     {
         return p->m_pNotify(msg, p, p->m_sUserData, Param1, Param2, Param3);
