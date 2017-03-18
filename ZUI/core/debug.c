@@ -322,7 +322,7 @@ static void UpdateControlTree() {
 
 //刷新数据时钟 1s
 static VOID CALLBACK UPDATETIME(HWND H, UINT U, UINT_PTR Pt, DWORD D) {
-    return;
+    
     LVITEM lvItem = { 0 };
     WCHAR buf[1024];
     int hash = 0;
@@ -356,8 +356,8 @@ static VOID CALLBACK UPDATETIME(HWND H, UINT U, UINT_PTR Pt, DWORD D) {
     }
     oldhash = hash;
     SendMessage(MemList, LVM_DELETEALLITEMS, 0, 0);
-
-    for (size_t i = 0; i < mem->count; i++)
+    
+    for (size_t i = mem->count-1; i > mem->count-14; i--)
     {
         MEM* p = ((MEM *)((char *)mem->data[i] - sizeof(MEM)));
         //先需要插入一行，才能对这行输入内容
@@ -391,6 +391,10 @@ static VOID CALLBACK UPDATETIME(HWND H, UINT U, UINT_PTR Pt, DWORD D) {
         lvItem.pszText = buf;
         SendMessageA(MemList, LVM_SETITEMTEXT, 0, (LPARAM)(LV_ITEM *)&lvItem);
     }
+    wsprintf(buf, L"%d", mem->count);
+    SetWindowText(GetDlgItem(hDlg_intab[0], IDC_STATIC1), buf);
+    wsprintf(buf, L"%d", mem->msize);
+    SetWindowText(GetDlgItem(hDlg_intab[0], IDC_STATIC2), buf);
 }
 ZuiVoid ZuiDebugLog(ZuiInt type, const wchar_t *fmt) {
 
