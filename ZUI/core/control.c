@@ -592,7 +592,24 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 
         break;
     }
-    //case Proc_JsHas: {
+    case Proc_JsInit: {
+        ZuiBuilderControlInit(Param1, "clos", 1, FALSE);
+        ZuiBuilderControlInit(Param1, "root", 1, TRUE);
+        ZuiBuilderControlInit(Param1, "parent", 1, TRUE);
+        ZuiBuilderControlInit(Param1, "text", 1, TRUE);
+        ZuiBuilderControlInit(Param1, "tooltip", 1, TRUE);
+        ZuiBuilderControlInit(Param1, "width", 1, TRUE);
+        ZuiBuilderControlInit(Param1, "height", 1, TRUE);
+        ZuiBuilderControlInit(Param1, "minwidth", 1, TRUE);
+        ZuiBuilderControlInit(Param1, "minheight", 1, TRUE);
+        ZuiBuilderControlInit(Param1, "maxheight", 1, TRUE);
+        ZuiBuilderControlInit(Param1, "bkcolor", 1, TRUE);
+        ZuiBuilderControlInit(Param1, "drag", 1, TRUE);
+        ZuiBuilderControlInit(Param1, "rect", 1, TRUE);
+        ZuiBuilderControlInit(Param1, "enabled", 1, TRUE);
+        ZuiBuilderControlInit(Param1, "visible", 1, TRUE);
+    }
+                            //case Proc_JsHas: {
     //    if (wcscmp(Param1, L"root") == 0) ZuiBuilderJs_pushControl(Param2, p->m_pManager->m_pRoot);
     //    else if (wcscmp(Param1, L"parent") == 0)
     //        ZuiBuilderJs_pushControl(Param2, p->m_pParent);

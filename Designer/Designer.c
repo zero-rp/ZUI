@@ -18,7 +18,3 @@ int _stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 
 	ZuiMsgLoop();
 }
-int main() {
-	_tWinMain(0, 0, 0, 0);
-
-}

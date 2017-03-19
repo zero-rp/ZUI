@@ -108,7 +108,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
     return win;
 }
 
-//----------------------------------------------------------------------------JS
+//----------------------------------------------------------------------------JNI
 wchar_t duk_temp[2048];
 const wchar_t *duk_to_string_w(duk_context *ctx, duk_idx_t idx) {
     char *str = duk_to_string(ctx, idx);
@@ -121,7 +121,7 @@ static duk_ret_t ZuiJsBind_Call_exit(duk_context *ctx) {
     return 0;
 }
 static duk_ret_t ZuiJsBind_Call_print(duk_context *ctx) {
-    for (size_t i = 0; i < duk_gettop(ctx); i++)
+    for (size_t i = 0; i < duk_get_top(ctx); i++)
     {
         LOG_DEGUB(L"%ls", duk_to_string_w(ctx, i));
     }
@@ -131,11 +131,37 @@ static duk_ret_t ZuiJsBind_Call_print(duk_context *ctx) {
 
 
 //--------------------------------------------------Control_Begin
-
+//js控件成员函数回调
+static duk_ret_t ZuiBuilderJs_Control_Call(duk_context *ctx) {
+    int id = duk_get_current_magic(ctx);
+    duk_push_this(ctx);
+    duk_get_prop_string(ctx, -1, "_ptr");
+    ZuiControl p = duk_to_pointer(ctx, -1);
+    return ZuiControlCall(Proc_JsCall, p, ctx, id, NULL);
+}
+//js控件成员属性回调
+static duk_ret_t ZuiBuilderJs_Control_Getter(duk_context *ctx) {
+    int id = duk_get_current_magic(ctx);
+    duk_push_this(ctx);
+    duk_get_prop_string(ctx, -1, "_ptr");
+    ZuiControl p = duk_to_pointer(ctx, -1);
+    return ZuiControlCall(Proc_JsGet, p, ctx, id, NULL);
+}
+static duk_ret_t ZuiBuilderJs_Control_Setter(duk_context *ctx) {
+    int id = duk_get_current_magic(ctx);
+    duk_push_this(ctx);
+    duk_get_prop_string(ctx, -1, "_ptr");
+    ZuiControl p = duk_to_pointer(ctx, -1);
+    return ZuiControlCall(Proc_JsSet, p, ctx, id, NULL);
+}
 //----------------辅助函数
 //查找控件
 static duk_ret_t ZuiJsBind_Call_GetByName(duk_context *ctx) {
-   // if (js_isstring(J, 1)) {
+    if (duk_is_string(ctx, 0)) {
+        //ZuiPaintManager p = js_getcontext(J);
+
+   }
+    // if (js_isstring(J, 1)) {
    //     ZuiPaintManager p = js_getcontext(J);
    //     if (p && p->m_pRoot)
    //     {
@@ -175,55 +201,69 @@ static duk_ret_t ZuiJsBind_Call_ClientToScreen(duk_context *ctx) {
     //js_pushundefined(J);
 }
 //----------------辅助函数结束
-//ZuiVoid ZuiBuilderJs_pushControl(js_State *J, ZuiControl cp) {
-//    if (!cp)
-//        return;
-//    js_newobject(J);
-//    js_getproperty(J, -1, L"prototype");
-//    js_newuserdatax(J, TAG, cp, Control_has, Control_put, NULL, NULL);
-//    return;
-//}
+ZuiVoid ZuiBuilderJs_pushControl(duk_context *ctx, ZuiControl cp) {
+    if (!cp)
+        return;
+    duk_get_global_string(ctx, "Control");
+    duk_push_pointer(ctx, cp);
+    duk_new(ctx, 1);
+    return;
+}
 //ZuiControl ZuiBuilderJs_toControl(js_State *J, ZuiInt idx) {
 //    if (!J)
 //        return;
 //    return js_touserdata(J, idx, TAG);;
 //}
-
+//Control对象构造函数
 static duk_ret_t ZuiBuilderJs_Control_constructor(duk_context *ctx) {
-    duk_idx_t nargs;
-
     if (!duk_is_constructor_call(ctx)) {
         return DUK_RET_TYPE_ERROR;
     }
 
-    nargs = duk_get_top(ctx);
-    duk_set_top(ctx, 1);
-
     duk_push_this(ctx);
-
+    ZuiControl p = NULL;
     if (duk_is_pointer(ctx, 0)) {
-        duk_push_pointer(ctx, duk_to_pointer(ctx, 0));
-        duk_put_prop_string(ctx, -2, "_ptr");
+        p = duk_to_pointer(ctx, 0);
     }
     else if (duk_is_string(ctx, 0)) {
-        ZuiControl p = NewZuiControl(duk_to_string_w(ctx, 0), NULL, NULL, NULL);
-        duk_push_pointer(ctx, p);
-        duk_put_prop_string(ctx, -2, "_ptr");
+        p = NewZuiControl(duk_to_string_w(ctx, 0), NULL, NULL, NULL);
     }
+    //绑定控件指针
+    duk_push_pointer(ctx, p);
+    duk_put_prop_string(ctx, -2, "_ptr");
 
-    duk_compact(ctx, 1);
-    return 0;
+    //初始化控件对象成员
+    ZuiControlCall(Proc_JsInit, p, ctx, NULL, NULL);
+
+    return 1;
 }
-void ZuiBuilderJs_Control(duk_context *ctx)
+//Control对象成员绑定辅助函数
+ZuiVoid ZuiBuilderControlInit(duk_context *ctx, char *name, int id, int ttr) {
+    if (ttr) {
+        duk_push_string(ctx, name);
+        duk_push_c_function(ctx, ZuiBuilderJs_Control_Getter, 0 /*nargs*/);
+        duk_set_magic(ctx, -1, id);  /* magic=0: trace */
+        duk_push_c_function(ctx, ZuiBuilderJs_Control_Setter, 1 /*nargs*/);
+        duk_set_magic(ctx, -1, id);  /* magic=0: trace */
+        duk_def_prop(ctx,
+            -4,
+            DUK_DEFPROP_HAVE_GETTER |
+            DUK_DEFPROP_HAVE_SETTER |
+            DUK_DEFPROP_HAVE_CONFIGURABLE |  /* clear */
+            DUK_DEFPROP_HAVE_ENUMERABLE | DUK_DEFPROP_ENUMERABLE);
+    }
+    else {
+        duk_push_c_function(ctx, ZuiBuilderJs_Control_Call, DUK_VARARGS /*nargs*/);
+        duk_set_magic(ctx, -1, id);  /* magic=0: trace */
+        duk_put_prop_string(ctx, -2, name);
+    }
+}
+static void ZuiBuilderJs_Control(duk_context *ctx)
 {
     duk_push_c_function(ctx, ZuiBuilderJs_Control_constructor, DUK_VARARGS /*nargs*/);
 
     /* Push MyObject.prototype object. */
     duk_push_object(ctx);  /* -> stack: [ MyObject proto ] */
-
-                           /* Set MyObject.prototype.printName. */
-    //duk_push_c_function(ctx, myobject_print_name, 0 /*nargs*/);
-    //duk_put_prop_string(ctx, -2, "printName");
 
     /* Set MyObject.prototype = proto */
     duk_put_prop_string(ctx, -2, "prototype");  /* -> stack: [ MyObject ] */
@@ -267,10 +307,6 @@ static duk_ret_t ZuiJsBind_Call_LayoutLoad(duk_context *ctx) {
                 duk_get_global_string(ctx, "Control");
                 duk_push_pointer(ctx, p);
                 duk_new(ctx, 1);
-    //            js_newobject(J);
-    //            js_getproperty(J, -1, L"prototype");
-    //            js_newuserdatax(J, TAG, p, Control_has, Control_put, NULL, NULL);
-    //            return;
                 return 1;
             }
         }
@@ -289,13 +325,17 @@ static duk_ret_t ZuiJsBind_Call_ZuiPopupMenu(duk_context *ctx) {
     //}
     //js_pushundefined(J);
 }
-//---------------------------------------------------------
+//---------------------------------------------------------------------------JNI_End
+//---------------------------------------------------------------------------Debug
+
+//---------------------------------------------------------------------------Debug_End
+
 ZuiBool ZuiBuilderJs(duk_context *ctx) {
     duk_push_c_function(ctx, ZuiJsBind_Call_exit, 1 /*nargs*/);
     duk_put_global_string(ctx, "exit");
 
-    //js_newcfunction(J, ZuiJsBind_Call_print, L"print", 0);
-    //js_setglobal(J, L"print");
+    duk_push_c_function(ctx, ZuiJsBind_Call_print, DUK_VARARGS /*nargs*/);
+    duk_put_global_string(ctx, "print");
 
     duk_push_c_function(ctx, ZuiJsBind_Call_GetByName, 1 /*nargs*/);
     duk_put_global_string(ctx, "GetByName");
@@ -349,7 +389,7 @@ ZEXPORT ZuiBool ZCALL ZuiBuilderJsLoad(duk_context *ctx, ZuiText str, ZuiInt len
 VOID ZCALL ZuiGcTimerProc(HWND h, UINT u, UINT_PTR p, DWORD d) {
     for (size_t i = 0; i < ctx_array->count; i++)
     {
-        //js_gc(js_array->data[i], LOG_DEBUG);
+        duk_gc(ctx_array->data[i], 0);
     }
 }
 ZuiBool ZuiBuilderInit() {

@@ -103,6 +103,12 @@
     <Filter Include="头文件\duktape">
       <UniqueIdentifier>{e5efa697-dfd4-4ad0-88a0-7ccec9b13113}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\libuv">
+      <UniqueIdentifier>{0bb92df5-8f7a-4b55-aee4-d8be0285e264}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\dukluv">
+      <UniqueIdentifier>{27eede43-af35-41ce-a2dd-82c9dd389069}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="control\html\lout\container.cc">

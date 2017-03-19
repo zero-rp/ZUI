@@ -147,12 +147,6 @@ static LRESULT ZCALL __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 ZEXPORT ZuiAny ZCALL ZuiMenuProc(ZuiInt ProcId, ZuiControl cp, ZuiMenu p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
-    case Proc_JsHas: {
-        break;
-    }
-    case Proc_JsCall: {
-        break;
-    }
     case Proc_SetAttribute: {
         if (wcscmp(Param1, L"layered") == 0) {
             if (wcscmp(Param2, L"true") == 0) {
@@ -334,12 +328,6 @@ ZEXPORT ZuiAny ZCALL ZuiMenuItemProc(ZuiInt ProcId, ZuiControl cp, ZuiMenuItem p
         default:
             break;
         }
-        break;
-    }
-    case Proc_JsHas: {
-        break;
-    }
-    case Proc_JsCall: {
         break;
     }
     case Proc_SetAttribute: {
