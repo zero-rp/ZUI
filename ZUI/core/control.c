@@ -608,6 +608,12 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         ZuiBuilderControlInit(Param1, "rect", 1, TRUE);
         ZuiBuilderControlInit(Param1, "enabled", 1, TRUE);
         ZuiBuilderControlInit(Param1, "visible", 1, TRUE);
+
+        ZuiBuilderControlInit(Param1, "onmouseleave", 1, TRUE);
+        ZuiBuilderControlInit(Param1, "onmouseenter", 1, TRUE);
+        ZuiBuilderControlInit(Param1, "onlbuttondown", 1, TRUE);
+        ZuiBuilderControlInit(Param1, "onclick", 1, TRUE);
+        ZuiBuilderControlInit(Param1, "onchar", 1, TRUE);
     }
                             //case Proc_JsHas: {
     //    if (wcscmp(Param1, L"root") == 0) ZuiBuilderJs_pushControl(Param2, p->m_pManager->m_pRoot);

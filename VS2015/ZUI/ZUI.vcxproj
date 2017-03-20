@@ -101,7 +101,7 @@
       <SDLCheck>true</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\platform\graph\agg\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\libuv\include;..\..\ZUI\platform\graph\agg\include</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4091</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -110,7 +110,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>../../ZUI/Zui.def</ModuleDefinitionFile>
-      <AdditionalDependencies>imm32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imm32.lib;ws2_32.lib;IPHLPAPI.lib;Psapi.lib;Userenv.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>DEL $(SolutionDir)..\$(ProjectName)\res\default.zip
@@ -148,7 +148,7 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0500;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_MSC_VER=1400;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0500;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_MSC_VER=1400;USING_VC6RT=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <ExceptionHandling>false</ExceptionHandling>
@@ -158,16 +158,16 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
       <StringPooling>true</StringPooling>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\platform\graph\agg\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\libuv\include;..\..\ZUI\platform\graph\agg\include</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>No</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;gdiplus.lib;wininet.lib;msvcrt.lib;oldnames.lib;comctl32.lib;ole32.lib;msimg32.lib;imm32.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;gdiplus.lib;wininet.lib;msvcrt.lib;oldnames.lib;comctl32.lib;ole32.lib;msimg32.lib;imm32.lib;ws2_32.lib;IPHLPAPI.lib;Psapi.lib;Userenv.lib;Advapi32.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
@@ -240,6 +240,23 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClCompile Include="..\..\ZUI\core\string.c" />
     <ClCompile Include="..\..\ZUI\core\template.c" />
     <ClCompile Include="..\..\ZUI\core\tree.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\callbacks.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_fs.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_handle.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\loop.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\main.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\misc.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_pipe.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\refs.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_req.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\schema.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_stream.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_tcp.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_timer.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_tty.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\utils.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\uv_schema.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_alloc_default.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_api_buffer.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_api_bytecode.c" />
@@ -337,6 +354,37 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClCompile Include="..\..\ZUI\layout\TabLayout.c" />
     <ClCompile Include="..\..\ZUI\layout\TileLayout.c" />
     <ClCompile Include="..\..\ZUI\layout\VerticalLayout.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\fs-poll.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\inet.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\threadpool.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\uv-common.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\version.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\async.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\core.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\dl.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\error.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\fs-event.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\fs.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\getaddrinfo.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\getnameinfo.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\handle.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\loop-watcher.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\pipe.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\poll.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\process-stdio.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\process.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\req.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\signal.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\snprintf.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\stream.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\tcp.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\thread.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\timer.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\tty.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\udp.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\util.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\winapi.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\winsock.c" />
     <ClCompile Include="..\..\ZUI\platform\graph\agg.cpp" />
     <ClCompile Include="..\..\ZUI\platform\graph\agg\agg_font_win32_tt.cpp" />
     <ClCompile Include="..\..\ZUI\platform\graph\agg\src\agg_curves.cpp" />
@@ -583,6 +631,16 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClInclude Include="..\..\ZUI\layout\TabLayout.h" />
     <ClInclude Include="..\..\ZUI\layout\TileLayout.h" />
     <ClInclude Include="..\..\ZUI\layout\VerticalLayout.h" />
+    <ClInclude Include="..\..\ZUI\libuv\src\heap-inl.h" />
+    <ClInclude Include="..\..\ZUI\libuv\src\queue.h" />
+    <ClInclude Include="..\..\ZUI\libuv\src\uv-common.h" />
+    <ClInclude Include="..\..\ZUI\libuv\src\win\atomicops-inl.h" />
+    <ClInclude Include="..\..\ZUI\libuv\src\win\handle-inl.h" />
+    <ClInclude Include="..\..\ZUI\libuv\src\win\internal.h" />
+    <ClInclude Include="..\..\ZUI\libuv\src\win\req-inl.h" />
+    <ClInclude Include="..\..\ZUI\libuv\src\win\stream-inl.h" />
+    <ClInclude Include="..\..\ZUI\libuv\src\win\winapi.h" />
+    <ClInclude Include="..\..\ZUI\libuv\src\win\winsock.h" />
     <ClInclude Include="..\..\ZUI\platform\graph\agg.h" />
     <ClInclude Include="..\..\ZUI\platform\graph\cairo.h" />
     <ClInclude Include="..\..\ZUI\platform\graph\gdi.h" />

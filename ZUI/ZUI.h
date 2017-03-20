@@ -15,7 +15,7 @@
 #define __ZUI_H__
 
 #include "duktape/duktape.h"
-
+#include <uv.h>
 #if defined(__cplusplus)
 extern "C"
 {

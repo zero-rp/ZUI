@@ -1,4 +1,5 @@
 ﻿#include <ZUI.h>
+
 void Rect_Join(RECT *rc, RECT *rc1)
 {
     if (rc1->left < rc->left) rc->left = rc1->left;
@@ -93,6 +94,24 @@ ZEXPORT ZuiBool ZCALL ZuiUnInit() {
 }
 ZEXPORT ZuiInt ZCALL ZuiMsgLoop() {
     MSG Msg;
+    uv_loop_t *loop = uv_default_loop();
+    while (1) {
+        int more = (0 != uv_run(loop, UV_RUN_NOWAIT));
+        if (PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE)) {
+            if (WM_QUIT == Msg.message) {
+                break;
+            }
+
+
+            TranslateMessage(&Msg);
+            DispatchMessageW(&Msg);
+        }
+        else {
+            Sleep(1);
+        }
+    }
+
+
     while (GetMessage(&Msg, NULL, 0, 0))
     {
         TranslateMessage(&Msg);
