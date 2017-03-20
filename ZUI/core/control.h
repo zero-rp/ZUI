@@ -22,6 +22,7 @@ typedef ZuiControl(ZCALL* FINDCONTROLPROC)(ZuiControl, LPVOID);
 typedef ZuiAny(ZCALL *ZCtlProc)(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 
+
 #undef  MODULE
 #define MODULE  Control
 
@@ -113,6 +114,32 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define ZSTATE_PUSHED       0x00000010
 #define ZSTATE_READONLY     0x00000020
 #define ZSTATE_CAPTURED     0x00000040
+
+//------JSID
+#define Js_Id_clos              1
+
+#define Js_Id_root              2
+#define Js_Id_parent            3
+#define Js_Id_text              4
+#define Js_Id_tooltip           5
+#define Js_Id_width             6
+#define Js_Id_height            7
+#define Js_Id_minwidth          8
+#define Js_Id_minheight         9
+#define Js_Id_maxwidth          10
+#define Js_Id_maxheight         11
+#define Js_Id_bkcolor           12
+#define Js_Id_drag              13
+#define Js_Id_rect              14
+#define Js_Id_enabled           15
+#define Js_Id_visible           16
+
+#define Js_Id_onmouseleave      17
+#define Js_Id_onmouseenter      18
+#define Js_Id_onlbuttondown     19
+#define Js_Id_onclick           20
+#define Js_Id_onchar            21
+
 
 //------宏封装
 #define ZuiControlGetType(Control) ZProc(Control, GetType, NULL, NULL , NULL);
@@ -219,6 +246,9 @@ typedef struct _ZControl
     _ZuiText m_chShortcut;          //快捷键
     void *m_sUserData;              //
 
+    //js_ref
+    ZuiInt m_rOnclick;
+    //js_refend
     rb_root *m_rAttribute;          //属性map
 
     //控件默认样式-------------------
@@ -241,7 +271,7 @@ typedef struct _ZControl
 ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 
 //创建控件
-ZuiControl NewZuiControl(ZuiText classname, void* Param1, void* Param2, void* Param3);
+ZuiControl NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 //销毁控件
 void FreeZuiControl(ZuiControl p, ZuiBool Delayed);
 

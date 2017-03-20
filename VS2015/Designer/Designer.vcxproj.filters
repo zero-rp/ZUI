@@ -46,6 +46,15 @@
     <Filter Include="源文件\ZUI\duktape">
       <UniqueIdentifier>{81afd6b2-6635-4b22-8403-7d9b453f381c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\ZUI\libuv">
+      <UniqueIdentifier>{bc205ee1-f155-44a1-87d9-2d219e1dcae5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\ZUI\libuv\win">
+      <UniqueIdentifier>{9f812b83-012c-4694-844d-c06504c0ed91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\ZUI\dukluv">
+      <UniqueIdentifier>{661f3a22-1f53-407a-b305-d968b449e768}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Designer\CodeEdit.c">
@@ -464,6 +473,99 @@
     </ClCompile>
     <ClCompile Include="..\..\ZUI\duktape\duk_util_tinyrandom.c">
       <Filter>源文件\ZUI\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\version.c">
+      <Filter>源文件\ZUI\libuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\uv-common.c">
+      <Filter>源文件\ZUI\libuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\threadpool.c">
+      <Filter>源文件\ZUI\libuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\inet.c">
+      <Filter>源文件\ZUI\libuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\fs-poll.c">
+      <Filter>源文件\ZUI\libuv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\async.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\core.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\dl.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\error.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\fs.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\fs-event.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\getaddrinfo.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\getnameinfo.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\handle.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\loop-watcher.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\pipe.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\poll.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\process.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\process-stdio.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\req.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\signal.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\snprintf.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\stream.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\tcp.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\thread.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\timer.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\tty.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\udp.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\util.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\winapi.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\winsock.c">
+      <Filter>源文件\ZUI\libuv\win</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

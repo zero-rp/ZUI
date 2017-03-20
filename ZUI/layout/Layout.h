@@ -49,6 +49,14 @@
 #define Proc_Layout_GetHorizontalScrollBar  532
 #define Proc_Layout_ProcessScrollBar    533 //调整滚动条位置
 
+//------Js
+
+#define Js_Id_Layout_Child              1
+#define Js_Id_Layout_GetByName              2
+
+#define Js_Id_Layout_Child              1
+#define Js_Id_Layout_Count              2
+
 //------宏封装
 #define ZuiLayoutAdd(Control, ...) ZProc(Control, Layout_Add, __VA_ARGS__);
 #define ZuiLayoutAddAt(Control, ...) ZProc(Control, Layout_AddAt, __VA_ARGS__);

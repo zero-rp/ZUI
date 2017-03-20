@@ -191,7 +191,57 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
         }
         break;
     }
-    //case Proc_JsPut: {
+    case Proc_JsGet: {
+        switch ((ZuiInt)Param2)
+        {
+        case Js_Id_Layout_Child: {
+
+            break;
+        }
+
+        default:
+            break;
+        }
+        break;
+    }
+    case Proc_JsCall: {
+        duk_context *ctx = (duk_context *)Param1;
+        switch ((ZuiInt)Param2)
+        {
+        case Js_Id_Layout_GetByName: {
+            if (duk_is_string(ctx, 0)) {
+                ZuiControl p = ZuiControlFindName(cp, duk_to_string_w(ctx, 0));
+                if (!p)
+                    LOG_ERROR("Layout GetByName失败: Name:%ls\r\n", duk_to_string_w(ctx, 0));
+                if (p)
+                {
+                    duk_get_global_string(ctx, "Control");
+                    duk_push_pointer(ctx, p);
+                    duk_new(ctx, 1);
+                    return 1;
+                }
+            }
+            duk_push_null(ctx);
+            return 1;
+        }
+
+        default:
+            break;
+        }
+        break;
+    }
+    case Proc_JsInit: {
+        ZuiBuilderControlInit(Param1, "Add", Proc_Layout_Add, FALSE);
+        ZuiBuilderControlInit(Param1, "AddAt", Proc_Layout_AddAt, FALSE);
+        ZuiBuilderControlInit(Param1, "GetItemIndex", 3, FALSE);
+        ZuiBuilderControlInit(Param1, "GetItemAt", 4, FALSE);
+        ZuiBuilderControlInit(Param1, "GetByName", Js_Id_Layout_GetByName, FALSE);
+
+        ZuiBuilderControlInit(Param1, "child", Js_Id_Layout_Child, TRUE);
+        ZuiBuilderControlInit(Param1, "count", Js_Id_Layout_Count, TRUE);
+        break;
+    }
+                      //case Proc_JsPut: {
     //    js_State *J = Param2;
     //    if (wcscmp(Param1, L"inset") == 0) {
     //        RECT rcPadding = { 0 };
@@ -257,9 +307,9 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
         TEventUI *event = (TEventUI *)Param1;
         //不响应鼠标消息
         if (!cp->m_bMouseEnabled && event->Type > ZEVENT__MOUSEBEGIN && event->Type < ZEVENT__MOUSEEND) {
-            if (cp->m_pParent != NULL) 
+            if (cp->m_pParent != NULL)
                 ZuiControlCall(Proc_OnEvent, cp->m_pParent, Param1, NULL, NULL);
-            else 
+            else
                 ZuiDefaultControlProc(Proc_OnEvent, cp, 0, Param1, NULL, NULL);
             return;
         }

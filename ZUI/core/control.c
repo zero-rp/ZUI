@@ -1,4 +1,5 @@
 ﻿#include <ZUI.h>
+#include "../dukluv/src/refs.h"
 
 extern rb_root *Global_ControlClass;
 ZuiVoid ZuiFreeAttributeCallBack(void *data) {
@@ -239,6 +240,12 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         }
                                  break;
         case ZEVENT_LBUTTONUP: {
+            if (p->m_rOnclick) {
+                duv_push_ref(p->m_pManager->m_ctx, p->m_rOnclick);
+                ZuiBuilderJs_pushControl(p->m_pManager->m_ctx, p);
+                duk_call_method(p->m_pManager->m_ctx, 1);
+                duk_pop(p->m_pManager->m_ctx);
+            }
             //ZuiControlNotify(L"onclick", p, ((TEventUI *)Param1)->ptMouse.x, JS_TNUMBER, ((TEventUI *)Param1)->ptMouse.y, JS_TNUMBER, NULL, NULL);
             break;
         }
@@ -498,6 +505,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             ZuiControlCall(Proc_Layout_Remove, p->m_pParent, p, TRUE, NULL);
         if (p->m_pManager != NULL)
             ZuiPaintManagerReapObjects(p->m_pManager, p);
+        if(p->m_rOnclick)
+            duv_unref(p->m_pManager->m_ctx, p->m_rOnclick);
         rb_foreach(p->m_rAttribute, ZuiFreeAttributeCallBack);
         rb_free(p->m_rAttribute);
 #if RUN_DEBUG
@@ -589,62 +598,195 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         break;
     }
     case Proc_GetAttribute: {
+        break;
+    }
+    case Proc_JsGet: {
+        duk_context *ctx = (duk_context *)Param1;
+        switch ((ZuiInt)Param2)
+        {
+        case  Js_Id_root: {
+            ZuiBuilderJs_pushControl(ctx, p->m_pManager->m_pRoot);
+            return 1;
+        }
+        case  Js_Id_parent: {
+            ZuiBuilderJs_pushControl(ctx, p->m_pParent);
+            return 1;
+        }
+        case  Js_Id_text: {
+            duk_push_string_w(ctx, ZuiControlCall(Proc_GetText, p, NULL, NULL, NULL));
+            return 1;
+        }
+        case  Js_Id_tooltip: {
+            duk_push_string_w(ctx, p->m_sToolTip);
+            return 1;
+        }
+        case  Js_Id_width: {
+            duk_push_int(ctx, p->m_cxyFixed.cx);
+            return 1;
+        }
+        case  Js_Id_height: {
+            duk_push_int(ctx, p->m_cxyFixed.cy);
+            return 1;
+        }
+        case  Js_Id_minwidth: {
+            duk_push_int(ctx, p->m_cxyMin.cx);
+            return 1;
+        }
+        case  Js_Id_minheight: {
+            duk_push_int(ctx, p->m_cxyMin.cy);
+            return 1;
+        }
+        case  Js_Id_maxwidth: {
+            duk_push_int(ctx, p->m_cxyMax.cx);
+            return 1;
+        }
+        case  Js_Id_maxheight: {
+            duk_push_int(ctx, p->m_cxyMax.cy);
+            return 1;
+        }
+        case  Js_Id_bkcolor: {
+            duk_push_int(ctx, p->m_BkgColor);
+            return 1;
+        }
+        case  Js_Id_drag: {
+            duk_push_boolean(ctx, p->m_drag);
+            return;
+        }
+        case  Js_Id_rect: {
+            //    else if (wcscmp(Param1, L"rect") == 0) {
+            //        js_newobject(Param2);
+            //        js_pushnumber(Param2, p->m_rcItem.left);
+            //        js_setproperty(Param2, -2, L"left");
+            //        js_pushnumber(Param2, p->m_rcItem.top);
+            //        js_setproperty(Param2, -2, L"top");
+            //        js_pushnumber(Param2, p->m_rcItem.bottom);
+            //        js_setproperty(Param2, -2, L"bottom");
+            //        js_pushnumber(Param2, p->m_rcItem.right);
+            //        js_setproperty(Param2, -2, L"right");
+            //    }
+            return 1;
+        }
+        case  Js_Id_enabled: {
+            duk_push_boolean(ctx, p->m_bEnabled);
+        }
+        case  Js_Id_visible: {
+            duk_push_boolean(ctx, p->m_bVisible);
+        }
+        default:
+            break;
+        }
+        break;
+    }
+    case Proc_JsSet: {
+        duk_context *ctx = (duk_context *)Param1;
+        switch ((ZuiInt)Param2)
+        {
+        case Js_Id_onmouseleave: {
 
+        }
+        case  Js_Id_onmouseenter: {
+
+        }
+        case  Js_Id_onlbuttondown: {
+
+        }
+        case  Js_Id_onclick: {
+            if (duk_is_function(ctx, 0)) {
+                duk_dup(ctx, 0);
+                p->m_rOnclick = duv_ref(ctx);
+            }
+            return 0;
+        }
+        case  Js_Id_onchar: {
+
+        }
+        case  Js_Id_root: {
+
+        }
+        case  Js_Id_parent: {
+
+        }
+        case  Js_Id_text: {
+
+        }
+        case  Js_Id_tooltip: {
+
+        }
+        case  Js_Id_width: {
+
+        }
+        case  Js_Id_height: {
+
+        }
+        case  Js_Id_minwidth: {
+
+        }
+        case  Js_Id_minheight: {
+
+        }
+        case  Js_Id_maxheight: {
+
+        }
+        case  Js_Id_bkcolor: {
+
+        }
+        case  Js_Id_drag: {
+
+        }
+        case  Js_Id_rect: {
+
+        }
+        case  Js_Id_enabled: {
+
+        }
+        case  Js_Id_visible: {
+
+        }
+        default:
+            break;
+        }
+        break;
+    }
+    case Proc_JsCall: {
+        duk_context *ctx = (duk_context *)Param1;
+        switch ((ZuiInt)Param2)
+        {
+        case Js_Id_clos: {
+            ZuiPaintManagerAddDelayedCleanup(p->m_pManager, p);
+            return 0;
+        }
+        default:
+            break;
+        }
         break;
     }
     case Proc_JsInit: {
-        ZuiBuilderControlInit(Param1, "clos", 1, FALSE);
-        ZuiBuilderControlInit(Param1, "root", 1, TRUE);
-        ZuiBuilderControlInit(Param1, "parent", 1, TRUE);
-        ZuiBuilderControlInit(Param1, "text", 1, TRUE);
-        ZuiBuilderControlInit(Param1, "tooltip", 1, TRUE);
-        ZuiBuilderControlInit(Param1, "width", 1, TRUE);
-        ZuiBuilderControlInit(Param1, "height", 1, TRUE);
-        ZuiBuilderControlInit(Param1, "minwidth", 1, TRUE);
-        ZuiBuilderControlInit(Param1, "minheight", 1, TRUE);
-        ZuiBuilderControlInit(Param1, "maxheight", 1, TRUE);
-        ZuiBuilderControlInit(Param1, "bkcolor", 1, TRUE);
-        ZuiBuilderControlInit(Param1, "drag", 1, TRUE);
-        ZuiBuilderControlInit(Param1, "rect", 1, TRUE);
-        ZuiBuilderControlInit(Param1, "enabled", 1, TRUE);
-        ZuiBuilderControlInit(Param1, "visible", 1, TRUE);
+        ZuiBuilderControlInit(Param1, "clos", Js_Id_clos, FALSE);
 
-        ZuiBuilderControlInit(Param1, "onmouseleave", 1, TRUE);
-        ZuiBuilderControlInit(Param1, "onmouseenter", 1, TRUE);
-        ZuiBuilderControlInit(Param1, "onlbuttondown", 1, TRUE);
-        ZuiBuilderControlInit(Param1, "onclick", 1, TRUE);
-        ZuiBuilderControlInit(Param1, "onchar", 1, TRUE);
+        ZuiBuilderControlInit(Param1, "root", Js_Id_root, TRUE);
+        ZuiBuilderControlInit(Param1, "parent", Js_Id_parent, TRUE);
+        ZuiBuilderControlInit(Param1, "text", Js_Id_text, TRUE);
+        ZuiBuilderControlInit(Param1, "tooltip", Js_Id_tooltip, TRUE);
+        ZuiBuilderControlInit(Param1, "width", Js_Id_width, TRUE);
+        ZuiBuilderControlInit(Param1, "height", Js_Id_height, TRUE);
+        ZuiBuilderControlInit(Param1, "minwidth", Js_Id_minwidth, TRUE);
+        ZuiBuilderControlInit(Param1, "minheight", Js_Id_minheight, TRUE);
+        ZuiBuilderControlInit(Param1, "maxwidth", Js_Id_maxwidth, TRUE);
+        ZuiBuilderControlInit(Param1, "maxheight", Js_Id_maxheight, TRUE);
+        ZuiBuilderControlInit(Param1, "bkcolor", Js_Id_bkcolor, TRUE);
+        ZuiBuilderControlInit(Param1, "drag", Js_Id_drag, TRUE);
+        ZuiBuilderControlInit(Param1, "rect", Js_Id_rect, TRUE);
+        ZuiBuilderControlInit(Param1, "enabled", Js_Id_enabled, TRUE);
+        ZuiBuilderControlInit(Param1, "visible", Js_Id_visible, TRUE);
+
+        ZuiBuilderControlInit(Param1, "onmouseleave", Js_Id_onmouseleave, TRUE);
+        ZuiBuilderControlInit(Param1, "onmouseenter", Js_Id_onmouseenter, TRUE);
+        ZuiBuilderControlInit(Param1, "onlbuttondown", Js_Id_onlbuttondown, TRUE);
+        ZuiBuilderControlInit(Param1, "onclick", Js_Id_onclick, TRUE);
+        ZuiBuilderControlInit(Param1, "onchar", Js_Id_onchar, TRUE);
+        break;
     }
-                            //case Proc_JsHas: {
-    //    if (wcscmp(Param1, L"root") == 0) ZuiBuilderJs_pushControl(Param2, p->m_pManager->m_pRoot);
-    //    else if (wcscmp(Param1, L"parent") == 0)
-    //        ZuiBuilderJs_pushControl(Param2, p->m_pParent);
-    //    else if (wcscmp(Param1, L"text") == 0) js_pushstring(Param2, ZuiControlCall(Proc_GetText, p, NULL, NULL, NULL));
-    //    else if (wcscmp(Param1, L"tooltip") == 0) js_pushstring(Param2, p->m_sToolTip);
-    //    else if (wcscmp(Param1, L"width") == 0) js_pushnumber(Param2, p->m_cxyFixed.cx);
-    //    else if (wcscmp(Param1, L"height") == 0) js_pushnumber(Param2, p->m_cxyFixed.cy);
-    //    else if (wcscmp(Param1, L"minwidth") == 0) js_pushnumber(Param2, p->m_cxyMin.cx);
-    //    else if (wcscmp(Param1, L"minheight") == 0) js_pushnumber(Param2, p->m_cxyMin.cy);
-    //    else if (wcscmp(Param1, L"maxwidth") == 0) js_pushnumber(Param2, p->m_cxyMax.cx);
-    //    else if (wcscmp(Param1, L"maxheight") == 0) js_pushnumber(Param2, p->m_cxyMax.cy);
-    //    else if (wcscmp(Param1, L"bkcolor") == 0) js_pushnumber(Param2, p->m_BkgColor);
-    //    else if (wcscmp(Param1, L"drag") == 0) js_pushboolean(Param2, p->m_drag);
-    //    else if (wcscmp(Param1, L"clos") == 0) return 1;
-    //    else if (wcscmp(Param1, L"rect") == 0) {
-    //        js_newobject(Param2);
-    //        js_pushnumber(Param2, p->m_rcItem.left);
-    //        js_setproperty(Param2, -2, L"left");
-    //        js_pushnumber(Param2, p->m_rcItem.top);
-    //        js_setproperty(Param2, -2, L"top");
-    //        js_pushnumber(Param2, p->m_rcItem.bottom);
-    //        js_setproperty(Param2, -2, L"bottom");
-    //        js_pushnumber(Param2, p->m_rcItem.right);
-    //        js_setproperty(Param2, -2, L"right");
-    //    }
-    //    else if (wcscmp(Param1, L"enabled") == 0) js_pushboolean(Param2, p->m_bEnabled);
-    //    else if (wcscmp(Param1, L"visible") == 0) js_pushboolean(Param2, p->m_bVisible);
-    //    break;
-    //}
+
     //case Proc_JsPut: {
     //    js_State *J = Param2;
     //    if (wcscmp(Param1, L"text") == 0) ZuiControlCall(Proc_SetText, p, js_tostring(J, -1), NULL, NULL);
@@ -766,14 +908,13 @@ ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, 
 ZEXPORT ZuiAny ZCALL ZuiControlNotify(ZuiText msg, ZuiControl p, ZuiAny Param1, ZuiInt p1Type, ZuiAny Param2, ZuiInt p2Type, ZuiAny Param3, ZuiInt p3Type) {
     //先通知js
     rb_node * node = rb_search((key_t)Zui_Hash(msg), p->m_rAttribute);
-    //if (node) {
-    //    ZuiAttribute att = node->data;
-    //    if (att->type == ZAttType_String)
-    //    {
-    //        ZuiBuilderJs_pushControl(p->m_pManager->m_js, p);
-    //        js_setglobal(p->m_pManager->m_js, L"ec");
-    //        ZuiBuilderJsLoad(p->m_pManager->m_js, att->v, att->vlen);
-    //    }
+    if (node) {
+        ZuiAttribute att = node->data;
+        if (att->type == ZAttType_String)
+        {
+            ZuiBuilderJs_pushControl(p->m_pManager->m_ctx, p);
+            ZuiBuilderJsLoad(p->m_pManager->m_ctx, att->v, att->vlen);
+        }
     //    else {
     //        int ret = 1;
     //        js_pushobject(p->m_pManager->m_js, att->v);
@@ -805,7 +946,7 @@ ZEXPORT ZuiAny ZCALL ZuiControlNotify(ZuiText msg, ZuiControl p, ZuiAny Param1, 
     //        js_pop(p->m_pManager->m_js, 1);
     //    }
 
-    //}
+    }
     if (p->m_pNotify)
     {
         return p->m_pNotify(msg, p, p->m_sUserData, Param1, Param2, Param3);

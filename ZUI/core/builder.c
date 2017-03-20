@@ -1,4 +1,5 @@
 ﻿#include <ZUI.h>
+#include "../dukluv/src/refs.h"
 
 duk_context *Global_ctx;
 static DArray *ctx_array = NULL;
@@ -115,6 +116,13 @@ const wchar_t *duk_to_string_w(duk_context *ctx, duk_idx_t idx) {
     duk_temp[MultiByteToWideChar(CP_UTF8, 0, str, -1, duk_temp, 2048 * 2)] = 0;
     return duk_temp;
 }
+void duk_push_string_w(duk_context *ctx, wchar_t str) {
+    int len = WideCharToMultiByte(CP_UTF8, 0, str, -1, 0, 0, NULL, NULL);
+    char*buf = ZuiMalloc(len + 1);
+    buf[WideCharToMultiByte(CP_UTF8, 0, str, -1, buf, len, NULL, NULL)] = 0;
+    duk_push_string(ctx, buf);
+    ZuiFree(buf);
+}
 
 static duk_ret_t ZuiJsBind_Call_exit(duk_context *ctx) {
     ZuiMsgLoop_exit();
@@ -204,6 +212,7 @@ ZuiVoid ZuiBuilderJs_pushControl(duk_context *ctx, ZuiControl cp) {
     duk_get_global_string(ctx, "Control");
     duk_push_pointer(ctx, cp);
     duk_new(ctx, 1);
+    duk_dup(ctx, -1);
     return;
 }
 //ZuiControl ZuiBuilderJs_toControl(js_State *J, ZuiInt idx) {
@@ -356,6 +365,7 @@ duk_context *ZuiBuilderJs(ZuiPaintManager p) {
     ZuiBuilderJs_Control(ctx);
     //ZuiBuilderJs_Graphic(J);
 
+    duv_ref_setup(ctx);
     //duv_bind(ctx);
     darray_append(ctx_array, ctx);
     return ctx;
@@ -363,13 +373,9 @@ duk_context *ZuiBuilderJs(ZuiPaintManager p) {
 ZuiBool ZuiBuilderJsUn(duk_context *ctx) {
     ZuiContext c = ZuiBuilderContext(ctx);
     darray_delete(ctx_array, darray_find(ctx_array, ctx));
-    duk_destroy_heap(Global_ctx);
+    duk_destroy_heap(ctx);
     ZuiFree(c);
 }
-//ZuiBool ZuiBuilderJsPM(js_State *J, ZuiPaintManager p) {
-//
-//}
-
 
 typedef struct _jsbuf
 {
@@ -378,9 +384,10 @@ typedef struct _jsbuf
 }jsbuf;
 static duk_ret_t eval_raw(duk_context *ctx, jsbuf *udata) {
     int len = WideCharToMultiByte(CP_UTF8, 0, udata->buf, -1, 0, 0, NULL, NULL);
-    char*buf = malloc(len + 1);
+    char*buf = ZuiMalloc(len + 1);
     buf[WideCharToMultiByte(CP_UTF8, 0, udata->buf, -1, buf, len, NULL, NULL)] = 0;
     duk_eval_string(ctx, buf);
+    ZuiFree(buf);
     return 1;
 }
 ZEXPORT ZuiBool ZCALL ZuiBuilderJsLoad(duk_context *ctx, ZuiText str, ZuiInt len) {
@@ -402,8 +409,7 @@ VOID ZCALL ZuiGcTimerProc(HWND h, UINT u, UINT_PTR p, DWORD d) {
 ZuiBool ZuiBuilderInit() {
     ctx_array = darray_create();
     Global_ctx = ZuiBuilderJs(NULL);
-    ZuiBuilderJs(Global_ctx);
-    SetTimer(0, 0, 1000 * JS_GCTIMER, ZuiGcTimerProc);
+    SetTimer(0, 0, 10 * JS_GCTIMER, ZuiGcTimerProc);
     return TRUE;
 }
 ZuiVoid ZuiBuilderUnInit() {

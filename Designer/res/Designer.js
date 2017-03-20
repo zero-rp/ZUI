@@ -3,7 +3,7 @@ var DesignTabHead = GetByName("designtabhead");//取设计区选择夹头部对�
 var DesignTab = GetByName("designtab");//取设计区选择夹对象
 
 
-GetByName("ctl").WindowCtl_clos.onclick=function (c){exit();};//设置关闭按钮回调
+GetByName("ctl").GetByName("WindowCtl_clos").onclick = function (c) { exit(); };//设置关闭按钮回调
 
 //------------设计区
 var DesignTabSelectIndex=0;//当前选择的选择夹

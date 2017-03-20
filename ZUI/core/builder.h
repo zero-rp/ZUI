@@ -22,6 +22,9 @@ typedef struct _ZuiContext
 
 ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win);
 ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len);
+
+const wchar_t *duk_to_string_w(duk_context *ctx, duk_idx_t idx);
+
 //绑定js对象
 ZuiVoid ZuiBuilderJs_pushControl(duk_context *ctx, ZuiControl cp);
 //ZuiControl ZuiBuilderJs_toControl(js_State *J, ZuiInt idx);

@@ -102,12 +102,12 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MinimalRebuild>true</MinimalRebuild>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\platform\graph\agg\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\libuv\include;..\..\ZUI\platform\graph\agg\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>imm32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imm32.lib;ws2_32.lib;IPHLPAPI.lib;Psapi.lib;Userenv.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>DEL $(SolutionDir)..\$(ProjectName)\res.zip
@@ -313,6 +313,37 @@ echo res| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\re
     <ClCompile Include="..\..\ZUI\layout\TabLayout.c" />
     <ClCompile Include="..\..\ZUI\layout\TileLayout.c" />
     <ClCompile Include="..\..\ZUI\layout\VerticalLayout.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\fs-poll.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\inet.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\threadpool.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\uv-common.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\version.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\async.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\core.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\dl.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\error.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\fs-event.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\fs.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\getaddrinfo.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\getnameinfo.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\handle.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\loop-watcher.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\pipe.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\poll.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\process-stdio.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\process.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\req.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\signal.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\snprintf.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\stream.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\tcp.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\thread.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\timer.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\tty.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\udp.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\util.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\winapi.c" />
+    <ClCompile Include="..\..\ZUI\libuv\src\win\winsock.c" />
     <ClCompile Include="..\..\ZUI\platform\graph\gdi.c" />
     <ClCompile Include="..\..\ZUI\platform\os\win.c" />
     <ClCompile Include="..\..\ZUI\vc6.cpp">
