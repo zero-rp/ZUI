@@ -484,8 +484,8 @@ static void duv_dump_error(duk_context *ctx, duk_idx_t idx) {
 
 int duv_bind(duk_context *ctx//,int argc, char *argv[]
     ) {
-    int argc = 1;
-    char *argv[2] = { "aaa","bbb" };
+    int argc = 2;
+    char *argv[2] = { "aaa","tcp-echo.js" };
   //uv_setup_args(argc, argv);
 
     uv_loop_t *loop = uv_default_loop();
@@ -506,8 +506,6 @@ int duv_bind(duk_context *ctx//,int argc, char *argv[]
   duk_push_string(ctx, argv[1]);
   if (duk_pcall(ctx, 1)) {
     duv_dump_error(ctx, -1);
-    uv_loop_close(&loop);
-    duk_destroy_heap(ctx);
     return 1;
   }
 

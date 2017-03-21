@@ -25,6 +25,14 @@
 #define Proc_Window_SetComBo        1008
 #define Proc_Window_Popup           1009
 #define Proc_Window_SetToolWindow   1010
+
+//------JSID
+#define Js_Id_Window_SetWindowMin    100
+#define Js_Id_Window_SetWindowMax    102
+#define Js_Id_Window_SetWindowRestor 103
+#define Js_Id_Window_Popup           104
+
+
 //------宏封装
 #define ZuiWindowSetNoBox(Control, ...) ZProc(Control, Window_SetNoBox, __VA_ARGS__);
 #define ZuiWindowSetWindowMin(Control, ...) ZProc(Control, Window_SetWindowMin, __VA_ARGS__);

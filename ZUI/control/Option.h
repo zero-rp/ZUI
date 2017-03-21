@@ -21,6 +21,10 @@
 #define Proc_Option_SetResSelectedPushed    1035    //选中的按下状态
 #define Proc_Option_SetGroup                1036
 
+//------JSID
+#define Js_Id_Option_selected               100
+#define Js_Id_Option_group                  101
+
 //------宏封装
 #define ZuiOptionSetSelected(Control, ...) ZProc(Control, Option_SetSelected, __VA_ARGS__);
 #define ZuiOptionGetSelected(Control, ...) ZProc(Control, Option_GetSelected, __VA_ARGS__);

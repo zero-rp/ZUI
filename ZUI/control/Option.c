@@ -108,19 +108,41 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
         else if (_tcscmp(Param1, _T("selectedpushedimage")) == 0) ZuiControlCall(Proc_Option_SetResSelectedPushed, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         break;
     }
-    //case Proc_JsHas: {
-    //    js_State *J = Param2;
-    //    if (wcscmp(Param1, L"selected") == 0) js_pushboolean(Param2, p->m_bSelected);
-    //    break;
-    //}
-    //case Proc_JsPut: {
-    //    js_State *J = Param2;
-    //    if (wcscmp(Param1, L"group") == 0)
-    //        ZuiControlCall(Proc_Option_SetGroup, cp, (ZuiAny)js_toboolean(J, -1), NULL, NULL);
-    //    else if (wcscmp(Param1, L"selected") == 0)
-    //        ZuiControlCall(Proc_Option_SetSelected, cp, (ZuiAny)js_toboolean(J, -1), NULL, NULL);
-    //    break;
-    //}
+    case Proc_JsGet: {
+        duk_context *ctx = (duk_context *)Param1;
+        switch ((ZuiInt)Param2)
+        {
+        case  Js_Id_Option_selected: {
+            duk_push_boolean(ctx, p->m_bSelected);
+            return 1;
+        }
+        default:
+            break;
+        }
+        break;
+    }
+    case Proc_JsSet: {
+        duk_context *ctx = (duk_context *)Param1;
+        switch ((ZuiInt)Param2)
+        {
+        case Js_Id_Option_selected: {
+            ZuiControlCall(Proc_Option_SetSelected, cp, (ZuiAny)duk_to_boolean(ctx, 0), NULL, NULL);
+            return 0;
+        }
+        case Js_Id_Option_group: {
+            ZuiControlCall(Proc_Option_SetGroup, cp, (ZuiAny)duk_to_boolean(ctx, 0), NULL, NULL);
+            return 0;
+        }
+        default:
+            break;
+        }
+        break;
+    }
+    case Proc_JsInit: {
+        ZuiBuilderControlInit(Param1, "selected", Js_Id_Option_selected, TRUE);
+        ZuiBuilderControlInit(Param1, "group", Js_Id_Option_group, TRUE);
+        break;
+    }
     case Proc_OnCreate: {
         p = (ZuiOption)ZuiMalloc(sizeof(ZOption));
         memset(p, 0, sizeof(ZOption));

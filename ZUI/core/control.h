@@ -203,18 +203,7 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define ZuiControlSetBkImage(Control, ...) ZProc(Control, SetBkImage, __VA_ARGS__);
 #define ZuiControlSetBorderColor(Control, ...) ZProc(Control, SetBorderColor, __VA_ARGS__);
 #define ZuiControlSetAnimation(Control, ...) ZProc(Control, SetAnimation, __VA_ARGS__);
-enum ZAttType
-{
-    ZAttType_JsCall = 1,
-    ZAttType_String
-};
-/**属性结构*/
-typedef struct _ZAttribute
-{
-    ZuiAny v;
-    ZuiInt vlen;
-    ZuiInt type;
-}*ZuiAttribute, ZAttribute;
+
 typedef struct _ZControl
 {
     //消息处理函数指针
@@ -248,8 +237,11 @@ typedef struct _ZControl
 
     //js_ref
     ZuiInt m_rOnclick;
+    ZuiInt m_rOnmouseleave;
+    ZuiInt m_rOnmouseenter;
+    ZuiInt m_rOnlbuttondown;
+    ZuiInt m_rOnchar;
     //js_refend
-    rb_root *m_rAttribute;          //属性map
 
     //控件默认样式-------------------
     ZuiInt m_tyle;                  //控件风格
@@ -278,7 +270,7 @@ void FreeZuiControl(ZuiControl p, ZuiBool Delayed);
 //调用控件处理函数
 ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 //发送用户通知
-ZEXPORT ZuiAny ZCALL ZuiControlNotify(ZuiText msg, ZuiControl p, ZuiAny Param1, ZuiInt p1Type, ZuiAny Param2, ZuiInt p2Type, ZuiAny Param3, ZuiInt p3Type);
+ZEXPORT ZuiAny ZCALL ZuiControlNotify(ZuiText msg, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 //注册通知函数
 ZEXPORT ZuiVoid ZCALL ZuiControlRegNotify(ZuiControl p, ZNotifyProc pNotify);
 

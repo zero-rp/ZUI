@@ -125,27 +125,43 @@ static LRESULT ZCALL __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
-    //case Proc_JsHas: {
-    //    if (wcscmp(Param1, L"SetWindowMin") == 0) return 1;
-    //    else if (wcscmp(Param1, L"SetWindowMax") == 0) return 1;
-    //    else if (wcscmp(Param1, L"SetWindowRestor") == 0) return 1;
-    //    else if (wcscmp(Param1, L"Popup") == 0) return 1;
-    //    break;
-    //}
-    //case Proc_JsCall: {
-    //    if (wcscmp(Param1, L"SetWindowMin") == 0) ZuiControlCall(Proc_Window_SetWindowMin, cp, NULL, NULL, NULL);
-    //    else if (wcscmp(Param1, L"SetWindowMax") == 0) ZuiControlCall(Proc_Window_SetWindowMax, cp, NULL, NULL, NULL);
-    //    else if (wcscmp(Param1, L"SetWindowRestor") == 0) ZuiControlCall(Proc_Window_SetWindowRestor, cp, NULL, NULL, NULL);
-    //    else if (wcscmp(Param1, L"Popup") == 0) {
-    //        if (js_gettop(Param2) == 3) {
-    //            ZPoint pt = { js_toint32(Param2,1),js_toint32(Param2,2) };
-    //            ZuiControlCall(Proc_Window_Popup, cp, &pt, NULL, NULL);
-    //        }
-    //        else
-    //            ZuiControlCall(Proc_Window_Popup, cp, NULL, NULL, NULL);
-    //    }
-    //    break;
-    //}
+    case Proc_JsInit: {
+        ZuiBuilderControlInit(Param1, "SetWindowMin", Js_Id_Window_SetWindowMin, FALSE);
+        ZuiBuilderControlInit(Param1, "SetWindowMax", Js_Id_Window_SetWindowMax, FALSE);
+        ZuiBuilderControlInit(Param1, "SetWindowRestor", Js_Id_Window_SetWindowRestor, FALSE);
+        ZuiBuilderControlInit(Param1, "Popup", Js_Id_Window_Popup, FALSE);
+        break;
+    }
+    case Proc_JsCall: {
+        duk_context *ctx = (duk_context *)Param1;
+        switch ((ZuiInt)Param2)
+        {
+        case Js_Id_Window_SetWindowMin: {
+            ZuiControlCall(Proc_Window_SetWindowMin, cp, NULL, NULL, NULL);
+            return 0;
+        }
+        case Js_Id_Window_SetWindowMax: {
+            ZuiControlCall(Proc_Window_SetWindowMax, cp, NULL, NULL, NULL);
+            return 0;
+        }
+        case Js_Id_Window_SetWindowRestor: {
+            ZuiControlCall(Proc_Window_SetWindowRestor, cp, NULL, NULL, NULL);
+            return 0;
+        }
+        case Js_Id_Window_Popup: {
+            //        if (js_gettop(Param2) == 3) {
+            //            ZPoint pt = { js_toint32(Param2,1),js_toint32(Param2,2) };
+            //            ZuiControlCall(Proc_Window_Popup, cp, &pt, NULL, NULL);
+            //        }
+            //        else
+            //            ZuiControlCall(Proc_Window_Popup, cp, NULL, NULL, NULL);
+            return 0;
+        }
+        default:
+            break;
+        }
+        break;
+    }
     case Proc_SetBorderColor: {
         if (!cp->m_dwBorderColor) {
             //以前没有边框了,加上边距
