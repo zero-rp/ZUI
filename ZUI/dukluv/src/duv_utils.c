@@ -1,14 +1,14 @@
+#include <ZUI.h>
 #include "utils.h"
 
 
 uv_loop_t* duv_loop(duk_context *ctx) {
-  duk_memory_functions funcs;
-  duk_get_memory_functions(ctx, &funcs);
-  return funcs.udata;
+  return Global_loop;
 }
 
 duv_handle_t* duv_setup_handle(duk_context *ctx) {
   duv_handle_t* data = duk_alloc(ctx, sizeof(*data));
+  data->ctx = ctx;
   duk_push_this(ctx);
   data->context = duv_ref(ctx);
   duk_dup(ctx, -1);

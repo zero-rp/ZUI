@@ -128,7 +128,7 @@ static duk_ret_t ZuiJsBind_Call_exit(duk_context *ctx) {
     ZuiMsgLoop_exit();
     return 0;
 }
-static duk_ret_t ZuiJsBind_Call_print(duk_context *ctx) {
+duk_ret_t ZuiJsBind_Call_print(duk_context *ctx) {
     for (size_t i = 0; i < duk_get_top(ctx); i++)
     {
         LOG_DEGUB(L"%ls", duk_to_string_w(ctx, i));
@@ -367,8 +367,8 @@ duk_context *ZuiBuilderJs(ZuiPaintManager p) {
     ZuiBuilderJs_Control(ctx);
     //ZuiBuilderJs_Graphic(J);
 
-    duv_ref_setup(ctx);
-    //duv_bind(ctx);
+    //duv_ref_setup(ctx);
+    duv_bind(ctx);
     darray_append(ctx_array, ctx);
     return ctx;
 }

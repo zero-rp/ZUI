@@ -1,19 +1,21 @@
 #include "callbacks.h"
 
 void duv_close_cb(uv_handle_t* handle) {
-  duk_context *ctx = handle->loop->data;
   duv_handle_t* data = handle->data;
+  duk_context *ctx = data->ctx;
 
   duv_emit_event(ctx, data, DUV_CLOSED, 0);
   handle->data = duv_cleanup_handle(ctx, data);
 }
 
 void duv_timer_cb(uv_timer_t* handle) {
-  duv_emit_event(handle->loop->data, handle->data, DUV_TIMEOUT, 0);
+  duv_emit_event(((duv_handle_t*)handle->data)->ctx, handle->data, DUV_TIMEOUT, 0);
 }
 
 void duv_connect_cb(uv_connect_t* req, int status) {
-  duk_context *ctx = req->handle->loop->data;
+  duv_handle_t* data = req->handle->data;
+  duk_context *ctx = data->ctx;
+
   duv_push_status(ctx, status);
   duv_fulfill_req(ctx, (uv_req_t*)req, 1);
   req->data = duv_cleanup_req(ctx, req->data);
@@ -27,13 +29,13 @@ void duv_shutdown_cb(uv_shutdown_t* req, int status) {
 }
 
 void duv_connection_cb(uv_stream_t* handle, int status) {
-  duk_context *ctx = handle->loop->data;
+  duk_context *ctx = ((duv_handle_t*)handle->data)->ctx;
   duv_push_status(ctx, status);
   duv_emit_event(ctx, handle->data, DUV_CONNECTION, 1);
 }
 
 void duv_read_cb(uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf) {
-  duk_context *ctx = handle->loop->data;
+  duk_context *ctx = ((duv_handle_t*)handle->data)->ctx;
 
   if (nread >= 0) {
     char* out;
@@ -57,7 +59,7 @@ void duv_read_cb(uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf) {
 }
 
 void duv_write_cb(uv_write_t* req, int status) {
-  duk_context *ctx = req->handle->loop->data;
+  duk_context *ctx = ((duv_handle_t*)req->handle->data)->ctx;
   duv_push_status(ctx, status);
   duv_fulfill_req(ctx, (uv_req_t*)req, 1);
   duv_cleanup_req(ctx, req->data);

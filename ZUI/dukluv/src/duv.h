@@ -70,6 +70,7 @@ typedef enum { false, true } bool;
 
 // Ref for userdata and event callbacks
 typedef struct {
+    duk_context *ctx;
   int ref;
   int context;
   int callbacks[2];

@@ -60,9 +60,9 @@ static void duk__resolve_module_id(duk_context *ctx, const char *req_id, const c
 	 */
 
 	if (mod_id != NULL && req_id[0] == '.') {
-		int_rc = snprintf((char *) buf, sizeof(buf), "%s/../%s", mod_id, req_id);
+		int_rc = DUK_SNPRINTF((char *) buf, sizeof(buf), "%s/../%s", mod_id, req_id);
 	} else {
-		int_rc = snprintf((char *) buf, sizeof(buf), "%s", req_id);
+		int_rc = DUK_SNPRINTF((char *) buf, sizeof(buf), "%s", req_id);
 	}
 	if (int_rc >= (duk_int_t) sizeof(buf) || int_rc < 0) {
 		/* Potentially truncated, NUL not guaranteed in any case.
