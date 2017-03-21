@@ -2,7 +2,7 @@
 #define DUV_H
 
 #include "uv.h"
-#include "../../duktape/duktape.h"
+#include "duktape.h"
 #include <assert.h>
 
 #if !defined(_WIN32)

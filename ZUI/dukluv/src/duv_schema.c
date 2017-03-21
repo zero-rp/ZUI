@@ -16,11 +16,11 @@ void dschema_check(duk_context *ctx, const duv_schema_entry schema[]) {
   for (i = 0; schema[i].name; ++i) {
     // printf("Checking arg %d-%s\n", i, schema[i].name);
     if (schema[i].checker(ctx, i)) continue;
-    //duk_dump_context_stderr(ctx);
+    //duk_dump_context(ctx);
     duk_error(ctx, DUK_ERR_TYPE_ERROR, "Invalid argument type for %s", schema[i].name);
   }
   if (top > i) {
-    //duk_dump_context_stderr(ctx);
+    //duk_dump_context(ctx);
     duk_error(ctx, DUK_ERR_TYPE_ERROR, "Too many arguments. Expected at %d, but got %d", i, top);
   }
 }

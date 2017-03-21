@@ -1,9 +1,11 @@
 ﻿var root = GetByName("window_main");//取根对象
 var DesignTabHead = GetByName("designtabhead");//取设计区选择夹头部对象
 var DesignTab = GetByName("designtab");//取设计区选择夹对象
+var Design = GetByName("design");
 
-
-GetByName("ctl").GetByName("WindowCtl_clos").onclick = function (c) { exit(); };//设置关闭按钮回调
+GetByName("WindowCtl_min").onclick = function (c) { c.root.SetWindowMin(); };//设置最小化按钮回调
+GetByName("WindowCtl_max").onclick = function (c) { if (c.selected) { c.root.SetWindowMax() } else { c.root.SetWindowRestor() }; };//设置最大化按钮回调
+GetByName("WindowCtl_clos").onclick = function (c) { exit(); };//设置关闭按钮回调
 
 //------------设计区
 var DesignTabSelectIndex=0;//当前选择的选择夹
@@ -11,14 +13,14 @@ function DesignTabSelect(Index){
 	var old = DesignTabHead.GetItemAt(DesignTabSelectIndex-1);
 	if(old){
 		old.bkcolor=0;
-		old.closbut.visible=false;
-		old.tit.padding="0,0,11,0";
+		old.GetItemName("closbut").visible = false;
+		old.GetItemName("tit").padding="0,0,11,0";
 	}
 	var c = DesignTabHead.GetItemAt(Index-1);
 	if(c){
 		c.bkcolor=0xFFFFF29D;
-		c.closbut.visible=true;
-		c.tit.padding="0,0,0,0";
+		c.GetItemName("closbut").visible = true;
+		c.GetItemName("tit").padding="0,0,0,0";
 	}
 	DesignTabSelectIndex=Index;
 	DesignTab.selectitem=Index-1;
@@ -31,15 +33,15 @@ function AddDesignTab(type){
 	TabHead.onmouseenter=function(c){
 		if(DesignTabHead.GetItemIndex(c)+1!=DesignTabSelectIndex){
 			c.bkcolor=0xFF5B7199;
-			c.closbut.visible=true;
-			c.tit.padding="0,0,0,0";
+			c.GetItemName("closbut").visible=true;
+			c.GetItemName("tit").padding="0,0,0,0";
 		}
 	};
 	TabHead.onmouseleave=function(c){
 		if(DesignTabHead.GetItemIndex(c)+1!=DesignTabSelectIndex){
 			c.bkcolor=0;
-			c.closbut.visible=false;
-			c.tit.padding="0,0,11,0";
+			c.GetItemName("closbut").visible=false;
+			c.GetItemName("tit").padding="0,0,11,0";
 		}	
 	};
 	TabHead.onclick=function(c){
@@ -102,12 +104,12 @@ var AttTabSelectIndex=1;//当前选择的选择夹
 //挂接事件
 var atttabhead=GetByName("atttabhead");
 var atttab=GetByName("atttab");
-atttabhead.工程.onmouseenter=atttabheadonmouseenter;
-atttabhead.工程.onmouseleave=atttabheadonmouseleave;
-atttabhead.工程.onclick=atttabheadonclick;
-atttabhead.属性.onmouseenter=atttabheadonmouseenter;
-atttabhead.属性.onmouseleave=atttabheadonmouseleave;
-atttabhead.属性.onclick=atttabheadonclick;
+atttabhead.GetItemName("工程").onmouseenter = atttabheadonmouseenter;
+atttabhead.GetItemName("工程").onmouseleave = atttabheadonmouseleave;
+atttabhead.GetItemName("工程").onclick = atttabheadonclick;
+atttabhead.GetItemName("属性").onmouseenter = atttabheadonmouseenter;
+atttabhead.GetItemName("属性").onmouseleave = atttabheadonmouseleave;
+atttabhead.GetItemName("属性").onclick = atttabheadonclick;
 function atttabheadonmouseenter(c){
 	if(atttabhead.GetItemIndex(c)+1!=AttTabSelectIndex){
 		c.bkcolor=0xFF5B7199;

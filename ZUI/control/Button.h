@@ -20,6 +20,15 @@
 #define Proc_Button_SetResPushed    1003    //按下状态
 #define Proc_Button_SetResFocused   1004    //焦点图片
 #define Proc_Button_SetResDisabled  1005    //非激活状态
+
+//------Js
+
+#define Js_Id_Button_normalimage    100
+#define Js_Id_Button_hotimage       101
+#define Js_Id_Button_pushedimage    102
+#define Js_Id_Button_focusedimage   103
+#define Js_Id_Button_disabledimage  104
+
 /**按钮控件结构*/
 typedef struct _ZButton
 {

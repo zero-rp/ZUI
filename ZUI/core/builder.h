@@ -27,7 +27,7 @@ const wchar_t *duk_to_string_w(duk_context *ctx, duk_idx_t idx);
 
 //绑定js对象
 ZuiVoid ZuiBuilderJs_pushControl(duk_context *ctx, ZuiControl cp);
-//ZuiControl ZuiBuilderJs_toControl(js_State *J, ZuiInt idx);
+ZuiControl ZuiBuilderJs_toControl(duk_context *ctx, ZuiInt idx);
 ZuiVoid ZuiBuilderControlInit(duk_context *ctx, char *name, int id, int ttr);
 //创建js环境
 duk_context *ZuiBuilderJs(ZuiPaintManager p);

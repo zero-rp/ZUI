@@ -220,14 +220,32 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             return 0;
         }
         case ZEVENT_MOUSELEAVE: {
-            //ZuiControlNotify(L"onmouseleave", p, NULL, NULL, NULL, NULL, NULL, NULL);
+            if (p->m_rOnmouseleave) {
+                duv_push_ref(p->m_pManager->m_ctx, p->m_rOnmouseleave);
+                ZuiBuilderJs_pushControl(p->m_pManager->m_ctx, p);
+                duk_call_method(p->m_pManager->m_ctx, 1);
+                duk_pop(p->m_pManager->m_ctx);
+            }
+            ZuiControlNotify(L"onmouseleave", p, NULL, NULL, NULL);
         }
                                 break;
         case ZEVENT_MOUSEENTER: {
-            //ZuiControlNotify(L"onmouseenter", p, ((TEventUI *)Param1)->ptMouse.x, JS_TNUMBER, ((TEventUI *)Param1)->ptMouse.y, JS_TNUMBER, NULL, NULL);
+            if (p->m_rOnmouseenter) {
+                duv_push_ref(p->m_pManager->m_ctx, p->m_rOnmouseenter);
+                ZuiBuilderJs_pushControl(p->m_pManager->m_ctx, p);
+                duk_call_method(p->m_pManager->m_ctx, 1);
+                duk_pop(p->m_pManager->m_ctx);
+            }
+            ZuiControlNotify(L"onmouseenter", p, ((TEventUI *)Param1)->ptMouse.x, ((TEventUI *)Param1)->ptMouse.y, NULL);
         }
                                 break;
         case ZEVENT_LBUTTONDOWN: {
+            if (p->m_rOnlbuttondown) {
+                duv_push_ref(p->m_pManager->m_ctx, p->m_rOnlbuttondown);
+                ZuiBuilderJs_pushControl(p->m_pManager->m_ctx, p);
+                duk_call_method(p->m_pManager->m_ctx, 1);
+                duk_pop(p->m_pManager->m_ctx);
+            }
             ZuiControlNotify(L"onlbuttondown", p, ((TEventUI *)Param1)->ptMouse.x, ((TEventUI *)Param1)->ptMouse.y, NULL);
         }
                                  break;
@@ -497,7 +515,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             ZuiControlCall(Proc_Layout_Remove, p->m_pParent, p, TRUE, NULL);
         if (p->m_pManager != NULL)
             ZuiPaintManagerReapObjects(p->m_pManager, p);
-        if(p->m_rOnclick)
+        if (p->m_rOnclick)
             duv_unref(p->m_pManager->m_ctx, p->m_rOnclick);
         if (p->m_rOnmouseleave)
             duv_unref(p->m_pManager->m_ctx, p->m_rOnmouseleave);
@@ -700,46 +718,75 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             return 0;
         }
         case  Js_Id_root: {
-
+            return 0;
         }
         case  Js_Id_parent: {
-
+            return 0;
         }
         case  Js_Id_text: {
-
+            ZuiControlCall(Proc_SetText, p, duk_to_string_w(ctx, 0), NULL, NULL);
+            return 0;
+        }
+        case Js_Id_name: {
+            ZuiControlCall(Proc_SetName, p, duk_to_string_w(ctx, 0), NULL, NULL);
+            return 0;
         }
         case  Js_Id_tooltip: {
-
+            ZuiControlCall(Proc_SetTooltip, p, duk_to_string_w(ctx, 0), NULL, NULL);
+            return 0;
         }
         case  Js_Id_width: {
-
+            ZuiControlCall(Proc_SetFixedWidth, p, duk_to_int(ctx, 0), NULL, NULL);
+            return 0;
         }
         case  Js_Id_height: {
-
+            ZuiControlCall(Proc_SetFixedHeight, p, duk_to_int(ctx, 0), NULL, NULL);
+            return 0;
         }
         case  Js_Id_minwidth: {
-
+            ZuiControlCall(Proc_SetMinWidth, p, duk_to_int(ctx, 0), NULL, NULL);
+            return 0;
         }
         case  Js_Id_minheight: {
-
+            ZuiControlCall(Proc_SetMinHeight, p, duk_to_int(ctx, 0), NULL, NULL);
+            return 0;
         }
         case  Js_Id_maxheight: {
-
+            ZuiControlCall(Proc_SetMaxHeight, p, duk_to_int(ctx, 0), NULL, NULL);
+            return 0;
+        }
+        case Js_Id_maxwidth: {
+            ZuiControlCall(Proc_SetMaxWidth, p, duk_to_int(ctx, 0), NULL, NULL);
+            return 0;
+        }
+        case Js_Id_padding: {
+            RECT rcPadding = { 0 };
+            LPTSTR pstr = NULL;
+            rcPadding.left = _tcstol(duk_to_string_w(ctx, 0), &pstr, 10);  ASSERT(pstr);
+            rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+            rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+            rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+            ZuiControlCall(Proc_SetPadding, p, &rcPadding, NULL, NULL);
+            return 0;
         }
         case  Js_Id_bkcolor: {
-
+            ZuiControlCall(Proc_SetBkColor, p, duk_to_boolean(ctx, 0), NULL, NULL);
+            return 0;
         }
         case  Js_Id_drag: {
-
+            ZuiControlCall(Proc_SetDrag, p, duk_to_boolean(ctx, 0), NULL, NULL);
+            return 0;
         }
         case  Js_Id_rect: {
-
+            return 0;
         }
         case  Js_Id_enabled: {
-
+            ZuiControlCall(Proc_SetEnabled, p, duk_to_boolean(ctx, 0), NULL, NULL);
+            return 0;
         }
         case  Js_Id_visible: {
-
+            ZuiControlCall(Proc_SetVisible, p, duk_to_boolean(ctx, 0), NULL, NULL);
+            return 0;
         }
         default:
             break;
@@ -765,6 +812,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         ZuiBuilderControlInit(Param1, "root", Js_Id_root, TRUE);
         ZuiBuilderControlInit(Param1, "parent", Js_Id_parent, TRUE);
         ZuiBuilderControlInit(Param1, "text", Js_Id_text, TRUE);
+        ZuiBuilderControlInit(Param1, "name", Js_Id_name, TRUE);
         ZuiBuilderControlInit(Param1, "tooltip", Js_Id_tooltip, TRUE);
         ZuiBuilderControlInit(Param1, "width", Js_Id_width, TRUE);
         ZuiBuilderControlInit(Param1, "height", Js_Id_height, TRUE);
@@ -777,6 +825,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         ZuiBuilderControlInit(Param1, "rect", Js_Id_rect, TRUE);
         ZuiBuilderControlInit(Param1, "enabled", Js_Id_enabled, TRUE);
         ZuiBuilderControlInit(Param1, "visible", Js_Id_visible, TRUE);
+        ZuiBuilderControlInit(Param1, "padding", Js_Id_padding, TRUE);
 
         ZuiBuilderControlInit(Param1, "onmouseleave", Js_Id_onmouseleave, TRUE);
         ZuiBuilderControlInit(Param1, "onmouseenter", Js_Id_onmouseenter, TRUE);
@@ -786,69 +835,49 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         break;
     }
 
-    //case Proc_JsPut: {
-    //    js_State *J = Param2;
-    //    if (wcscmp(Param1, L"text") == 0) ZuiControlCall(Proc_SetText, p, js_tostring(J, -1), NULL, NULL);
-    //    else if (wcscmp(Param1, L"tooltip") == 0) ZuiControlCall(Proc_SetTooltip, p, js_tostring(J, -1), NULL, NULL);
-    //    else if (wcscmp(Param1, L"width") == 0) ZuiControlCall(Proc_SetFixedWidth, p, js_toint32(J, -1), NULL, NULL);
-    //    else if (wcscmp(Param1, L"height") == 0) ZuiControlCall(Proc_SetFixedHeight, p, js_toint32(J, -1), NULL, NULL);
-    //    else if (wcscmp(Param1, L"minwidth") == 0) ZuiControlCall(Proc_SetMinWidth, p, js_toint32(J, -1), NULL, NULL);
-    //    else if (wcscmp(Param1, L"minheight") == 0) ZuiControlCall(Proc_SetMinHeight, p, js_toint32(J, -1), NULL, NULL);
-    //    else if (wcscmp(Param1, L"maxwidth") == 0) ZuiControlCall(Proc_SetMaxWidth, p, js_toint32(J, -1), NULL, NULL);
-    //    else if (wcscmp(Param1, L"maxheight") == 0) ZuiControlCall(Proc_SetMaxHeight, p, js_toint32(J, -1), NULL, NULL);
-    //    else if (wcscmp(Param1, L"bkcolor") == 0) ZuiControlCall(Proc_SetBkColor, p, js_toint32(J, -1), NULL, NULL);
-    //    else if (wcscmp(Param1, L"drag") == 0) ZuiControlCall(Proc_SetDrag, p, js_toboolean(J, -1), NULL, NULL);
-    //    else if (wcscmp(Param1, L"bkimage") == 0) ZuiControlCall(Proc_SetBkImage, p, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
-    //    else if (wcscmp(Param1, L"padding") == 0) {
-    //        RECT rcPadding = { 0 };
-    //        LPTSTR pstr = NULL;
-    //        rcPadding.left = _tcstol(js_tostring(J, -1), &pstr, 10);  ASSERT(pstr);
-    //        rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
-    //        rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
-    //        rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
-    //        ZuiControlCall(Proc_SetPadding, p, &rcPadding, NULL, NULL);
-    //    }
-    //    else if (wcscmp(Param1, L"bordercolor") == 0) ZuiControlCall(Proc_SetBorderColor, p, js_toint32(J, -1), NULL, NULL);
-    //    else if (wcscmp(Param1, L"name") == 0) ZuiControlCall(Proc_SetName, p, js_tostring(J, -1), NULL, NULL);
-    //    else if (wcscmp(Param1, L"float") == 0) {
+                      //case Proc_JsPut: {
 
-    //    }
-    //    else if (wcscmp(Param1, L"visible") == 0) ZuiControlCall(Proc_SetVisible, p, js_toboolean(J, -1), NULL, NULL);
-    //    else if (wcscmp(Param1, L"enabled") == 0) ZuiControlCall(Proc_SetEnabled, p, js_toboolean(J, -1), NULL, NULL);
-    //    else
-    //    {
-    //        ZuiAttribute att;
-    //        rb_node *old = rb_search((key_t)Zui_Hash(Param1), p->m_rAttribute);
-    //        if (old) {
-    //            att = (ZuiAttribute)old->data;
-    //            ZuiFree(att->v);
-    //        }
-    //        else {
-    //            att = ZuiMalloc(sizeof(ZAttribute));
-    //            rb_insert((key_t)Zui_Hash(Param1), att, p->m_rAttribute);
-    //        }
+                      //    else if (wcscmp(Param1, L"minheight") == 0) 
+                      //    else if (wcscmp(Param1, L"maxwidth") == 0) 
+                      //    else if (wcscmp(Param1, L"maxheight") == 0) 
+                      //    else if (wcscmp(Param1, L"bkcolor") == 0) 
+                      //    else if (wcscmp(Param1, L"drag") == 0) 
+                      //    else if (wcscmp(Param1, L"bkimage") == 0) ZuiControlCall(Proc_SetBkImage, p, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
+                      //    else if (wcscmp(Param1, L"padding") == 0) {
+                      //        
+                      //    }
+                      //    else if (wcscmp(Param1, L"bordercolor") == 0) ZuiControlCall(Proc_SetBorderColor, p, js_toint32(J, -1), NULL, NULL);
+                      //    else if (wcscmp(Param1, L"name") == 0) 
+                      //    else if (wcscmp(Param1, L"float") == 0) {
 
-    //        if (js_iscallable(J, -1)) {
-    //            att->type = ZAttType_JsCall;
-    //            js_Object *obj = js_toobject(J, -1);
-    //            att->v = obj;
-    //        }
-    //        else
-    //        {
-    //            att->type = ZAttType_String;
-    //            att->v = ZuiWcsdup(js_tostring(J, -1));
-    //            att->vlen = wcslen(att->v);
-    //        }
-    //    }
-    //    break;
-    //}
-    //case Proc_JsCall: {
-    //    if (wcscmp(Param1, L"clos") == 0) {
-    //        ZuiPaintManagerAddDelayedCleanup(p->m_pManager, p);
-    //        //FreeZuiControl(p);
-    //    }
-    //    break;
-    //}
+                      //    }
+                      //    else
+                      //    {
+                      //        ZuiAttribute att;
+                      //        rb_node *old = rb_search((key_t)Zui_Hash(Param1), p->m_rAttribute);
+                      //        if (old) {
+                      //            att = (ZuiAttribute)old->data;
+                      //            ZuiFree(att->v);
+                      //        }
+                      //        else {
+                      //            att = ZuiMalloc(sizeof(ZAttribute));
+                      //            rb_insert((key_t)Zui_Hash(Param1), att, p->m_rAttribute);
+                      //        }
+
+                      //        if (js_iscallable(J, -1)) {
+                      //            att->type = ZAttType_JsCall;
+                      //            js_Object *obj = js_toobject(J, -1);
+                      //            att->v = obj;
+                      //        }
+                      //        else
+                      //        {
+                      //            att->type = ZAttType_String;
+                      //            att->v = ZuiWcsdup(js_tostring(J, -1));
+                      //            att->vlen = wcslen(att->v);
+                      //        }
+                      //    }
+                      //    break;
+                      //}
     case Proc_GetObject: {
         if (Param1 == Type_Null)
             return p;

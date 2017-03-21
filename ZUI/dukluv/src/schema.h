@@ -1,7 +1,7 @@
 #ifndef DSCHEMA_H
 #define DSCHEMA_H
 
-#include "../../duktape/duktape.h"
+#include "duktape.h"
 
 typedef struct {
   const char* name;

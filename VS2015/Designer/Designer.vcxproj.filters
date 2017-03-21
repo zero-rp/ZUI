@@ -567,6 +567,57 @@
     <ClCompile Include="..\..\ZUI\libuv\src\win\winsock.c">
       <Filter>源文件\ZUI\libuv\win</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\callbacks.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_fs.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_handle.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_pipe.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_req.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_stream.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_tcp.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_timer.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_tty.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\loop.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\main.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\misc.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\refs.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\schema.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\utils.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\uv_schema.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\Designer\Designer.rc">

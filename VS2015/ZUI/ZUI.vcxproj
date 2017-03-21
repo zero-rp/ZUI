@@ -101,7 +101,7 @@
       <SDLCheck>true</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\libuv\include;..\..\ZUI\platform\graph\agg\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\duktape;..\..\ZUI\libuv\include;..\..\ZUI\platform\graph\agg\include</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4091</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -240,22 +240,23 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClCompile Include="..\..\ZUI\core\string.c" />
     <ClCompile Include="..\..\ZUI\core\template.c" />
     <ClCompile Include="..\..\ZUI\core\tree.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\callbacks.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_callbacks.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_module.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_fs.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_handle.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\loop.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\main.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\misc.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_loop.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_main.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_misc.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_pipe.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\refs.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_req.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\schema.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_schema.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_stream.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_tcp.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_timer.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_tty.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\utils.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_utils.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\uv_schema.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_alloc_default.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_api_buffer.c" />
@@ -591,6 +592,24 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClInclude Include="..\..\ZUI\core\string.h" />
     <ClInclude Include="..\..\ZUI\core\template.h" />
     <ClInclude Include="..\..\ZUI\core\tree.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\callbacks.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_module.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\fs.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\handle.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\loop.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\miniz.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\misc.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\pipe.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\refs.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\req.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\schema.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\stream.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\tcp.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\timer.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\tty.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\utils.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\uv_schema.h" />
     <ClInclude Include="..\..\ZUI\duktape\duktape.h" />
     <ClInclude Include="..\..\ZUI\duktape\duk_api_internal.h" />
     <ClInclude Include="..\..\ZUI\duktape\duk_bi_protos.h" />
@@ -631,6 +650,12 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClInclude Include="..\..\ZUI\layout\TabLayout.h" />
     <ClInclude Include="..\..\ZUI\layout\TileLayout.h" />
     <ClInclude Include="..\..\ZUI\layout\VerticalLayout.h" />
+    <ClInclude Include="..\..\ZUI\libuv\include\stdint-msvc2008.h" />
+    <ClInclude Include="..\..\ZUI\libuv\include\tree.h" />
+    <ClInclude Include="..\..\ZUI\libuv\include\uv-errno.h" />
+    <ClInclude Include="..\..\ZUI\libuv\include\uv-version.h" />
+    <ClInclude Include="..\..\ZUI\libuv\include\uv-win.h" />
+    <ClInclude Include="..\..\ZUI\libuv\include\uv.h" />
     <ClInclude Include="..\..\ZUI\libuv\src\heap-inl.h" />
     <ClInclude Include="..\..\ZUI\libuv\src\queue.h" />
     <ClInclude Include="..\..\ZUI\libuv\src\uv-common.h" />

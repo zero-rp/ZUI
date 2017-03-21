@@ -4,8 +4,7 @@
 uv_loop_t* duv_loop(duk_context *ctx) {
   duk_memory_functions funcs;
   duk_get_memory_functions(ctx, &funcs);
-  //return funcs.udata;
-  return uv_default_loop();
+  return funcs.udata;
 }
 
 duv_handle_t* duv_setup_handle(duk_context *ctx) {

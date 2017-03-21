@@ -51,11 +51,14 @@
 
 //------Js
 
-#define Js_Id_Layout_Child              1
-#define Js_Id_Layout_GetByName              2
+#define Js_Id_Layout_Add                100
+#define Js_Id_Layout_AddAt              101
+#define Js_Id_Layout_GetItemIndex       102
+#define Js_Id_Layout_GetItemAt          103
+#define Js_Id_Layout_GetItemName        104
 
-#define Js_Id_Layout_Child              1
-#define Js_Id_Layout_Count              2
+#define Js_Id_Layout_count              105
+#define Js_Id_Layout_inset              106
 
 //------宏封装
 #define ZuiLayoutAdd(Control, ...) ZProc(Control, Layout_Add, __VA_ARGS__);

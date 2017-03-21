@@ -215,11 +215,13 @@ ZuiVoid ZuiBuilderJs_pushControl(duk_context *ctx, ZuiControl cp) {
     duk_dup(ctx, -1);
     return;
 }
-//ZuiControl ZuiBuilderJs_toControl(js_State *J, ZuiInt idx) {
-//    if (!J)
-//        return;
-//    return js_touserdata(J, idx, TAG);;
-//}
+ZuiControl ZuiBuilderJs_toControl(duk_context *ctx, ZuiInt idx) {
+    if (!ctx)
+        return;
+    duk_get_prop_string(ctx, idx, "_ptr");
+    ZuiControl p = duk_to_pointer(ctx, -1);
+    return p;
+}
 //Control对象构造函数
 static duk_ret_t ZuiBuilderJs_Control_constructor(duk_context *ctx) {
     if (!duk_is_constructor_call(ctx)) {

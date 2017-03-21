@@ -16,7 +16,7 @@
  */
 
 #include "duv.h"
-//#include "../lib/miniz.c"
+#include "../lib/miniz.c"
 
 // typedef struct {
 //   mz_zip_archive archive;

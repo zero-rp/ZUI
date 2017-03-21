@@ -133,12 +133,14 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define Js_Id_rect              14
 #define Js_Id_enabled           15
 #define Js_Id_visible           16
+#define Js_Id_name              17
+#define Js_Id_padding           18
 
-#define Js_Id_onmouseleave      17
-#define Js_Id_onmouseenter      18
-#define Js_Id_onlbuttondown     19
-#define Js_Id_onclick           20
-#define Js_Id_onchar            21
+#define Js_Id_onmouseleave      19
+#define Js_Id_onmouseenter      20
+#define Js_Id_onlbuttondown     21
+#define Js_Id_onclick           22
+#define Js_Id_onchar            23
 
 
 //------宏封装

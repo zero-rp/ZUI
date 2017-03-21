@@ -1,7 +1,7 @@
 #include "duv.h"
 #include "misc.h"
-
-//static uv_loop_t loop;
+#include "duk_module_duktape.h"
+static uv_loop_t loop;
 
 // Sync readfile using libuv APIs as an API function.
 static duk_ret_t duv_loadfile(duk_context *ctx) {
@@ -12,29 +12,29 @@ static duk_ret_t duv_loadfile(duk_context *ctx) {
   char* chunk;
   uv_buf_t buf;
 
-  if (uv_fs_open(uv_default_loop(), &req, path, O_RDONLY, 0644, NULL) < 0) goto fail;
+  if (uv_fs_open(&loop, &req, path, O_RDONLY, 0644, NULL) < 0) goto fail;
   uv_fs_req_cleanup(&req);
   fd = req.result;
-  if (uv_fs_fstat(uv_default_loop(), &req, fd, NULL) < 0) goto fail;
+  if (uv_fs_fstat(&loop, &req, fd, NULL) < 0) goto fail;
   uv_fs_req_cleanup(&req);
   size = req.statbuf.st_size;
   chunk = duk_alloc(ctx, size);
   buf = uv_buf_init(chunk, size);
-  if (uv_fs_read(uv_default_loop(), &req, fd, &buf, 1, 0, NULL) < 0) {
+  if (uv_fs_read(&loop, &req, fd, &buf, 1, 0, NULL) < 0) {
     duk_free(ctx, chunk);
     goto fail;
   }
   uv_fs_req_cleanup(&req);
   duk_push_lstring(ctx, chunk, size);
   duk_free(ctx, chunk);
-  uv_fs_close(uv_default_loop(), &req, fd, NULL);
+  uv_fs_close(&loop, &req, fd, NULL);
   uv_fs_req_cleanup(&req);
 
   return 1;
 
   fail:
   uv_fs_req_cleanup(&req);
-  if (fd) uv_fs_close(uv_default_loop(), &req, fd, NULL);
+  if (fd) uv_fs_close(&loop, &req, fd, NULL);
   uv_fs_req_cleanup(&req);
   duk_error(ctx, DUK_ERR_ERROR, "%s: %s: %s", uv_err_name(req.result), uv_strerror(req.result), path);
 }
@@ -448,8 +448,8 @@ static duk_ret_t duv_main(duk_context *ctx) {
   duk_put_prop_string(ctx, -2, "id");
   duk_dup(ctx, 0);
   duk_call_method(ctx, 1);
-
-  //uv_run(&loop, UV_RUN_DEFAULT);
+  
+  uv_run(&loop, UV_RUN_DEFAULT);
 
   return 0;
 }
@@ -471,30 +471,51 @@ static duk_ret_t duv_stash_argv(duk_context *ctx) {
 }
 
 static void duv_dump_error(duk_context *ctx, duk_idx_t idx) {
-  printf("\nUncaught Exception:\n");
+  fprintf(stderr, "\nUncaught Exception:\n");
   if (duk_is_object(ctx, idx)) {
     duk_get_prop_string(ctx, -1, "stack");
-    printf("\n%s\n\n", duk_get_string(ctx, -1));
+    fprintf(stderr, "\n%s\n\n", duk_get_string(ctx, -1));
     duk_pop(ctx);
   }
   else {
-    printf("\nThrown Value: %s\n\n", duk_json_encode(ctx, idx));
+    fprintf(stderr, "\nThrown Value: %s\n\n", duk_json_encode(ctx, idx));
   }
 }
+duk_ret_t ZuiJsBind_Call_print1(duk_context *ctx) {
+    for (size_t i = 0; i < duk_get_top(ctx); i++)
+    {
+        printf("%s", duk_to_string(ctx, i));
+    }
+    printf("\r\n");
+    return 0;
+}
+int main(int argc, char *argv[]) {
+  duk_context *ctx = NULL;
+  uv_loop_init(&loop);
 
-int duv_bind(duk_context *ctx//,int argc, char *argv[]
-    ) {
-    int argc = 2;
-    char *argv[2] = { "aaa","tcp-echo.js" };
-  //uv_setup_args(argc, argv);
+  uv_setup_args(argc, argv);
 
-    uv_loop_t *loop = uv_default_loop();
-  loop->data = ctx;
+  if (argc < 2) {
+    fprintf(stderr, "Usage: dukluv script.js\n");
+    exit(1);
+  }
+
+  // Tie loop and context together
+  ctx = duk_create_heap(NULL, NULL, NULL, &loop, NULL);
+  if (!ctx) {
+    fprintf(stderr, "Problem initiailizing duktape heap\n");
+    return -1;
+  }
+  loop.data = ctx;
+
+  duk_module_duktape_init(ctx);
+  duk_push_c_function(ctx, ZuiJsBind_Call_print1, DUK_VARARGS /*nargs*/);
+  duk_put_global_string(ctx, "print");
 
   // Stash argv for later access
   duk_push_pointer(ctx, (void *) argv);
   duk_push_int(ctx, argc);
-  if (duk_safe_call(ctx, duv_stash_argv,NULL, 2, 1)) {
+  if (duk_safe_call(ctx, duv_stash_argv, 2, 1,0)) {
     duv_dump_error(ctx, -1);
     uv_loop_close(&loop);
     duk_destroy_heap(ctx);
@@ -506,7 +527,12 @@ int duv_bind(duk_context *ctx//,int argc, char *argv[]
   duk_push_string(ctx, argv[1]);
   if (duk_pcall(ctx, 1)) {
     duv_dump_error(ctx, -1);
+    uv_loop_close(&loop);
+    duk_destroy_heap(ctx);
     return 1;
   }
 
+  uv_loop_close(&loop);
+  duk_destroy_heap(ctx);
+  return 0;
 }
