@@ -490,40 +490,6 @@ RB_HEAD(uv_timer_tree_s, uv_timer_s);
     struct { uv_pipe_connection_fields } conn;                                \
   } pipe;
 
-/* TODO: put the parser states in an union - TTY handles are always */
-/* half-duplex so read-state can safely overlap write-state. */
-#define UV_TTY_PRIVATE_FIELDS                                                 \
-  HANDLE handle;                                                              \
-  union {                                                                     \
-    struct {                                                                  \
-      /* Used for readable TTY handles */                                     \
-      /* TODO: remove me in v2.x. */                                          \
-      HANDLE unused_;                                                         \
-      uv_buf_t read_line_buffer;                                              \
-      HANDLE read_raw_wait;                                                   \
-      /* Fields used for translating win keystrokes into vt100 characters */  \
-      char last_key[8];                                                       \
-      unsigned char last_key_offset;                                          \
-      unsigned char last_key_len;                                             \
-      WCHAR last_utf16_high_surrogate;                                        \
-      INPUT_RECORD last_input_record;                                         \
-    } rd;                                                                     \
-    struct {                                                                  \
-      /* Used for writable TTY handles */                                     \
-      /* utf8-to-utf16 conversion state */                                    \
-      unsigned int utf8_codepoint;                                            \
-      unsigned char utf8_bytes_left;                                          \
-      /* eol conversion state */                                              \
-      unsigned char previous_eol;                                             \
-      /* ansi parser state */                                                 \
-      unsigned char ansi_parser_state;                                        \
-      unsigned char ansi_csi_argc;                                            \
-      unsigned short ansi_csi_argv[4];                                        \
-      COORD saved_position;                                                   \
-      WORD saved_attributes;                                                  \
-    } wr;                                                                     \
-  } tty;
-
 #define UV_POLL_PRIVATE_FIELDS                                                \
   SOCKET socket;                                                              \
   /* Used in fast mode */                                                     \

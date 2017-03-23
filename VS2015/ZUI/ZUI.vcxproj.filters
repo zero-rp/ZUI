@@ -717,9 +717,6 @@
     <ClCompile Include="..\..\ZUI\libuv\src\win\timer.c">
       <Filter>源文件\libuv\win</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\libuv\src\win\tty.c">
-      <Filter>源文件\libuv\win</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\libuv\src\win\udp.c">
       <Filter>源文件\libuv\win</Filter>
     </ClCompile>
@@ -762,9 +759,6 @@
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_timer.c">
       <Filter>源文件\dukluv\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_tty.c">
-      <Filter>源文件\dukluv\src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_schema.c">
       <Filter>源文件\dukluv\src</Filter>
     </ClCompile>
@@ -781,9 +775,6 @@
       <Filter>源文件\dukluv\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_loop.c">
-      <Filter>源文件\dukluv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_module.c">
       <Filter>源文件\dukluv\src</Filter>
     </ClCompile>
   </ItemGroup>

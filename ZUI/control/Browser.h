@@ -22,11 +22,23 @@
 #define Proc_Browser_RunJs          1005
 #define Proc_Browser_jsToString     1006
 
+//------Js
+
+#define Js_Id_Browser_titlechanged    100
+#define Js_Id_Browser_newwindow       101
+#define Js_Id_Browser_urlchanged    102
+#define Js_Id_Browser_navigation   103
+
 #define ZuiBrowserLoadUrl(Control, ...) ZProc(Control, Browser_LoadUrl, __VA_ARGS__);
 
 /**游览器控件结构*/
 typedef struct _ZuiBrowser
 {
+    ZuiInt titlechanged;
+    ZuiInt newwindow;
+    ZuiInt urlchanged;
+    ZuiInt navigation;
+
     ZuiText url;///当前URL
     ZuiAny view;
     ZuiControl cp;

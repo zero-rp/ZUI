@@ -98,7 +98,15 @@ void _staticOnPaintUpdated(wkeWebView webView, void* param, const HDC hdc, int x
 // 回调：页面标题改变
 void _staticOnTitleChanged(wkeWebView webWindow, void* param, void *title)
 {
-    //ZuiControlNotify(L"titlechanged", ((ZuiBrowser)param)->cp, wkeGetStringW(title), JS_TSHRSTR, NULL, NULL, NULL, NULL);
+    ZuiBrowser p = (ZuiBrowser)param;
+    if (p->titlechanged) {
+        duv_push_ref(p->cp->m_pManager->m_ctx, p->titlechanged);
+        ZuiBuilderJs_pushControl(p->cp->m_pManager->m_ctx, p->cp);
+        duk_push_string_w(p->cp->m_pManager->m_ctx, wkeGetStringW(title));
+        duk_call_method(p->cp->m_pManager->m_ctx, 2);
+        duk_pop(p->cp->m_pManager->m_ctx);
+    }
+    ZuiControlNotify(L"titlechanged", ((ZuiBrowser)param)->cp, wkeGetStringW(title), NULL, NULL);
 }
 // 回调：创建新的页面，比如说调用了 window.open 或者点击了 <a target="_blank" .../>
 wkeWebView _staticOnCreateView(wkeWebView webWindow, void* param, int navType, void *url, void* features)
@@ -111,12 +119,33 @@ wkeWebView _staticOnCreateView(wkeWebView webWindow, void* param, int navType, v
 // 回调：url改变
 wkeWebView _staticOnURLChanged(wkeWebView webView, void* param, void *url)
 {
-    //((ZuiBrowser)param)->url = ZuiWcsdup(wkeGetStringW(url));
-    //ZuiControlNotify(L"urlchanged", ((ZuiBrowser)param)->cp, wkeGetStringW(url), JS_TSHRSTR, NULL, NULL, NULL, NULL);
+    ((ZuiBrowser)param)->url = ZuiWcsdup(wkeGetStringW(url));
+    ZuiBrowser p = (ZuiBrowser)param;
+    if (p->urlchanged) {
+        duv_push_ref(p->cp->m_pManager->m_ctx, p->urlchanged);
+        ZuiBuilderJs_pushControl(p->cp->m_pManager->m_ctx, p->cp);
+        duk_push_string_w(p->cp->m_pManager->m_ctx, ((ZuiBrowser)param)->url);
+        duk_call_method(p->cp->m_pManager->m_ctx, 2);
+        duk_pop(p->cp->m_pManager->m_ctx);
+    }
+    
+    ZuiControlNotify(L"urlchanged", ((ZuiBrowser)param)->cp, ((ZuiBrowser)param)->url, NULL, NULL);
 }
 // 回调：转跳
 BOOL _staticOnNavigation(wkeWebView webView, void* param, int navigationType, void *url) {
-    //return !ZuiControlNotify(L"navigation", ((ZuiBrowser)param)->cp, wkeGetStringW(url), JS_TSHRSTR, NULL, NULL, NULL, NULL);
+    int ret = 0;
+    ZuiBrowser p = (ZuiBrowser)param;
+    if (p->navigation) {
+        duv_push_ref(p->cp->m_pManager->m_ctx, p->navigation);
+        ZuiBuilderJs_pushControl(p->cp->m_pManager->m_ctx, p->cp);
+        duk_push_string_w(p->cp->m_pManager->m_ctx, wkeGetStringW(url));
+        duk_call_method(p->cp->m_pManager->m_ctx, 2);
+        ret = duk_to_boolean(p->cp->m_pManager->m_ctx, -1);
+        duk_pop(p->cp->m_pManager->m_ctx);
+    }
+    if (ret)
+        return ret;
+    return !ZuiControlNotify(L"navigation", ((ZuiBrowser)param)->cp, wkeGetStringW(url), NULL, NULL);
 }
 ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
@@ -312,7 +341,59 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         return NULL;
         break;
     }
-    //case Proc_JsPut: {
+    case Proc_JsSet: {
+        duk_context *ctx = (duk_context *)Param1;
+        switch ((ZuiInt)Param2)
+        {
+        case Js_Id_Browser_titlechanged: {
+            if (duk_is_function(ctx, 0)) {
+                if (p->titlechanged)
+                    duv_unref(ctx, p->titlechanged);
+                duk_dup(ctx, 0);
+                p->titlechanged = duv_ref(ctx);
+            }
+            return 0;
+        }
+        case Js_Id_Browser_newwindow: {
+            if (duk_is_function(ctx, 0)) {
+                if (p->newwindow)
+                    duv_unref(ctx, p->newwindow);
+                duk_dup(ctx, 0);
+                p->newwindow = duv_ref(ctx);
+            }
+            return 0;
+        }
+        case Js_Id_Browser_urlchanged: {
+            if (duk_is_function(ctx, 0)) {
+                if (p->urlchanged)
+                    duv_unref(ctx, p->urlchanged);
+                duk_dup(ctx, 0);
+                p->urlchanged = duv_ref(ctx);
+            }
+            return 0;
+        }
+        case Js_Id_Browser_navigation: {
+            if (duk_is_function(ctx, 0)) {
+                if (p->navigation)
+                    duv_unref(ctx, p->navigation);
+                duk_dup(ctx, 0);
+                p->navigation = duv_ref(ctx);
+            }
+            return 0;
+        }
+        default:
+            break;
+        }
+        break;
+    }
+    case Proc_JsInit: {
+        ZuiBuilderControlInit(Param1, "titlechanged", Js_Id_Browser_titlechanged, TRUE);
+        ZuiBuilderControlInit(Param1, "newwindow", Js_Id_Browser_newwindow, TRUE);
+        ZuiBuilderControlInit(Param1, "urlchanged", Js_Id_Browser_urlchanged, TRUE);
+        ZuiBuilderControlInit(Param1, "navigation", Js_Id_Browser_navigation, TRUE);
+        break;
+    }
+                                  //case Proc_JsPut: {
     //    js_State *J = Param2;
     //    if (wcscmp(Param1, L"url") == 0) ZuiControlCall(Proc_Browser_LoadUrl, cp, (ZuiAny)js_tostring(J, -1), NULL, NULL);
 

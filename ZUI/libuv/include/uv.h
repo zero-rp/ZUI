@@ -155,7 +155,6 @@ extern "C" {
   XX(STREAM, stream)                                                          \
   XX(TCP, tcp)                                                                \
   XX(TIMER, timer)                                                            \
-  XX(TTY, tty)                                                                \
   XX(UDP, udp)                                                                \
   XX(SIGNAL, signal)                                                          \
 
@@ -203,7 +202,6 @@ typedef struct uv_stream_s uv_stream_t;
 typedef struct uv_tcp_s uv_tcp_t;
 typedef struct uv_udp_s uv_udp_t;
 typedef struct uv_pipe_s uv_pipe_t;
-typedef struct uv_tty_s uv_tty_t;
 typedef struct uv_poll_s uv_poll_t;
 typedef struct uv_timer_s uv_timer_t;
 typedef struct uv_prepare_s uv_prepare_t;
@@ -637,42 +635,6 @@ UV_EXTERN int uv_udp_recv_start(uv_udp_t* handle,
                                 uv_alloc_cb alloc_cb,
                                 uv_udp_recv_cb recv_cb);
 UV_EXTERN int uv_udp_recv_stop(uv_udp_t* handle);
-
-
-/*
- * uv_tty_t is a subclass of uv_stream_t.
- *
- * Representing a stream for the console.
- */
-struct uv_tty_s {
-  UV_HANDLE_FIELDS
-  UV_STREAM_FIELDS
-  UV_TTY_PRIVATE_FIELDS
-};
-
-typedef enum {
-  /* Initial/normal terminal mode */
-  UV_TTY_MODE_NORMAL,
-  /* Raw input mode (On Windows, ENABLE_WINDOW_INPUT is also enabled) */
-  UV_TTY_MODE_RAW,
-  /* Binary-safe I/O mode for IPC (Unix-only) */
-  UV_TTY_MODE_IO
-} uv_tty_mode_t;
-
-UV_EXTERN int uv_tty_init(uv_loop_t*, uv_tty_t*, uv_file fd, int readable);
-UV_EXTERN int uv_tty_set_mode(uv_tty_t*, uv_tty_mode_t mode);
-UV_EXTERN int uv_tty_reset_mode(void);
-UV_EXTERN int uv_tty_get_winsize(uv_tty_t*, int* width, int* height);
-
-#ifdef __cplusplus
-extern "C++" {
-
-inline int uv_tty_set_mode(uv_tty_t* handle, int mode) {
-  return uv_tty_set_mode(handle, static_cast<uv_tty_mode_t>(mode));
-}
-
-}
-#endif
 
 UV_EXTERN uv_handle_type uv_guess_handle(uv_file file);
 

@@ -57,12 +57,13 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
                         src = node->value.attrs[i].value;
                     }
                 }
-                ZuiRes res = ZuiResDBGetRes(src, ZREST_TXT);
-                if (res)
-                {
-                    ZuiBuilderJsLoad(win->m_pManager->m_ctx, res->p, res->plen);
-                    ZuiResDBDelRes(res);
-                }
+                //ZuiRes res = ZuiResDBGetRes(src, ZREST_TXT);
+                //if (res)
+                //{
+                //    ZuiBuilderJsLoad(win->m_pManager->m_ctx, res->p, res->plen);
+                //    ZuiResDBDelRes(res);
+                //}
+                ZuiBuilderJsLoad(win->m_pManager->m_ctx, src);
             }
             else if (!node->user_data) {//当前节点还未创建
                 Control = NewZuiControl(ClassName, NULL, NULL, NULL);
@@ -116,7 +117,7 @@ const wchar_t *duk_to_string_w(duk_context *ctx, duk_idx_t idx) {
     duk_temp[MultiByteToWideChar(CP_UTF8, 0, str, -1, duk_temp, 2048 * 2)] = 0;
     return duk_temp;
 }
-void duk_push_string_w(duk_context *ctx, wchar_t str) {
+void duk_push_string_w(duk_context *ctx, wchar_t *str) {
     int len = WideCharToMultiByte(CP_UTF8, 0, str, -1, 0, 0, NULL, NULL);
     char*buf = ZuiMalloc(len + 1);
     buf[WideCharToMultiByte(CP_UTF8, 0, str, -1, buf, len, NULL, NULL)] = 0;
@@ -378,28 +379,15 @@ ZuiBool ZuiBuilderJsUn(duk_context *ctx) {
     duk_destroy_heap(ctx);
     ZuiFree(c);
 }
-
-typedef struct _jsbuf
-{
-    const wchar_t *buf;
-    int len;
-}jsbuf;
-static duk_ret_t eval_raw(duk_context *ctx, jsbuf *udata) {
-    int len = WideCharToMultiByte(CP_UTF8, 0, udata->buf, -1, 0, 0, NULL, NULL);
-    char*buf = ZuiMalloc(len + 1);
-    buf[WideCharToMultiByte(CP_UTF8, 0, udata->buf, -1, buf, len, NULL, NULL)] = 0;
-    duk_eval_string(ctx, buf);
-    ZuiFree(buf);
-    return 1;
-}
-ZEXPORT ZuiBool ZCALL ZuiBuilderJsLoad(duk_context *ctx, ZuiText str, ZuiInt len) {
+duk_ret_t duv_load(duk_context *ctx);
+ZEXPORT ZuiBool ZCALL ZuiBuilderJsLoad(duk_context *ctx, ZuiText src) {
     duk_int_t rc;
-    jsbuf buf;
-    buf.buf = str;
-    buf.len = len;
-    rc = duk_safe_call(ctx, eval_raw, &buf, NULL /*nargs*/, 1 /*nrets*/);
-    if (rc) {
+    duk_push_c_function(ctx, duv_load, 1);
+    duk_push_string_w(ctx, src);
+    if (duk_pcall(ctx, 1)) {
+        duv_dump_error(ctx, -1);
         LOG_ERROR(L"ERROR: %s\n", duk_to_string_w(ctx, -1));
+        return 1;
     }
 }
 VOID ZCALL ZuiGcTimerProc(HWND h, UINT u, UINT_PTR p, DWORD d) {

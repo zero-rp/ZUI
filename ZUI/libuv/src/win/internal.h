@@ -101,11 +101,6 @@ extern UV_THREAD_LOCAL int uv__crt_assert_enabled;
 #define UV_HANDLE_PIPESERVER                    0x02000000
 #define UV_HANDLE_PIPE_READ_CANCELABLE          0x04000000
 
-/* Only used by uv_tty_t handles. */
-#define UV_HANDLE_TTY_READABLE                  0x01000000
-#define UV_HANDLE_TTY_RAW                       0x02000000
-#define UV_HANDLE_TTY_SAVED_POSITION            0x04000000
-#define UV_HANDLE_TTY_SAVED_ATTRIBUTES          0x08000000
 
 /* Only used by uv_poll_t handles. */
 #define UV_HANDLE_POLL_SLOW                     0x02000000
@@ -201,34 +196,6 @@ void uv_process_pipe_shutdown_req(uv_loop_t* loop, uv_pipe_t* handle,
 void uv_pipe_close(uv_loop_t* loop, uv_pipe_t* handle);
 void uv_pipe_cleanup(uv_loop_t* loop, uv_pipe_t* handle);
 void uv_pipe_endgame(uv_loop_t* loop, uv_pipe_t* handle);
-
-
-/*
- * TTY
- */
-void uv_console_init();
-
-int uv_tty_read_start(uv_tty_t* handle, uv_alloc_cb alloc_cb,
-    uv_read_cb read_cb);
-int uv_tty_read_stop(uv_tty_t* handle);
-int uv_tty_write(uv_loop_t* loop, uv_write_t* req, uv_tty_t* handle,
-    const uv_buf_t bufs[], unsigned int nbufs, uv_write_cb cb);
-int uv__tty_try_write(uv_tty_t* handle, const uv_buf_t bufs[],
-    unsigned int nbufs);
-void uv_tty_close(uv_tty_t* handle);
-
-void uv_process_tty_read_req(uv_loop_t* loop, uv_tty_t* handle,
-    uv_req_t* req);
-void uv_process_tty_write_req(uv_loop_t* loop, uv_tty_t* handle,
-    uv_write_t* req);
-/* TODO: remove me */
-void uv_process_tty_accept_req(uv_loop_t* loop, uv_tty_t* handle,
-    uv_req_t* raw_req);
-/* TODO: remove me */
-void uv_process_tty_connect_req(uv_loop_t* loop, uv_tty_t* handle,
-    uv_connect_t* req);
-
-void uv_tty_endgame(uv_loop_t* loop, uv_tty_t* handle);
 
 
 /*

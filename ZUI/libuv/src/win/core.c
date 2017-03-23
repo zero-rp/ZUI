@@ -117,9 +117,6 @@ static void uv_init(void) {
   /* Initialize signal stuff */
   uv_signals_init();
 
-  /* Initialize console */
-  uv_console_init();
-
   /* Initialize utilities */
   uv__util_init();
 }
@@ -440,10 +437,6 @@ int uv_fileno(const uv_handle_t* handle, uv_os_fd_t* fd) {
 
   case UV_NAMED_PIPE:
     fd_out = ((uv_pipe_t*) handle)->handle;
-    break;
-
-  case UV_TTY:
-    fd_out = ((uv_tty_t*) handle)->handle;
     break;
 
   case UV_UDP:

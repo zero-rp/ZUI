@@ -403,10 +403,7 @@ int uv__stdio_create(uv_loop_t* loop,
         uv_stream_t* stream = fdopt.data.stream;
 
         /* Leech the handle out of the stream. */
-        if (stream->type == UV_TTY) {
-          stream_handle = ((uv_tty_t*) stream)->handle;
-          crt_flags = FOPEN | FDEV;
-        } else if (stream->type == UV_NAMED_PIPE &&
+        if (stream->type == UV_NAMED_PIPE &&
                    stream->flags & UV_HANDLE_CONNECTION) {
           stream_handle = ((uv_pipe_t*) stream)->handle;
           crt_flags = FOPEN | FPIPE;

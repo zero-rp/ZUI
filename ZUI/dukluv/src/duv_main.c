@@ -1,42 +1,18 @@
 #include <ZUI.h>
 #include "duv.h"
 #include "misc.h"
-#include "duv_module.h"
 
-// Sync readfile using libuv APIs as an API function.
+// º”‘ÿ◊ ‘¥
 static duk_ret_t duv_loadfile(duk_context *ctx) {
-  const char* path = duk_require_string(ctx, 0);
-  uv_fs_t req;
-  int fd = 0;
-  uint64_t size;
-  char* chunk;
-  uv_buf_t buf;
-
-  if (uv_fs_open(uv_default_loop(), &req, path, O_RDONLY, 0644, NULL) < 0) goto fail;
-  uv_fs_req_cleanup(&req);
-  fd = req.result;
-  if (uv_fs_fstat(uv_default_loop(), &req, fd, NULL) < 0) goto fail;
-  uv_fs_req_cleanup(&req);
-  size = req.statbuf.st_size;
-  chunk = duk_alloc(ctx, size);
-  buf = uv_buf_init(chunk, size);
-  if (uv_fs_read(uv_default_loop(), &req, fd, &buf, 1, 0, NULL) < 0) {
-    duk_free(ctx, chunk);
-    goto fail;
+  const wchar_t* path = duk_to_string_w(ctx, 0);
+  ZuiRes res = ZuiResDBGetRes(path, ZREST_STREAM);
+  if (res)
+  {
+      duk_push_lstring(ctx, res->p, res->plen);
+      ZuiResDBDelRes(res);
+      return 1;
   }
-  uv_fs_req_cleanup(&req);
-  duk_push_lstring(ctx, chunk, size);
-  duk_free(ctx, chunk);
-  uv_fs_close(uv_default_loop(), &req, fd, NULL);
-  uv_fs_req_cleanup(&req);
-
-  return 1;
-
-  fail:
-  uv_fs_req_cleanup(&req);
-  if (fd) uv_fs_close(uv_default_loop(), &req, fd, NULL);
-  uv_fs_req_cleanup(&req);
-  duk_error(ctx, DUK_ERR_ERROR, "%s: %s: %s", uv_err_name(req.result), uv_strerror(req.result), path);
+  duk_error(ctx, DUK_ERR_ERROR, "%s", duk_get_string(ctx, 0));
 }
 
 struct duv_list {
@@ -184,7 +160,7 @@ static duk_ret_t duv_require(duk_context *ctx) {
 
   // push Duktape.modLoaded
   duk_get_prop_string(ctx, -1, "modLoaded");
-
+  char *a=duk_get_string(ctx,0);
   // push Duktape.modLoaded[id];
   duk_dup(ctx, 0);
   duk_get_prop(ctx, -2);
@@ -411,7 +387,7 @@ static duk_ret_t duv_main(duk_context *ctx) {
 
   // Replace the module loader with Duktape 2.x polyfill.
   duk_get_prop_string(ctx, -1, "Duktape");
-  duk_del_prop_string(ctx, -1, "modSearch");
+  //duk_del_prop_string(ctx, -1, "modSearch");
   duk_push_c_function(ctx, duv_mod_compile, 1);
   duk_put_prop_string(ctx, -2, "modCompile");
   duk_push_c_function(ctx, duv_mod_resolve, 1);
@@ -429,47 +405,10 @@ static duk_ret_t duv_main(duk_context *ctx) {
   duk_push_c_function(ctx, duv_loadfile, 1);
   duk_put_prop_string(ctx, -2, "loadFile");
 
-  // require.call({id:uv.cwd()+"/main.c"}, path);
-  //duk_push_c_function(ctx, duv_require, 1);
-  //{
-  //  // Store this require function in the module prototype
-  //  duk_push_global_stash(ctx);
-  //  duk_push_object(ctx);
-  //  duk_dup(ctx, -3);
-  //  duk_put_prop_string(ctx, -2, "require");
-  //  duk_put_prop_string(ctx, -2, "modulePrototype");
-  //  duk_pop(ctx);
-  //}
-  //duk_push_object(ctx);
-  //duk_push_c_function(ctx, duv_cwd, 0);
-  //duk_call(ctx, 0);
-  //duk_push_string(ctx, "/main.c");
-  //duk_concat(ctx, 2);
-  //duk_put_prop_string(ctx, -2, "id");
-  //duk_dup(ctx, 0);
-  //duk_call_method(ctx, 1);
-  
-
   return 0;
 }
 
-static duk_ret_t duv_stash_argv(duk_context *ctx) {
-  char **argv = (char **) duk_require_pointer(ctx, 0);
-  int argc = (int) duk_require_int(ctx, 1);
-  int i;
-
-  duk_push_global_stash(ctx);
-  duk_push_array(ctx);
-  for (i = 0; i < argc; i++) {
-    duk_push_string(ctx, argv[i]);
-    duk_put_prop_index(ctx, -2, i);
-  }
-  duk_put_prop_string(ctx, -2, "argv");
-  duk_pop(ctx);
-  return 0;
-}
-
-static void duv_dump_error(duk_context *ctx, duk_idx_t idx) {
+ void duv_dump_error(duk_context *ctx, duk_idx_t idx) {
   fprintf(stderr, "\nUncaught Exception:\n");
   if (duk_is_object(ctx, idx)) {
     duk_get_prop_string(ctx, -1, "stack");
@@ -482,31 +421,49 @@ static void duv_dump_error(duk_context *ctx, duk_idx_t idx) {
   }
 }
 
-int duv_bind(duk_context *ctx/*,int argc, char *argv[]*/) {
-    int argc = 2;
-    char *argv[2] = { "aaa","tcp-echo.js" };
+int duv_bind(duk_context *ctx) {
+    //uv_setup_args(argc, argv);
+  /* Stash 'Duktape' in case it's modified. */
+  duk_push_global_stash(ctx);
+  duk_get_global_string(ctx, "Duktape");
+  duk_put_prop_string(ctx, -2, "\xff" "module:Duktape");
+  duk_pop(ctx);
 
-
-  uv_setup_args(argc, argv);
-
-
-  duk_module_duktape_init(ctx);
-
-
-  // Stash argv for later access
-  duk_push_pointer(ctx, (void *) argv);
-  duk_push_int(ctx, argc);
-  if (duk_safe_call(ctx, duv_stash_argv, 2, 1,0)) {
-    duv_dump_error(ctx, -1);
-    return 1;
-  }
+  /* Register `require` as a global function. */
+  duk_eval_string(ctx,
+      "(function(req){"
+      "var D=Object.defineProperty;"
+      "D(req,'name',{value:'require'});"
+      "D(this,'require',{value:req,writable:true,configurable:true});"
+      "D(Duktape,'modLoaded',{value:Object.create(null),writable:true,configurable:true});"
+      "})");
+  duk_push_c_function(ctx, duv_require, 1 /*nargs*/);
+  duk_call(ctx, 1);
   duk_pop(ctx);
 
   duk_push_c_function(ctx, duv_main, 1);
-  duk_push_string(ctx, argv[1]);
-  if (duk_pcall(ctx, 1)) {
+  if (duk_pcall(ctx, 0)) {
     duv_dump_error(ctx, -1);
     return 1;
   }
   return 0;
+}
+duk_ret_t duv_load(duk_context *ctx) {
+    //require.call({id:uv.cwd()+"/main.c"}, path);
+    duk_push_c_function(ctx, duv_require, 1);
+    {
+        // Store this require function in the module prototype
+        duk_push_global_stash(ctx);
+        duk_push_object(ctx);
+        duk_dup(ctx, -3);
+        duk_put_prop_string(ctx, -2, "require");
+        duk_put_prop_string(ctx, -2, "modulePrototype");
+        duk_pop(ctx);
+    }
+    duk_push_object(ctx);
+    duk_dup(ctx, 0);
+    duk_put_prop_string(ctx, -2, "id");
+    duk_dup(ctx, 0);
+    duk_call_method(ctx, 1);
+    return 0;
 }

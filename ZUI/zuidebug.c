@@ -61,8 +61,11 @@ int _stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	ZuiMsgLoop();
 	return;
 }
-
+main() {
+    _tWinMain(0, 0, 0, 0);
+}
 #endif
+
 #ifdef _WIN32
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 {

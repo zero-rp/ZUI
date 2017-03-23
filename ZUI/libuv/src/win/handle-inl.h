@@ -113,10 +113,6 @@ INLINE static void uv_process_endgames(uv_loop_t* loop) {
         uv_pipe_endgame(loop, (uv_pipe_t*) handle);
         break;
 
-      case UV_TTY:
-        uv_tty_endgame(loop, (uv_tty_t*) handle);
-        break;
-
       case UV_UDP:
         uv_udp_endgame(loop, (uv_udp_t*) handle);
         break;

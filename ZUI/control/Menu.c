@@ -56,12 +56,13 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNodeMenu(mxml_node_t *tree, ZuiControl win
                         src = node->value.attrs[i].value;
                     }
                 }
-                ZuiRes res = ZuiResDBGetRes(src, ZREST_TXT);
-                if (res)
-                {
-                    ZuiBuilderJsLoad(win->m_pManager->m_ctx, res->p, res->plen);
-                    ZuiResDBDelRes(res);
-                }
+                //ZuiRes res = ZuiResDBGetRes(src, ZREST_TXT);
+                //if (res)
+                //{
+                //    ZuiBuilderJsLoad(win->m_pManager->m_ctx, res->p, res->plen);
+                //    ZuiResDBDelRes(res);
+                //}
+                ZuiBuilderJsLoad(win->m_pManager->m_ctx, src);
             }
             else if (!node->user_data) {//当前节点还未创建
                 Control = NewZuiControl(ClassName, NULL, NULL, NULL);

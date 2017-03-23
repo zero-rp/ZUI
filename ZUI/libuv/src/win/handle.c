@@ -40,11 +40,7 @@ uv_handle_type uv_guess_handle(uv_file file) {
 
   switch (GetFileType(handle)) {
     case FILE_TYPE_CHAR:
-      if (GetConsoleMode(handle, &mode)) {
-        return UV_TTY;
-      } else {
         return UV_FILE;
-      }
 
     case FILE_TYPE_PIPE:
       return UV_NAMED_PIPE;
@@ -82,10 +78,6 @@ void uv_close(uv_handle_t* handle, uv_close_cb cb) {
 
     case UV_NAMED_PIPE:
       uv_pipe_close(loop, (uv_pipe_t*) handle);
-      return;
-
-    case UV_TTY:
-      uv_tty_close((uv_tty_t*) handle);
       return;
 
     case UV_UDP:

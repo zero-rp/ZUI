@@ -98,7 +98,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type);//获取一个资
 * @return 此函数没有返回值.
 */
 ZEXPORT ZuiVoid ZCALL ZuiResDBDelRes(ZuiRes res);//释放一个资源
-ZEXPORT ZuiRes ZCALL ZuiResDBNewTempRes(ZuiAny buf, ZuiInt buflen, ZuiInt type);
+//ZEXPORT ZuiRes ZCALL ZuiResDBNewTempRes(ZuiAny buf, ZuiInt buflen, ZuiInt type);
 
 #endif //__ZUI_CORE_RESDB_H__
 

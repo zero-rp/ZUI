@@ -107,7 +107,7 @@
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>../../ZUI/Zui.def</ModuleDefinitionFile>
       <AdditionalDependencies>imm32.lib;ws2_32.lib;IPHLPAPI.lib;Psapi.lib;Userenv.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -161,6 +161,7 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
       <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\duktape;..\..\ZUI\libuv\include;..\..\ZUI\platform\graph\agg\include</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <WholeProgramOptimization>true</WholeProgramOptimization>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -241,7 +242,6 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClCompile Include="..\..\ZUI\core\template.c" />
     <ClCompile Include="..\..\ZUI\core\tree.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_callbacks.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_module.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_fs.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_handle.c" />
@@ -255,7 +255,6 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_stream.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_tcp.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_timer.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_tty.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_utils.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\uv_schema.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_alloc_default.c" />
@@ -381,7 +380,6 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClCompile Include="..\..\ZUI\libuv\src\win\tcp.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\win\thread.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\win\timer.c" />
-    <ClCompile Include="..\..\ZUI\libuv\src\win\tty.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\win\udp.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\win\util.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\win\winapi.c" />

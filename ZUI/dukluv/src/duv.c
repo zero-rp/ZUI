@@ -9,7 +9,6 @@
 #include "stream.h"
 #include "tcp.h"
 #include "pipe.h"
-#include "tty.h"
 #include "fs.h"
 #include "misc.h"
 #include "miniz.h"
@@ -65,12 +64,6 @@ static const duk_function_list_entry duv_funcs[] = {
   {"pipe_pending_count", duv_pipe_pending_count, 1},
   {"pipe_pending_type", duv_pipe_pending_type, 1},
 
-  // tty.c
-  {"new_tty", duv_new_tty, 2},
-  {"tty_set_mode", duv_tty_set_mode, 2},
-  {"tty_reset_mode", duv_tty_reset_mode, 0},
-  {"tty_get_winsize", duv_tty_get_winsize, 1},
-
   // fs.c
   {"fs_close", duv_fs_close, 2},
   {"fs_open", duv_fs_open, 4},
@@ -114,7 +107,6 @@ static const duk_function_list_entry duv_funcs[] = {
   {"interface_addresses", duv_interface_addresses, 0},
   {"loadavg", duv_loadavg, 0},
   {"exepath", duv_exepath, 0},
-  {"cwd", duv_cwd, 0},
   {"os_homedir", duv_os_homedir, 0},
   {"chdir", duv_chdir, 1},
   {"get_total_memory", duv_get_total_memory, 0},

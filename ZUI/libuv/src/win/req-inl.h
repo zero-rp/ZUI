@@ -129,11 +129,6 @@ INLINE static void uv_insert_pending_req(uv_loop_t* loop, uv_req_t* req) {
                                        req);                                  \
         break;                                                                \
                                                                               \
-      case UV_TTY:                                                            \
-        uv_process_tty_##method##_req(loop,                                   \
-                                      (uv_tty_t*) ((req)->handle_at),         \
-                                      req);                                   \
-        break;                                                                \
                                                                               \
       default:                                                                \
         assert(0);                                                            \
