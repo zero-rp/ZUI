@@ -720,6 +720,11 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\ZUI\res\default.zip" />
+    <None Include="..\..\ZUI\res\modules\classes.js" />
+    <None Include="..\..\ZUI\res\modules\test.js" />
+    <None Include="..\..\ZUI\res\modules\theme-16.js" />
+    <None Include="..\..\ZUI\res\modules\theme-256.js" />
+    <None Include="..\..\ZUI\res\modules\utils.js" />
     <None Include="..\..\ZUI\res\onload.js" />
     <None Include="..\..\ZUI\res\res.zip" />
   </ItemGroup>

@@ -124,6 +124,9 @@
     <Filter Include="头文件\dukluv\src">
       <UniqueIdentifier>{a672d3f7-932b-4274-8157-5b9c11937665}</UniqueIdentifier>
     </Filter>
+    <Filter Include="res\modules">
+      <UniqueIdentifier>{006a5695-9b0d-40ff-a1cf-be4f43d535b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="control\html\lout\container.cc">
@@ -1256,6 +1259,21 @@
       <Filter>res</Filter>
     </None>
     <None Include="..\..\ZUI\res\default.zip" />
+    <None Include="..\..\ZUI\res\modules\classes.js">
+      <Filter>res\modules</Filter>
+    </None>
+    <None Include="..\..\ZUI\res\modules\test.js">
+      <Filter>res\modules</Filter>
+    </None>
+    <None Include="..\..\ZUI\res\modules\theme-16.js">
+      <Filter>res\modules</Filter>
+    </None>
+    <None Include="..\..\ZUI\res\modules\theme-256.js">
+      <Filter>res\modules</Filter>
+    </None>
+    <None Include="..\..\ZUI\res\modules\utils.js">
+      <Filter>res\modules</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\ZUI\Zui.rc">

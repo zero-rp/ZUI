@@ -22,7 +22,8 @@ void duv_connect_cb(uv_connect_t* req, int status) {
 }
 
 void duv_shutdown_cb(uv_shutdown_t* req, int status) {
-  duk_context *ctx = req->handle->loop->data;
+    duv_handle_t* data = req->handle->data;
+    duk_context *ctx = data->ctx;
   duv_push_status(ctx, status);
   duv_fulfill_req(ctx, (uv_req_t*)req, 1);
   req->data = duv_cleanup_req(ctx, req->data);

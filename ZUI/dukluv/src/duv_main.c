@@ -5,6 +5,15 @@
 // º”‘ÿ◊ ‘¥
 static duk_ret_t duv_loadfile(duk_context *ctx) {
   const wchar_t* path = duk_to_string_w(ctx, 0);
+
+  if (wcschr(path, '\:')==0) {
+      wchar_t *buf = malloc(wcslen(path) * 2 + 20);
+      buf[0] = 0;
+      wcscat(buf, L"default:");
+      wcscat(buf, path);
+      path = buf;
+  }
+
   ZuiRes res = ZuiResDBGetRes(path, ZREST_STREAM);
   if (res)
   {
