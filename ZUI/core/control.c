@@ -793,7 +793,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             return 0;
         }
         case  Js_Id_bkcolor: {
-            ZuiControlCall(Proc_SetBkColor, p, duk_to_boolean(ctx, 0), NULL, NULL);
+            ZuiControlCall(Proc_SetBkColor, p, duk_to_uint(ctx, 0), NULL, NULL);
             return 0;
         }
         case  Js_Id_drag: {
