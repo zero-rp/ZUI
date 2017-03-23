@@ -748,11 +748,13 @@ DUK_LOCAL DUK__INLINE_PERF void duk__prepost_incdec_var_helper(duk_hthread *thr,
 
 	if (op & 0x02) {
 		duk_push_number(ctx, y);  /* -> [ ... x this y ] */
+		act = thr->callstack + thr->callstack_top - 1;
 		duk_js_putvar_activation(thr, act, name, DUK_GET_TVAL_NEGIDX(ctx, -1), is_strict);
 		duk_pop_2(ctx);  /* -> [ ... x ] */
 	} else {
 		duk_pop_2(ctx);  /* -> [ ... ] */
 		duk_push_number(ctx, y);  /* -> [ ... y ] */
+		act = thr->callstack + thr->callstack_top - 1;
 		duk_js_putvar_activation(thr, act, name, DUK_GET_TVAL_NEGIDX(ctx, -1), is_strict);
 	}
 
@@ -1135,7 +1137,9 @@ duk_small_uint_t duk__handle_longjmp(duk_hthread *thr,
 			 *  which we simply ignore.
 			 */
 
+			DUK_ASSERT(resumee->resumer == NULL);
 			resumee->resumer = thr;
+			DUK_HTHREAD_INCREF(thr, thr);
 			resumee->state = DUK_HTHREAD_STATE_RUNNING;
 			thr->state = DUK_HTHREAD_STATE_RESUMED;
 			DUK_HEAP_SWITCH_THREAD(thr->heap, resumee);
@@ -1165,7 +1169,9 @@ duk_small_uint_t duk__handle_longjmp(duk_hthread *thr,
 
 			duk__reconfig_valstack_ecma_return(resumee, act_idx);
 
+			DUK_ASSERT(resumee->resumer == NULL);
 			resumee->resumer = thr;
+			DUK_HTHREAD_INCREF(thr, thr);
 			resumee->state = DUK_HTHREAD_STATE_RUNNING;
 			thr->state = DUK_HTHREAD_STATE_RESUMED;
 			DUK_HEAP_SWITCH_THREAD(thr->heap, resumee);
@@ -1201,7 +1207,9 @@ duk_small_uint_t duk__handle_longjmp(duk_hthread *thr,
 				DUK_ERROR_INTERNAL(thr);
 			}
 
+			DUK_ASSERT(resumee->resumer == NULL);
 			resumee->resumer = thr;
+			DUK_HTHREAD_INCREF(thr, thr);
 			resumee->state = DUK_HTHREAD_STATE_RUNNING;
 			thr->state = DUK_HTHREAD_STATE_RESUMED;
 			DUK_HEAP_SWITCH_THREAD(thr->heap, resumee);
@@ -1256,6 +1264,7 @@ duk_small_uint_t duk__handle_longjmp(duk_hthread *thr,
 		if (thr->heap->lj.iserror) {
 			thr->state = DUK_HTHREAD_STATE_YIELDED;
 			thr->resumer = NULL;
+			DUK_HTHREAD_DECREF_NORZ(thr, resumer);
 			resumer->state = DUK_HTHREAD_STATE_RUNNING;
 			DUK_HEAP_SWITCH_THREAD(thr->heap, resumer);
 			thr = resumer;
@@ -1271,6 +1280,7 @@ duk_small_uint_t duk__handle_longjmp(duk_hthread *thr,
 
 			thr->state = DUK_HTHREAD_STATE_YIELDED;
 			thr->resumer = NULL;
+			DUK_HTHREAD_DECREF_NORZ(thr, resumer);
 			resumer->state = DUK_HTHREAD_STATE_RUNNING;
 			DUK_HEAP_SWITCH_THREAD(thr->heap, resumer);
 #if 0
@@ -1387,6 +1397,7 @@ duk_small_uint_t duk__handle_longjmp(duk_hthread *thr,
 		DUK_ASSERT(thr->state == DUK_HTHREAD_STATE_TERMINATED);
 
 		thr->resumer = NULL;
+		DUK_HTHREAD_DECREF_NORZ(thr, resumer);
 		resumer->state = DUK_HTHREAD_STATE_RUNNING;
 		DUK_HEAP_SWITCH_THREAD(thr->heap, resumer);
 		thr = resumer;
@@ -1648,6 +1659,7 @@ DUK_LOCAL duk_small_uint_t duk__handle_return(duk_hthread *thr,
 	DUK_ASSERT(thr->state == DUK_HTHREAD_STATE_TERMINATED);
 
 	thr->resumer = NULL;
+	DUK_HTHREAD_DECREF(thr, resumer);
 	resumer->state = DUK_HTHREAD_STATE_RUNNING;
 	DUK_HEAP_SWITCH_THREAD(thr->heap, resumer);
 #if 0
@@ -3661,9 +3673,15 @@ DUK_LOCAL DUK_NOINLINE void duk__js_execute_bytecode_inner(duk_hthread *entry_th
 
 			act = thr->callstack + thr->callstack_top - 1;
 			if (duk_js_declvar_activation(thr, act, name, tv1, prop_flags, is_func_decl)) {
-				/* already declared, must update binding value */
-				tv1 = DUK_GET_TVAL_NEGIDX(ctx, -1);
-				duk_js_putvar_activation(thr, act, name, tv1, DUK__STRICT());
+				if (is_undef_value) {
+					/* Already declared but no initializer value
+					 * (e.g. 'var xyz;'), no-op.
+					 */
+				} else {
+					/* Already declared, update value. */
+					tv1 = DUK_GET_TVAL_NEGIDX(ctx, -1);
+					duk_js_putvar_activation(thr, act, name, tv1, DUK__STRICT());
+				}
 			}
 
 			duk_pop(ctx);
@@ -3756,6 +3774,7 @@ DUK_LOCAL DUK_NOINLINE void duk__js_execute_bytecode_inner(duk_hthread *entry_th
 			if (act->lex_env == NULL) {
 				DUK_ASSERT(act->var_env == NULL);
 				duk_js_init_activation_environment_records_delayed(thr, act);
+				act = thr->callstack + thr->callstack_top - 1;
 			}
 			DUK_ASSERT(act->lex_env != NULL);
 			DUK_ASSERT(act->var_env != NULL);
@@ -4097,11 +4116,11 @@ DUK_LOCAL DUK_NOINLINE void duk__js_execute_bytecode_inner(duk_hthread *entry_th
 
 				DUK_DDD(DUK_DDDPRINT("activating object env: %!iT",
 				                     (duk_tval *) duk_get_tval(ctx, -1)));
-				DUK_ASSERT(act->lex_env != NULL);
 				new_env = DUK_GET_HOBJECT_NEGIDX(ctx, -1);
 				DUK_ASSERT(new_env != NULL);
 
 				act = thr->callstack + thr->callstack_top - 1;  /* relookup (side effects) */
+				DUK_ASSERT(act->lex_env != NULL);
 				DUK_HOBJECT_SET_PROTOTYPE_UPDREF(thr, new_env, act->lex_env);  /* side effects */
 
 				act = thr->callstack + thr->callstack_top - 1;  /* relookup (side effects) */

@@ -693,9 +693,6 @@
     <ClCompile Include="..\..\ZUI\libuv\src\win\poll.c">
       <Filter>源文件\libuv\win</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\libuv\src\win\process.c">
-      <Filter>源文件\libuv\win</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\libuv\src\win\process-stdio.c">
       <Filter>源文件\libuv\win</Filter>
     </ClCompile>
@@ -779,6 +776,9 @@
     </ClCompile>
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_loop.c">
       <Filter>源文件\dukluv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\libuv\src\win\process.c">
+      <Filter>源文件\libuv\win</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

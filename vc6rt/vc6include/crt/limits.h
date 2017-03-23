@@ -47,6 +47,7 @@
 #define LONG_MIN    (-2147483647L - 1) /* minimum (signed) long value */
 #define LONG_MAX      2147483647L   /* maximum (signed) long value */
 #define ULONG_MAX     0xffffffffUL  /* maximum unsigned long value */
+#define ULLONG_MAX    0xffffffffffffffffui64       // maximum unsigned long long int value
 
 #if     _INTEGRAL_MAX_BITS >= 8
 #define _I8_MIN     (-127i8 - 1)    /* minimum signed 8 bit value */

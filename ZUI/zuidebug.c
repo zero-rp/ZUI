@@ -1,6 +1,6 @@
 ﻿#include <stdio.h>
 #include <ZUI.h>
-#if !(defined NDEBUG)
+#if (defined NDEBUG)
 int _stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
     ZInitConfig config = { 0 };
     config.debug = TRUE;
@@ -43,7 +43,7 @@ int _stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
     //ZuiUnInit();
     ZuiMsgLoop();
 #endif
-    ZuiRes res = ZuiResDBGetRes(L"file:test.xml", ZREST_STREAM);
+    ZuiRes res = ZuiResDBGetRes(L"file:client.xml", ZREST_STREAM);
 
     srand(time(0));
     ZuiControl c = ZuiControlFindName(ZuiLayoutLoad(res->p, res->plen), L"list");
