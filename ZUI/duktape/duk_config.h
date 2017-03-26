@@ -2715,7 +2715,10 @@ typedef struct duk_hthread duk_context;
 #define DUK_USE_BOOLEAN_BUILTIN
 #define DUK_USE_BUFFEROBJECT_SUPPORT
 #undef DUK_USE_BUFLEN16
-#define DUK_USE_BYTECODE_DUMP_SUPPORT
+//禁用不必要的C API部分：
+//#define DUK_USE_BYTECODE_DUMP_SUPPORT
+#undef DUK_USE_BYTECODE_DUMP_SUPPORT
+
 #define DUK_USE_COMMONJS_MODULES
 #define DUK_USE_COMPILER_RECLIMIT 2500
 #define DUK_USE_COROUTINE_SUPPORT
@@ -2810,7 +2813,10 @@ typedef struct duk_hthread duk_context;
 #define DUK_USE_JSON_SUPPORT
 #define DUK_USE_JX
 #define DUK_USE_LEXER_SLIDING_WINDOW
-#undef DUK_USE_LIGHTFUNC_BUILTINS
+//考虑为Duktape / C绑定使用轻量级功能，并强制Duktape内置功能是轻量级功能
+#define DUK_USE_LIGHTFUNC_BUILTINS
+//#undef DUK_USE_LIGHTFUNC_BUILTINS
+
 #undef DUK_USE_MARKANDSWEEP_FINALIZER_TORTURE
 #define DUK_USE_MARK_AND_SWEEP_RECLIMIT 256
 #define DUK_USE_MATH_BUILTIN
@@ -2867,7 +2873,8 @@ typedef struct duk_hthread duk_context;
 #define DUK_USE_TRACEBACK_DEPTH 10
 #define DUK_USE_USER_DECLARE() /* no user declarations */
 #undef DUK_USE_VALSTACK_UNSAFE
-#define DUK_USE_VERBOSE_ERRORS
+//调试符号
+#undef DUK_USE_VERBOSE_ERRORS
 #define DUK_USE_VERBOSE_EXECUTOR_ERRORS
 #define DUK_USE_VOLUNTARY_GC
 #define DUK_USE_ZERO_BUFFER_DATA
