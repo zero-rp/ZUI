@@ -13,8 +13,8 @@
 */
 #ifndef __TREE_H__
 #define __TREE_H__
-#define Type_TreeView               0x0
-#define Type_TreeNode               0x0
+#define Type_TreeView               0xa1526942
+#define Type_TreeNode               0xa78958f4
 
 #define Proc_TreeView_Add           Proc_Layout_Add  
 #define Proc_TreeView_AddAt         Proc_Layout_AddAt
@@ -28,7 +28,8 @@
 #define Proc_TreeNode_Add           Proc_Layout_Add  
 #define Proc_TreeNode_AddAt         Proc_Layout_AddAt
 #define Proc_TreeNode_Remove        Proc_Layout_Remove
-
+#define Proc_TreeNode_AddChildNode  1003
+#define Proc_TreeNode_CalLocation   1004    //计算缩进
 /**树形框结构*/
 typedef struct _ZTreeNode
 {
@@ -40,7 +41,7 @@ typedef struct _ZTreeNode
     DWORD	m_dwSelItemTextColor;
     DWORD	m_dwSelItemHotTextColor;
 
-    ZuiControl          pTreeView;
+    ZuiControl          pTreeView;          //所属树形框
     ZuiControl          pHoriz;
     ZuiControl          pFolderButton;
     ZuiControl          pDottedLine;

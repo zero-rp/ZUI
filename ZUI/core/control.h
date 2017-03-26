@@ -135,12 +135,15 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define Js_Id_visible           16
 #define Js_Id_name              17
 #define Js_Id_padding           18
+#define Js_Id_left              19
+#define Js_Id_top               20
 
-#define Js_Id_onmouseleave      19
-#define Js_Id_onmouseenter      20
-#define Js_Id_onlbuttondown     21
-#define Js_Id_onclick           22
-#define Js_Id_onchar            23
+#define Js_Id_onmouseleave      21
+#define Js_Id_onmouseenter      22
+#define Js_Id_onlbuttondown     23
+#define Js_Id_onclick           24
+#define Js_Id_onchar            25
+#define Js_Id_onsize            26
 
 
 //------宏封装
@@ -243,6 +246,7 @@ typedef struct _ZControl
     ZuiInt m_rOnmouseenter;
     ZuiInt m_rOnlbuttondown;
     ZuiInt m_rOnchar;
+    ZuiInt m_rOnsize;
     //js_refend
 
     //控件默认样式-------------------

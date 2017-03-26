@@ -2567,7 +2567,7 @@ typedef struct duk_hthread duk_context;
 #endif
 
 #if !defined(DUK_FILE_MACRO)
-#define DUK_FILE_MACRO  __FILE__
+#define DUK_FILE_MACRO  ""//__FILE__
 #endif
 #if !defined(DUK_LINE_MACRO)
 #define DUK_LINE_MACRO  __LINE__
@@ -2715,10 +2715,7 @@ typedef struct duk_hthread duk_context;
 #define DUK_USE_BOOLEAN_BUILTIN
 #define DUK_USE_BUFFEROBJECT_SUPPORT
 #undef DUK_USE_BUFLEN16
-//禁用不必要的C API部分：
-//#define DUK_USE_BYTECODE_DUMP_SUPPORT
-#undef DUK_USE_BYTECODE_DUMP_SUPPORT
-
+#define DUK_USE_BYTECODE_DUMP_SUPPORT
 #define DUK_USE_COMMONJS_MODULES
 #define DUK_USE_COMPILER_RECLIMIT 2500
 #define DUK_USE_COROUTINE_SUPPORT

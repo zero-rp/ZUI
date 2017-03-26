@@ -14,12 +14,6 @@
 #ifndef __ZUI_H__
 #define __ZUI_H__
 
-#include <uv.h>
-#if defined(__cplusplus)
-extern "C"
-{
-#endif
-
 //config
 
 //图形引擎配置
@@ -56,6 +50,8 @@ extern "C"
 #include <malloc.h>
 #include <stdlib.h>
 
+#include <uv.h>
+#include "duktape/duktape.h"
 
 #ifdef PLATFORM_OS_WIN
     #ifdef __cplusplus
@@ -163,9 +159,12 @@ typedef struct tagSIZE
 } SIZE, *PSIZE, *LPSIZE;
 #endif
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif
 
 #include "core/memory.h"
-#include "duktape/duktape.h"
 #include "core/debug.h"
 
 /*基础辅助函数*/
@@ -198,11 +197,13 @@ typedef struct tagSIZE
 #include "control/Label.h"
 #include "control/Button.h"
 #include "control/SplitterBar.h"
+#include "control/ProgressBar.h"
 #ifdef WIN32
 #include "control/Browser.h"
 #endif
 #include "control/Edit.h"
 #include "control/Option.h"
+#include "control/CheckBox.h"
 #include "control/List.h"
 #include "control/TreeView.h"
 

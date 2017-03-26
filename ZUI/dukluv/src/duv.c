@@ -2,7 +2,6 @@
 
 #include "refs.h"
 #include "utils.h"
-#include "loop.h"
 #include "req.h"
 #include "handle.h"
 #include "timer.h"
@@ -14,10 +13,6 @@
 #include "miniz.h"
 
 static const duk_function_list_entry duv_funcs[] = {
-  // loop.c
-  {"run", duv_run, 0},
-  {"walk", duv_walk, 1},
-
   // req.c
   {"cancel", duv_cancel, 1},
 

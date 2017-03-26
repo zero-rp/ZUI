@@ -97,7 +97,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;RUN_DEBUG=1;MEM_DEBUG=1;LOG_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -166,6 +166,7 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <OmitFramePointers>true</OmitFramePointers>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -183,6 +184,9 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
       <FixedBaseAddress>false</FixedBaseAddress>
       <ModuleDefinitionFile>..\..\ZUI\Zui.def</ModuleDefinitionFile>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+      <NoEntryPoint>false</NoEntryPoint>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
     </Link>
     <PreBuildEvent>
       <Command>DEL $(SolutionDir)..\$(ProjectName)\res\default.zip
@@ -219,12 +223,14 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
   <ItemGroup>
     <ClCompile Include="..\..\ZUI\control\Browser.c" />
     <ClCompile Include="..\..\ZUI\control\Button.c" />
+    <ClCompile Include="..\..\ZUI\control\CheckBox.c" />
     <ClCompile Include="..\..\ZUI\control\Edit.c" />
     <ClCompile Include="..\..\ZUI\control\Label.c" />
     <ClCompile Include="..\..\ZUI\control\List.c" />
     <ClCompile Include="..\..\ZUI\control\Menu.c" />
     <ClCompile Include="..\..\ZUI\control\MenuBar.c" />
     <ClCompile Include="..\..\ZUI\control\Option.c" />
+    <ClCompile Include="..\..\ZUI\control\ProgressBar.c" />
     <ClCompile Include="..\..\ZUI\control\Register.c" />
     <ClCompile Include="..\..\ZUI\control\ScrollBar.c" />
     <ClCompile Include="..\..\ZUI\control\SplitterBar.c" />
@@ -249,11 +255,10 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClCompile Include="..\..\ZUI\dukluv\src\duv.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_fs.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_handle.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_loop.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_main.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_misc.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_pipe.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\refs.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_refs.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_req.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_schema.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_stream.c" />
@@ -403,6 +408,7 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\ZUI\zlib\adler32.c" />
     <ClCompile Include="..\..\ZUI\zlib\crc32.c" />
@@ -568,6 +574,7 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
   <ItemGroup>
     <ClInclude Include="..\..\ZUI\control\Browser.h" />
     <ClInclude Include="..\..\ZUI\control\Button.h" />
+    <ClInclude Include="..\..\ZUI\control\CheckBox.h" />
     <ClInclude Include="..\..\ZUI\control\Edit.h" />
     <ClInclude Include="..\..\ZUI\control\Html.h" />
     <ClInclude Include="..\..\ZUI\control\Label.h" />
@@ -575,6 +582,7 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClInclude Include="..\..\ZUI\control\Menu.h" />
     <ClInclude Include="..\..\ZUI\control\MenuBar.h" />
     <ClInclude Include="..\..\ZUI\control\Option.h" />
+    <ClInclude Include="..\..\ZUI\control\ProgressBar.h" />
     <ClInclude Include="..\..\ZUI\control\Register.h" />
     <ClInclude Include="..\..\ZUI\control\ScrollBar.h" />
     <ClInclude Include="..\..\ZUI\control\SplitterBar.h" />
@@ -599,7 +607,6 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClInclude Include="..\..\ZUI\dukluv\src\duv.h" />
     <ClInclude Include="..\..\ZUI\dukluv\src\fs.h" />
     <ClInclude Include="..\..\ZUI\dukluv\src\handle.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\loop.h" />
     <ClInclude Include="..\..\ZUI\dukluv\src\miniz.h" />
     <ClInclude Include="..\..\ZUI\dukluv\src\misc.h" />
     <ClInclude Include="..\..\ZUI\dukluv\src\pipe.h" />

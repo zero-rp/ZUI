@@ -23,13 +23,15 @@ BOOL ZuiControlRegister()
     ZuiControlRegisterAdd(L"scrollbar", (ZCtlProc)&ZuiScrollBarProc);
     ZuiControlRegisterAdd(L"splitterbar", (ZCtlProc)&ZuiSplitterBarProc);
     ZuiControlRegisterAdd(L"label", (ZCtlProc)&ZuiLabelProc);
+    ZuiControlRegisterAdd(L"ProgressBar", (ZCtlProc)&ZuiProgressBarProc);
     ZuiControlRegisterAdd(L"button", (ZCtlProc)&ZuiButtonProc);
     ZuiControlRegisterAdd(L"browser", (ZCtlProc)&ZuiBrowserProc);
     ZuiControlRegisterAdd(L"edit", (ZCtlProc)&ZuiEditProc);
     ZuiControlRegisterAdd(L"option", (ZCtlProc)&ZuiOptionProc);
+    ZuiControlRegisterAdd(L"checkbox", (ZCtlProc)&ZuiOptionProc);
     ZuiControlRegisterAdd(L"list", (ZCtlProc)&ZuiListProc);
     ZuiControlRegisterAdd(L"treeview", (ZCtlProc)&ZuiTreeViewProc);
-
+    
     /*初始化全部控件*/
     //rb_foreach(Global_ControlClass, ZuiCoreInit);
     return TRUE;

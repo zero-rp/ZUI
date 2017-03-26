@@ -110,13 +110,6 @@ ZEXPORT ZuiInt ZCALL ZuiMsgLoop() {
             Sleep(1);
         }
     }
-
-
-    while (GetMessage(&Msg, NULL, 0, 0))
-    {
-        TranslateMessage(&Msg);
-        DispatchMessage(&Msg);
-    }
     return Msg.wParam;
 }
 ZEXPORT ZuiVoid ZCALL ZuiMsgLoop_exit() {

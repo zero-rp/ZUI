@@ -115,9 +115,13 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
                     if (!pControl->m_bVisible) continue;
                     if (!IntersectRect(&rcTemp, (RECT *)Param2, (RECT *)ZuiControlCall(Proc_GetPos, pControl, 0, 0, 0))) continue;
                     if (pControl->m_bFloat) {
-                        if (!IntersectRect(&rcTemp, (RECT *)Param2, (RECT *)ZuiControlCall(Proc_GetPos, pControl, 0, 0, 0))) continue;
+                        if (!IntersectRect(&rcTemp, (RECT *)Param2, (RECT *)ZuiControlCall(Proc_GetPos, pControl, 0, 0, 0)))
+                            continue;
                         ZuiGraphicsSetClipRegion((ZuiGraphics)Param1, OldRgn_child, 0);
-                        ZuiControlCall(Proc_OnPaint, pControl, Param1, Param2, Param3);
+                        if (pControl->m_aAnime)
+                            pControl->m_aAnime->OnPaint(pControl, Param1, Param2);
+                        else
+                            ZuiControlCall(Proc_OnPaint, pControl, Param1, &pControl->m_rcItem, Param3);
                         ZuiGraphicsSetClipRegion((ZuiGraphics)Param1, rgn_child, 0);
                     }
                     else {
@@ -259,13 +263,21 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
         }
         case Js_Id_Layout_GetItemName: {
             if (duk_is_string(ctx, 0)) {
-                ZuiControl p = ZuiControlFindName(cp, duk_to_string_w(ctx, 0));
-                if (!p)
+                ZuiControl fp = NULL;
+                ZuiText name = duk_to_string_w(ctx, 0);
+                for (int it = 0; it < darray_len(p->m_items); it++) {
+                    ZuiControl pResult = (ZuiControl)(p->m_items->data[it]);
+                    if (pResult->m_sName && wcscmp(name, pResult->m_sName) == 0) {
+                        fp = (ZuiControl)(p->m_items->data[it]);
+                        break;
+                    }
+                }
+                if (!fp)
                     LOG_ERROR(L"Layout GetByName失败: Name:%ls\r\n", duk_to_string_w(ctx, 0));
-                if (p)
+                if (fp)
                 {
                     duk_get_global_string(ctx, "Control");
-                    duk_push_pointer(ctx, p);
+                    duk_push_pointer(ctx, fp);
                     duk_new(ctx, 1);
                     return 1;
                 }
@@ -401,9 +413,9 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
     }
     case Proc_SetVisible: {
         p->old_call(Proc_SetVisible, cp, 0, Param1, Param2, Param3);
-        for (int it = darray_len(p->m_items) - 1; it >= 0; it--) {
-            ZuiControlCall(Proc_SetVisible, p->m_items->data[it], Param1, Param2, Param3);
-        }
+        //for (int it = darray_len(p->m_items) - 1; it >= 0; it--) {
+        //    ZuiControlCall(Proc_SetVisible, p->m_items->data[it], Param1, Param2, Param3);
+        //}
         return 0;
         break;
     }

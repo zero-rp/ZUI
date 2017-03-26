@@ -28,6 +28,7 @@
 #define Js_Id_Browser_newwindow       101
 #define Js_Id_Browser_urlchanged    102
 #define Js_Id_Browser_navigation   103
+#define Js_Id_Browser_url   104
 
 #define ZuiBrowserLoadUrl(Control, ...) ZProc(Control, Browser_LoadUrl, __VA_ARGS__);
 

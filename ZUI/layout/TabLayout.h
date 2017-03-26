@@ -17,11 +17,15 @@
 
 #define Proc_TabLayout_SelectItem  1001    //当前Tab
 
+//------Js
+
+#define Js_Id_TabLayout_selectitem    200
+
 
 /**选择夹布局结构*/
 typedef struct _ZuiTabLayout
 {
-    ZuiInt m_iCurSel;
+    ZuiInt m_iCurSel;//当前选择夹
     ZCtlProc old_call;
     ZuiAny old_udata;
 }*ZuiTabLayout, ZTabLayout;

@@ -541,15 +541,15 @@ void rb_foreach(rb_root *root, TreeVisitFunc visitfunc) {
 void rb_print_c(rb_node *node) {
     if (node != NULL) {
         rb_print_c(node->rb_left);
-        LOG_INFO("	%p(%s)\n", node->key, (node->rb_parent_color == RB_RED) ? "红" : "黑");
+        //LOG_INFO("	%p(%s)\n", node->key, (node->rb_parent_color == RB_RED) ? "红" : "黑");
         rb_print_c(node->rb_right);
     }
 }
 /*打印结点*/
 void rb_print(rb_root *root) {
-    LOG_INFO("Tree结构:[\r\n");
+    //LOG_INFO("Tree结构:[\r\n");
     rb_print_c(root->rb_node);
-    LOG_INFO("]\r\n");
+    //LOG_INFO("]\r\n");
 }
 #endif
 

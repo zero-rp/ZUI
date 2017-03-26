@@ -103,7 +103,9 @@ void _staticOnTitleChanged(wkeWebView webWindow, void* param, void *title)
         duv_push_ref(p->cp->m_pManager->m_ctx, p->titlechanged);
         ZuiBuilderJs_pushControl(p->cp->m_pManager->m_ctx, p->cp);
         duk_push_string_w(p->cp->m_pManager->m_ctx, wkeGetStringW(title));
-        duk_call_method(p->cp->m_pManager->m_ctx, 2);
+        if (duk_pcall_method(p->cp->m_pManager->m_ctx, 2)) {
+            LOG_ERROR(L"THROW: %s\n", duk_to_string_w(p->cp->m_pManager->m_ctx, -1));
+        }
         duk_pop(p->cp->m_pManager->m_ctx);
     }
     ZuiControlNotify(L"titlechanged", ((ZuiBrowser)param)->cp, wkeGetStringW(title), NULL, NULL);
@@ -111,10 +113,22 @@ void _staticOnTitleChanged(wkeWebView webWindow, void* param, void *title)
 // 回调：创建新的页面，比如说调用了 window.open 或者点击了 <a target="_blank" .../>
 wkeWebView _staticOnCreateView(wkeWebView webWindow, void* param, int navType, void *url, void* features)
 {
-    //ZuiControl bro = ZuiControlNotify(L"newwindow", ((ZuiBrowser)param)->cp, (void *)navType, JS_TNUMBER, wkeGetStringW(url), JS_TSHRSTR, NULL, NULL);
-    //if (bro)
-    //    return ZuiControlCall(Proc_Browser_GetView, bro, NULL, NULL, NULL);//重定向到当前页面
-    //return 0;
+    ZuiControl bro = NULL;
+    ZuiBrowser p = (ZuiBrowser)param;
+    if (p->newwindow) {
+        duv_push_ref(p->cp->m_pManager->m_ctx, p->newwindow);
+        ZuiBuilderJs_pushControl(p->cp->m_pManager->m_ctx, p->cp);
+        duk_push_uint(p->cp->m_pManager->m_ctx, navType);
+        duk_push_string_w(p->cp->m_pManager->m_ctx, wkeGetStringW(url));
+        if (duk_pcall_method(p->cp->m_pManager->m_ctx, 3)) {
+            LOG_ERROR(L"THROW: %s\n", duk_to_string_w(p->cp->m_pManager->m_ctx, -1));
+        }
+        bro = ZuiBuilderJs_toControl(p->cp->m_pManager->m_ctx, -1);
+        duk_pop(p->cp->m_pManager->m_ctx);
+    }
+    if (bro)
+        return ZuiControlCall(Proc_Browser_GetView, bro, NULL, NULL, NULL);//重定向到当前页面
+    return 0;
 }
 // 回调：url改变
 wkeWebView _staticOnURLChanged(wkeWebView webView, void* param, void *url)
@@ -125,7 +139,9 @@ wkeWebView _staticOnURLChanged(wkeWebView webView, void* param, void *url)
         duv_push_ref(p->cp->m_pManager->m_ctx, p->urlchanged);
         ZuiBuilderJs_pushControl(p->cp->m_pManager->m_ctx, p->cp);
         duk_push_string_w(p->cp->m_pManager->m_ctx, ((ZuiBrowser)param)->url);
-        duk_call_method(p->cp->m_pManager->m_ctx, 2);
+        if (duk_pcall_method(p->cp->m_pManager->m_ctx, 2)) {
+            LOG_ERROR(L"THROW: %s\n", duk_to_string_w(p->cp->m_pManager->m_ctx, -1));
+        }
         duk_pop(p->cp->m_pManager->m_ctx);
     }
     
@@ -281,7 +297,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
     }
     case Proc_OnPaint: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        RECT *rc = &cp->m_rcItem;
+        RECT *rc = (RECT *)Param2;
         if (p->init) {
             //ZGraphics sp;
             //sp.hdc = wkeGetViewDC(p->view);
@@ -381,6 +397,25 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
             }
             return 0;
         }
+        case Js_Id_Browser_url: {
+            if (duk_is_string(ctx, 0)) {
+                ZuiControlCall(Proc_Browser_LoadUrl, cp, (ZuiAny)duk_to_string_w(ctx, 0), NULL, NULL);
+            }
+            return 0;
+        }
+        default:
+            break;
+        }
+        break;
+    }
+    case Proc_JsGet: {
+        duk_context *ctx = (duk_context *)Param1;
+        switch ((ZuiInt)Param2)
+        {
+        case Js_Id_Browser_url: {
+            duk_push_string_w(ctx, p->url);
+            return 1;
+        }
         default:
             break;
         }
@@ -391,18 +426,9 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         ZuiBuilderControlInit(Param1, "newwindow", Js_Id_Browser_newwindow, TRUE);
         ZuiBuilderControlInit(Param1, "urlchanged", Js_Id_Browser_urlchanged, TRUE);
         ZuiBuilderControlInit(Param1, "navigation", Js_Id_Browser_navigation, TRUE);
+        ZuiBuilderControlInit(Param1, "url", Js_Id_Browser_url, TRUE);
         break;
     }
-                                  //case Proc_JsPut: {
-    //    js_State *J = Param2;
-    //    if (wcscmp(Param1, L"url") == 0) ZuiControlCall(Proc_Browser_LoadUrl, cp, (ZuiAny)js_tostring(J, -1), NULL, NULL);
-
-    //    break;
-    //}
-    //case Proc_JsHas: {
-    //    if (wcscmp(Param1, L"url") == 0) js_pushstring(Param2, p->url);
-    //    break;
-    //}
     case Proc_GetImePoint: {
         wkeRect caret = wkeGetCaretRect(p->view);
         ZPoint pt;

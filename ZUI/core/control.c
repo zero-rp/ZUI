@@ -190,6 +190,17 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     case Proc_OnSize: {
         if (p->m_aAnime)
             p->m_aAnime->OnSize(p, Param1, Param2);
+        if (p->m_rOnsize) {
+            duv_push_ref(p->m_pManager->m_ctx, p->m_rOnsize);
+            ZuiBuilderJs_pushControl(p->m_pManager->m_ctx, p);
+            duk_push_int(p->m_pManager->m_ctx, Param1);
+            duk_push_int(p->m_pManager->m_ctx, Param2);
+            if (duk_pcall_method(p->m_pManager->m_ctx, 3)) {
+                LOG_ERROR(L"THROW: %s\n", duk_to_string_w(p->m_pManager->m_ctx, -1));
+            }
+            duk_pop(p->m_pManager->m_ctx);
+        }
+        ZuiControlNotify(L"onlbuttondown", p, Param1, Param2, NULL);
         break;
     }
     case Proc_SetManager: {
@@ -223,7 +234,9 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             if (p->m_rOnmouseleave) {
                 duv_push_ref(p->m_pManager->m_ctx, p->m_rOnmouseleave);
                 ZuiBuilderJs_pushControl(p->m_pManager->m_ctx, p);
-                duk_call_method(p->m_pManager->m_ctx, 3);
+                if(duk_pcall_method(p->m_pManager->m_ctx, 1)) {
+                    LOG_ERROR(L"THROW: %s\n", duk_to_string_w(p->m_pManager->m_ctx, -1));
+                }
                 duk_pop(p->m_pManager->m_ctx);
             }
             ZuiControlNotify(L"onmouseleave", p, NULL, NULL, NULL);
@@ -235,7 +248,9 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 ZuiBuilderJs_pushControl(p->m_pManager->m_ctx, p);
                 duk_push_int(p->m_pManager->m_ctx, ((TEventUI *)Param1)->ptMouse.x);
                 duk_push_int(p->m_pManager->m_ctx, ((TEventUI *)Param1)->ptMouse.y);
-                duk_call_method(p->m_pManager->m_ctx, 3);
+                if (duk_pcall_method(p->m_pManager->m_ctx, 3)) {
+                    LOG_ERROR(L"THROW: %s\n", duk_to_string_w(p->m_pManager->m_ctx, -1));
+                }
                 duk_pop(p->m_pManager->m_ctx);
             }
             ZuiControlNotify(L"onmouseenter", p, ((TEventUI *)Param1)->ptMouse.x, ((TEventUI *)Param1)->ptMouse.y, NULL);
@@ -247,7 +262,9 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 ZuiBuilderJs_pushControl(p->m_pManager->m_ctx, p);
                 duk_push_int(p->m_pManager->m_ctx, ((TEventUI *)Param1)->ptMouse.x);
                 duk_push_int(p->m_pManager->m_ctx, ((TEventUI *)Param1)->ptMouse.y);
-                duk_call_method(p->m_pManager->m_ctx, 3);
+                if (duk_pcall_method(p->m_pManager->m_ctx, 3)) {
+                    LOG_ERROR(L"THROW: %s\n", duk_to_string_w(p->m_pManager->m_ctx, -1));
+                }
                 duk_pop(p->m_pManager->m_ctx);
             }
             ZuiControlNotify(L"onlbuttondown", p, ((TEventUI *)Param1)->ptMouse.x, ((TEventUI *)Param1)->ptMouse.y, NULL);
@@ -259,7 +276,9 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 ZuiBuilderJs_pushControl(p->m_pManager->m_ctx, p);
                 duk_push_int(p->m_pManager->m_ctx, ((TEventUI *)Param1)->ptMouse.x);
                 duk_push_int(p->m_pManager->m_ctx, ((TEventUI *)Param1)->ptMouse.y);
-                duk_call_method(p->m_pManager->m_ctx, 3);
+                if (duk_pcall_method(p->m_pManager->m_ctx, 3)) {
+                    LOG_ERROR(L"THROW: %s\n", duk_to_string_w(p->m_pManager->m_ctx, -1));
+                }
                 duk_pop(p->m_pManager->m_ctx);
             }
             ZuiControlNotify(L"onclick", p, ((TEventUI *)Param1)->ptMouse.x, ((TEventUI *)Param1)->ptMouse.y, NULL);
@@ -270,7 +289,9 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 duv_push_ref(p->m_pManager->m_ctx, p->m_rOnchar);
                 ZuiBuilderJs_pushControl(p->m_pManager->m_ctx, p);
                 duk_push_int(p->m_pManager->m_ctx, ((TEventUI *)Param1)->wParam);
-                duk_call_method(p->m_pManager->m_ctx, 2);
+                if (duk_pcall_method(p->m_pManager->m_ctx, 2)) {
+                    LOG_ERROR(L"THROW: %s\n", duk_to_string_w(p->m_pManager->m_ctx, -1));
+                }
                 duk_pop(p->m_pManager->m_ctx);
             }
             ZuiControlNotify(L"onchar", p, &((TEventUI *)Param1)->wParam, NULL, NULL);
@@ -682,9 +703,19 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         }
         case  Js_Id_enabled: {
             duk_push_boolean(ctx, p->m_bEnabled);
+            return 1;
         }
         case  Js_Id_visible: {
             duk_push_boolean(ctx, p->m_bVisible);
+            return 1;
+        }
+        case Js_Id_left: {
+            duk_push_int(ctx, ZuiControlCall(Proc_GetX, p, NULL, NULL, NULL));
+            return 1;
+        }
+        case Js_Id_top: {
+            duk_push_int(ctx, ZuiControlCall(Proc_GetY, p, NULL, NULL, NULL));
+            return 1;
         }
         default:
             break;
@@ -737,6 +768,15 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                     duv_unref(ctx, p->m_rOnchar);
                 duk_dup(ctx, 0);
                 p->m_rOnchar = duv_ref(ctx);
+            }
+            return 0;
+        }
+        case  Js_Id_onsize: {
+            if (duk_is_function(ctx, 0)) {
+                if (p->m_rOnsize)
+                    duv_unref(ctx, p->m_rOnsize);
+                duk_dup(ctx, 0);
+                p->m_rOnsize = duv_ref(ctx);
             }
             return 0;
         }
@@ -811,6 +851,14 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             ZuiControlCall(Proc_SetVisible, p, duk_to_boolean(ctx, 0), NULL, NULL);
             return 0;
         }
+        case Js_Id_left: {
+            ZuiControlCall(Proc_SetFixedXY, p, duk_to_int(ctx, 0), ((SIZE *)ZuiControlCall(Proc_GetFixedXY, p, NULL, NULL, NULL))->cy, NULL);
+            return 0;
+        }
+        case Js_Id_top: {
+            ZuiControlCall(Proc_SetFixedXY, p, ((SIZE *)ZuiControlCall(Proc_GetFixedXY, p, NULL, NULL, NULL))->cx, duk_to_int(ctx, 0), NULL);
+            return 0;
+        }
         default:
             break;
         }
@@ -849,12 +897,15 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         ZuiBuilderControlInit(Param1, "enabled", Js_Id_enabled, TRUE);
         ZuiBuilderControlInit(Param1, "visible", Js_Id_visible, TRUE);
         ZuiBuilderControlInit(Param1, "padding", Js_Id_padding, TRUE);
+        ZuiBuilderControlInit(Param1, "left", Js_Id_left, TRUE);
+        ZuiBuilderControlInit(Param1, "top", Js_Id_top, TRUE);
 
         ZuiBuilderControlInit(Param1, "onmouseleave", Js_Id_onmouseleave, TRUE);
         ZuiBuilderControlInit(Param1, "onmouseenter", Js_Id_onmouseenter, TRUE);
         ZuiBuilderControlInit(Param1, "onlbuttondown", Js_Id_onlbuttondown, TRUE);
         ZuiBuilderControlInit(Param1, "onclick", Js_Id_onclick, TRUE);
         ZuiBuilderControlInit(Param1, "onchar", Js_Id_onchar, TRUE);
+        ZuiBuilderControlInit(Param1, "onsize", Js_Id_onsize, TRUE);
         break;
     }
 

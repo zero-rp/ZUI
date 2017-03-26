@@ -146,7 +146,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
             return ret;
         }
         // 插入的元素是行数据
-        if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) == Type_ListElement) {
+        if (ZuiControlCall(Proc_GetObject, Param1, Type_ListElement, NULL, NULL)) {
             ZuiControlCall(Proc_ListElement_SetOwner, Param1, cp, NULL, NULL);
             ZuiControlCall(Proc_ListElement_SetIndex, Param1, ZuiControlCall(Proc_List_GetCount, p->m_pHeader, NULL, NULL, NULL), NULL, NULL);
         }
@@ -178,7 +178,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         if (!ZuiControlCall(Proc_Layout_AddAt, p->m_pList, Param1, Param2, NULL)) return FALSE;
 
         // 设置初始化当前控件
-        if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) == Type_ListElement) {
+        if (ZuiControlCall(Proc_GetObject, Param1, Type_ListElement, NULL, NULL)) {
             ZuiControlCall(Proc_ListElement_SetOwner, Param1, cp, NULL, NULL);
             ZuiControlCall(Proc_ListElement_SetIndex, Param1, ZuiControlCall(Proc_List_GetCount, p->m_pHeader, NULL, NULL, NULL), NULL, NULL);
         }
