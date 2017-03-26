@@ -133,10 +133,15 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         RECT *rc = (RECT *)Param1;
         BOOL bNeedInvalidate = (BOOL)Param2;
         RECT invalidateRc = p->m_rcItem;
+        ZuiBool bSize = FALSE;
         if (rc->right < rc->left) rc->right = rc->left;
         if (rc->bottom < rc->top) rc->bottom = rc->top;
 
         if (IsRectEmpty(&invalidateRc)) invalidateRc = *rc;
+        //防止不必要的调用
+        if (rc->right - rc->left != p->m_rcItem.right - p->m_rcItem.left ||
+            rc->bottom - rc->top != p->m_rcItem.bottom - p->m_rcItem.top)
+            bSize = TRUE;
 
         if (p->m_bFloat) {
             ZuiControl pParent = p->m_pParent;
@@ -162,7 +167,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         if (p->m_pManager == NULL)
             return 0;
 
-        if (!p->m_bSetPos) {
+        if (!p->m_bSetPos && bSize) {
             p->m_bSetPos = TRUE;
             ZuiControlCall(Proc_OnSize, p, p->m_rcItem.right - p->m_rcItem.left, p->m_rcItem.bottom - p->m_rcItem.top, NULL);
             p->m_bSetPos = FALSE;
