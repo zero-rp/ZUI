@@ -335,9 +335,13 @@ static duk_ret_t ZuiJsBind_Call_ZuiPopupMenu(duk_context *ctx) {
     //js_pushundefined(J);
 }
 //---------------------------------------------------------------------------JNI_End
-//---------------------------------------------------------------------------Debug
-
-//---------------------------------------------------------------------------Debug_End
+//致命错误
+static void duv_fatal(void *udata, const char *msg) {
+    (void)udata;  /* ignored in this case, silence warning */
+    msg = (msg ? msg : "no message");
+    duk_temp[MultiByteToWideChar(CP_UTF8, 0, msg, -1, duk_temp, 2048 * 2)] = 0;
+    LOG_ERROR(L"FATAL ERROR: %s\n", duk_temp);
+}
 ZuiContext ZuiBuilderContext(duk_context *ctx) {
     duk_memory_functions funcs;
     duk_get_memory_functions(ctx, &funcs);
@@ -346,7 +350,7 @@ ZuiContext ZuiBuilderContext(duk_context *ctx) {
 duk_context *ZuiBuilderJs(ZuiPaintManager p) {
     ZuiContext c = (ZuiContext)ZuiMalloc(sizeof(ZContext));
     c->mp = p;
-    duk_context *ctx = duk_create_heap(NULL, NULL, NULL, c, NULL);
+    duk_context *ctx = duk_create_heap(NULL, NULL, NULL, c, duv_fatal);
     duk_push_c_function(ctx, ZuiJsBind_Call_exit, 1 /*nargs*/);
     duk_put_global_string(ctx, "exit");
 

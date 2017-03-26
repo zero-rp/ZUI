@@ -14,7 +14,6 @@
 #ifndef __ZUI_H__
 #define __ZUI_H__
 
-#include "duktape/duktape.h"
 #include <uv.h>
 #if defined(__cplusplus)
 extern "C"
@@ -43,9 +42,9 @@ extern "C"
     #define PLATFORM_OS_MACX
 #endif
 
-#define LOG_DEBUG   1       //打印调试日志 有运行时调试功能则打印到日志窗口
-#define MEM_DEBUG   0       //开启内存调试功能
-#define RUN_DEBUG   1       //开启运行时调试功能
+//#define LOG_DEBUG   0       //打印调试日志 有运行时调试功能则打印到日志窗口
+//#define MEM_DEBUG   0       //开启内存调试功能
+//#define RUN_DEBUG   0       //开启运行时调试功能
 
 
 #define JS_GCTIMER  10      //js内存回收间隔 s
@@ -166,6 +165,7 @@ typedef struct tagSIZE
 
 
 #include "core/memory.h"
+#include "duktape/duktape.h"
 #include "core/debug.h"
 
 /*基础辅助函数*/

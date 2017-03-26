@@ -4,6 +4,8 @@
 #include <stdio.h>  
 #include "../resource.h"
 #include "commctrl.h" //高级控件都要加该头文件
+#include "duk_trans_dvalue.h"
+
 #if RUN_DEBUG
 extern MArray *mem;
 extern DArray *m_window_array;
@@ -65,6 +67,7 @@ static LRESULT CALLBACK __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
     }
     return FALSE;
 }
+//Tab回调
 static BOOL WINAPI tab1_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
@@ -405,6 +408,64 @@ ZuiVoid ZuiDebugLog(ZuiInt type, const wchar_t *fmt) {
     /* 设置滚轮到末尾，这样就可以看到最新信息 */
     SendMessage(GetDlgItem(hDlg_intab[4], IDC_EDIT2), WM_VSCROLL, SB_BOTTOM, 0);
 }
+
+//---------------------------------------------------------------------------Debug
+static void duv_cooperate(duk_trans_dvalue_ctx *ctx, int block) {
+    static int first_blocked = 1;
+
+    if (!block) {
+        /* Duktape is not blocked; you can cooperate with e.g. a user
+        * interface here and send dvalues to Duktape, but don't block.
+        */
+        return;
+    }
+
+    //duk_trans_dvalue_send_req_cmd(ctx, 0x14);  /* 0x14 = StepOver */
+    duk_trans_dvalue_send_eom(ctx);
+}
+static void duv_received(duk_trans_dvalue_ctx *ctx, duk_dvalue *dv) {
+    char buf[DUK_DVALUE_TOSTRING_BUFLEN];
+    (void)ctx;
+
+
+    duk_dvalue_free(dv);
+}
+static void duv_handshake(duk_trans_dvalue_ctx *ctx, const char *line) {
+    (void)ctx;
+
+}
+static void duv_detached(duk_trans_dvalue_ctx *ctx) {
+    (void)ctx;
+
+}
+static void duv_debug(duk_context *ctx) {
+    duk_trans_dvalue_ctx *trans_ctx;
+    trans_ctx = duk_trans_dvalue_init();
+    if (!trans_ctx) {
+
+    }
+    trans_ctx->cooperate = duv_cooperate;
+    trans_ctx->received = duv_received;
+    trans_ctx->handshake = duv_handshake;
+    trans_ctx->detached = duv_detached;
+
+    /* Attach debugger; this will fail with a fatal error here unless
+    * debugger support is compiled in.  To fail more gracefully, call
+    * this under a duk_safe_call() to catch the error.
+    */
+    duk_debugger_attach(ctx,
+        duk_trans_dvalue_read_cb,
+        duk_trans_dvalue_write_cb,
+        duk_trans_dvalue_peek_cb,
+        duk_trans_dvalue_read_flush_cb,
+        duk_trans_dvalue_write_flush_cb,
+        NULL,  /* app request cb */
+        duk_trans_dvalue_detached_cb,
+        (void *)trans_ctx);
+}
+
+//---------------------------------------------------------------------------Debug_End
+
 ZuiVoid ZuiStartDebug() {
     InitCommonControls();
     HWND hwnd = CreateDialog(m_hInstance, MAKEINTRESOURCE(IDD_DEBUG), GetDesktopWindow(), __WndProc);
@@ -439,6 +500,17 @@ ZuiVoid ZuiStartDebug() {
         AttList = GetDlgItem(hDlg_intab[2], IDC_LIST1);
         SendMessage(AttList, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_UNDERLINEHOT);
         UpdateControlTree();
+    }
+    if (hDlg_intab[3]) {
+        //js调试窗口
+        if (LoadLibrary(_T("SciLexer.dll"))) {
+            CreateWindow(_T("Scintilla"), NULL, 1342177280,
+                0, 0,
+                620, 480,
+                hDlg_intab[3],
+                NULL, m_hInstance, NULL);
+
+        }
     }
     InsertColumn();
     ShowWindow(hDlg_intab[0], SW_SHOW);

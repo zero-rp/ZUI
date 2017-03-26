@@ -780,6 +780,9 @@
     <ClCompile Include="..\..\ZUI\libuv\src\win\process.c">
       <Filter>源文件\libuv\win</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_trans_dvalue.c">
+      <Filter>源文件\duktape</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="control\html\lout\container.hh">
@@ -1238,17 +1241,14 @@
     <ClInclude Include="..\..\ZUI\dukluv\src\timer.h">
       <Filter>头文件\dukluv\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\tty.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ZUI\dukluv\src\utils.h">
       <Filter>头文件\dukluv\src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ZUI\dukluv\src\uv_schema.h">
       <Filter>头文件\dukluv\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_module.h">
-      <Filter>头文件\dukluv\src</Filter>
+    <ClInclude Include="..\..\ZUI\duktape\duk_trans_dvalue.h">
+      <Filter>头文件\duktape</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

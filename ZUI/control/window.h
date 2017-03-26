@@ -25,6 +25,7 @@
 #define Proc_Window_SetComBo        1008
 #define Proc_Window_Popup           1009
 #define Proc_Window_SetToolWindow   1010
+#define Proc_Window_Center          1011
 
 //------JSID
 #define Js_Id_Window_SetWindowMin    100

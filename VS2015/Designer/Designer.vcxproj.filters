@@ -552,9 +552,6 @@
     <ClCompile Include="..\..\ZUI\libuv\src\win\timer.c">
       <Filter>源文件\ZUI\libuv\win</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\libuv\src\win\tty.c">
-      <Filter>源文件\ZUI\libuv\win</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\libuv\src\win\udp.c">
       <Filter>源文件\ZUI\libuv\win</Filter>
     </ClCompile>
@@ -566,9 +563,6 @@
     </ClCompile>
     <ClCompile Include="..\..\ZUI\libuv\src\win\winsock.c">
       <Filter>源文件\ZUI\libuv\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\callbacks.c">
-      <Filter>源文件\ZUI\dukluv</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ZUI\dukluv\src\duv.c">
       <Filter>源文件\ZUI\dukluv</Filter>
@@ -594,28 +588,28 @@
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_timer.c">
       <Filter>源文件\ZUI\dukluv</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_tty.c">
-      <Filter>源文件\ZUI\dukluv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\loop.c">
-      <Filter>源文件\ZUI\dukluv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\main.c">
-      <Filter>源文件\ZUI\dukluv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\misc.c">
-      <Filter>源文件\ZUI\dukluv</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\dukluv\src\refs.c">
       <Filter>源文件\ZUI\dukluv</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\schema.c">
-      <Filter>源文件\ZUI\dukluv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\utils.c">
-      <Filter>源文件\ZUI\dukluv</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\dukluv\src\uv_schema.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_callbacks.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_loop.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_main.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_misc.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_schema.c">
+      <Filter>源文件\ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_utils.c">
       <Filter>源文件\ZUI\dukluv</Filter>
     </ClCompile>
   </ItemGroup>

@@ -271,6 +271,22 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         SetFocus(p->m_hWnd);
         break;
     }
+    case Proc_Window_Center: {
+        RECT rc, rc1, rctomove;
+        int width = GetSystemMetrics(SM_CXSCREEN);
+        int height = GetSystemMetrics(SM_CYSCREEN);
+        rc.left = 0;
+        rc.top = 0;
+        rc.right = width;
+        rc.bottom = height;
+        GetClientRect(p->m_hWnd, &rc1);
+        rctomove.left = (rc.right - rc.left) / 2 - (rc1.right - rc1.left) / 2;
+        rctomove.right = (rc.right - rc.left) / 2 + (rc1.right - rc1.left) / 2;
+        rctomove.top = (rc.bottom - rc.top) / 2 - (rc1.bottom - rc1.top) / 2;
+        rctomove.bottom = (rc.bottom - rc.top) / 2 + (rc1.bottom - rc1.top) / 2;
+        SetWindowPos(p->m_hWnd, HWND_TOPMOST, rctomove.left, rctomove.top, rc1.right - rc1.left, rc1.bottom - rc1.top, SWP_NOZORDER | SWP_NOACTIVATE);
+        break;
+    }
     case Proc_SetAttribute: {
         if (wcscmp(Param1, L"nobox") == 0) ZuiControlCall(Proc_Window_SetNoBox, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
         else if (wcscmp(Param1, L"combo") == 0) ZuiControlCall(Proc_Window_SetComBo, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
@@ -306,6 +322,11 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
             if (cp->m_sName)
                 rb_delete(Zui_Hash(cp->m_sName), m_window);//删除以前的名字
             rb_insert(Zui_Hash(Param2), cp, m_window);//保存现在的名字
+        }
+        else if (wcscmp(Param1, L"center") == 0) {
+            if (wcscmp(Param2, L"true") == 0) {
+                ZuiControlCall(Proc_Window_Center, cp, NULL, NULL, NULL);
+            }
         }
         else if (wcscmp(Param1, L"desktop") == 0) {
             //嵌入桌面

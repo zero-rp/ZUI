@@ -102,7 +102,8 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MinimalRebuild>true</MinimalRebuild>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\libuv\include;..\..\ZUI\platform\graph\agg\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\duktape;..\..\ZUI\libuv\include;..\..\ZUI\platform\graph\agg\include</AdditionalIncludeDirectories>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -114,6 +115,9 @@
 cd $(SolutionDir)..\$(ProjectName)\res 
 echo res| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\res.zip ./*</Command>
     </PreBuildEvent>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -216,22 +220,21 @@ echo res| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\re
     <ClCompile Include="..\..\ZUI\core\string.c" />
     <ClCompile Include="..\..\ZUI\core\template.c" />
     <ClCompile Include="..\..\ZUI\core\tree.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\callbacks.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_callbacks.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_fs.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_handle.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_loop.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_main.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_misc.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_pipe.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_req.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_schema.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_stream.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_tcp.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_timer.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_tty.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\loop.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\main.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\misc.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_utils.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\refs.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\schema.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\utils.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\uv_schema.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_alloc_default.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_api_buffer.c" />
@@ -356,7 +359,6 @@ echo res| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\re
     <ClCompile Include="..\..\ZUI\libuv\src\win\tcp.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\win\thread.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\win\timer.c" />
-    <ClCompile Include="..\..\ZUI\libuv\src\win\tty.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\win\udp.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\win\util.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\win\winapi.c" />

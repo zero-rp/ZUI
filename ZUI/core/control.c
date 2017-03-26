@@ -860,47 +860,11 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 
                       //case Proc_JsPut: {
 
-                      //    else if (wcscmp(Param1, L"minheight") == 0) 
-                      //    else if (wcscmp(Param1, L"maxwidth") == 0) 
-                      //    else if (wcscmp(Param1, L"maxheight") == 0) 
-                      //    else if (wcscmp(Param1, L"bkcolor") == 0) 
-                      //    else if (wcscmp(Param1, L"drag") == 0) 
                       //    else if (wcscmp(Param1, L"bkimage") == 0) ZuiControlCall(Proc_SetBkImage, p, ZuiResDBGetRes(js_tostring(J, -1), ZREST_IMG), NULL, NULL);
-                      //    else if (wcscmp(Param1, L"padding") == 0) {
-                      //        
-                      //    }
                       //    else if (wcscmp(Param1, L"bordercolor") == 0) ZuiControlCall(Proc_SetBorderColor, p, js_toint32(J, -1), NULL, NULL);
-                      //    else if (wcscmp(Param1, L"name") == 0) 
                       //    else if (wcscmp(Param1, L"float") == 0) {
 
                       //    }
-                      //    else
-                      //    {
-                      //        ZuiAttribute att;
-                      //        rb_node *old = rb_search((key_t)Zui_Hash(Param1), p->m_rAttribute);
-                      //        if (old) {
-                      //            att = (ZuiAttribute)old->data;
-                      //            ZuiFree(att->v);
-                      //        }
-                      //        else {
-                      //            att = ZuiMalloc(sizeof(ZAttribute));
-                      //            rb_insert((key_t)Zui_Hash(Param1), att, p->m_rAttribute);
-                      //        }
-
-                      //        if (js_iscallable(J, -1)) {
-                      //            att->type = ZAttType_JsCall;
-                      //            js_Object *obj = js_toobject(J, -1);
-                      //            att->v = obj;
-                      //        }
-                      //        else
-                      //        {
-                      //            att->type = ZAttType_String;
-                      //            att->v = ZuiWcsdup(js_tostring(J, -1));
-                      //            att->vlen = wcslen(att->v);
-                      //        }
-                      //    }
-                      //    break;
-                      //}
     case Proc_GetObject: {
         if (Param1 == Type_Null)
             return p;

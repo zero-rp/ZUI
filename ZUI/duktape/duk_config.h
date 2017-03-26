@@ -57,7 +57,6 @@
 
 #if !defined(DUK_CONFIG_H_INCLUDED)
 #define DUK_CONFIG_H_INCLUDED
-
 /*
  *  Intermediate helper defines
  */
@@ -2704,7 +2703,11 @@ typedef struct duk_hthread duk_context;
 #define DUK_USE_ARRAY_BUILTIN
 #define DUK_USE_ARRAY_FASTPATH
 #define DUK_USE_ARRAY_PROP_FASTPATH
+#if RUN_DEBUG
+#define DUK_USE_ASSERTIONS
+#else
 #undef DUK_USE_ASSERTIONS
+#endif
 #define DUK_USE_AUGMENT_ERROR_CREATE
 #define DUK_USE_AUGMENT_ERROR_THROW
 #define DUK_USE_AVOID_PLATFORM_FUNCPTRS
@@ -2727,10 +2730,18 @@ typedef struct duk_hthread duk_context;
 #undef DUK_USE_DATE_PARSE_STRING
 #undef DUK_USE_DATE_PRS_GETDATE
 #undef DUK_USE_DEBUG
+#if RUN_DEBUG
+#define DUK_USE_DEBUGGER_DUMPHEAP
+#else
 #undef DUK_USE_DEBUGGER_DUMPHEAP
+#endif
 #undef DUK_USE_DEBUGGER_INSPECT
 #undef DUK_USE_DEBUGGER_PAUSE_UNCAUGHT
+#if RUN_DEBUG
+#define DUK_USE_DEBUGGER_SUPPORT
+#else
 #undef DUK_USE_DEBUGGER_SUPPORT
+#endif
 #define DUK_USE_DEBUGGER_THROW_NOTIFY
 #undef DUK_USE_DEBUGGER_TRANSPORT_TORTURE
 #define DUK_USE_DEBUG_BUFSIZE 65536L
@@ -2781,7 +2792,11 @@ typedef struct duk_hthread duk_context;
 #define DUK_USE_HSTRING_CLEN
 #undef DUK_USE_HSTRING_EXTDATA
 #define DUK_USE_IDCHAR_FASTPATH
+#if RUN_DEBUG
+#define DUK_USE_INTERRUPT_COUNTER
+#else
 #undef DUK_USE_INTERRUPT_COUNTER
+#endif
 #undef DUK_USE_INTERRUPT_DEBUG_FIXUP
 #define DUK_USE_JC
 #define DUK_USE_JSON_BUILTIN

@@ -2301,7 +2301,7 @@ DUK_INTERNAL duk_bool_t duk_handle_ecma_call_setup(duk_hthread *thr,
 	duk_idx_t nregs;        /* # total registers target function wants on entry (< 0 => never for ecma calls) */
 	duk_hobject *func;      /* 'func' on stack (borrowed reference) */
 	duk_tval *tv_func;      /* duk_tval ptr for 'func' on stack (borrowed reference) */
-	duk_activation *act;
+    duk_activation *act = NULL;
 	duk_hobject *env;
 	duk_bool_t use_tailcall;
 	duk_instr_t **entry_ptr_curr_pc;
