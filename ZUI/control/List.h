@@ -21,8 +21,8 @@
 #define Type_ListHeaderItem                 0x25996255
 
 
-#define Proc_List_GetHeader                 1000    //取列表头控件
-#define Proc_List_GetListInfo               1001    //取列表属性
+#define Proc_List_GetHeader                 400    //取列表头控件
+#define Proc_List_GetListInfo               401    //取列表属性
 #define Proc_List_Add                       Proc_Layout_Add
 #define Proc_List_GetCount                  Proc_Layout_GetCount
 #define Proc_List_AddAt                     Proc_Layout_AddAt
@@ -35,21 +35,34 @@
 #define Proc_List_GetHorizontalScrollBar    Proc_Layout_GetHorizontalScrollBar
 #define Proc_List_EnableScrollBar           Proc_Layout_EnableScrollBar
 
+#define Proc_ListHeaderItem_SetSepWidth     400
+#define Proc_ListHeaderItem_SetNormalImage  401
+#define Proc_ListHeaderItem_SetHotImage     402
+#define Proc_ListHeaderItem_SetPushedImage  403
+#define Proc_ListHeaderItem_SetFocusedImage 404
+#define Proc_ListHeaderItem_SetSepImage     405
 
-#define Proc_ListBody_SetOwner              1000    //设置宿主
+#define Proc_ListBody_SetOwner              400    //设置宿主
 #define Proc_ListBody_SetScrollPos          Proc_Layout_SetScrollPos
 
-#define Proc_ListElement_SetOwner           1000    //设置宿主
-#define Proc_ListElement_SetIndex           1001    //
-#define Proc_ListElement_GetIndex           1002    //
+#define Proc_ListElement_SetOwner           400    //设置宿主
+#define Proc_ListElement_SetIndex           401    //
+#define Proc_ListElement_GetIndex           402    //
 
 /**列表头元素结构*/
 typedef struct _ZListHeaderItem
 {
     POINT ptLastMouse;
     ZuiBool m_bDragable;
-    UINT m_uButtonState;
+    UINT m_uButtonState;    //按钮状态
     int m_iSepWidth;
+
+
+    ZuiRes m_diNormal;  //通常图片
+    ZuiRes m_diHot;        //点燃图片
+    ZuiRes m_diPushed;  //按下图片
+    ZuiRes m_diFocused; //焦点图片
+    ZuiRes m_diSep;
 
     ZuiAny old_udata;
     ZCtlProc old_call;

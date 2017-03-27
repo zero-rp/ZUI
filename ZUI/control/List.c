@@ -4,7 +4,6 @@
 ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
-
     case Proc_SetPos: {
         RECT rc;
         //拿到父组件数据
@@ -67,7 +66,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
             rc.right += (ZuiInt)ZuiControlCall(Proc_ScrollBar_GetScrollRange, op->m_pHorizontalScrollBar, NULL, NULL, NULL);
             rc.bottom -= (ZuiInt)ZuiControlCall(Proc_GetFixedHeight, op->m_pHorizontalScrollBar, NULL, NULL, NULL);
         }
-        
+
         //计算列数量
         p->m_ListInfo.nColumns = MIN(ZuiControlCall(Proc_Layout_GetCount, p->m_pHeader, NULL, NULL, NULL), LIST_MAX_COLUMNS);
 
@@ -85,7 +84,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
             if (!pControl->m_bVisible) continue;
             if (pControl->m_bFloat) continue;
             RECT rcPos = *(RECT *)ZuiControlCall(Proc_GetPos, pControl, NULL, NULL, NULL);
-            
+
             if (iOffset > 0) {
                 rcPos.left -= iOffset;
                 rcPos.right -= iOffset;
@@ -150,7 +149,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
             ZuiControlCall(Proc_ListElement_SetOwner, Param1, cp, NULL, NULL);
             ZuiControlCall(Proc_ListElement_SetIndex, Param1, ZuiControlCall(Proc_List_GetCount, p->m_pHeader, NULL, NULL, NULL), NULL, NULL);
         }
-        
+
         return ZuiControlCall(Proc_Layout_Add, p->m_pList, Param1, 0, NULL);
     }
     case Proc_List_AddAt: {
@@ -716,12 +715,12 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
         {
             if ((p->m_uButtonState & ZSTATE_CAPTURED) != 0) {
                 RECT rc = cp->m_rcItem;
-                //if (p->m_iSepWidth >= 0) {
-                //    rc.right -= ptLastMouse.x - event.ptMouse.x;
-                //}
-                //else {
-                //    rc.left -= ptLastMouse.x - event->ptMouse.x;
-                //}
+                if (p->m_iSepWidth >= 0) {
+                    rc.right -= p->ptLastMouse.x - event->ptMouse.x;
+                }
+                else {
+                    rc.left -= p->ptLastMouse.x - event->ptMouse.x;
+                }
 
                 //if (rc.right - rc.left > GetMinWidth()) {
                 //    m_cxyFixed.cx = rc.right - rc.left;
@@ -734,7 +733,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
         }
         if (event->Type == ZEVENT_SETCURSOR)
         {
-            RECT rcSeparator = {0};// = GetThumbRect();
+            RECT rcSeparator = { 0 };// = GetThumbRect();
             if (p->m_iSepWidth >= 0)//111024 by cddjr, 增加分隔符区域，方便用户拖动
                 rcSeparator.left -= 4;
             else
@@ -770,6 +769,35 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
         ZuiDrawString(gp, Global_StringFormat, cp->m_sText, &r);
         break;
     }
+    case Proc_OnPaintStatusImage: {
+        if (cp->m_bFocused) 
+            p->m_uButtonState |= ZSTATE_FOCUSED;
+        else p->m_uButtonState &= ~ZSTATE_FOCUSED;
+
+        if ((p->m_uButtonState & ZSTATE_PUSHED) != 0) {
+            //if (!DrawImage(hDC, m_diPushed))
+            //    DrawImage(hDC, m_diNormal);
+        }
+        else if ((p->m_uButtonState & ZSTATE_HOT) != 0) {
+            //if (!DrawImage(hDC, m_diHot))
+            //    DrawImage(hDC, m_diNormal);
+        }
+        else if ((p->m_uButtonState & ZSTATE_FOCUSED) != 0) {
+            //if (!DrawImage(hDC, m_diFocused))
+            //    DrawImage(hDC, m_diNormal);
+        }
+        else {
+            //DrawImage(hDC, m_diNormal);
+        }
+
+        /*RECT rcThumb = GetThumbRect();
+        rcThumb.left -= m_rcItem.left;
+        rcThumb.top -= m_rcItem.top;
+        rcThumb.right -= m_rcItem.left;
+        rcThumb.bottom -= m_rcItem.top;
+        m_diSep.rcDestOffset = rcThumb;
+        DrawImage(hDC, m_diSep);*/
+    }
     case Proc_OnCreate: {
         p = (ZuiListHeaderItem)ZuiMalloc(sizeof(ZListHeaderItem));
         memset(p, 0, sizeof(ZListHeaderItem));
@@ -792,6 +820,52 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
     case Proc_GetObject: {
         if (Param1 == Type_ListHeaderItem)
             return (ZuiAny)p;
+        break;
+    }
+    case Proc_SetAttribute: {
+        if (wcscmp(Param1, _T("dragable")) == 0) {
+            //SetDragable(_tcscmp(pstrValue, _T("true")) == 0);
+        }
+        else if (wcscmp(Param1, _T("sepwidth")) == 0)ZuiControlCall(Proc_ListHeaderItem_SetSepWidth, cp, _wtoi(Param2), NULL, NULL);
+        else if (wcscmp(Param1, _T("normalimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetNormalImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+        else if (wcscmp(Param1, _T("hotimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetHotImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+        else if (wcscmp(Param1, _T("pushedimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetPushedImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+        else if (wcscmp(Param1, _T("focusedimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetFocusedImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+        else if (wcscmp(Param1, _T("sepimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetSepImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+        break;
+    }
+    case Proc_ListHeaderItem_SetSepWidth: {
+        p->m_iSepWidth = Param2;
+        return;
+    }
+    case Proc_ListHeaderItem_SetNormalImage: {
+        if (p->m_diNormal)
+            ZuiResDBDelRes(p->m_diNormal);
+        p->m_diNormal = Param1;
+        break;
+    }
+    case Proc_ListHeaderItem_SetHotImage: {
+        if (p->m_diHot)
+            ZuiResDBDelRes(p->m_diHot);
+        p->m_diHot = Param1;
+        break;
+    }
+    case Proc_ListHeaderItem_SetPushedImage: {
+        if (p->m_diPushed)
+            ZuiResDBDelRes(p->m_diPushed);
+        p->m_diPushed = Param1;
+        break;
+    }
+    case Proc_ListHeaderItem_SetFocusedImage: {
+        if (p->m_diFocused)
+            ZuiResDBDelRes(p->m_diFocused);
+        p->m_diFocused = Param1;
+        break;
+    }
+    case Proc_ListHeaderItem_SetSepImage: {
+        if (p->m_diSep)
+            ZuiResDBDelRes(p->m_diSep);
+        p->m_diSep = Param1;
         break;
     }
     case Proc_GetType:

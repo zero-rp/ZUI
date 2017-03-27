@@ -30,7 +30,7 @@ BOOL ZuiControlRegister()
     ZuiControlRegisterAdd(L"option", (ZCtlProc)&ZuiOptionProc);
     ZuiControlRegisterAdd(L"checkbox", (ZCtlProc)&ZuiOptionProc);
     ZuiControlRegisterAdd(L"list", (ZCtlProc)&ZuiListProc);
-    ZuiControlRegisterAdd(L"treeview", (ZCtlProc)&ZuiTreeViewProc);
+    //ZuiControlRegisterAdd(L"treeview", (ZCtlProc)&ZuiTreeViewProc);
     
     /*初始化全部控件*/
     //rb_foreach(Global_ControlClass, ZuiCoreInit);

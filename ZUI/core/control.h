@@ -61,6 +61,7 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define Proc_GetControlFlags    25  //
 #define Proc_Activate           26  //活动
 #define Proc_SetVisible         27  //设置是否可视
+#define Proc_GetVisible         68  //是否可视
 #define Proc_SetText            28  //设置文本
 #define Proc_GetText            29  //设置文本
 #define Proc_SetName            30  //设置名字

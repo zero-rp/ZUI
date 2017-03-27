@@ -53,6 +53,7 @@
 #define LOG_DEGUB(fmt, ...)
 #define LOG_WARNING(fmt, ...)
 #define LOG_INFO(fmt, ...)
+#define LOG_DUK(ctx)
 #endif 
 
 ZuiVoid ZuiDebugLog(ZuiInt type, const wchar_t *fmt);

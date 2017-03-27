@@ -95,6 +95,9 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         }
         break;
     }
+    case Proc_GetVisible: {
+        return p->m_bVisible;
+    }
     case Proc_SetText: {
         ZuiControlInvalidate(p, TRUE);
         if (!p->m_sText)

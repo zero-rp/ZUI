@@ -155,7 +155,9 @@ BOOL _staticOnNavigation(wkeWebView webView, void* param, int navigationType, vo
         duv_push_ref(p->cp->m_pManager->m_ctx, p->navigation);
         ZuiBuilderJs_pushControl(p->cp->m_pManager->m_ctx, p->cp);
         duk_push_string_w(p->cp->m_pManager->m_ctx, wkeGetStringW(url));
-        duk_call_method(p->cp->m_pManager->m_ctx, 2);
+        if (duk_pcall_method(p->cp->m_pManager->m_ctx, 2)) {
+            LOG_DUK(p->cp->m_pManager->m_ctx);
+        }
         ret = duk_to_boolean(p->cp->m_pManager->m_ctx, -1);
         duk_pop(p->cp->m_pManager->m_ctx);
     }

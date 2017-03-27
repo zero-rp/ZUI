@@ -407,7 +407,7 @@ VOID ZCALL ZuiGcTimerProc(HWND h, UINT u, UINT_PTR p, DWORD d) {
 ZuiBool ZuiBuilderInit() {
     ctx_array = darray_create();
     Global_ctx = ZuiBuilderJs(NULL);
-    SetTimer(0, 0, 10 * JS_GCTIMER, ZuiGcTimerProc);
+    SetTimer(0, 0, 1000 * JS_GCTIMER, ZuiGcTimerProc);
     return TRUE;
 }
 ZuiVoid ZuiBuilderUnInit() {
