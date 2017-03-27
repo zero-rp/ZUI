@@ -221,7 +221,7 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
         case Js_Id_Layout_inset: {
             RECT rcPadding = { 0 };
             LPTSTR pstr = NULL;
-            rcPadding.left = _tcstol(duk_to_string_w(ctx, 0), &pstr, 10);  ASSERT(pstr);
+            rcPadding.left = _tcstol(duk_get_string_w(ctx, 0), &pstr, 10);  ASSERT(pstr);
             rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
             rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
             rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
@@ -264,7 +264,7 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
         case Js_Id_Layout_GetItemName: {
             if (duk_is_string(ctx, 0)) {
                 ZuiControl fp = NULL;
-                ZuiText name = duk_to_string_w(ctx, 0);
+                ZuiText name = duk_get_string_w(ctx, 0);
                 for (int it = 0; it < darray_len(p->m_items); it++) {
                     ZuiControl pResult = (ZuiControl)(p->m_items->data[it]);
                     if (pResult->m_sName && wcscmp(name, pResult->m_sName) == 0) {
@@ -273,7 +273,7 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
                     }
                 }
                 if (!fp)
-                    LOG_ERROR(L"Layout GetByName失败: Name:%ls\r\n", duk_to_string_w(ctx, 0));
+                    LOG_ERROR(L"Layout GetByName失败: Name:%ls\r\n", duk_get_string_w(ctx, 0));
                 if (fp)
                 {
                     duk_get_global_string(ctx, "Control");

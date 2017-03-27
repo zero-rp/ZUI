@@ -164,6 +164,9 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         else {
             memcpy(&p->m_rcItem, rc, sizeof(RECT));
         }
+
+
+
         if (p->m_pManager == NULL)
             return 0;
 
@@ -201,7 +204,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             duk_push_int(p->m_pManager->m_ctx, Param1);
             duk_push_int(p->m_pManager->m_ctx, Param2);
             if (duk_pcall_method(p->m_pManager->m_ctx, 3)) {
-                LOG_ERROR(L"THROW: %s\n", duk_to_string_w(p->m_pManager->m_ctx, -1));
+                LOG_DUK(p->m_pManager->m_ctx);
             }
             duk_pop(p->m_pManager->m_ctx);
         }
@@ -240,7 +243,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 duv_push_ref(p->m_pManager->m_ctx, p->m_rOnmouseleave);
                 ZuiBuilderJs_pushControl(p->m_pManager->m_ctx, p);
                 if(duk_pcall_method(p->m_pManager->m_ctx, 1)) {
-                    LOG_ERROR(L"THROW: %s\n", duk_to_string_w(p->m_pManager->m_ctx, -1));
+                    LOG_DUK(p->m_pManager->m_ctx);
                 }
                 duk_pop(p->m_pManager->m_ctx);
             }
@@ -254,7 +257,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 duk_push_int(p->m_pManager->m_ctx, ((TEventUI *)Param1)->ptMouse.x);
                 duk_push_int(p->m_pManager->m_ctx, ((TEventUI *)Param1)->ptMouse.y);
                 if (duk_pcall_method(p->m_pManager->m_ctx, 3)) {
-                    LOG_ERROR(L"THROW: %s\n", duk_to_string_w(p->m_pManager->m_ctx, -1));
+                    LOG_DUK(p->m_pManager->m_ctx);
                 }
                 duk_pop(p->m_pManager->m_ctx);
             }
@@ -268,7 +271,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 duk_push_int(p->m_pManager->m_ctx, ((TEventUI *)Param1)->ptMouse.x);
                 duk_push_int(p->m_pManager->m_ctx, ((TEventUI *)Param1)->ptMouse.y);
                 if (duk_pcall_method(p->m_pManager->m_ctx, 3)) {
-                    LOG_ERROR(L"THROW: %s\n", duk_to_string_w(p->m_pManager->m_ctx, -1));
+                    LOG_DUK(p->m_pManager->m_ctx);
                 }
                 duk_pop(p->m_pManager->m_ctx);
             }
@@ -282,7 +285,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 duk_push_int(p->m_pManager->m_ctx, ((TEventUI *)Param1)->ptMouse.x);
                 duk_push_int(p->m_pManager->m_ctx, ((TEventUI *)Param1)->ptMouse.y);
                 if (duk_pcall_method(p->m_pManager->m_ctx, 3)) {
-                    LOG_ERROR(L"THROW: %s\n", duk_to_string_w(p->m_pManager->m_ctx, -1));
+                    LOG_DUK(p->m_pManager->m_ctx);
                 }
                 duk_pop(p->m_pManager->m_ctx);
             }
@@ -295,7 +298,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 ZuiBuilderJs_pushControl(p->m_pManager->m_ctx, p);
                 duk_push_int(p->m_pManager->m_ctx, ((TEventUI *)Param1)->wParam);
                 if (duk_pcall_method(p->m_pManager->m_ctx, 2)) {
-                    LOG_ERROR(L"THROW: %s\n", duk_to_string_w(p->m_pManager->m_ctx, -1));
+                    LOG_DUK(p->m_pManager->m_ctx);
                 }
                 duk_pop(p->m_pManager->m_ctx);
             }
@@ -661,11 +664,11 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             return 1;
         }
         case  Js_Id_width: {
-            duk_push_int(ctx, p->m_cxyFixed.cx);
+            duk_push_int(ctx, p->m_rcItem.right - p->m_rcItem.left);
             return 1;
         }
         case  Js_Id_height: {
-            duk_push_int(ctx, p->m_cxyFixed.cy);
+            duk_push_int(ctx, p->m_rcItem.bottom - p->m_rcItem.top);
             return 1;
         }
         case  Js_Id_minwidth: {
@@ -792,15 +795,15 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             return 0;
         }
         case  Js_Id_text: {
-            ZuiControlCall(Proc_SetText, p, duk_to_string_w(ctx, 0), NULL, NULL);
+            ZuiControlCall(Proc_SetText, p, duk_get_string_w(ctx, 0), NULL, NULL);
             return 0;
         }
         case Js_Id_name: {
-            ZuiControlCall(Proc_SetName, p, duk_to_string_w(ctx, 0), NULL, NULL);
+            ZuiControlCall(Proc_SetName, p, duk_get_string_w(ctx, 0), NULL, NULL);
             return 0;
         }
         case  Js_Id_tooltip: {
-            ZuiControlCall(Proc_SetTooltip, p, duk_to_string_w(ctx, 0), NULL, NULL);
+            ZuiControlCall(Proc_SetTooltip, p, duk_get_string_w(ctx, 0), NULL, NULL);
             return 0;
         }
         case  Js_Id_width: {
@@ -830,7 +833,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         case Js_Id_padding: {
             RECT rcPadding = { 0 };
             LPTSTR pstr = NULL;
-            rcPadding.left = _tcstol(duk_to_string_w(ctx, 0), &pstr, 10);  ASSERT(pstr);
+            rcPadding.left = _tcstol(duk_get_string_w(ctx, 0), &pstr, 10);  ASSERT(pstr);
             rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
             rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
             rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);

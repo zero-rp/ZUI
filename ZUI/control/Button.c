@@ -47,23 +47,23 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         switch ((ZuiInt)Param2)
         {
         case Js_Id_Button_normalimage: {
-            ZuiControlCall(Proc_Button_SetResNormal, cp, ZuiResDBGetRes(duk_to_string_w(ctx, 0), ZREST_IMG), NULL, NULL);
+            ZuiControlCall(Proc_Button_SetResNormal, cp, ZuiResDBGetRes(duk_get_string_w(ctx, 0), ZREST_IMG), NULL, NULL);
             return 0;
         }
         case Js_Id_Button_hotimage: {
-            ZuiControlCall(Proc_Button_SetResHot, cp, ZuiResDBGetRes(duk_to_string_w(ctx, 0), ZREST_IMG), NULL, NULL);
+            ZuiControlCall(Proc_Button_SetResHot, cp, ZuiResDBGetRes(duk_get_string_w(ctx, 0), ZREST_IMG), NULL, NULL);
             return 0;
         }
         case Js_Id_Button_pushedimage: {
-            ZuiControlCall(Proc_Button_SetResPushed, cp, ZuiResDBGetRes(duk_to_string_w(ctx, 0), ZREST_IMG), NULL, NULL);
+            ZuiControlCall(Proc_Button_SetResPushed, cp, ZuiResDBGetRes(duk_get_string_w(ctx, 0), ZREST_IMG), NULL, NULL);
             return 0;
         }
         case Js_Id_Button_focusedimage: {
-            ZuiControlCall(Proc_Button_SetResFocused, cp, ZuiResDBGetRes(duk_to_string_w(ctx, 0), ZREST_IMG), NULL, NULL);
+            ZuiControlCall(Proc_Button_SetResFocused, cp, ZuiResDBGetRes(duk_get_string_w(ctx, 0), ZREST_IMG), NULL, NULL);
             return 0;
         }
         case Js_Id_Button_disabledimage: {
-            ZuiControlCall(Proc_Button_SetResDisabled, cp, ZuiResDBGetRes(duk_to_string_w(ctx, 0), ZREST_IMG), NULL, NULL);
+            ZuiControlCall(Proc_Button_SetResDisabled, cp, ZuiResDBGetRes(duk_get_string_w(ctx, 0), ZREST_IMG), NULL, NULL);
             return 0;
         }
         default:

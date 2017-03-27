@@ -104,7 +104,7 @@ void _staticOnTitleChanged(wkeWebView webWindow, void* param, void *title)
         ZuiBuilderJs_pushControl(p->cp->m_pManager->m_ctx, p->cp);
         duk_push_string_w(p->cp->m_pManager->m_ctx, wkeGetStringW(title));
         if (duk_pcall_method(p->cp->m_pManager->m_ctx, 2)) {
-            LOG_ERROR(L"THROW: %s\n", duk_to_string_w(p->cp->m_pManager->m_ctx, -1));
+            LOG_DUK(p->cp->m_pManager->m_ctx);
         }
         duk_pop(p->cp->m_pManager->m_ctx);
     }
@@ -121,7 +121,7 @@ wkeWebView _staticOnCreateView(wkeWebView webWindow, void* param, int navType, v
         duk_push_uint(p->cp->m_pManager->m_ctx, navType);
         duk_push_string_w(p->cp->m_pManager->m_ctx, wkeGetStringW(url));
         if (duk_pcall_method(p->cp->m_pManager->m_ctx, 3)) {
-            LOG_ERROR(L"THROW: %s\n", duk_to_string_w(p->cp->m_pManager->m_ctx, -1));
+            LOG_DUK(p->cp->m_pManager->m_ctx);
         }
         bro = ZuiBuilderJs_toControl(p->cp->m_pManager->m_ctx, -1);
         duk_pop(p->cp->m_pManager->m_ctx);
@@ -140,7 +140,7 @@ wkeWebView _staticOnURLChanged(wkeWebView webView, void* param, void *url)
         ZuiBuilderJs_pushControl(p->cp->m_pManager->m_ctx, p->cp);
         duk_push_string_w(p->cp->m_pManager->m_ctx, ((ZuiBrowser)param)->url);
         if (duk_pcall_method(p->cp->m_pManager->m_ctx, 2)) {
-            LOG_ERROR(L"THROW: %s\n", duk_to_string_w(p->cp->m_pManager->m_ctx, -1));
+            LOG_DUK(p->cp->m_pManager->m_ctx);
         }
         duk_pop(p->cp->m_pManager->m_ctx);
     }
@@ -399,7 +399,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         }
         case Js_Id_Browser_url: {
             if (duk_is_string(ctx, 0)) {
-                ZuiControlCall(Proc_Browser_LoadUrl, cp, (ZuiAny)duk_to_string_w(ctx, 0), NULL, NULL);
+                ZuiControlCall(Proc_Browser_LoadUrl, cp, (ZuiAny)duk_get_string_w(ctx, 0), NULL, NULL);
             }
             return 0;
         }

@@ -4,7 +4,7 @@
 
 // º”‘ÿ◊ ‘¥
 static duk_ret_t duv_loadfile(duk_context *ctx) {
-  const wchar_t* path = duk_to_string_w(ctx, 0);
+  const wchar_t* path = duk_get_string_w(ctx, 0);
 
   if (wcschr(path, '\:')==0) {
       wchar_t *buf = malloc(wcslen(path) * 2 + 20);
@@ -417,19 +417,6 @@ static duk_ret_t duv_main(duk_context *ctx) {
   return 0;
 }
 
- void duv_dump_error(duk_context *ctx, duk_idx_t idx) {
-  fprintf(stderr, "\nUncaught Exception:\n");
-  if (duk_is_object(ctx, idx)) {
-    duk_get_prop_string(ctx, -1, "stack");
-    char *A = duk_get_string(ctx, -1);
-    fprintf(stderr, "\n%s\n\n", A);
-    duk_pop(ctx);
-  }
-  else {
-    fprintf(stderr, "\nThrown Value: %s\n\n", duk_json_encode(ctx, idx));
-  }
-}
-
 int duv_bind(duk_context *ctx) {
     //uv_setup_args(argc, argv);
   /* Stash 'Duktape' in case it's modified. */
@@ -452,7 +439,7 @@ int duv_bind(duk_context *ctx) {
 
   duk_push_c_function(ctx, duv_main, 1);
   if (duk_pcall(ctx, 0)) {
-    duv_dump_error(ctx, -1);
+    LOG_DUK(ctx, -1);
     return 1;
   }
   return 0;

@@ -112,6 +112,11 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
 
 //----------------------------------------------------------------------------JNI
 wchar_t duk_temp[2048];
+const wchar_t *duk_get_string_w(duk_context *ctx, duk_idx_t idx) {
+    char *str = duk_get_string(ctx, idx);
+    duk_temp[MultiByteToWideChar(CP_UTF8, 0, str, -1, duk_temp, 2048 * 2)] = 0;
+    return duk_temp;
+}
 const wchar_t *duk_to_string_w(duk_context *ctx, duk_idx_t idx) {
     char *str = duk_to_string(ctx, idx);
     duk_temp[MultiByteToWideChar(CP_UTF8, 0, str, -1, duk_temp, 2048 * 2)] = 0;
@@ -170,9 +175,9 @@ static duk_ret_t ZuiJsBind_Call_GetByName(duk_context *ctx) {
         ZuiContext c = ZuiBuilderContext(ctx);
         if (c && c->mp && c->mp->m_pRoot)
         {
-            ZuiControl cp = ZuiControlFindName(c->mp->m_pRoot, duk_to_string_w(ctx, 0));
+            ZuiControl cp = ZuiControlFindName(c->mp->m_pRoot, duk_get_string_w(ctx, 0));
             if (!cp)
-                LOG_ERROR("GetByName失败: Name:%ls\r\n", duk_to_string_w(ctx, 0));
+                LOG_ERROR("GetByName失败: Name:%ls\r\n", duk_get_string_w(ctx, 0));
             if (cp)
             {
                 duk_get_global_string(ctx, "Control");
@@ -235,7 +240,7 @@ static duk_ret_t ZuiBuilderJs_Control_constructor(duk_context *ctx) {
         p = duk_to_pointer(ctx, 0);
     }
     else if (duk_is_string(ctx, 0)) {
-        p = NewZuiControl(duk_to_string_w(ctx, 0), NULL, NULL, NULL);
+        p = NewZuiControl(duk_get_string_w(ctx, 0), NULL, NULL, NULL);
     }
     //绑定控件指针
     duk_push_pointer(ctx, p);
@@ -307,7 +312,7 @@ static void ZuiBuilderJs_Control(duk_context *ctx)
 //--------------------------------------------------Graphic_End
 static duk_ret_t ZuiJsBind_Call_LayoutLoad(duk_context *ctx) {
     if (duk_is_string(ctx, 0)) {
-        ZuiRes res = ZuiResDBGetRes(duk_to_string_w(ctx, 0), ZREST_STREAM);
+        ZuiRes res = ZuiResDBGetRes(duk_get_string_w(ctx, 0), ZREST_STREAM);
         if (res)
         {
             ZuiControl p = ZuiLayoutLoad(res->p, res->plen);
@@ -389,8 +394,7 @@ ZEXPORT ZuiBool ZCALL ZuiBuilderJsLoad(duk_context *ctx, ZuiText src) {
     duk_push_c_function(ctx, duv_load, 1);
     duk_push_string_w(ctx, src);
     if (duk_pcall(ctx, 1)) {
-        duv_dump_error(ctx, -1);
-        LOG_ERROR(L"ERROR: %s\n", duk_to_string_w(ctx, -1));
+        LOG_DUK(ctx);
         return 1;
     }
 }

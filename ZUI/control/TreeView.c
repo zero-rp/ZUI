@@ -15,6 +15,7 @@ ZEXPORT ZuiAny ZCALL ZuiTreeViewProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeView p
             ZuiControlCall(Proc_SetMinWidth, Param1, p->m_uItemMinWidth, NULL, NULL);
 
         ZuiListProc(Proc_List_Add, cp, p->old_udata, Param1, NULL, NULL);
+        
         if (ZuiControlCall(Proc_TreeNode_GetCountChild, Param1, NULL, NULL, NULL) > 0)
         {
             int nCount = ZuiControlCall(Proc_TreeNode_GetCountChild, Param1, NULL, NULL, NULL);
@@ -83,6 +84,35 @@ ZEXPORT ZuiAny ZCALL ZuiTreeViewProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeView p
 ZEXPORT ZuiAny ZCALL ZuiTreeNodeProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeNode p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
+    case Proc_TreeNode_Add: {
+        if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) == Type_TreeNode)
+            return ZuiControlCall(Proc_TreeNode_AddChildNode, cp, Param1, NULL, NULL);//作为子节点插入
+
+        break;//普通插入,直接交给原型处理
+    }
+    case Proc_TreeNode_AddChildNode: {
+        if (!Param1)
+            return FALSE;
+
+        if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) != Type_TreeNode)
+            return FALSE;
+        //计算缩进
+        //_pTreeNodeUI = CalLocation(_pTreeNodeUI);
+
+        ZuiBool nRet = TRUE;
+
+        if (p->pTreeView) {
+          //  CTreeNodeUI* pNode = static_cast<CTreeNodeUI*>(mTreeNodes.GetAt(mTreeNodes.GetSize() - 1));
+          //  if (!pNode || !pNode->GetLastNode())
+           //     nRet = pTreeView->AddAt(_pTreeNodeUI, GetTreeIndex() + 1) >= 0;
+           // else nRet = pTreeView->AddAt(_pTreeNodeUI, pNode->GetLastNode()->GetTreeIndex() + 1) >= 0;
+        }
+
+        //if (nRet)
+         //   mTreeNodes.Add(_pTreeNodeUI);
+
+        return nRet;
+    }
     case Proc_OnCreate: {
         p = (ZuiTreeNode)ZuiMalloc(sizeof(ZTreeNode));
         memset(p, 0, sizeof(ZTreeNode));
@@ -107,11 +137,11 @@ ZEXPORT ZuiAny ZCALL ZuiTreeNodeProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeNode p
         //p->pCheckBox = NewZuiControl(L"ListHeader", NULL, NULL, NULL); new CCheckBoxUI();
         p->pItemButton = NewZuiControl(L"Option", NULL, NULL, NULL);
         
-        ZuiControlCall(Proc_SetFixedHeight, cp, 18, NULL, NULL, NULL);
-        ZuiControlCall(Proc_SetFixedWidth, cp, 250, NULL, NULL, NULL);
+        ZuiControlCall(Proc_SetFixedHeight, cp, 18, NULL, NULL);
+        ZuiControlCall(Proc_SetFixedWidth, cp, 250, NULL, NULL);
 
         //p->pFolderButton->SetFixedWidth(GetFixedHeight());
-        ZuiControlCall(Proc_SetFixedWidth, p->pDottedLine, 2, NULL, NULL, NULL);
+        ZuiControlCall(Proc_SetFixedWidth, p->pDottedLine, 2, NULL, NULL);
         //p->pCheckBox->SetFixedWidth(GetFixedHeight());
         //p->pItemButton->SetAttribute(_T("align"), _T("left"));
 

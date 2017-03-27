@@ -127,6 +127,9 @@
     <Filter Include="res\modules">
       <UniqueIdentifier>{006a5695-9b0d-40ff-a1cf-be4f43d535b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\dukluv\src\hash">
+      <UniqueIdentifier>{3f3968f2-7b20-4c21-92e9-0306431bb97a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="control\html\lout\container.cc">
@@ -732,9 +735,6 @@
     <ClCompile Include="..\..\ZUI\dukluv\src\duv.c">
       <Filter>源文件\dukluv\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\refs.c">
-      <Filter>源文件\dukluv\src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\dukluv\src\uv_schema.c">
       <Filter>源文件\dukluv\src</Filter>
     </ClCompile>
@@ -774,14 +774,20 @@
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_misc.c">
       <Filter>源文件\dukluv\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_loop.c">
-      <Filter>源文件\dukluv\src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\libuv\src\win\process.c">
       <Filter>源文件\libuv\win</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ZUI\duktape\duk_trans_dvalue.c">
       <Filter>源文件\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\CheckBox.c">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\ProgressBar.c">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_refs.c">
+      <Filter>源文件\dukluv\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1211,9 +1217,6 @@
     <ClInclude Include="..\..\ZUI\dukluv\src\handle.h">
       <Filter>头文件\dukluv\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\loop.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ZUI\dukluv\src\miniz.h">
       <Filter>头文件\dukluv\src</Filter>
     </ClInclude>
@@ -1249,6 +1252,12 @@
     </ClInclude>
     <ClInclude Include="..\..\ZUI\duktape\duk_trans_dvalue.h">
       <Filter>头文件\duktape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\control\CheckBox.h">
+      <Filter>头文件\control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\control\ProgressBar.h">
+      <Filter>头文件\control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

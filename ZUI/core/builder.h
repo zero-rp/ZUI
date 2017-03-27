@@ -23,6 +23,7 @@ typedef struct _ZuiContext
 ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win);
 ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len);
 
+const wchar_t *duk_get_string_w(duk_context *ctx, duk_idx_t idx);
 const wchar_t *duk_to_string_w(duk_context *ctx, duk_idx_t idx);
 void duk_push_string_w(duk_context *ctx, wchar_t *str);
 //绑定js对象

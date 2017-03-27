@@ -40,6 +40,14 @@
     _snwprintf(buf, 512, fmt, __VA_ARGS__);\
     ZuiDebugLog(ZLOG_TYPE_INFO, buf);  \
 }while(0)
+
+
+#define LOG_DUK(ctx) do{\
+    wchar_t buf[1024];   \
+    duk_get_prop_string((ctx), -1, "stack");\
+    _snwprintf(buf, 1024, L"%s",duk_get_string_w((ctx), -1));\
+    ZuiDebugLog(ZLOG_TYPE_INFO, buf);  \
+}while(0)
 #else
 #define LOG_ERROR(fmt, ...)
 #define LOG_DEGUB(fmt, ...)

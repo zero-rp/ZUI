@@ -90,7 +90,7 @@ void duv_emit_event(duk_context *ctx, duv_handle_t* data, duv_callback_id type, 
       duk_insert(ctx, -1 - nargs);
     }
     if (duk_pcall_method(ctx, nargs)) {
-        LOG_ERROR(L"THROW: %s\n", duk_to_string_w(ctx,-1));
+        LOG_DUK(ctx);
     }
     duk_pop(ctx);
   }
@@ -107,7 +107,7 @@ void duv_fulfill_req(duk_context *ctx, uv_req_t* req, int nargs) {
     duv_push_ref(ctx, data->context);
     if (nargs) duk_insert(ctx, -1 - nargs);
     if (duk_pcall_method(ctx, nargs)) {
-        LOG_ERROR(L"THROW: %s\n", duk_to_string_w(ctx, -1));
+        LOG_DUK(ctx);
     }
     duk_pop(ctx);
   }
