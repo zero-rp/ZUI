@@ -105,7 +105,7 @@
       <DisableSpecificWarnings>4091</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <BrowseInformation>true</BrowseInformation>
+      <BrowseInformation>false</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -234,9 +234,7 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClCompile Include="..\..\ZUI\control\Register.c" />
     <ClCompile Include="..\..\ZUI\control\ScrollBar.c" />
     <ClCompile Include="..\..\ZUI\control\SplitterBar.c" />
-    <ClCompile Include="..\..\ZUI\control\TreeView.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\TreeView.c" />
     <ClCompile Include="..\..\ZUI\control\Virtual.c" />
     <ClCompile Include="..\..\ZUI\control\window.c" />
     <ClCompile Include="..\..\ZUI\core\animation.c" />

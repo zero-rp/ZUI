@@ -76,6 +76,29 @@ void FreeZuiControl(ZuiControl p, ZuiBool Delayed)
 ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
+    case Proc_Invalidate: {
+        RECT invalidateRc = p->m_rcItem;
+        if (!p->m_bVisible) return;
+        {
+            ZuiControl pParent = p;
+            RECT rcTemp;
+            RECT *rcParent;
+            while (pParent = pParent->m_pParent)
+            {
+                rcTemp = invalidateRc;
+                rcParent = (RECT *)ZuiControlCall(Proc_GetPos, pParent, NULL, NULL, NULL);
+                if (!IntersectRect(&invalidateRc, &rcTemp, rcParent))
+                {
+                    return;
+                }
+            }
+            //重置动画
+            if (Param1 && p->m_aAnime)
+                p->m_aAnime->steup = NULL;
+            if (p->m_pManager != NULL) ZuiPaintManagerInvalidateRect(p->m_pManager, &invalidateRc);
+        }
+        return;
+    }
     case Proc_Activate: {
         if (!p->m_bVisible) return FALSE;
         if (!p->m_bEnabled) return FALSE;
@@ -999,26 +1022,7 @@ ZEXPORT ZuiControl ZCALL ZuiControlFindName(ZuiControl p, ZuiText Name) {
 
 ZEXPORT ZuiVoid ZCALL ZuiControlInvalidate(ZuiControl p, ZuiBool ResetAnimation)
 {
-    RECT invalidateRc = p->m_rcItem;
-    if (!p->m_bVisible) return;
-    {
-        ZuiControl pParent = p;
-        RECT rcTemp;
-        RECT *rcParent;
-        while (pParent = pParent->m_pParent)
-        {
-            rcTemp = invalidateRc;
-            rcParent = (RECT *)ZuiControlCall(Proc_GetPos, pParent, NULL, NULL, NULL);
-            if (!IntersectRect(&invalidateRc, &rcTemp, rcParent))
-            {
-                return;
-            }
-        }
-        //重置动画
-        if (ResetAnimation && p->m_aAnime)
-            p->m_aAnime->steup = NULL;
-        if (p->m_pManager != NULL) ZuiPaintManagerInvalidateRect(p->m_pManager, &invalidateRc);
-    }
+    ZuiControlCall(Proc_Invalidate, p, ResetAnimation, NULL, NULL);
 }
 
 ZEXPORT ZuiVoid ZCALL ZuiControlNeedUpdate(ZuiControl p)

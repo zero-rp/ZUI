@@ -42,6 +42,7 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define Proc_OnEvent            9   //
 #define Proc_OnNotify           10   //
 #define Proc_OnPaint            11  // 绘制循序：背景颜色->背景图->状态图->文本->边框
+#define Proc_EndPaint           70  //子控件绘制完毕后调用
 #define Proc_OnPaintBkColor     12  //背景色
 #define Proc_OnPaintBkImage     13  //背景图片
 #define Proc_OnPaintStatusImage 14  //状态图片
@@ -49,6 +50,7 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define Proc_OnPaintBorder      16  //边框
 #define Proc_OnPostPaint        17  //
 
+#define Proc_Invalidate         69  //刷新显示
 #define Proc_FindControl        18  //查找控件
 #define Proc_JsInit             19  //函数调用
 #define Proc_JsCall             20  //函数调用

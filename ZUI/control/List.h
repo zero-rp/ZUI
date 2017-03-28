@@ -41,6 +41,9 @@
 #define Proc_ListHeaderItem_SetPushedImage  403
 #define Proc_ListHeaderItem_SetFocusedImage 404
 #define Proc_ListHeaderItem_SetSepImage     405
+#define Proc_ListHeaderItem_GetThumbRect    406
+#define Proc_ListHeaderItem_SetDragable     407
+#define Proc_ListHeaderItem_EstimateSize    Proc_EstimateSize
 
 #define Proc_ListBody_SetOwner              400    //设置宿主
 #define Proc_ListBody_SetScrollPos          Proc_Layout_SetScrollPos
@@ -52,10 +55,10 @@
 /**列表头元素结构*/
 typedef struct _ZListHeaderItem
 {
-    POINT ptLastMouse;
+    ZPoint ptLastMouse;
     ZuiBool m_bDragable;
     UINT m_uButtonState;    //按钮状态
-    int m_iSepWidth;
+    int m_iSepWidth;        //分隔符区域
 
 
     ZuiRes m_diNormal;  //通常图片
@@ -64,6 +67,7 @@ typedef struct _ZListHeaderItem
     ZuiRes m_diFocused; //焦点图片
     ZuiRes m_diSep;
 
+    RECT Thumb;
     ZuiAny old_udata;
     ZCtlProc old_call;
 }*ZuiListHeaderItem, ZListHeaderItem;
@@ -88,8 +92,8 @@ typedef struct _ZListBody
 typedef struct _ZListElement
 {
     ZuiInt m_iIndex;
-    ZuiBool m_bSelected;
-    UINT m_uButtonState;
+    ZuiBool m_bSelected;//选中
+    UINT m_uButtonState;//列状态
     ZuiControl m_pOwner;//宿主
 
     ZuiAny old_udata;
@@ -97,13 +101,13 @@ typedef struct _ZListElement
 }*ZuiListElement, ZListElement;
 
 /**列表属性结构*/
-#define LIST_MAX_COLUMNS 32
+#define ZLIST_MAX_COLUMNS 32
 typedef struct _ZListInfo
 {
     int nColumns;//列数量
-    RECT rcColumn[LIST_MAX_COLUMNS];
+    RECT rcColumn[ZLIST_MAX_COLUMNS];
 
-    DWORD dwLineColor;
+    DWORD dwLineColor;//行间线颜色
 } *ZuiListInfo, ZListInfo;
 
 /**列表控件结构*/

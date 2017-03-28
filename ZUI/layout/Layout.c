@@ -151,6 +151,7 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
                 ZuiControlCall(Proc_OnPaint, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
             }
         }
+        ZuiControlCall(Proc_EndPaint, cp, Param1, Param2, 0);
 
 
         //恢复剪裁区
