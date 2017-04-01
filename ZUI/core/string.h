@@ -20,6 +20,7 @@
 * @param num 目标数组大小
 * @return 此函数没有返回值.
 */
+ZEXPORT ZuiVoid ZCALL ZuiStingSplitA(char* src, char* pSeparator, char *dest, ZuiInt *num);
 ZEXPORT ZuiVoid ZCALL ZuiStingSplit(ZuiText src, ZuiText pSeparator, ZuiText *dest, ZuiInt *num);
 ZEXPORT ZuiBool ZCALL ZuiStingIsUtf8(ZuiAny str, ZuiInt length);
 ZEXPORT ZuiInt ZCALL ZuiUtf8ToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen);

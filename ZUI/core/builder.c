@@ -356,19 +356,19 @@ duk_context *ZuiBuilderJs(ZuiPaintManager p) {
     ZuiContext c = (ZuiContext)ZuiMalloc(sizeof(ZContext));
     c->mp = p;
     duk_context *ctx = duk_create_heap(NULL, NULL, NULL, c, duv_fatal);
-    duk_push_c_function(ctx, ZuiJsBind_Call_exit, 1 /*nargs*/);
+    duk_push_c_lightfunc(ctx, ZuiJsBind_Call_exit, 1 /*nargs*/, 0, 0);
     duk_put_global_string(ctx, "exit");
 
-    duk_push_c_function(ctx, ZuiJsBind_Call_print, DUK_VARARGS /*nargs*/);
+    duk_push_c_lightfunc(ctx, ZuiJsBind_Call_print, DUK_VARARGS /*nargs*/, 0, 0);
     duk_put_global_string(ctx, "print");
 
-    duk_push_c_function(ctx, ZuiJsBind_Call_GetByName, 1 /*nargs*/);
+    duk_push_c_lightfunc(ctx, ZuiJsBind_Call_GetByName, 1 /*nargs*/, 0, 0);
     duk_put_global_string(ctx, "GetByName");
 
     //js_newcfunction(J, ZuiJsBind_Call_ClientToScreen, L"ClientToScreen", 0);
     //js_setglobal(J, L"ClientToScreen");
 
-    duk_push_c_function(ctx, ZuiJsBind_Call_LayoutLoad, 1 /*nargs*/);
+    duk_push_c_function(ctx, ZuiJsBind_Call_LayoutLoad, 1 /*nargs*/, 0, 0);
     duk_put_global_string(ctx, "LayoutLoad");
 
     //js_newcfunction(J, ZuiJsBind_Call_ZuiPopupMenu, L"PopupMenu", 0);

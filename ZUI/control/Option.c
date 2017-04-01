@@ -62,16 +62,24 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
                 ZuiControl pControl;
                 if ((pControl = ZuiControlCall(Proc_Layout_GetItemAt, cp->m_pParent, i, NULL, NULL)) != cp)
                 {
-                    ZuiControlCall(Proc_Option_SetSelected, pControl, FALSE, NULL, NULL);
+                    if (pControl != cp) {
+                        ZuiControlCall(Proc_Option_SetSelected, pControl, FALSE, NULL, NULL);
+                    }
+                    
                 }
 
             }
         }
-
-
-
-
-        //ZuiControlNotify(L"selectchanged", cp, Param1, JS_TNUMBER, NULL, NULL, NULL, NULL);
+        if (p->m_rOnselected) {
+            duv_push_ref(cp->m_pManager->m_ctx, p->m_rOnselected);
+            ZuiBuilderJs_pushControl(cp->m_pManager->m_ctx, p);
+            duk_push_boolean(cp->m_pManager->m_ctx, Param1);
+            if (duk_pcall_method(cp->m_pManager->m_ctx, 2)) {
+                LOG_DUK(cp->m_pManager->m_ctx);
+            }
+            duk_pop(cp->m_pManager->m_ctx);
+        }
+        ZuiControlNotify(L"selectchanged", cp, Param1, NULL, NULL);
         ZuiControlInvalidate(cp, TRUE);
         break;
     }
@@ -116,6 +124,10 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
             duk_push_boolean(ctx, p->m_bSelected);
             return 1;
         }
+        case Js_Id_Option_group: {
+            duk_push_boolean(ctx, p->m_bGroup);
+            return 1;
+        }
         default:
             break;
         }
@@ -133,6 +145,15 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
             ZuiControlCall(Proc_Option_SetGroup, cp, (ZuiAny)duk_to_boolean(ctx, 0), NULL, NULL);
             return 0;
         }
+        case Js_Id_Option_onselected: {
+            if (duk_is_function(ctx, 0)) {
+                if (p->m_rOnselected)
+                    duv_unref(ctx, p->m_rOnselected);
+                duk_dup(ctx, 0);
+                p->m_rOnselected = duv_ref(ctx);
+            }
+            return 0;
+        }
         default:
             break;
         }
@@ -141,6 +162,8 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
     case Proc_JsInit: {
         ZuiBuilderControlInit(Param1, "selected", Js_Id_Option_selected, TRUE);
         ZuiBuilderControlInit(Param1, "group", Js_Id_Option_group, TRUE);
+
+        ZuiBuilderControlInit(Param1, "onselected", Js_Id_Option_onselected, TRUE);
         break;
     }
     case Proc_OnCreate: {
@@ -150,7 +173,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
         //创建继承的控件 保存数据指针
         p->old_udata = ZuiButtonProc(Proc_OnCreate, cp, 0, 0, 0, 0);
         p->old_call = (ZCtlProc)&ZuiButtonProc;
-        p->m_ColorSelected = ARGB(200, 0, 3, 255);		//选中的普通状态
+        p->m_ColorSelected = ARGB(200, 12, 111, 255);		//选中的普通状态
         p->m_ColorSelectedHot = ARGB(200, 0, 255, 255);		//选中的点燃状态
         p->m_ColorSelectedPushed = ARGB(200, 255, 255, 255);	//选中的按下状态
         return p;

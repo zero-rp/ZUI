@@ -42,72 +42,72 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define Proc_OnEvent            9   //
 #define Proc_OnNotify           10   //
 #define Proc_OnPaint            11  // 绘制循序：背景颜色->背景图->状态图->文本->边框
-#define Proc_EndPaint           70  //子控件绘制完毕后调用
-#define Proc_OnPaintBkColor     12  //背景色
-#define Proc_OnPaintBkImage     13  //背景图片
-#define Proc_OnPaintStatusImage 14  //状态图片
-#define Proc_OnPaintText        15  //文本
-#define Proc_OnPaintBorder      16  //边框
-#define Proc_OnPostPaint        17  //
+#define Proc_EndPaint           12  //子控件绘制完毕后调用
+#define Proc_OnPaintBkColor     13  //背景色
+#define Proc_OnPaintBkImage     14  //背景图片
+#define Proc_OnPaintStatusImage 15  //状态图片
+#define Proc_OnPaintText        16  //文本
+#define Proc_OnPaintBorder      17  //边框
+#define Proc_OnPostPaint        18  //
 
-#define Proc_Invalidate         69  //刷新显示
-#define Proc_FindControl        18  //查找控件
-#define Proc_JsInit             19  //函数调用
-#define Proc_JsCall             20  //函数调用
-#define Proc_JsSet              21  //
-#define Proc_JsGet              22  //处理js对象 返回0则是变量,返回1则是call
+#define Proc_Invalidate         19  //刷新显示
+#define Proc_FindControl        20  //查找控件
+#define Proc_JsInit             21  //函数调用
+#define Proc_JsCall             22  //函数调用
+#define Proc_JsSet              23  //
+#define Proc_JsGet              24  //处理js对象 返回0则是变量,返回1则是call
 
 //----控件属性
-#define Proc_SetAttribute       23  //解析属性
-#define Proc_GetAttribute       24  //取属性
-#define Proc_GetControlFlags    25  //
-#define Proc_Activate           26  //活动
-#define Proc_SetVisible         27  //设置是否可视
-#define Proc_GetVisible         68  //是否可视
-#define Proc_SetText            28  //设置文本
-#define Proc_GetText            29  //设置文本
-#define Proc_SetName            30  //设置名字
-#define Proc_SetTooltip         31  //设置提示文本
-#define Proc_GetPos             32  //得到控件位置
-#define Proc_SetPos             33  //设置控件位置并重绘
-#define Proc_SetManager         34  //设置控件的绘制管理者
-#define Proc_SetAnimation       35  //设置动画类型
+#define Proc_SetAttribute       25  //解析属性
+#define Proc_GetAttribute       26  //取属性
+#define Proc_GetControlFlags    27  //
+#define Proc_Activate           28  //活动
+#define Proc_SetVisible         29  //设置是否可视
+#define Proc_GetVisible         30  //是否可视
+#define Proc_SetText            31  //设置文本
+#define Proc_GetText            32  //设置文本
+#define Proc_SetName            33  //设置名字
+#define Proc_SetTooltip         34  //设置提示文本
+#define Proc_GetPos             35  //得到控件位置
+#define Proc_SetPos             36  //设置控件位置并重绘
+#define Proc_SetManager         37  //设置控件的绘制管理者
+#define Proc_SetAnimation       38  //设置动画类型
 //设置大小的限制值
-#define Proc_GetMinWidth        36  //
-#define Proc_SetMinWidth        37  //
-#define Proc_GetMaxWidth        38  //
-#define Proc_SetMaxWidth        39  //
-#define Proc_GetMinHeight       40  //
-#define Proc_SetMinHeight       41  //
-#define Proc_GetMaxHeight       42  //
-#define Proc_SetMaxHeight       43  //
-#define Proc_GetWidth           44  //
-#define Proc_GetHeight          45  //
-#define Proc_GetX               46  //
-#define Proc_GetY               47
-#define Proc_EstimateSize       48  //获取自适应大小
-#define Proc_SetFloatPercent    49  //
-#define Proc_GetPadding         50
-#define Proc_SetPadding         51  // 设置外边距，由上层窗口绘制
-#define Proc_GetFixedXY         52  // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
-#define Proc_SetFixedXY         53  // 仅float为true时有效
-#define Proc_GetFixedWidth      54  // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
-#define Proc_SetFixedWidth      55  // 预设的参考值
-#define Proc_GetFixedHeight     56  // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
-#define Proc_SetFixedHeight     57  // 预设的参考值
-#define Proc_GetRelativePos     58  // 相对(父控件)位置
-#define Proc_GetImePoint        59  // 获取输入法位置
-#define Proc_SetFloat           60  //设置为浮动控件
-#define Proc_SetEnabled         61  //设置可用状态
-#define Proc_SetFocus           62  //设置焦点
-#define Proc_SetDrag            63  //设置拖拽控件
+#define Proc_GetMinWidth        39  //
+#define Proc_SetMinWidth        40  //
+#define Proc_GetMaxWidth        41  //
+#define Proc_SetMaxWidth        42  //
+#define Proc_GetMinHeight       43  //
+#define Proc_SetMinHeight       44  //
+#define Proc_GetMaxHeight       45  //
+#define Proc_SetMaxHeight       46  //
+#define Proc_GetWidth           47  //
+#define Proc_GetHeight          48  //
+#define Proc_GetX               49  //
+#define Proc_GetY               50
+#define Proc_EstimateSize       51  //获取自适应大小
+#define Proc_SetFloatPercent    52  //
+#define Proc_GetPadding         53
+#define Proc_SetPadding         54  // 设置外边距，由上层窗口绘制
+#define Proc_GetFixedXY         55  // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
+#define Proc_SetFixedXY         56  // 仅float为true时有效
+#define Proc_GetFixedWidth      57  // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
+#define Proc_SetFixedWidth      58  // 预设的参考值
+#define Proc_GetFixedHeight     59  // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
+#define Proc_SetFixedHeight     60  // 预设的参考值
+#define Proc_GetRelativePos     61  // 相对(父控件)位置
+#define Proc_GetImePoint        62  // 获取输入法位置
+#define Proc_SetFloat           63  //设置为浮动控件
+#define Proc_SetEnabled         64  //设置可用状态
+#define Proc_SetFocus           65  //设置焦点
+#define Proc_SetDrag            66  //设置拖拽控件
 
 //-------绘图资源
-#define Proc_SetBkColor         64  //设置背景色
-#define Proc_SetBkImage         65  //设置背景图片
-#define Proc_SetBorderColor     66  //设置边框颜色
+#define Proc_SetBkColor         67  //设置背景色
+#define Proc_SetBkImage         68  //设置背景图片
+#define Proc_SetBorderColor     69  //设置边框颜色
 
-#define Proc_SetAnimationType   67  //设置动画类型
+#define Proc_SetAnimationType   70  //设置动画类型
 
 //-------控件状态
 #define ZSTATE_FOCUSED      0x00000001

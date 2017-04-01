@@ -24,6 +24,7 @@
 //------JSID
 #define Js_Id_Option_selected               100
 #define Js_Id_Option_group                  101
+#define Js_Id_Option_onselected             102
 
 //------宏封装
 #define ZuiOptionSetSelected(Control, ...) ZProc(Control, Option_SetSelected, __VA_ARGS__);
@@ -47,6 +48,7 @@ typedef struct _ZOption
     ZuiColor    m_ColorSelectedHot;     //选中的点燃状态
     ZuiColor    m_ColorSelectedPushed;  //选中的按下状态
 
+    ZuiInt      m_rOnselected;          //js回调
     ZCtlProc old_call;
     ZuiAny old_udata;
 }*ZuiOption, ZOption;

@@ -1,5 +1,37 @@
 ﻿#include <ZUI.h>
+//默认数据
+//横向
+ZuiRes m_sButton1NormalImage;
+ZuiRes m_sButton1HotImage;
+ZuiRes m_sButton1PushedImage;
+ZuiRes m_sButton1DisabledImage;
 
+ZuiRes m_sButton2NormalImage;
+ZuiRes m_sButton2HotImage;
+ZuiRes m_sButton2PushedImage;
+ZuiRes m_sButton2DisabledImage;
+
+ZuiRes m_sThumbNormalImage;
+ZuiRes m_sThumbHotImage;
+ZuiRes m_sThumbPushedImage;
+ZuiRes m_sThumbDisabledImage;
+
+
+//纵向
+ZuiRes _m_sButton1NormalImage;
+ZuiRes _m_sButton1HotImage;
+ZuiRes _m_sButton1PushedImage;
+ZuiRes _m_sButton1DisabledImage;
+
+ZuiRes _m_sButton2NormalImage;
+ZuiRes _m_sButton2HotImage;
+ZuiRes _m_sButton2PushedImage;
+ZuiRes _m_sButton2DisabledImage;
+
+ZuiRes _m_sThumbNormalImage;
+ZuiRes _m_sThumbHotImage;
+ZuiRes _m_sThumbPushedImage;
+ZuiRes _m_sThumbDisabledImage;
 ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
@@ -136,18 +168,36 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 }
             }
             else {
-                if ((p->m_uThumbState & ZSTATE_HOT) != 0) {
-                    if (!ZuiIsPointInRect(&p->m_rcThumb, &event->ptMouse)) {
+                if (p->m_bShowButton1 && ZuiIsPointInRect(&p->m_rcButton1, &event->ptMouse)) {
+                    if ((p->m_uButton1State & ZSTATE_HOT) == 0) {
+                        p->m_uButton1State |= ZSTATE_HOT;
+                        p->m_uButton2State &= ~ZSTATE_HOT;
                         p->m_uThumbState &= ~ZSTATE_HOT;
                         ZuiControlInvalidate(cp, TRUE);
                     }
                 }
-                else {
-                    if (!cp->m_bEnabled) return;
-                    if (ZuiIsPointInRect(&p->m_rcThumb, &event->ptMouse)) {
-                        p->m_uThumbState |= ZSTATE_HOT;
+                else if (p->m_bShowButton2 && ZuiIsPointInRect(&p->m_rcButton2, &event->ptMouse)) {
+                    if ((p->m_uButton2State & ZSTATE_HOT) == 0) {
+                        p->m_uButton2State |= ZSTATE_HOT;
+                        p->m_uThumbState &= ~ZSTATE_HOT;
+                        p->m_uButton1State &= ~ZSTATE_HOT;
                         ZuiControlInvalidate(cp, TRUE);
                     }
+                }
+                else if (ZuiIsPointInRect(&p->m_rcThumb, &event->ptMouse)) {
+                    if ((p->m_uThumbState & ZSTATE_HOT) == 0) {
+                        p->m_uThumbState |= ZSTATE_HOT;
+                        p->m_uButton1State &= ~ZSTATE_HOT;
+                        p->m_uButton2State &= ~ZSTATE_HOT;
+                        ZuiControlInvalidate(cp, TRUE);
+                    }
+                }
+                else if((p->m_uButton1State & ZSTATE_HOT) == 0 || (p->m_uButton2State & ZSTATE_HOT) == 0 || (p->m_uThumbState & ZSTATE_HOT) == 0)
+                {
+                    p->m_uThumbState &= ~ZSTATE_HOT;
+                    p->m_uButton1State &= ~ZSTATE_HOT;
+                    p->m_uButton2State &= ~ZSTATE_HOT;
+                    ZuiControlInvalidate(cp, TRUE);
                 }
             }
             return;
@@ -248,9 +298,15 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         if (event->Type == ZEVENT_MOUSEENTER)
         {
             if (cp->m_bEnabled) {
-                p->m_uButton1State |= ZSTATE_HOT;
-                p->m_uButton2State |= ZSTATE_HOT;
-                if (ZuiIsPointInRect(&p->m_rcThumb, &event->ptMouse)) p->m_uThumbState |= ZSTATE_HOT;
+                if (p->m_bShowButton1 && ZuiIsPointInRect(&p->m_rcButton1, &event->ptMouse)) {
+                    p->m_uButton1State |= ZSTATE_HOT;
+                }
+                else if (p->m_bShowButton2 && ZuiIsPointInRect(&p->m_rcButton2, &event->ptMouse)) {
+                    p->m_uButton2State |= ZSTATE_HOT;
+                }
+                else if (ZuiIsPointInRect(&p->m_rcThumb, &event->ptMouse)) {
+                    p->m_uThumbState |= ZSTATE_HOT;
+                }
                 ZuiControlInvalidate(cp, TRUE);
             }
             return;
@@ -285,7 +341,169 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         ZuiGraphics gp = (ZuiGraphics)Param1;
         RECT *rc = (RECT *)&p->m_rcThumb;
         ZuiDrawFillRect(gp, ARGB(200, 0, 3, 255), rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
-            
+
+    }
+    case Proc_OnPaintStatusImage: {
+        ZuiGraphics gp = (ZuiGraphics)Param1;
+        RECT *rc = (RECT *)Param2;
+        ZuiImage img;
+        //绘制第一个按钮
+        if (p->m_bShowButton1) {
+
+            if (!cp->m_bEnabled) p->m_uButton1State |= ZSTATE_DISABLED;
+            else p->m_uButton1State &= ~ZSTATE_DISABLED;
+
+            //int d1 = MulDiv(p->m_rcButton1.left - cp->m_rcItem.left, 100, Global_DPI_X);
+            //int d2 = MulDiv(p->m_rcButton1.top - cp->m_rcItem.top, 100, Global_DPI_Y);
+            //int d3 = MulDiv(p->m_rcButton1.right - cp->m_rcItem.left, 100, Global_DPI_X);
+            //int d4 = MulDiv(p->m_rcButton1.bottom - cp->m_rcItem.top, 100, Global_DPI_Y);
+            rc = &p->m_rcButton1;
+            if ((p->m_uButton1State & ZSTATE_DISABLED) != 0) {
+                if (p->m_sButton1DisabledImage)
+                    img = p->m_sButton1DisabledImage->p;
+                else
+                    if (!p->m_bHorizontal)
+                        img = _m_sButton1DisabledImage->p;
+                    else
+                        img = m_sButton1DisabledImage->p;
+                ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
+            }
+            else if ((p->m_uButton1State & ZSTATE_PUSHED) != 0) {
+                if (p->m_sButton1PushedImage)
+                    img = p->m_sButton1PushedImage->p;
+                else
+                    if (!p->m_bHorizontal)
+                        img = _m_sButton1PushedImage->p;
+                    else
+                        img = m_sButton1PushedImage->p;
+                ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
+            }
+            else if ((p->m_uButton1State & ZSTATE_HOT) != 0) {
+                if (p->m_sButton1HotImage)
+                    img = p->m_sButton1HotImage->p;
+                else
+                    if (!p->m_bHorizontal)
+                        img = _m_sButton1HotImage->p;
+                    else
+                        img = m_sButton1HotImage->p;
+                ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
+            }
+            else {
+                if (p->m_sButton1NormalImage)
+                    img = p->m_sButton1NormalImage->p;
+                else
+                    if (!p->m_bHorizontal)
+                        img = _m_sButton1NormalImage->p;
+                    else
+                        img = m_sButton1NormalImage->p;
+
+                ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
+            }
+            //绘制按钮1边框
+            //DWORD dwBorderColor = 0xFF85E4FF;
+            //int nBorderSize = 2;
+            //CRenderEngine::DrawRect(hDC, m_rcButton1, nBorderSize, dwBorderColor);
+        }
+        //绘制第二个按钮
+        if (p->m_bShowButton2) {
+
+            if (!cp->m_bEnabled) p->m_uButton2State |= ZSTATE_DISABLED;
+            else p->m_uButton2State &= ~ZSTATE_DISABLED;
+            rc = &p->m_rcButton2;
+            if ((p->m_uButton2State & ZSTATE_DISABLED) != 0) {
+                if (p->m_sButton2DisabledImage)
+                    img = p->m_sButton2DisabledImage->p;
+                else
+                    if (!p->m_bHorizontal)
+                        img = _m_sButton2DisabledImage->p;
+                    else
+                        img = m_sButton2DisabledImage->p;
+                ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
+            }
+            else if ((p->m_uButton2State & ZSTATE_PUSHED) != 0) {
+                if (p->m_sButton2PushedImage)
+                    img = p->m_sButton2PushedImage->p;
+                else
+                    if (!p->m_bHorizontal)
+                        img = _m_sButton2PushedImage->p;
+                    else
+                        img = m_sButton2PushedImage->p;
+                ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
+            }
+            else if ((p->m_uButton2State & ZSTATE_HOT) != 0) {
+                if (p->m_sButton2HotImage)
+                    img = p->m_sButton2HotImage->p;
+                else
+                    if (!p->m_bHorizontal)
+                        img = _m_sButton2HotImage->p;
+                    else
+                        img = m_sButton2HotImage->p;
+                ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
+            }
+            else {
+                if (p->m_sButton2NormalImage)
+                    img = p->m_sButton2NormalImage->p;
+                else
+                    if (!p->m_bHorizontal)
+                        img = _m_sButton2NormalImage->p;
+                    else
+                        img = m_sButton2NormalImage->p;
+
+                ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
+            }
+            //绘制按钮1边框
+            //DWORD dwBorderColor = 0xFF85E4FF;
+            //int nBorderSize = 2;
+            //CRenderEngine::DrawRect(hDC, m_rcButton1, nBorderSize, dwBorderColor);
+        }
+
+        if (p->m_rcThumb.left == 0 && p->m_rcThumb.top == 0 && p->m_rcThumb.right == 0 && p->m_rcThumb.bottom == 0) return;
+        if (!cp->m_bEnabled) p->m_uThumbState |= ZSTATE_DISABLED;
+        else p->m_uThumbState &= ~ZSTATE_DISABLED;
+
+        rc = &p->m_rcThumb;
+        if ((p->m_uThumbState & ZSTATE_DISABLED) != 0) {
+            if (p->m_sThumbDisabledImage)
+                img = p->m_sThumbDisabledImage->p;
+            else
+                if (!p->m_bHorizontal)
+                    img = _m_sThumbDisabledImage->p;
+                else
+                    img = m_sThumbDisabledImage->p;
+            ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
+        }
+        else if ((p->m_uThumbState & ZSTATE_PUSHED) != 0) {
+            if (p->m_sThumbPushedImage)
+                img = p->m_sThumbPushedImage->p;
+            else
+                if (!p->m_bHorizontal)
+                    img = _m_sThumbPushedImage->p;
+                else
+                    img = m_sThumbPushedImage->p;
+            ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
+        }
+        else if ((p->m_uThumbState & ZSTATE_HOT) != 0) {
+            if (p->m_sThumbHotImage)
+                img = p->m_sThumbHotImage->p;
+            else
+                if (!p->m_bHorizontal)
+                    img = _m_sThumbHotImage->p;
+                else
+                    img = m_sThumbHotImage->p;
+            ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
+        }
+        else {
+            if (p->m_sThumbNormalImage)
+                img = p->m_sThumbNormalImage->p;
+            else
+                if (!p->m_bHorizontal)
+                    img = _m_sThumbNormalImage->p;
+                else
+                    img = m_sThumbNormalImage->p;
+
+            ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
+        }
+
     }
     case Proc_SetPos: {
         ZuiDefaultControlProc(ProcId, cp, 0, Param1, Param2, Param3);
@@ -490,6 +708,50 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         ZuiControlCall(Proc_SetPos, cp, &cp->m_rcItem, NULL, NULL);
         break;
     }
+    case Proc_JsSet:
+    case Proc_JsGet:
+    case Proc_JsCall: {
+        break;
+    }
+    case Proc_JsInit: {
+        //ZuiBuilderControlInit(Param1, "top", Js_Id_top, TRUE);
+        //ZuiBuilderControlInit(Param1, "top", Js_Id_top, TRUE);
+        //ZuiBuilderControlInit(Param1, "top", Js_Id_top, TRUE);
+        //ZuiBuilderControlInit(Param1, "top", Js_Id_top, TRUE);
+        //ZuiBuilderControlInit(Param1, "top", Js_Id_top, TRUE);
+        //ZuiBuilderControlInit(Param1, "top", Js_Id_top, TRUE);
+        //ZuiBuilderControlInit(Param1, "top", Js_Id_top, TRUE);
+        break;
+    }
+    case Proc_SetAttribute: {
+        //if (_tcsicmp(pstrName, _T("button1normalimage")) == 0) SetButton1NormalImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("button1hotimage")) == 0) SetButton1HotImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("button1pushedimage")) == 0) SetButton1PushedImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("button1disabledimage")) == 0) SetButton1DisabledImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("button2normalimage")) == 0) SetButton2NormalImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("button2hotimage")) == 0) SetButton2HotImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("button2pushedimage")) == 0) SetButton2PushedImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("button2disabledimage")) == 0) SetButton2DisabledImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("thumbnormalimage")) == 0) SetThumbNormalImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("thumbhotimage")) == 0) SetThumbHotImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("thumbpushedimage")) == 0) SetThumbPushedImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("thumbdisabledimage")) == 0) SetThumbDisabledImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("railnormalimage")) == 0) SetRailNormalImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("railhotimage")) == 0) SetRailHotImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("railpushedimage")) == 0) SetRailPushedImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("raildisabledimage")) == 0) SetRailDisabledImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("bknormalimage")) == 0) SetBkNormalImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("bkhotimage")) == 0) SetBkHotImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("bkpushedimage")) == 0) SetBkPushedImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("bkdisabledimage")) == 0) SetBkDisabledImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("hor")) == 0) SetHorizontal(_tcsicmp(pstrValue, _T("true")) == 0);
+        //else if (_tcsicmp(pstrName, _T("linesize")) == 0) SetLineSize(_ttoi(pstrValue));
+        //else if (_tcsicmp(pstrName, _T("range")) == 0) SetScrollRange(_ttoi(pstrValue));
+        //else if (_tcsicmp(pstrName, _T("value")) == 0) SetScrollPos(_ttoi(pstrValue));
+        //else if (_tcsicmp(pstrName, _T("showbutton1")) == 0) SetShowButton1(_tcsicmp(pstrValue, _T("true")) == 0);
+        //else if (_tcsicmp(pstrName, _T("showbutton2")) == 0) SetShowButton2(_tcsicmp(pstrValue, _T("true")) == 0);
+        break;
+    }
     case Proc_OnCreate: {
         p = (ZuiScrollBar)ZuiMalloc(sizeof(ZScrollBar));
         memset(p, 0, sizeof(ZScrollBar));
@@ -516,8 +778,38 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         break;
     case Proc_GetType:
         return (ZuiAny)Type_ScrollBar;
-    case Proc_CoreInit:
+    case Proc_CoreInit: {
+        m_sButton1NormalImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='0,0,16,16'", ZREST_IMG);
+        m_sButton1HotImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='18,0,16,16'", ZREST_IMG);
+        m_sButton1PushedImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='36,0,16,16'", ZREST_IMG);
+        m_sButton1DisabledImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='54,0,16,16'", ZREST_IMG);
+
+        _m_sButton1NormalImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='0,90,16,16'", ZREST_IMG);
+        _m_sButton1HotImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='18,90,16,16'", ZREST_IMG);
+        _m_sButton1PushedImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='36,90,16,16'", ZREST_IMG);
+        _m_sButton1DisabledImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='54,90,16,16'", ZREST_IMG);
+
+        m_sButton2NormalImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='0,18,16,16'", ZREST_IMG);
+        m_sButton2HotImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='18,18,16,16'", ZREST_IMG);
+        m_sButton2PushedImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='36,18,16,16'", ZREST_IMG);
+        m_sButton2DisabledImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='54,18,16,16'", ZREST_IMG);
+
+        _m_sButton2NormalImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='0,108,16,16'", ZREST_IMG);
+        _m_sButton2HotImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='18,108,16,16'", ZREST_IMG);
+        _m_sButton2PushedImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='36,108,16,16'", ZREST_IMG);
+        _m_sButton2DisabledImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='54,108,16,16'", ZREST_IMG);
+
+        m_sThumbNormalImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='0,54,16,16'", ZREST_IMG);
+        m_sThumbHotImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='18,54,16,16'", ZREST_IMG);
+        m_sThumbPushedImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='36,54,16,16'", ZREST_IMG);
+        m_sThumbDisabledImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='54,54,16,16'", ZREST_IMG);
+
+        _m_sThumbNormalImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='0,144,16,16'", ZREST_IMG);
+        _m_sThumbHotImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='18,144,16,16'", ZREST_IMG);
+        _m_sThumbPushedImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='36,144,16,16'", ZREST_IMG);
+        _m_sThumbDisabledImage = ZuiResDBGetRes(L"default:default/scrollbar.bmp:src='54,144,16,16'", ZREST_IMG);
         return (ZuiAny)TRUE;
+    }
     case Proc_CoreUnInit:
         return (ZuiAny)NULL;
     default:

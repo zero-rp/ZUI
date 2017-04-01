@@ -51,11 +51,7 @@ ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
     if (!ZuiPaintManagerInitialize()) {
         return FALSE;
     }
-    /*注册全局控件*/
-    if (!ZuiControlRegister())
-    {
-        return FALSE;
-    }
+
     /*初始化模版管理器*/
     if (!ZuiTemplateInit())
     {
@@ -70,7 +66,11 @@ ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
     if (!ZuiResDBInit()) {
         return FALSE;
     }
-
+    /*注册全局控件*/
+    if (!ZuiControlRegister())
+    {
+        return FALSE;
+    }
     return TRUE;
 }
 ZEXPORT ZuiBool ZCALL ZuiUnInit() {
@@ -93,22 +93,33 @@ ZEXPORT ZuiBool ZCALL ZuiUnInit() {
     return TRUE;
 }
 ZEXPORT ZuiInt ZCALL ZuiMsgLoop() {
+    //MSG Msg;
+    //uv_loop_t *loop = uv_default_loop();
+    //while (1) {
+    //    int more = (0 != uv_run(loop, UV_RUN_NOWAIT));
+    //    if (PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE)) {
+    //        if (WM_QUIT == Msg.message) {
+    //            break;
+    //        }
+
+
+    //        TranslateMessage(&Msg);
+    //        DispatchMessageW(&Msg);
+    //    }
+    //    else {
+    //        Sleep(1);
+    //    }
+    //}
+    //return Msg.wParam;
     MSG Msg;
     uv_loop_t *loop = uv_default_loop();
-    while (1) {
-        int more = (0 != uv_run(loop, UV_RUN_NOWAIT));
-        if (PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE)) {
-            if (WM_QUIT == Msg.message) {
-                break;
-            }
-
-
-            TranslateMessage(&Msg);
-            DispatchMessageW(&Msg);
+    while (GetMessage(&Msg, NULL, 0, 0)) {
+        if (WM_QUIT == Msg.message) {
+            break;
         }
-        else {
-            Sleep(1);
-        }
+        uv_run(loop, UV_RUN_NOWAIT);
+        TranslateMessage(&Msg);
+        DispatchMessageW(&Msg);
     }
     return Msg.wParam;
 }

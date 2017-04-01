@@ -37,7 +37,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         break;
     }
     case Proc_List_SetScrollPos: {
-        ZuiControlCall(Proc_ListBody_SetScrollPos, p->m_pList, Param1, NULL, NULL);
+        return ZuiControlCall(Proc_ListBody_SetScrollPos, p->m_pList, Param1, NULL, NULL);
     }
     case Proc_List_GetHeader: {
         return p->m_pHeader;
@@ -177,6 +177,22 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         p->m_iExpandedItem = -1;
         return ZuiControlCall(Proc_Layout_RemoveAll, p->m_pList, NULL, NULL, NULL);
     }
+    //直接转发到列表体的消息
+    case Proc_Layout_LineUp:
+    case Proc_Layout_LineDown:
+    case Proc_Layout_PageUp:
+    case Proc_Layout_PageDown:
+    case Proc_Layout_HomeUp:
+    case Proc_Layout_EndDown:
+    case Proc_Layout_LineLeft:
+    case Proc_Layout_LineRight:
+    case Proc_Layout_PageLeft:
+    case Proc_Layout_PageRight:
+    case Proc_Layout_HomeLeft:
+    case Proc_Layout_EndRight:
+    case Proc_List_GetCount:
+    case Proc_List_GetItemAt:
+        return ZuiControlCall(ProcId, p->m_pList, Param1, Param2, Param3);
     case Proc_OnCreate: {
         p = (ZuiList)ZuiMalloc(sizeof(ZList));
         memset(p, 0, sizeof(ZList));
@@ -194,6 +210,8 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         ZuiControlCall(Proc_ListBody_SetOwner, p->m_pList, cp, NULL, NULL);
 
         p->m_ListInfo.dwLineColor = 0xFF004488;
+        p->m_ListInfo.dwHotBkColor = 0xFF002244;
+        p->m_ListInfo.dwSelectedBkColor = 0xFFFF1166;
         return p;
     }
     case Proc_OnDestroy: {
@@ -400,20 +418,6 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
         }
 
         RECT rcPos;
-        for (int it2 = 0; it2 < op->m_items->count; it2++) {
-            ZuiControl pControl = (ZuiControl)(op->m_items->data[it2]);
-            if (!pControl->m_bVisible) continue;
-            if (pControl->m_bFloat) continue;
-
-            rcPos = *(RECT *)ZuiControlCall(Proc_GetPos, pControl, NULL, NULL, NULL);
-            rcPos.left -= cx;
-            rcPos.right -= cx;
-            rcPos.top -= cy;
-            rcPos.bottom -= cy;
-            ZuiControlCall(Proc_SetPos, pControl, &rcPos, TRUE, 0);
-        }
-
-        ZuiControlInvalidate(cp, TRUE);
 
         if (p->m_pOwner) {
             //得到表头控件
@@ -422,11 +426,11 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
             ZuiListInfo pInfo = ZuiControlCall(Proc_List_GetListInfo, p->m_pOwner, cp, NULL, NULL);
             pInfo->nColumns = MIN(ZuiControlCall(Proc_Layout_GetCount, pHeader, NULL, NULL, NULL), ZLIST_MAX_COLUMNS);
 
-            if (!pHeader->m_bVisible) {
-                for (int it = 0; it < ZuiControlCall(Proc_Layout_GetCount, pHeader, NULL, NULL, NULL); it++) {
-                    //static_cast<CControlUI*>(pHeader->GetItemAt(it))->SetInternVisible(true);
-                }
-            }
+            //if (!pHeader->m_bVisible) {
+            //    for (int it = 0; it < ZuiControlCall(Proc_Layout_GetCount, pHeader, NULL, NULL, NULL); it++) {
+            //        //static_cast<CControlUI*>(pHeader->GetItemAt(it))->SetInternVisible(true);
+            //   }
+            //}
             for (int i = 0; i < pInfo->nColumns; i++) {
                 ZuiControl pControl = ZuiControlCall(Proc_Layout_GetItemAt, pHeader, i, NULL, NULL);
                 if (!pControl->m_bVisible) continue;
@@ -438,12 +442,27 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
                 ZuiControlCall(Proc_SetPos, pControl, &rcPos, TRUE, 0);
                 pInfo->rcColumn[i] = *(RECT *)ZuiControlCall(Proc_GetPos, pControl, NULL, NULL, NULL);
             }
-            if (!pHeader->m_bVisible) {
-                for (int it = 0; it < ZuiControlCall(Proc_Layout_GetCount, pHeader, NULL, NULL, NULL); it++) {
-                    //static_cast<CControlUI*>(pHeader->GetItemAt(it))->SetInternVisible(false);
-                }
+            //将列表元素的移动调整到头移动完成后
+            for (int it2 = 0; it2 < op->m_items->count; it2++) {
+                ZuiControl pControl = (ZuiControl)(op->m_items->data[it2]);
+                if (!pControl->m_bVisible) continue;
+                if (pControl->m_bFloat) continue;
+
+                rcPos = *(RECT *)ZuiControlCall(Proc_GetPos, pControl, NULL, NULL, NULL);
+                rcPos.left -= cx;
+                rcPos.right -= cx;
+                rcPos.top -= cy;
+                rcPos.bottom -= cy;
+                ZuiControlCall(Proc_SetPos, pControl, &rcPos, TRUE, 0);
             }
+
+            //if (!pHeader->m_bVisible) {
+            //    for (int it = 0; it < ZuiControlCall(Proc_Layout_GetCount, pHeader, NULL, NULL, NULL); it++) {
+            //        //static_cast<CControlUI*>(pHeader->GetItemAt(it))->SetInternVisible(false);
+            //    }
+            //}
         }
+        ZuiControlInvalidate(cp, TRUE);
         return 0;
     }
     case Proc_ListBody_SetOwner: {
@@ -492,6 +511,87 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
 ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListElement p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
+    case Proc_OnEvent: {
+        TEventUI *event = (TEventUI *)Param1;
+        if (!cp->m_bMouseEnabled && event->Type > ZEVENT__MOUSEBEGIN && event->Type < ZEVENT__MOUSEEND) {
+            if (p->m_pOwner != NULL) 
+                ZuiControlCall(Proc_OnEvent, p->m_pOwner, Param1, NULL, NULL);
+            else 
+                ZuiLayoutProc(Proc_OnEvent, cp, 0, Param1, NULL, NULL);
+            return;
+        }
+
+        if (event->Type == ZEVENT_LDBLCLICK)
+        {
+            if (cp->m_bEnabled) {
+                //Activate();
+                ZuiControlInvalidate(cp, TRUE);
+            }
+            return;
+        }
+        if (event->Type == ZEVENT_KEYDOWN && cp->m_bEnabled)
+        {
+            if (event->chKey == VK_RETURN) {
+                //Activate();
+                ZuiControlInvalidate(cp, TRUE);
+                return;
+            }
+        }
+        if (event->Type == ZEVENT_LBUTTONDOWN)
+        {
+            if (cp->m_bEnabled) {
+                if ((GetKeyState(VK_CONTROL) & 0x8000)) {
+                    //SelectMulti(!IsSelected());
+                }
+                //else 
+                    //Select();
+            }
+            return;
+        }
+        if (event->Type == ZEVENT_LBUTTONUP)
+        {
+            if (cp->m_bEnabled) {
+                //m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMCLICK);
+            }
+            return;
+        }
+        if (event->Type == ZEVENT_MOUSEMOVE)
+        {
+            return;
+        }
+        if (event->Type == ZEVENT_MOUSEENTER)
+        {
+            if (cp->m_bEnabled) {
+                p->m_uButtonState |= ZSTATE_HOT;
+                ZuiControlInvalidate(cp, TRUE);
+            }
+            return;
+        }
+        if (event->Type == ZEVENT_MOUSELEAVE)
+        {
+            if ((p->m_uButtonState & ZSTATE_HOT) != 0) {
+                p->m_uButtonState &= ~ZSTATE_HOT;
+                ZuiControlInvalidate(cp, TRUE);
+            }
+            return;
+        }
+        if (event->Type == ZEVENT_TIMER)
+        {
+            //m_pManager->SendNotify(this, DUI_MSGTYPE_TIMER, event.wParam, event.lParam);
+            return;
+        }
+
+        if (event->Type == ZEVENT_CONTEXTMENU)
+        {
+            //if (IsContextMenuUsed()) {
+            //    m_pManager->SendNotify(this, DUI_MSGTYPE_MENU, event.wParam, event.lParam);
+            //    return;
+            //}
+        }
+        if (p->m_pOwner != NULL) ZuiControlCall(Proc_OnEvent, p->m_pOwner, Param1, NULL, NULL);
+        else ZuiLayoutProc(Proc_OnEvent, cp, 0, Param1, NULL, NULL);
+        break;
+    }
     case Proc_Invalidate: {
         if (!cp->m_bVisible) return;
 
@@ -572,8 +672,10 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
                 RECT rt = *(RECT *)ZuiControlCall(Proc_GetPos, pListItem, NULL, NULL, NULL);
                 rt.left = rcHeaderItem->left;
                 rt.right = rcHeaderItem->right;
-                rt.right--;
-                rt.bottom--;
+                
+                //rt.right--;
+                //rt.bottom--;
+                
                 ZuiControlCall(Proc_SetPos, pListItem, &rt, FALSE, 0);
             }
         }
@@ -582,11 +684,66 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
     case Proc_OnPaintBkColor: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
         RECT *rc = (RECT*)Param2;
+        if (p->m_pOwner == NULL) return;
         ZuiListInfo pInfo = ZuiControlCall(Proc_List_GetListInfo, p->m_pOwner, cp, NULL, NULL);
+        
+        
+
+        DWORD iBackColor = 0;
+        if (!pInfo->bAlternateBk || p->m_iIndex % 2 == 0) iBackColor = pInfo->dwBkColor;
+
+        if ((p->m_uButtonState & ZSTATE_HOT) != 0) {
+            iBackColor = pInfo->dwHotBkColor;
+        }
+        if (p->m_bSelected) {
+            iBackColor = pInfo->dwSelectedBkColor;
+        }
+        if (!cp->m_bEnabled) {
+            iBackColor = pInfo->dwDisabledBkColor;
+        }
+        if (iBackColor != 0) {
+            ZuiDrawFillRect(gp, iBackColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+        }
+
+        //if (!cp->m_bEnabled) {
+        //    if (!pInfo->sDisabledImage.IsEmpty()) {
+        //        if (!DrawImage(hDC, (LPCTSTR)pInfo->sDisabledImage)) {}
+        //        else return;
+        //    }
+        //}
+        //if (IsSelected()) {
+        //    if (!pInfo->sSelectedImage.IsEmpty()) {
+        //        if (!DrawImage(hDC, (LPCTSTR)pInfo->sSelectedImage)) {}
+        //        else return;
+        //    }
+        //}
+        //if ((m_uButtonState & UISTATE_HOT) != 0) {
+        //    if (!pInfo->sHotImage.IsEmpty()) {
+        //        if (!DrawImage(hDC, (LPCTSTR)pInfo->sHotImage)) {}
+        //        else return;
+        //    }
+        //}
+        //if (!m_sBkImage.IsEmpty()) {
+        //    if (!pInfo->bAlternateBk || m_iIndex % 2 == 0) {
+        //        if (!DrawImage(hDC, (LPCTSTR)m_sBkImage)) {}
+        //    }
+        //}
+
+        //if (m_sBkImage.IsEmpty()) {
+        //    if (!pInfo->sBkImage.IsEmpty()) {
+        //        if (!DrawImage(hDC, (LPCTSTR)pInfo->sBkImage)) {}
+        //        else return;
+        //    }
+        //}
+
         if (pInfo->dwLineColor != 0) {
-            ZuiDrawLine(gp, pInfo->dwLineColor, rc->left, rc->bottom - 1, rc->right, rc->bottom - 1, 1);
-            for (int i = 0; i < pInfo->nColumns; i++) {
-                ZuiDrawLine(gp, pInfo->dwLineColor, pInfo->rcColumn[i].right - 1, rc->top, pInfo->rcColumn[i].right - 1, rc->bottom - 1, 1);
+            if (pInfo->bShowRowLine) {
+                ZuiDrawLine(gp, pInfo->dwLineColor, rc->left, rc->bottom - 1, rc->right, rc->bottom - 1, 1);
+            }
+            if (pInfo->bShowColumnLine) {
+                for (int i = 0; i < pInfo->nColumns; i++) {
+                    ZuiDrawLine(gp, pInfo->dwLineColor, pInfo->rcColumn[i].right - 1, rc->top, pInfo->rcColumn[i].right - 1, rc->bottom - 1, 1);
+                }
             }
         }
         break;

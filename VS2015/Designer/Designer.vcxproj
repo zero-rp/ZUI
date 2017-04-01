@@ -103,7 +103,7 @@
       <MinimalRebuild>true</MinimalRebuild>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\duktape;..\..\ZUI\libuv\include;..\..\ZUI\platform\graph\agg\include</AdditionalIncludeDirectories>
-      <BrowseInformation>true</BrowseInformation>
+      <BrowseInformation>false</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -200,6 +200,7 @@ echo res| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\re
     <ClCompile Include="..\..\ZUI\control\Menu.c" />
     <ClCompile Include="..\..\ZUI\control\MenuBar.c" />
     <ClCompile Include="..\..\ZUI\control\Option.c" />
+    <ClCompile Include="..\..\ZUI\control\ProgressBar.c" />
     <ClCompile Include="..\..\ZUI\control\Register.c" />
     <ClCompile Include="..\..\ZUI\control\ScrollBar.c" />
     <ClCompile Include="..\..\ZUI\control\SplitterBar.c" />
@@ -224,17 +225,16 @@ echo res| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\re
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_callbacks.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_fs.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_handle.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_loop.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_main.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_misc.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_pipe.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_refs.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_req.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_schema.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_stream.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_tcp.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_timer.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_utils.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\refs.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\uv_schema.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_alloc_default.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_api_buffer.c" />

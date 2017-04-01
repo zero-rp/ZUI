@@ -28,7 +28,7 @@ BOOL ZuiControlRegister()
     ZuiControlRegisterAdd(L"browser", (ZCtlProc)&ZuiBrowserProc);
     ZuiControlRegisterAdd(L"edit", (ZCtlProc)&ZuiEditProc);
     ZuiControlRegisterAdd(L"option", (ZCtlProc)&ZuiOptionProc);
-    ZuiControlRegisterAdd(L"checkbox", (ZCtlProc)&ZuiOptionProc);
+    ZuiControlRegisterAdd(L"checkbox", (ZCtlProc)&ZuiCheckBoxProc);
     ZuiControlRegisterAdd(L"list", (ZCtlProc)&ZuiListProc);
     ZuiControlRegisterAdd(L"treeview", (ZCtlProc)&ZuiTreeViewProc);
     

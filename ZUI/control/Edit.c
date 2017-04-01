@@ -21,20 +21,20 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
             p->MouseType = 1;
             ZuiControlInvalidate(cp, TRUE);
             return;
-            break;
         }
         case ZEVENT_SETCURSOR: {
             SetCursor(LoadCursor(NULL, MAKEINTRESOURCE(IDC_IBEAM)));
             return;
-            break;
         }
         case ZEVENT_LBUTTONDOWN: {
             ZuiControlInvalidate(cp, TRUE);
             break;
         }
         case ZEVENT_LBUTTONUP: {
-
             ZuiControlInvalidate(cp, TRUE);
+            break;
+        }
+        case ZEVENT_MOUSEMOVE: {
             break;
         }
         case ZEVENT_KILLFOCUS: {
@@ -76,6 +76,38 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
             ZuiMeasureStringRect(cp->m_pManager->m_hDcOffscreen, p->sf, cp->m_sText, &r, 0);
             p->x = r.Width;
             ZuiControlInvalidate(cp, TRUE);
+            break;
+        }
+        case ZEVENT_KEYDOWN: {
+            if (event->wParam == VK_LEFT) {
+                _ZuiText str[2];
+                
+                p->pos--;//将读写位置左移一个
+                
+                str[0] = cp->m_sText[p->pos];
+                str[1] = 0;
+                
+                ZRectR r = { 0 };
+                ZuiMeasureStringRect(cp->m_pManager->m_hDcOffscreen, p->sf, str, &r, 0);
+                p->x -= r.Width;
+
+            }
+            else if(event->wParam == VK_RIGHT)
+            {
+                _ZuiText str[2];
+
+                p->pos++;//将读写位置右移一个
+
+                str[0] = cp->m_sText[p->pos - 1];
+                str[1] = 0;
+
+                ZRectR r = { 0 };
+                ZuiMeasureStringRect(cp->m_pManager->m_hDcOffscreen, p->sf, str, &r, 0);
+                p->x += r.Width;
+
+            }
+
+            
             break;
         }
         default:
@@ -124,7 +156,6 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
     }
     case Proc_GetControlFlags: {
         return ZFLAG_SETCURSOR;
-        break;
     }
     case Proc_OnCreate: {
         p = (ZuiEdit)ZuiMalloc(sizeof(ZEdit));

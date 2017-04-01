@@ -30,6 +30,16 @@
 #define Proc_List_RemoveAt                  Proc_Layout_RemoveAt
 #define Proc_List_RemoveAll                 Proc_Layout_RemoveAll
 #define Proc_List_SetScrollPos              Proc_Layout_SetScrollPos
+#define Proc_List_GetItemAt                 Proc_Layout_GetItemAt
+#define Proc_List_SelectItem                402     //选择表项
+#define Proc_List_SelectMultiItem           403     //多项选择
+#define Proc_List_SetMultiSelect            404     //置允许多项选择
+#define Proc_List_IsMultiSelect             405     //是否允许多项选择
+#define Proc_List_UnSelectItem              406
+#define Proc_List_SelectAllItems            407     //选择全部行
+#define Proc_List_UnSelectAllItems          408     //取消所有选择项
+
+
 
 #define Proc_List_GetVerticalScrollBar      Proc_Layout_GetVerticalScrollBar
 #define Proc_List_GetHorizontalScrollBar    Proc_Layout_GetHorizontalScrollBar
@@ -91,10 +101,10 @@ typedef struct _ZListBody
 /**列表元素结构*/
 typedef struct _ZListElement
 {
-    ZuiInt m_iIndex;
-    ZuiBool m_bSelected;//选中
-    UINT m_uButtonState;//列状态
-    ZuiControl m_pOwner;//宿主
+    ZuiInt m_iIndex;        //列索引
+    ZuiBool m_bSelected;    //选中
+    UINT m_uButtonState;    //列状态
+    ZuiControl m_pOwner;    //宿主
 
     ZuiAny old_udata;
     ZCtlProc old_call;
@@ -107,7 +117,15 @@ typedef struct _ZListInfo
     int nColumns;//列数量
     RECT rcColumn[ZLIST_MAX_COLUMNS];
 
-    DWORD dwLineColor;//行间线颜色
+    ZuiBool bAlternateBk;       //使用交替背景色
+    DWORD dwLineColor;          //行间线颜色
+    DWORD dwBkColor;            //背景色
+    DWORD dwHotBkColor;         //点燃背景色
+    DWORD dwSelectedBkColor;    //选中背景色
+    DWORD dwDisabledBkColor;    //禁用背景色
+
+    ZuiBool bShowRowLine;       //显示行线
+    ZuiBool bShowColumnLine;    //显示列线
 } *ZuiListInfo, ZListInfo;
 
 /**列表控件结构*/
