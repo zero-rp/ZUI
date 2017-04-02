@@ -222,8 +222,8 @@ typedef struct _ZControl
     ZuiPaintManager m_pManager;     //关联的管理器
     struct _ZControl* m_pParent;    //父控件
     ZuiBool m_bUpdateNeeded;        //是否需要更新布局
-    RECT m_rcItem;                  //控件矩形
-    RECT m_rcPadding;               //控件
+    ZRect m_rcItem;                  //控件矩形
+    ZRect m_rcPadding;               //控件
     SIZE m_cXY;                     //预设的左上角坐标
     SIZE m_cxyFixed;                //预设的控件大小
     SIZE m_cxyMin;                  //控件最小大小

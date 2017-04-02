@@ -24,7 +24,7 @@ typedef struct _ZuiInitConfig
 } *ZuiInitConfig, ZInitConfig;
 
 
-void Rect_Join(RECT *rc, RECT *rc1);
+void Rect_Join(ZRect *rc, ZRect *rc1);
 ZEXPORT ZuiBool ZCALL ZuiIsPointInRect(ZuiRect Rect, ZuiPoint pt);
 /*字符串HASH函数*/
 void * ZCALL Zui_Hash(wchar_t* str);

@@ -42,7 +42,7 @@ typedef struct tagTIMERINFO
 
 /////////////////////////////////////////////////////////////////////////////////////
 
-static void GetChildWndRect(HWND hWnd, HWND hChildWnd, RECT *rcChildWnd)
+static void GetChildWndRect(HWND hWnd, HWND hChildWnd, ZRect *rcChildWnd)
 {
     GetWindowRect(hChildWnd, rcChildWnd);
 
@@ -198,15 +198,15 @@ ZEXPORT ZuiVoid ZCALL ZuiPaintManagerInvalidate(ZuiPaintManager p)
     if (!p->m_bLayered)
         InvalidateRect(p->m_hWndPaint, NULL, FALSE);
     else {
-        RECT rcClient = { 0 };
+        ZRect rcClient = { 0 };
         GetClientRect(p->m_hWndPaint, &rcClient);
         UnionRect(&p->m_rcLayeredUpdate, &p->m_rcLayeredUpdate, &rcClient);
     }
 }
 //指定区域失效
-ZEXPORT ZuiVoid ZCALL ZuiPaintManagerInvalidateRect(ZuiPaintManager p, RECT *rcItem)
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerInvalidateRect(ZuiPaintManager p, ZRect *rcItem)
 {
-    RECT rc;
+    ZRect rc;
     rc.bottom = rcItem->bottom;
     rc.left = rcItem->left;
     rc.right = rcItem->right;
@@ -282,7 +282,7 @@ ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetLayered(ZuiPaintManager p, BOOL bLayered
 }
 
 
-ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetLayeredInset(ZuiPaintManager p, RECT *rcLayeredInset)
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetLayeredInset(ZuiPaintManager p, ZRect *rcLayeredInset)
 {
 
     p->m_rcLayeredInset.bottom = rcLayeredInset->bottom;
@@ -743,10 +743,10 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
             return TRUE;
         }
 
-        RECT rcClient = { 0 };
+        ZRect rcClient = { 0 };
         GetClientRect(p->m_hWndPaint, &rcClient);
 
-        RECT rcPaint = { 0 };
+        ZRect rcPaint = { 0 };
         if (p->m_bLayered) {
             p->m_bOffscreenPaint = TRUE;
             rcPaint = p->m_rcLayeredUpdate;
@@ -769,7 +769,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
             p->m_bUpdateNeeded = FALSE;
             if (!IsRectEmpty(&rcClient)) {
                 if (p->m_pRoot->m_bUpdateNeeded) {
-                    RECT rcRoot = rcClient;
+                    ZRect rcRoot = rcClient;
                     if (p->m_hDcOffscreen != NULL)
                         ZuiDestroyGraphics(p->m_hDcOffscreen);
                     p->m_hDcOffscreen = NULL;
@@ -788,7 +788,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
                     for (int it = 0; it < darray_len(p->m_aFoundControls); it++) {
                         pControl = (ZuiControl)(p->m_aFoundControls->data[it]);
                         if (!pControl->m_bFloat)
-                            ZuiControlCall(Proc_SetPos, pControl, (RECT *)ZuiControlCall(Proc_GetPos, pControl, NULL, NULL, NULL), (void *)TRUE, 0);
+                            ZuiControlCall(Proc_SetPos, pControl, (ZRect *)ZuiControlCall(Proc_GetPos, pControl, NULL, NULL, NULL), (void *)TRUE, 0);
                         else
                             ZuiControlCall(Proc_SetPos, pControl, ZuiControlCall(Proc_GetRelativePos, pControl, NULL, NULL, NULL), (void *)TRUE, 0);
                     }
@@ -808,7 +808,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
             }
         }
         else if (p->m_bLayered && p->m_bLayeredChanged) {
-            RECT rcRoot = rcClient;
+            ZRect rcRoot = rcClient;
             if (p->m_pOffscreenBits)
                 memset(p->m_pOffscreenBits, 0, (rcRoot.right - rcRoot.left) * (rcRoot.bottom - rcRoot.top) * 4);
             rcRoot.left += p->m_rcLayeredInset.left;
@@ -856,11 +856,11 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
             }
             //RestoreDC(p->m_hDcOffscreen->hdc, iSaveDC);
             if (p->m_bLayered) {
-                RECT rcWnd = { 0 };
+                ZRect rcWnd = { 0 };
                 GetWindowRect(p->m_hWndPaint, &rcWnd);
                 DWORD dwWidth = rcClient.right - rcClient.left;
                 DWORD dwHeight = rcClient.bottom - rcClient.top;
-                RECT rcLayeredClient = rcClient;
+                ZRect rcLayeredClient = rcClient;
                 rcLayeredClient.left += p->m_rcLayeredInset.left;
                 rcLayeredClient.top += p->m_rcLayeredInset.top;
                 rcLayeredClient.right -= p->m_rcLayeredInset.right;
@@ -910,7 +910,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
     case WM_PRINTCLIENT:
     {
         if (p->m_pRoot == NULL) break;
-        RECT rcClient;
+        ZRect rcClient;
         GetClientRect(p->m_hWndPaint, &rcClient);
         HDC hDC = (HDC)wParam;
         int save = SaveDC(hDC);
@@ -921,7 +921,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
         if ((lParam & PRF_CHILDREN) != 0) {
             HWND hWndChild = GetWindow(p->m_hWndPaint, GW_CHILD);
             while (hWndChild != NULL) {
-                RECT rcPos = { 0 };
+                ZRect rcPos = { 0 };
                 GetWindowRect(hWndChild, &rcPos);
                 MapWindowPoints(HWND_DESKTOP, p->m_hWndPaint, (LPPOINT)(&rcPos), 2);
                 SetWindowOrgEx(hDC, -rcPos.left, -rcPos.top, NULL);
@@ -1024,7 +1024,7 @@ ZEXPORT ZuiBool ZCALL ZuiPaintManagerMessageHandler(ZuiPaintManager p, UINT uMsg
         p->m_ToolTip.uId = (UINT_PTR)p->m_hWndPaint;
         p->m_ToolTip.hinst = m_hInstance;
         p->m_ToolTip.lpszText = (LPWSTR)pHover->m_sToolTip;
-        memcpy(&p->m_ToolTip.rect, (RECT *)ZuiControlCall(Proc_GetPos, pHover, NULL, NULL, NULL), sizeof(RECT));
+        memcpy(&p->m_ToolTip.rect, (ZRect *)ZuiControlCall(Proc_GetPos, pHover, NULL, NULL, NULL), sizeof(ZRect));
         if (p->m_hwndTooltip == NULL) {
             p->m_hwndTooltip = CreateWindowEx(0, TOOLTIPS_CLASS, NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, p->m_hWndPaint, NULL, m_hInstance, NULL);
             if (p->m_hwndTooltip != NULL && p->m_iTooltipWidth >= 0) {

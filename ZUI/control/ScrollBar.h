@@ -33,7 +33,7 @@ typedef struct _ZScrollBar
 
     //头按钮
     ZuiBool m_bShowButton1;
-    RECT m_rcButton1;
+    ZRect m_rcButton1;
     ZuiUInt m_uButton1State;
     ZuiRes m_sButton1NormalImage;
     ZuiRes m_sButton1HotImage;
@@ -42,7 +42,7 @@ typedef struct _ZScrollBar
 
     //尾按钮
     ZuiBool m_bShowButton2;
-    RECT m_rcButton2;
+    ZRect m_rcButton2;
     ZuiUInt m_uButton2State;
     ZuiRes m_sButton2NormalImage;
     ZuiRes m_sButton2HotImage;
@@ -50,7 +50,7 @@ typedef struct _ZScrollBar
     ZuiRes m_sButton2DisabledImage;
 
     //滑块按钮
-    RECT m_rcThumb;
+    ZRect m_rcThumb;
     ZuiUInt m_uThumbState;
     ZuiRes m_sThumbNormalImage;
     ZuiRes m_sThumbHotImage;

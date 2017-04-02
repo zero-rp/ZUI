@@ -2,6 +2,27 @@
 #if (defined PLATFORM_OS_WIN)
 #pragma comment(lib, "Imm32.lib")
 #pragma comment(lib, "Winmm.lib")
+//查找桌面句柄
+BOOL __stdcall enumUserWindowsCB(HWND hwnd, LPARAM lParam)
+{
+    long wflags = GetWindowLong(hwnd, GWL_STYLE);
+    if (!(wflags & WS_VISIBLE)) return TRUE;
+
+    HWND sndWnd;
+    if (!(sndWnd = FindWindowEx(hwnd, NULL, L"SHELLDLL_DefView", NULL))) return TRUE;
+    HWND targetWnd;
+    if (!(targetWnd = FindWindowEx(sndWnd, NULL, L"SysListView32", L"FolderView"))) return TRUE;
+
+    HWND* resultHwnd = (HWND*)lParam;
+    *resultHwnd = targetWnd;
+    return FALSE;
+}
+HWND findDesktopIconWnd()
+{
+    HWND resultHwnd = NULL;
+    EnumWindows((WNDENUMPROC)enumUserWindowsCB, (LPARAM)&resultHwnd);
+    return resultHwnd;
+}
 static LRESULT ZCALL __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     ZuiOsWindow pThis = NULL;
@@ -27,34 +48,34 @@ static LRESULT ZCALL __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
             {
                 int x = GET_X_LPARAM(lParam);
                 int	y = GET_Y_LPARAM(lParam);
-                if (x <= pThis->m_rect.Left + 3 && y <= pThis->m_rect.Top + 3) {
+                if (x <= pThis->m_rect.left + 3 && y <= pThis->m_rect.top + 3) {
                     return HTTOPLEFT;
                 }
-                else if (x <= pThis->m_rect.Left + 3 && y >= pThis->m_rect.Top + pThis->m_rect.Height - 3)
+                else if (x <= pThis->m_rect.left + 3 && y >= pThis->m_rect.bottom - 3)
                 {
                     return HTBOTTOMLEFT;
                 }
-                else if (x >= pThis->m_rect.Left + pThis->m_rect.Width - 3 && y <= pThis->m_rect.Top + 3)
+                else if (x >= pThis->m_rect.right - 3 && y <= pThis->m_rect.top + 3)
                 {
                     return HTTOPRIGHT;
                 }
-                else if (x >= pThis->m_rect.Left + pThis->m_rect.Width - 3 && y >= pThis->m_rect.Top + pThis->m_rect.Height - 3)
+                else if (x >= pThis->m_rect.right - 3 && y >= pThis->m_rect.bottom - 3)
                 {
                     return HTBOTTOMRIGHT;
                 }
-                else if (x <= pThis->m_rect.Left + 2)
+                else if (x <= pThis->m_rect.left + 2)
                 {
                     return HTLEFT;
                 }
-                else if (y <= pThis->m_rect.Top + 2)
+                else if (y <= pThis->m_rect.top + 2)
                 {
                     return HTTOP;
                 }
-                else if (x >= pThis->m_rect.Left + pThis->m_rect.Width - 2)
+                else if (x >= pThis->m_rect.right - 2)
                 {
                     return HTRIGHT;
                 }
-                else if (y >= pThis->m_rect.Top + pThis->m_rect.Height - 2)
+                else if (y >= pThis->m_rect.bottom - 2)
                 {
                     return HTBOTTOM;
                 }
@@ -65,13 +86,11 @@ static LRESULT ZCALL __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
                 return HTCLIENT;
             }
             else if (uMsg == WM_MOVE) {
-                pThis->m_rect.Left = GET_X_LPARAM(lParam);
-                pThis->m_rect.Top = GET_Y_LPARAM(lParam);
+                GetWindowRect(pThis->m_hWnd, &pThis->m_rect);
             }
             else if (uMsg == WM_SIZE)
             {
-                pThis->m_rect.Width = GET_X_LPARAM(lParam);
-                pThis->m_rect.Height = GET_Y_LPARAM(lParam);
+                GetWindowRect(pThis->m_hWnd, &pThis->m_rect);
             }
             else if (uMsg == WM_NCLBUTTONDOWN) {
                 if (pThis->m_bMax)
@@ -185,12 +204,7 @@ ZuiBool ZuiOsSetWindowNoBox(ZuiOsWindow OsWindow, ZuiBool b) {
     else {
         SetWindowLong(OsWindow->m_hWnd, GWL_STYLE, WS_VISIBLE | WS_POPUP | WS_CLIPCHILDREN);
     }
-    RECT r;
-    GetWindowRect(OsWindow->m_hWnd, &r);
-    OsWindow->m_rect.Left = r.left;
-    OsWindow->m_rect.Top = r.top;
-    OsWindow->m_rect.Height = r.bottom - r.top;
-    OsWindow->m_rect.Width = r.right - r.left;
+    GetWindowRect(OsWindow->m_hWnd, &OsWindow->m_rect);
     ZuiControlInvalidate(OsWindow->root, TRUE);
     return TRUE;
 }
@@ -228,13 +242,13 @@ ZuiVoid ZuiOsSetWindowVisible(ZuiOsWindow OsWindow, ZuiBool Visible) {
 ZuiVoid ZuiOsWindowPopup(ZuiOsWindow OsWindow, ZuiPoint pt) {
     if (pt)
     {
-        SetWindowPos(OsWindow->m_hWnd, NULL, pt->x, pt->y, OsWindow->m_rect.Width, OsWindow->m_rect.Height, SWP_NOZORDER | SWP_NOACTIVATE);
+        SetWindowPos(OsWindow->m_hWnd, NULL, pt->x, pt->y, OsWindow->m_rect.right- OsWindow->m_rect.left, OsWindow->m_rect.bottom- OsWindow->m_rect.top, SWP_NOZORDER | SWP_NOACTIVATE);
     }
     ShowWindow(OsWindow->m_hWnd, SW_SHOWNORMAL);
     SetFocus(OsWindow->m_hWnd);
 }
 ZuiVoid ZuiOsSetWindowCenter(ZuiOsWindow OsWindow) {
-    RECT rc, rc1, rctomove;
+    ZRect rc, rc1, rctomove;
     int width = GetSystemMetrics(SM_CXSCREEN);
     int height = GetSystemMetrics(SM_CYSCREEN);
     rc.left = 0;

@@ -339,13 +339,13 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
     }
     case Proc_OnPaintBkColor: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        RECT *rc = (RECT *)&p->m_rcThumb;
+        ZRect *rc = (ZRect *)&p->m_rcThumb;
         ZuiDrawFillRect(gp, ARGB(200, 0, 3, 255), rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
 
     }
     case Proc_OnPaintStatusImage: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        RECT *rc = (RECT *)Param2;
+        ZRect *rc = (ZRect *)Param2;
         ZuiImage img;
         //绘制第一个按钮
         if (p->m_bShowButton1) {
@@ -507,7 +507,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
     }
     case Proc_SetPos: {
         ZuiDefaultControlProc(ProcId, cp, 0, Param1, Param2, Param3);
-        RECT rc = cp->m_rcItem;
+        ZRect rc = cp->m_rcItem;
 
         if (p->m_bHorizontal) {
             int cx = rc.right - rc.left;

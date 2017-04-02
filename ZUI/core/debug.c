@@ -256,7 +256,7 @@ static BOOL WINAPI tab6_dlg_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 static void SetSelectControl(ZuiControl p) {
     wchar_t buf[255];
-    RECT *pos = ZuiControlCall(Proc_GetPos, p, NULL, NULL, NULL);
+    ZRect *pos = ZuiControlCall(Proc_GetPos, p, NULL, NULL, NULL);
     swprintf(buf, L"%d,%d,%d,%d", pos->left, pos->top, pos->right, pos->bottom);
     SetWindowText(GetDlgItem(hDlg_intab[2], IDC_EDIT3), buf);
 

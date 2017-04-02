@@ -100,18 +100,18 @@ typedef unsigned        ZuiByte;
 /**矩形*/
 typedef struct _ZRect
 {
-    int Left;   ///左边
-    int Top;    ///顶边
-    int Width;  ///宽度
-    int Height; ///高度
+    int left;   ///左边
+    int top;    ///顶边
+    int right;  ///右边
+    int bottom; ///底边
 } *ZuiRect, ZRect;
 /**矩形(浮点)*/
 typedef struct _ZRectR
 {
-    ZuiReal Left;///左边
-    ZuiReal Top;///顶边
-    ZuiReal Width;///宽度
-    ZuiReal Height;///高度
+    ZuiReal left;///左边
+    ZuiReal top;///顶边
+    ZuiReal right;///宽度
+    ZuiReal bottom;///高度
 } *ZuiRectR, ZRectR;
 /**点*/
 typedef struct _ZPoint
@@ -132,32 +132,17 @@ typedef struct _ZPointR
     ZuiReal y;
 } *ZuiPointR, ZPointR;
 
-#define MAKEZRECT(r, L, T, W, H) \
-    r.Left = L; \
-    r.Top = T;\
-    r.Width = W;\
-    r.Height = H;
-#define MAKEZRECTP(r, L, T, W, H) \
-    r->Left = L; \
-    r->Top = T;\
-    r->Width = W;\
-    r->Height = H;
+#define MAKEZRECT(r, L, T, R, B) \
+    r.left = L; \
+    r.top = T;\
+    r.right = R;\
+    r.bottom = B;
+#define MAKEZRECTP(r, L, T, R, B) \
+    r->left = L; \
+    r->top = T;\
+    r->right = R;\
+    r->bottom = B;
 
-#ifdef LINUX 
-typedef long LONG;
-typedef struct tagRECT
-{
-    LONG    left;
-    LONG    top;
-    LONG    right;
-    LONG    bottom;
-} RECT, *PRECT, *NPRECT, *LPRECT;
-typedef struct tagSIZE
-{
-    LONG        cx;
-    LONG        cy;
-} SIZE, *PSIZE, *LPSIZE;
-#endif
 
 #if defined(__cplusplus)
 extern "C"

@@ -1,6 +1,6 @@
 ﻿#include <ZUI.h>
 
-void Rect_Join(RECT *rc, RECT *rc1)
+void Rect_Join(ZRect *rc, ZRect *rc1)
 {
     if (rc1->left < rc->left) rc->left = rc1->left;
     if (rc1->top < rc->top) rc->top = rc1->top;

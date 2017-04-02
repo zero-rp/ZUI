@@ -5,7 +5,7 @@ void* ZCALL ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayout p
     {
     case Proc_SetPos: {
         ZuiDefaultControlProc(ProcId, cp, 0, Param1, Param2, Param3);
-        RECT rc = cp->m_rcItem;
+        ZRect rc = cp->m_rcItem;
         ZuiLayout op = (ZuiLayout)p->old_udata;
         // Adjust for inset
         rc.left += op->m_rcInset.left;
@@ -40,7 +40,7 @@ void* ZCALL ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayout p
                 if (sz.cy < (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0)) sz.cy = (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0);
                 if (sz.cy > (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0)) sz.cy = (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0);
             }
-            cyFixed += sz.cy + ((RECT *)(ZuiControlCall(Proc_GetPadding, pControl, 0, 0, 0)))->top + ((RECT *)(ZuiControlCall(Proc_GetPadding, pControl, 0, 0, 0)))->bottom;
+            cyFixed += sz.cy + ((ZRect *)(ZuiControlCall(Proc_GetPadding, pControl, 0, 0, 0)))->top + ((ZRect *)(ZuiControlCall(Proc_GetPadding, pControl, 0, 0, 0)))->bottom;
             nEstimateNum++;
         }
         cyFixed += (nEstimateNum - 1) * op->m_iChildPadding;
@@ -72,7 +72,7 @@ void* ZCALL ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayout p
                 continue;
             }
 
-            RECT *rcPadding = (RECT *)(ZuiControlCall(Proc_GetPadding, pControl, 0, 0, 0));
+            ZRect *rcPadding = (ZRect *)(ZuiControlCall(Proc_GetPadding, pControl, 0, 0, 0));
             szRemaining.cy -= rcPadding->top;
             SIZE sz;
             SIZE * psz = (SIZE *)ZuiControlCall(Proc_EstimateSize, pControl, (void *)&szRemaining, 0, 0);
@@ -100,7 +100,7 @@ void* ZCALL ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayout p
             if (sz.cx < (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0)) { sz.cx = (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0); }
             if (sz.cx > (LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0)) { sz.cx = (LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0); }
 
-            RECT rcCtrl = { iPosX + rcPadding->left, iPosY + rcPadding->top, iPosX + rcPadding->left + sz.cx, iPosY + sz.cy + rcPadding->top + rcPadding->bottom };
+            ZRect rcCtrl = { iPosX + rcPadding->left, iPosY + rcPadding->top, iPosX + rcPadding->left + sz.cx, iPosY + sz.cy + rcPadding->top + rcPadding->bottom };
             ZuiControlCall(Proc_SetPos, pControl, &rcCtrl, FALSE, 0);
 
             iPosY += sz.cy + op->m_iChildPadding + rcPadding->top + rcPadding->bottom;

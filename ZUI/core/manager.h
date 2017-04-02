@@ -131,9 +131,9 @@ typedef struct _ZuiPaintManager
 
     BYTE m_nOpacity;				///窗口透明度
     ZuiBool m_bLayered;				///是否分层
-    RECT m_rcLayeredInset;			///
+    ZRect m_rcLayeredInset;			///
     ZuiBool m_bLayeredChanged;			///
-    RECT m_rcLayeredUpdate;			///
+    ZRect m_rcLayeredUpdate;			///
 
     ZuiBool m_bUnfocusPaintWindow;		///开启无焦点窗口
     ZuiBool m_bMouseTracking;			///是否需要支持鼠标追踪
@@ -159,14 +159,14 @@ void FreeCPaintManagerUI(ZuiPaintManager p);
 
 ZEXPORT ZuiVoid ZCALL ZuiPaintManagerInit(ZuiPaintManager p, HWND hWnd);// 绘图管理器的初始化(m_hWndPaint,m_hDcPaint赋值，在预处理消息中加入管理器)
 ZEXPORT ZuiVoid ZCALL ZuiPaintManagerInvalidate(ZuiPaintManager p);//指定区域失效
-ZEXPORT ZuiVoid ZCALL ZuiPaintManagerInvalidateRect(ZuiPaintManager p, RECT *rcItem);//指定区域失效
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerInvalidateRect(ZuiPaintManager p, ZRect *rcItem);//指定区域失效
 
 
 ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetOpacity(ZuiPaintManager p, BYTE nOpacity);//设置窗口透明度 会开启分层窗口
 
 ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetLayered(ZuiPaintManager p, BOOL bLayered);//设置分层窗口
 
-ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetLayeredInset(ZuiPaintManager p, RECT *rcLayeredInset);
+ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetLayeredInset(ZuiPaintManager p, ZRect *rcLayeredInset);
 
 ZEXPORT ZuiVoid ZCALL ZuiPaintManagerSetLayeredOpacity(ZuiPaintManager p, BYTE nOpacity);//设置分层窗口透明度
 

@@ -77,16 +77,16 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     switch (ProcId)
     {
     case Proc_Invalidate: {
-        RECT invalidateRc = p->m_rcItem;
+        ZRect invalidateRc = p->m_rcItem;
         if (!p->m_bVisible) return;
         {
             ZuiControl pParent = p;
-            RECT rcTemp;
-            RECT *rcParent;
+            ZRect rcTemp;
+            ZRect *rcParent;
             while (pParent = pParent->m_pParent)
             {
                 rcTemp = invalidateRc;
-                rcParent = (RECT *)ZuiControlCall(Proc_GetPos, pParent, NULL, NULL, NULL);
+                rcParent = (ZRect *)ZuiControlCall(Proc_GetPos, pParent, NULL, NULL, NULL);
                 if (!IntersectRect(&invalidateRc, &rcTemp, rcParent))
                 {
                     return;
@@ -156,9 +156,9 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         break;
     }
     case Proc_SetPos: {// 只有控件为float的时候，外部调用SetPos和Move才是有效的，位置参数是相对父控件的位置
-        RECT *rc = (RECT *)Param1;
+        ZRect *rc = (ZRect *)Param1;
         BOOL bNeedInvalidate = (BOOL)Param2;
-        RECT invalidateRc = p->m_rcItem;
+        ZRect invalidateRc = p->m_rcItem;
         ZuiBool bSize = FALSE;
         if (rc->right < rc->left) rc->right = rc->left;
         if (rc->bottom < rc->top) rc->bottom = rc->top;
@@ -172,14 +172,14 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         if (p->m_bFloat) {
             ZuiControl pParent = p->m_pParent;
             if (pParent != NULL) {
-                RECT *rcParentPos = (RECT *)ZuiControlCall(Proc_GetPos, pParent, NULL, NULL, NULL);
-                RECT rcCtrl = { rcParentPos->left + rc->left, rcParentPos->top + rc->top,
+                ZRect *rcParentPos = (ZRect *)ZuiControlCall(Proc_GetPos, pParent, NULL, NULL, NULL);
+                ZRect rcCtrl = { rcParentPos->left + rc->left, rcParentPos->top + rc->top,
                     rcParentPos->left + rc->right, rcParentPos->top + rc->bottom };
                 p->m_rcItem = rcCtrl;
 
                 LONG width = rcParentPos->right - rcParentPos->left;
                 LONG height = rcParentPos->bottom - rcParentPos->top;
-                RECT rcPercent = { (LONG)(width*p->m_piFloatPercent.left), (LONG)(height*p->m_piFloatPercent.top),
+                ZRect rcPercent = { (LONG)(width*p->m_piFloatPercent.left), (LONG)(height*p->m_piFloatPercent.top),
                     (LONG)(width*p->m_piFloatPercent.right), (LONG)(height*p->m_piFloatPercent.bottom) };
                 p->m_cXY.cx = rc->left - rcPercent.left;
                 p->m_cXY.cy = rc->top - rcPercent.top;
@@ -188,7 +188,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             }
         }
         else {
-            memcpy(&p->m_rcItem, rc, sizeof(RECT));
+            memcpy(&p->m_rcItem, rc, sizeof(ZRect));
         }
 
 
@@ -207,13 +207,13 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         if (bNeedInvalidate && p->m_bVisible) {
             Rect_Join(&invalidateRc, &p->m_rcItem);
             ZuiControl pParent = p;
-            RECT rcTemp;
-            RECT *rcParent;
+            ZRect rcTemp;
+            ZRect *rcParent;
             while (pParent = pParent->m_pParent) {
                 if (!pParent->m_bVisible)
                     return 0;
                 rcTemp = invalidateRc;
-                rcParent = (RECT *)ZuiControlCall(Proc_GetPos, pParent, NULL, NULL, NULL);
+                rcParent = (ZRect *)ZuiControlCall(Proc_GetPos, pParent, NULL, NULL, NULL);
                 if (!IntersectRect(&invalidateRc, &rcTemp, rcParent))
                     return 0;
             }
@@ -409,7 +409,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         break;
     }
     case Proc_SetFloatPercent: {
-        memcpy(&p->m_piFloatPercent, Param1, sizeof(RECT));
+        memcpy(&p->m_piFloatPercent, Param1, sizeof(ZRect));
         ZuiControlNeedParentUpdate(p);
         break;
     }
@@ -418,7 +418,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         break;
     }
     case Proc_SetPadding: {
-        memcpy(&p->m_rcPadding, Param1, sizeof(RECT));
+        memcpy(&p->m_rcPadding, Param1, sizeof(ZRect));
         ZuiControlNeedParentUpdate(p);
         break;
     }
@@ -459,8 +459,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     case Proc_GetRelativePos: {
         ZuiControl pParent = p->m_pParent;
         if (pParent != NULL) {
-            RECT *rcParentPos = (RECT *)ZuiControlCall(Proc_GetPos, pParent, NULL, NULL, NULL);
-            RECT rcRelativePos = p->m_rcItem;
+            ZRect *rcParentPos = (ZRect *)ZuiControlCall(Proc_GetPos, pParent, NULL, NULL, NULL);
+            ZRect rcRelativePos = p->m_rcItem;
             OffsetRect(&rcRelativePos, -rcParentPos->left, -rcParentPos->top);
             return &rcRelativePos;
         }
@@ -536,14 +536,14 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     }
     case Proc_OnPaintBkColor: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        RECT *rc = (RECT *)Param2;
+        ZRect *rc = (ZRect *)Param2;
         if (p->m_BkgColor)
             ZuiDrawFillRect(gp, p->m_BkgColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
         break;
     }
     case Proc_OnPaintBkImage: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        RECT *rc = &p->m_rcItem;
+        ZRect *rc = &p->m_rcItem;
         if (p->m_BkgImg) {
             ZuiImage img = p->m_BkgImg->p;
             ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
@@ -552,18 +552,18 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     }
     case Proc_OnPaintStatusImage: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        RECT *rc = &p->m_rcItem;
+        ZRect *rc = &p->m_rcItem;
         break;
     }
     case Proc_OnPaintText: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        RECT *rc = &p->m_rcItem;
+        ZRect *rc = &p->m_rcItem;
 
         break;
     }
     case Proc_OnPaintBorder: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        RECT *rc = &p->m_rcItem;
+        ZRect *rc = &p->m_rcItem;
         if (p->m_dwBorderColor)
             ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 1);
         break;
@@ -619,7 +619,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         else if (wcscmp(Param1, L"drag") == 0) ZuiControlCall(Proc_SetDrag, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
         else if (wcscmp(Param1, L"bkimage") == 0) ZuiControlCall(Proc_SetBkImage, p, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         else if (wcscmp(Param1, L"padding") == 0) {
-            RECT rcPadding = { 0 };
+            ZRect rcPadding = { 0 };
             LPTSTR pstr = NULL;
             rcPadding.left = _tcstol(Param2, &pstr, 10);  ASSERT(pstr);
             rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
@@ -653,7 +653,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         }
         else if (wcscmp(Param1, L"visible") == 0) ZuiControlCall(Proc_SetVisible, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
         else if (wcscmp(Param1, L"pos") == 0) {
-            RECT rcPos = { 0 };
+            ZRect rcPos = { 0 };
             ZuiText pstr = NULL;
             rcPos.left = _tcstol(Param2, &pstr, 10);  ASSERT(pstr);
             rcPos.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
@@ -857,7 +857,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             return 0;
         }
         case Js_Id_padding: {
-            RECT rcPadding = { 0 };
+            ZRect rcPadding = { 0 };
             LPTSTR pstr = NULL;
             rcPadding.left = _tcstol(duk_get_string_w(ctx, 0), &pstr, 10);  ASSERT(pstr);
             rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
@@ -1056,7 +1056,7 @@ ZEXPORT ZuiVoid ZCALL ZuiControlEvent(ZuiControl p, TEventUI *event)
 
 ZEXPORT ZuiVoid ZCALL ZuiControlMove(ZuiControl p, SIZE *szOffset, BOOL bNeedInvalidate)
 {
-    RECT invalidateRc = p->m_rcItem;
+    ZRect invalidateRc = p->m_rcItem;
     p->m_rcItem.left += szOffset->cx;
     p->m_rcItem.top += szOffset->cy;
     p->m_rcItem.right += szOffset->cx;
@@ -1065,12 +1065,12 @@ ZEXPORT ZuiVoid ZCALL ZuiControlMove(ZuiControl p, SIZE *szOffset, BOOL bNeedInv
     if (bNeedInvalidate && p->m_pManager == NULL && p->m_bVisible) {
         Rect_Join(&invalidateRc, &p->m_rcItem);
         ZuiControl pParent = p;
-        RECT rcTemp;
-        RECT *rcParent;
+        ZRect rcTemp;
+        ZRect *rcParent;
         while (pParent = pParent->m_pParent) {
             if (!pParent->m_bVisible) return;
             rcTemp = invalidateRc;
-            rcParent = (RECT *)ZuiControlCall(Proc_GetPos, pParent, NULL, NULL, NULL);
+            rcParent = (ZRect *)ZuiControlCall(Proc_GetPos, pParent, NULL, NULL, NULL);
             if (!IntersectRect(&invalidateRc, &rcTemp, rcParent)) return;
         }
         ZuiPaintManagerInvalidateRect(p->m_pManager, &invalidateRc);

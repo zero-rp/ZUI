@@ -5,7 +5,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
     {
     case Proc_OnPaintText: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        RECT *rc = &cp->m_rcItem;
+        ZRect *rc = &cp->m_rcItem;
         ZRect r;
         MAKEZRECT(r, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
         ZuiDrawString(gp, Global_StringFormat, cp->m_sText, &r);

@@ -21,7 +21,7 @@ ZEXPORT ZuiAny ZCALL ZuiMenuBarProc(ZuiInt ProcId, ZuiControl cp, ZuiMenuBar p, 
                         break;
     case Proc_OnPaintText: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        RECT *rc = &cp->m_rcItem;
+        ZRect *rc = &cp->m_rcItem;
         ZRect r;
         MAKEZRECT(r, rc->left + 5, rc->top + 5, rc->right - rc->left - 10, rc->bottom - rc->top - 10);
         ZuiDrawString(gp, Global_StringFormat, cp->m_sText, &r);

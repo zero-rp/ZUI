@@ -77,7 +77,7 @@ typedef struct _ZListHeaderItem
     ZuiRes m_diFocused; //焦点图片
     ZuiRes m_diSep;
 
-    RECT Thumb;
+    ZRect Thumb;
     ZuiAny old_udata;
     ZCtlProc old_call;
 }*ZuiListHeaderItem, ZListHeaderItem;
@@ -115,7 +115,7 @@ typedef struct _ZListElement
 typedef struct _ZListInfo
 {
     int nColumns;//列数量
-    RECT rcColumn[ZLIST_MAX_COLUMNS];
+    ZRect rcColumn[ZLIST_MAX_COLUMNS];
 
     ZuiBool bAlternateBk;       //使用交替背景色
     DWORD dwLineColor;          //行间线颜色

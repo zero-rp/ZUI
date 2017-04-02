@@ -345,10 +345,10 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
                 {
                     if (wcsncmp(arr[i], L"src='", 5) == 0) {
                         LPTSTR pstr = NULL;
-                        img->src.Left = _tcstol(arr[i] + 5, &pstr, 10);  ASSERT(pstr);
-                        img->src.Top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
-                        img->src.Width = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
-                        img->src.Height = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+                        img->src.left = _tcstol(arr[i] + 5, &pstr, 10);  ASSERT(pstr);
+                        img->src.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+                        img->src.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+                        img->src.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
                     }
                 }
 

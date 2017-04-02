@@ -18,7 +18,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
     }
     case Proc_OnPaint: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        RECT *rc = &cp->m_rcItem;
+        ZRect *rc = &cp->m_rcItem;
         if (p->m_bSelected) {
             ZuiImage img;
             if (((ZuiButton)p->old_udata)->type == 0) {

@@ -5,7 +5,7 @@ void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Pa
     {
     case Proc_SetPos: {
         ZuiDefaultControlProc(ProcId, cp, 0, Param1, Param2, Param3);
-        RECT rc = cp->m_rcItem;
+        ZRect rc = cp->m_rcItem;
 
         // Adjust for inset
         ZuiLayout op = (ZuiLayout)p->old_udata;
@@ -24,7 +24,7 @@ void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Pa
 
             if (it != p->m_iCurSel) continue;
 
-            RECT *rcPadding = (RECT *)(ZuiControlCall(Proc_GetPadding, pControl, 0, 0, 0));
+            ZRect *rcPadding = (ZRect *)(ZuiControlCall(Proc_GetPadding, pControl, 0, 0, 0));
             rc.left += rcPadding->left;
             rc.top += rcPadding->top;
             rc.right -= rcPadding->right;
@@ -48,7 +48,7 @@ void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Pa
             if (sz.cy < (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0)) sz.cy = (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0);
             if (sz.cy > (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0)) sz.cy = (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0);
             {
-                RECT rcCtrl = { rc.left, rc.top, rc.left + sz.cx, rc.top + sz.cy };
+                ZRect rcCtrl = { rc.left, rc.top, rc.left + sz.cx, rc.top + sz.cy };
                 ZuiControlCall(Proc_SetPos, pControl, &rcCtrl, FALSE, 0);
             }
         }

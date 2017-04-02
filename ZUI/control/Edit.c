@@ -74,7 +74,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
             }
             ZRectR r = { 0 };
             ZuiMeasureStringRect(cp->m_pManager->m_hDcOffscreen, p->sf, cp->m_sText, &r, 0);
-            p->x = r.Width;
+            p->x = r.right;
             ZuiControlInvalidate(cp, TRUE);
             break;
         }
@@ -89,7 +89,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
                 
                 ZRectR r = { 0 };
                 ZuiMeasureStringRect(cp->m_pManager->m_hDcOffscreen, p->sf, str, &r, 0);
-                p->x -= r.Width;
+                p->x -= r.right;
 
             }
             else if(event->wParam == VK_RIGHT)
@@ -103,7 +103,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 
                 ZRectR r = { 0 };
                 ZuiMeasureStringRect(cp->m_pManager->m_hDcOffscreen, p->sf, str, &r, 0);
-                p->x += r.Width;
+                p->x += r.right;
 
             }
 
@@ -117,7 +117,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
     }
     case Proc_OnPaint: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        RECT *rc = &cp->m_rcItem;
+        ZRect *rc = &cp->m_rcItem;
 
         if (p->MouseType == 1)
         {

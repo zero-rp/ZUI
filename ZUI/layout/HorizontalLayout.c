@@ -6,7 +6,7 @@ void* ZCALL ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalLayo
     {
     case Proc_SetPos: {
         ZuiDefaultControlProc(ProcId, cp, 0, Param1, Param2, Param3);
-        RECT rc = cp->m_rcItem;
+        ZRect rc = cp->m_rcItem;
         ZuiLayout op = (ZuiLayout)p->old_udata;
         // Adjust for inset
         rc.left += op->m_rcInset.left;
@@ -46,7 +46,7 @@ void* ZCALL ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalLayo
                 if (sz.cx < (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0)) sz.cx = (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0);
                 if (sz.cx > (LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0)) sz.cx = (LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0);
             }
-            cxFixed += sz.cx + ((RECT *)(ZuiControlCall(Proc_GetPadding, pControl, 0, 0, 0)))->left + ((RECT *)(ZuiControlCall(Proc_GetPadding, pControl, 0, 0, 0)))->right;
+            cxFixed += sz.cx + ((ZRect *)(ZuiControlCall(Proc_GetPadding, pControl, 0, 0, 0)))->left + ((ZRect *)(ZuiControlCall(Proc_GetPadding, pControl, 0, 0, 0)))->right;
             //记录需要做相对布局的子控件的数量 
             nEstimateNum++;
         }
@@ -79,7 +79,7 @@ void* ZCALL ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalLayo
                 continue;
             }
 
-            RECT *rcPadding = (RECT *)(ZuiControlCall(Proc_GetPadding, pControl, 0, 0, 0));
+            ZRect *rcPadding = (ZRect *)(ZuiControlCall(Proc_GetPadding, pControl, 0, 0, 0));
             szRemaining.cx -= rcPadding->left;
             SIZE sz;
             SIZE * psz = (SIZE *)ZuiControlCall(Proc_EstimateSize, pControl, (void *)&szRemaining, 0, 0);
@@ -107,7 +107,7 @@ void* ZCALL ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalLayo
             if (sz.cy < 0) sz.cy = 0;
             if (sz.cy < (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0)) { sz.cy = (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0); }
             if (sz.cy > (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0)) { sz.cy = (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0); }
-            RECT rcCtrl = { iPosX + rcPadding->left, rc.top + rcPadding->top, iPosX + sz.cx + rcPadding->left , rc.top + rcPadding->top + sz.cy };
+            ZRect rcCtrl = { iPosX + rcPadding->left, rc.top + rcPadding->top, iPosX + sz.cx + rcPadding->left , rc.top + rcPadding->top + sz.cy };
             ZuiControlCall(Proc_SetPos, pControl, &rcCtrl, FALSE, 0);
 
             iPosX += sz.cx + op->m_iChildPadding + rcPadding->left + rcPadding->right;

@@ -99,7 +99,7 @@
 typedef struct _ZuiLayout
 {
     DArray *m_items;            /// 控件数组
-    RECT m_rcInset;             /// 内边距
+    ZRect m_rcInset;             /// 内边距
     ZuiBool m_bMouseChildEnabled;
     ZuiInt m_iChildPadding;
     ZuiBool m_bFocused;            //是焦点状态

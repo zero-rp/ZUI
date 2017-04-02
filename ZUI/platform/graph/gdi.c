@@ -115,7 +115,7 @@ ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiStringFormat String
     if (String) {
         if (!StringFormat) { StringFormat = Global_StringFormat; }//使用默认字体
         ZRectR r;
-        MAKEZRECT(r, (ZuiReal)Rect->Left, (ZuiReal)Rect->Top, (ZuiReal)Rect->Width, (ZuiReal)Rect->Height);
+        MAKEZRECT(r, (ZuiReal)Rect->left, (ZuiReal)Rect->top, (ZuiReal)Rect->right, (ZuiReal)Rect->bottom);
         //int len = MultiByteToWideChar(0, 0, String, -1, 0, 0) * 2;
         //void *buf = malloc(len);
         //memset(buf, 0, len);
@@ -157,34 +157,34 @@ ZEXPORT ZuiVoid ZCALL ZuiDrawImageEx(ZuiGraphics Graphics, ZuiImage Image, ZuiIn
     if (!(Graphics && Image)) {
         return;
     }
-    if (Image->src.Left)
-        xSrc = Image->src.Left;
-    if (Image->src.Top)
-        ySrc = Image->src.Top;
+    if (Image->src.left)
+        xSrc = Image->src.left;
+    if (Image->src.top)
+        ySrc = Image->src.top;
 
     if (Width <= 0) {
-        if (Image->src.Width)
-            Width = Image->src.Width - xSrc;
+        if (Image->src.right)
+            Width = Image->src.right - xSrc;
         else
             Width = (ZuiInt)(Image->Width - xSrc);
     }
     if (Height <= 0) {
-        if (Image->src.Height)
-            Height = Image->src.Height - ySrc;
+        if (Image->src.bottom)
+            Height = Image->src.bottom - ySrc;
         else
             Height = (ZuiInt)(Image->Height - ySrc);
     }
 
 
     if (WidthSrc <= 0 || WidthSrc + xSrc > Image->Width) {
-        if (Image->src.Width)
-            WidthSrc = Image->src.Width;
+        if (Image->src.right)
+            WidthSrc = Image->src.right;
         else
             WidthSrc = (ZuiInt)(Image->Width - xSrc);
     }
     if (HeightSrc <= 0 || HeightSrc + ySrc > Image->Height) {
-        if (Image->src.Height)
-            HeightSrc = Image->src.Height;
+        if (Image->src.right)
+            HeightSrc = Image->src.right;
         else
             HeightSrc = (ZuiInt)(Image->Height - ySrc);
     }

@@ -1,27 +1,5 @@
 ﻿#include <ZUI.h>
 
-//查找桌面句柄
-BOOL __stdcall enumUserWindowsCB(HWND hwnd, LPARAM lParam)
-{
-    long wflags = GetWindowLong(hwnd, GWL_STYLE);
-    if (!(wflags & WS_VISIBLE)) return TRUE;
-
-    HWND sndWnd;
-    if (!(sndWnd = FindWindowEx(hwnd, NULL, L"SHELLDLL_DefView", NULL))) return TRUE;
-    HWND targetWnd;
-    if (!(targetWnd = FindWindowEx(sndWnd, NULL, L"SysListView32", L"FolderView"))) return TRUE;
-
-    HWND* resultHwnd = (HWND*)lParam;
-    *resultHwnd = targetWnd;
-    return FALSE;
-}
-HWND findDesktopIconWnd()
-{
-    HWND resultHwnd = NULL;
-    EnumWindows((WNDENUMPROC)enumUserWindowsCB, (LPARAM)&resultHwnd);
-    return resultHwnd;
-}
-
 static rb_root *m_window = NULL;
 DArray *m_window_array = NULL;
 
