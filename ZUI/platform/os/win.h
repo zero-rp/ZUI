@@ -27,13 +27,19 @@
 #else
 #   pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #endif
-
+typedef struct _ZControl *ZuiControl, ZControl;
+typedef struct _ZuiPaintManager *ZuiPaintManager, IZuiPaintManager;
 typedef struct _ZOsWindow
 {
-    HWND hWnd;				//窗口句柄
-    HDC hDC;				//窗口场景 GetDC得到
-    int Layered;			//分层窗口
-    HIMC   hIMC;			//输入法句柄
+    HWND m_hWnd;				//窗口句柄
+    HIMC   m_hIMC;			//输入法句柄
+    ZRect m_rect;           //窗口矩形
+    ZuiBool m_nobox;    //无边框
+    ZuiBool m_bMax;	//是否最大化
+    ZuiBool m_combo;//组合窗口 失焦隐藏
+
+    ZuiControl root;        //根控件
+    ZuiPaintManager m_pm;   //绘制管理器
 } *ZuiOsWindow, ZOsWindow;
 
 #endif //PLATFORM_OS_WIN
