@@ -49,7 +49,7 @@ duk_bool_t duv_is_tcp(duk_context* ctx, duk_idx_t index) {
   if (!duk_is_fixed_buffer(ctx, index)) return 0;
   handle = duk_get_buffer(ctx, index, &size);
   // TODO: find safer check than size to verify struct type
-  return size == sizeof(*handle) &&
+  return size == sizeof(*handle)+4 &&
          handle->type == UV_TCP;
 }
 

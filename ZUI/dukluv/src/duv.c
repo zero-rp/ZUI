@@ -31,7 +31,7 @@ static const duk_function_list_entry duv_funcs[] = {
   {"shutdown", duv_shutdown, 2},
   {"listen", duv_listen, 3},
   {"accept", duv_accept, 2},
-  {"read_start", duv_read_start, 2},
+  {"read_start", duv_read_start, 3},
   {"read_stop", duv_read_stop, 1},
   {"write", duv_write, 3},
   {"is_readable", duv_is_readable, 1},

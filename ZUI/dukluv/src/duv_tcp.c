@@ -7,7 +7,7 @@ duk_ret_t duv_new_tcp(duk_context *ctx) {
     {NULL}
   });
 
-  handle = duk_push_fixed_buffer(ctx, sizeof(*handle));
+  handle = duk_push_fixed_buffer(ctx, sizeof(*handle) + sizeof(unsigned short) + sizeof(char) + sizeof(char));
   duv_check(ctx, uv_tcp_init(duv_loop(ctx), handle));
   handle->data = duv_setup_handle(ctx);
   return 1;

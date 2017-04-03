@@ -30,8 +30,8 @@ function Stream() {
   throw new Error("Can't reate Stream directly");
 }
 Stream.prototype.__proto__ = Handle.prototype;
-Stream.prototype.readStart = function readStart(callback) {
-  return uv.read_start(this.handle, callback);
+Stream.prototype.readStart = function readStart(callback, unpack) {
+  return uv.read_start(this.handle, callback, unpack);
 };
 Stream.prototype.readStop = function readStop() {
   return uv.read_stop(this.handle);
