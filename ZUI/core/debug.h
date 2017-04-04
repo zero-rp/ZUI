@@ -20,6 +20,8 @@
 #define ZLOG_TYPE_INFO     3
 
 #if LOG_DEBUG || RUN_DEBUG
+
+
 #define LOG_ERROR(fmt, ...) do{\
     wchar_t buf[512];   \
     _snwprintf(buf, 512, fmt, __VA_ARGS__);\
@@ -28,6 +30,7 @@
 #define LOG_DEGUB(fmt, ...) do{\
     wchar_t buf[512];   \
     _snwprintf(buf, 512, fmt, __VA_ARGS__);\
+    wprintf(buf);\
     ZuiDebugLog(ZLOG_TYPE_DEBUG, buf);  \
 }while(0)
 #define LOG_WARNING(fmt, ...) do{\
@@ -46,6 +49,7 @@
     wchar_t buf[1024];   \
     duk_get_prop_string((ctx), -1, "stack");\
     _snwprintf(buf, 1024, L"%s",duk_get_string_w((ctx), -1));\
+    wprintf(buf);\
     ZuiDebugLog(ZLOG_TYPE_INFO, buf);  \
 }while(0)
 #else

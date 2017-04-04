@@ -38,7 +38,7 @@
 #define Proc_List_UnSelectItem              406
 #define Proc_List_SelectAllItems            407     //选择全部行
 #define Proc_List_UnSelectAllItems          408     //取消所有选择项
-
+#define Proc_List_EnsureVisible             409     //定位滚动条
 
 
 #define Proc_List_GetVerticalScrollBar      Proc_Layout_GetVerticalScrollBar
@@ -61,7 +61,8 @@
 #define Proc_ListElement_SetOwner           400    //设置宿主
 #define Proc_ListElement_SetIndex           401    //
 #define Proc_ListElement_GetIndex           402    //
-
+#define Proc_ListElement_Select             403     //选中
+#define Proc_ListElement_SelectMulti        404     //多选
 /**列表头元素结构*/
 typedef struct _ZListHeaderItem
 {
@@ -132,7 +133,9 @@ typedef struct _ZListInfo
 typedef struct _ZList
 {
     ZuiBool m_bScrollSelect;
-    ZuiInt m_iCurSel;
+    ZuiInt m_iCurSel;           //现行选中项
+    DArray* m_aSelItems;        //选中项数组
+    ZuiBool m_bMultiSel;        //允许多选
     ZuiInt m_iExpandedItem;
 
     ZuiControl m_pList;     //列表体容器

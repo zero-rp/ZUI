@@ -78,7 +78,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         // 插入的元素是行数据
         if (ZuiControlCall(Proc_GetObject, Param1, Type_ListElement, NULL, NULL)) {
             ZuiControlCall(Proc_ListElement_SetOwner, Param1, cp, NULL, NULL);
-            ZuiControlCall(Proc_ListElement_SetIndex, Param1, ZuiControlCall(Proc_List_GetCount, p->m_pHeader, NULL, NULL, NULL), NULL, NULL);
+            ZuiControlCall(Proc_ListElement_SetIndex, Param1, ZuiControlCall(Proc_List_GetCount, p->m_pList, NULL, NULL, NULL), NULL, NULL);
         }
 
         return ZuiControlCall(Proc_Layout_Add, p->m_pList, Param1, 0, NULL);
@@ -177,6 +177,84 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         p->m_iExpandedItem = -1;
         return ZuiControlCall(Proc_Layout_RemoveAll, p->m_pList, NULL, NULL, NULL);
     }
+    case Proc_List_SelectItem: {
+        // 取消所有选择项
+        ZuiControlCall(Proc_List_UnSelectAllItems, cp, NULL, NULL, NULL);
+        // 判断是否合法列表项
+        if (Param1 < 0) return FALSE;
+        ZuiControl pControl = ZuiControlCall(Proc_List_GetItemAt, cp, Param1, NULL, NULL);
+        if (pControl == NULL) return FALSE;
+        if (!ZuiControlCall(Proc_ListElement_Select, pControl, TRUE, NULL, NULL)) {
+            return FALSE;
+        }
+        int iLastSel = p->m_iCurSel;
+        p->m_iCurSel = Param1;
+        darray_append(p->m_aSelItems, Param1);
+        //EnsureVisible(iIndex);//定位滚动条
+        //if (p->bTakeFocus) pControl->SetFocus();//设置焦点
+        if (cp->m_pManager != NULL && iLastSel != p->m_iCurSel) {
+            //事件通知
+            
+            //m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMSELECT, iIndex);
+        }
+
+        return TRUE;
+    }
+    case Proc_List_SelectMultiItem: {
+
+    }
+    case Proc_List_SetMultiSelect: {
+
+    }
+    case Proc_List_IsMultiSelect: {
+
+    }
+    case Proc_List_UnSelectItem: {
+        if (!p->m_bMultiSel)
+            return FALSE;
+        if (Param2) {
+            //for (int i = m_aSelItems.GetSize() - 1; i >= 0; --i) {
+            //    int iSelIndex = (int)m_aSelItems.GetAt(i);
+            //    if (iSelIndex == Param1) continue;
+            //    CControlUI* pControl = GetItemAt(iSelIndex);
+            //    if (pControl == NULL) continue;
+            //    if (!pControl->IsEnabled()) continue;
+            //    IListItemUI* pSelListItem = static_cast<IListItemUI*>(pControl->GetInterface(_T("ListItem")));
+            //    if (pSelListItem == NULL) continue;
+            //    if (!pSelListItem->SelectMulti(false)) continue;
+            //    m_aSelItems.Remove(i);
+            //}
+        }
+        else {
+            if (Param1 < 0) 
+                return FALSE;
+            ZuiControl pControl = ZuiControlCall(Proc_List_GetItemAt, cp, Param1, NULL, NULL);
+            if (pControl == NULL) return FALSE;
+            if (!pControl->m_bEnabled) return FALSE;
+            
+            int aIndex = darray_find(p->m_aSelItems, Param1);
+            if (aIndex < 0) return FALSE;
+            if (!ZuiControlCall(Proc_ListElement_SelectMulti, pControl, FALSE, NULL, NULL)) return FALSE;
+            if (p->m_iCurSel == Param1) p->m_iCurSel = -1;
+            darray_delete(p->m_aSelItems, aIndex);
+        }
+        return TRUE;
+    }
+    case Proc_List_SelectAllItems: {
+
+    }
+    case Proc_List_UnSelectAllItems: {
+        for (int i = 0; i < p->m_aSelItems->count; ++i) {
+            int iSelIndex = darray_getat(p->m_aSelItems, i);
+            ZuiControl pControl = ZuiControlCall(Proc_List_GetItemAt, cp, iSelIndex, NULL, NULL);;
+            if (pControl == NULL) continue;
+            if (!pControl->m_bEnabled) continue;
+            if (!ZuiControlCall(Proc_ListElement_SelectMulti, pControl, FALSE, NULL, NULL)) continue;
+        }
+        darray_empty(p->m_aSelItems);
+        p->m_iCurSel = -1;
+        return TRUE;
+    }
     //直接转发到列表体的消息
     case Proc_Layout_LineUp:
     case Proc_Layout_LineDown:
@@ -200,6 +278,9 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         //创建继承的控件 保存数据指针
         p->old_udata = ZuiVerticalLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
         p->old_call = (ZCtlProc)&ZuiVerticalLayoutProc;
+
+        p->m_aSelItems = darray_create();
+
         //创建表头
         p->m_pHeader = NewZuiControl(L"ListHeader", NULL, NULL, NULL);
         ZuiVerticalLayoutProc(Proc_Layout_Add, cp, p->old_udata, p->m_pHeader, NULL, NULL);
@@ -543,8 +624,8 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
                 if ((GetKeyState(VK_CONTROL) & 0x8000)) {
                     //SelectMulti(!IsSelected());
                 }
-                //else 
-                    //Select();
+                else
+                    ZuiControlCall(Proc_ListElement_Select, cp, TRUE, NULL, NULL);
             }
             return;
         }
@@ -753,12 +834,34 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
             p->m_pOwner = Param1;
         break;
     }
-    case Proc_ListElement_SetIndex: {
+    case Proc_ListElement_GetIndex: {
         return p->m_iIndex;
     }
-    case Proc_ListElement_GetIndex: {
+    case Proc_ListElement_SetIndex: {
         p->m_iIndex = Param1;
         break;
+    }
+    case Proc_ListElement_Select: {
+        if (!cp->m_bEnabled) return FALSE;
+        if (p->m_pOwner != NULL && p->m_bSelected)
+            ZuiControlCall(Proc_List_UnSelectItem, p->m_pOwner, p->m_iIndex, TRUE, NULL);//如果被选中就先反选,然后重新选取
+        if (Param1 == p->m_bSelected) return TRUE;
+        p->m_bSelected = Param1;
+        if (Param1 && p->m_pOwner != NULL)
+            ZuiControlCall(Proc_List_SelectItem, p->m_pOwner, p->m_iIndex, FALSE, NULL);
+        ZuiControlInvalidate(cp, TRUE);
+
+        return TRUE;
+    }
+    case Proc_ListElement_SelectMulti: {
+        if (!cp->m_bEnabled) return FALSE;
+        if (Param1 == p->m_bSelected) return TRUE;
+
+        p->m_bSelected = Param1;
+        if (Param1 && p->m_pOwner != NULL)
+            ZuiControlCall(Proc_List_SelectMultiItem, p->m_pOwner, p->m_iIndex, FALSE, NULL);
+        ZuiControlInvalidate(cp, TRUE);
+        return TRUE;
     }
     case Proc_OnCreate: {
         p = (ZuiListHeaderItem)ZuiMalloc(sizeof(ZListHeaderItem));

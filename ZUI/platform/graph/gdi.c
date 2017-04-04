@@ -183,8 +183,8 @@ ZEXPORT ZuiVoid ZCALL ZuiDrawImageEx(ZuiGraphics Graphics, ZuiImage Image, ZuiIn
             WidthSrc = (ZuiInt)(Image->Width - xSrc);
     }
     if (HeightSrc <= 0 || HeightSrc + ySrc > Image->Height) {
-        if (Image->src.right)
-            HeightSrc = Image->src.right;
+        if (Image->src.bottom)
+            HeightSrc = Image->src.bottom;
         else
             HeightSrc = (ZuiInt)(Image->Height - ySrc);
     }

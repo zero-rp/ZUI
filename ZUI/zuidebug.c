@@ -3,7 +3,7 @@
 #if !(defined NDEBUG)
 int _stdcall _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
     ZInitConfig config = { 0 };
-    config.debug = TRUE;
+    //config.debug = TRUE;
     config.m_hInstance = hInstance;
     ZuiInit(&config);
 	
