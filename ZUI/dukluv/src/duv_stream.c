@@ -65,7 +65,7 @@ static void duv_alloc_unpack_cb(struct task_client * handle, size_t suggested_si
         buf->len = *len;
     }
 }
-static void duv_read_unpack_cb(uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf) {
+static void duv_read_unpack_cb(uv_stream_t* handle, ssize_t nread, uv_buf_t* buf) {
     unsigned short *len = (unsigned short *)((char *)handle + sizeof(uv_tcp_t));
     char *head = (char *)((char *)handle + sizeof(uv_tcp_t) + sizeof(unsigned short));
     if (nread >= 0) {
@@ -84,6 +84,10 @@ static void duv_read_unpack_cb(uv_stream_t* handle, ssize_t nread, const uv_buf_
             duv_read_cb(handle, -1, buf);
         }
         return;
+    }
+    else {
+        if (!*head)
+            buf->base = 0;
     }
     duv_read_cb(handle, nread, buf);
 }
@@ -132,7 +136,7 @@ static void duv_get_unpack_data(duk_context *ctx, int index, uv_buf_t* buf) {
         data = (char*)duk_get_lstring(ctx, index, &len);
     }
     else {
-        data = duk_get_buffer(ctx, index, &len);
+        data = duk_get_buffer_data(ctx, index, &len);
     }
     buf->base = malloc(len+2);
     *((unsigned short *)buf->base) = len;

@@ -122,7 +122,7 @@ void duv_get_data(duk_context *ctx, int index, uv_buf_t* buf) {
     buf->base = (char*) duk_get_lstring(ctx, index, &len);
   }
   else {
-    buf->base = duk_get_buffer(ctx, index, &len);
+    buf->base = duk_get_buffer_data(ctx, index, &len);
   }
   buf->len = len;
 }

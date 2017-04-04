@@ -1,7 +1,7 @@
 #include "schema.h"
 
 duk_bool_t dschema_is_data(duk_context* ctx, duk_idx_t index) {
-  return duk_is_string(ctx, index) || duk_is_buffer(ctx, index);
+  return duk_is_string(ctx, index) || duk_is_buffer_data(ctx, index);
 }
 
 duk_bool_t dschema_is_continuation(duk_context* ctx, duk_idx_t index) {
