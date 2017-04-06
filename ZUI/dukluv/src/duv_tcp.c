@@ -1,4 +1,4 @@
-#include "tcp.h"
+#include "duv_tcp.h"
 
 duk_ret_t duv_new_tcp(duk_context *ctx) {
   uv_tcp_t* handle;
@@ -102,28 +102,6 @@ duk_ret_t duv_tcp_bind(duk_context *ctx) {
   }
   duv_check(ctx, uv_tcp_bind(handle, (struct sockaddr*)&addr, flags));
   return 0;
-}
-
-static void duv_push_sockaddr(duk_context *ctx, struct sockaddr_storage* address, int addrlen) {
-  char ip[INET6_ADDRSTRLEN];
-  int port = 0;
-  if (address->ss_family == AF_INET) {
-    struct sockaddr_in* addrin = (struct sockaddr_in*)address;
-    uv_inet_ntop(AF_INET, &(addrin->sin_addr), ip, addrlen);
-    port = ntohs(addrin->sin_port);
-  } else if (address->ss_family == AF_INET6) {
-    struct sockaddr_in6* addrin6 = (struct sockaddr_in6*)address;
-    uv_inet_ntop(AF_INET6, &(addrin6->sin6_addr), ip, addrlen);
-    port = ntohs(addrin6->sin6_port);
-  }
-
-  duk_push_object(ctx);
-  duk_push_string(ctx, duv_protocol_to_string(address->ss_family));
-  duk_put_prop_string(ctx, -2, "family");
-  duk_push_number(ctx, port);
-  duk_put_prop_string(ctx, -2, "port");
-  duk_push_string(ctx, ip);
-  duk_put_prop_string(ctx, -2, "ip");
 }
 
 duk_ret_t duv_tcp_getsockname(duk_context *ctx) {

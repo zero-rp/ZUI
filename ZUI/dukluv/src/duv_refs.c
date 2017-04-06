@@ -1,4 +1,4 @@
-#include "refs.h"
+#include "duv_refs.h"
 
 // Create a global array refs in the heap stash.
 void duv_ref_setup(duk_context *ctx) {

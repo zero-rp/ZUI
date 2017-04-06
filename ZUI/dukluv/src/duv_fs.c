@@ -1,4 +1,4 @@
-#include "fs.h"
+#include "duv_fs.h"
 
 static void duv_push_timespec_table(duk_context *ctx, const uv_timespec_t* t) {
   duk_push_object(ctx);

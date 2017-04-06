@@ -1,6 +1,6 @@
 #include <ZUI.h>
 #include "duv.h"
-#include "misc.h"
+#include "duv_misc.h"
 
 // ¼ÓÔØ×ÊÔ´
 static duk_ret_t duv_loadfile(duk_context *ctx) {

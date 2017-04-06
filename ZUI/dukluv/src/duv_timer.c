@@ -1,4 +1,4 @@
-#include "timer.h"
+#include "duv_timer.h"
 
 duk_ret_t duv_new_timer(duk_context *ctx) {
   uv_timer_t* handle;

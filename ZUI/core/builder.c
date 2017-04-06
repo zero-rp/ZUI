@@ -1,5 +1,4 @@
 ﻿#include <ZUI.h>
-#include "../dukluv/src/refs.h"
 
 duk_context *Global_ctx;
 static DArray *ctx_array = NULL;
@@ -398,7 +397,7 @@ ZEXPORT ZuiBool ZCALL ZuiBuilderJsLoad(duk_context *ctx, ZuiText src) {
         return 1;
     }
 }
-VOID ZCALL ZuiGcTimerProc(HWND h, UINT u, UINT_PTR p, DWORD d) {
+VOID WINAPI ZuiGcTimerProc(HWND h, UINT u, UINT_PTR p, DWORD d) {
     for (size_t i = 0; i < ctx_array->count; i++)
     {
         duk_gc(ctx_array->data[i], 0);

@@ -1,5 +1,5 @@
 #include <ZUI.h>
-#include "utils.h"
+#include "duv_utils.h"
 
 
 uv_loop_t* duv_loop(duk_context *ctx) {
@@ -66,6 +66,29 @@ int duv_push_status(duk_context *ctx, int status) {
   }
   duk_push_null(ctx);
   return 0;
+}
+
+void duv_push_sockaddr(duk_context *ctx, struct sockaddr_storage* address, int addrlen) {
+    char ip[INET6_ADDRSTRLEN];
+    int port = 0;
+    if (address->ss_family == AF_INET) {
+        struct sockaddr_in* addrin = (struct sockaddr_in*)address;
+        uv_inet_ntop(AF_INET, &(addrin->sin_addr), ip, addrlen);
+        port = ntohs(addrin->sin_port);
+    }
+    else if (address->ss_family == AF_INET6) {
+        struct sockaddr_in6* addrin6 = (struct sockaddr_in6*)address;
+        uv_inet_ntop(AF_INET6, &(addrin6->sin6_addr), ip, addrlen);
+        port = ntohs(addrin6->sin6_port);
+    }
+
+    duk_push_object(ctx);
+    duk_push_string(ctx, duv_protocol_to_string(address->ss_family));
+    duk_put_prop_string(ctx, -2, "family");
+    duk_push_number(ctx, port);
+    duk_put_prop_string(ctx, -2, "port");
+    duk_push_string(ctx, ip);
+    duk_put_prop_string(ctx, -2, "ip");
 }
 
 void duv_check(duk_context *ctx, int status) {

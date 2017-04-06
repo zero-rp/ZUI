@@ -1,15 +1,16 @@
 #include "duv.h"
 
-#include "refs.h"
-#include "utils.h"
-#include "req.h"
-#include "handle.h"
-#include "timer.h"
-#include "stream.h"
-#include "tcp.h"
-#include "pipe.h"
-#include "fs.h"
-#include "misc.h"
+#include "duv_refs.h"
+#include "duv_utils.h"
+#include "duv_req.h"
+#include "duv_handle.h"
+#include "duv_timer.h"
+#include "duv_stream.h"
+#include "duv_tcp.h"
+#include "duv_udp.h"
+#include "duv_pipe.h"
+#include "duv_fs.h"
+#include "duv_misc.h"
 #include "miniz.h"
 
 static const duk_function_list_entry duv_funcs[] = {
@@ -48,6 +49,11 @@ static const duk_function_list_entry duv_funcs[] = {
   {"tcp_getpeername", duv_tcp_getpeername, 1},
   {"tcp_getsockname", duv_tcp_getsockname, 1},
   {"tcp_connect", duv_tcp_connect, 4},
+
+  // udp.c
+  { "new_udp", duv_new_udp, 0 },
+  { "udp_open", duv_udp_open, 2 },
+  { "udp_bind", duv_udp_bind, 3 },
 
   // pipe.c
   {"new_pipe", duv_new_pipe, 1},

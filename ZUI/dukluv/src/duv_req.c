@@ -1,4 +1,4 @@
-#include "req.h"
+#include "duv_req.h"
 
 duk_ret_t duv_cancel(duk_context *ctx) {
   uv_req_t* req;

@@ -10,6 +10,7 @@ duv_req_t* duv_setup_req(duk_context *ctx, int callback_index);
 duv_req_t* duv_cleanup_req(duk_context *ctx, duv_req_t *data);
 void duv_error(duk_context *ctx, int status);
 int duv_push_status(duk_context *ctx, int status);
+void duv_push_sockaddr(duk_context *ctx, struct sockaddr_storage* address, int addrlen);
 void duv_check(duk_context *ctx, int status);
 void duv_store_handler(duk_context *ctx, duv_handle_t *data, int type, int index);
 void duv_emit_event(duk_context *ctx, duv_handle_t* data, duv_callback_id type, int nargs);

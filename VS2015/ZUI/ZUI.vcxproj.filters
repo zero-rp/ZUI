@@ -789,6 +789,9 @@
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_refs.c">
       <Filter>源文件\dukluv\src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_udp.c">
+      <Filter>源文件\dukluv\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="control\html\lout\container.hh">
@@ -1205,46 +1208,10 @@
     <ClInclude Include="..\..\ZUI\libuv\include\uv-win.h">
       <Filter>头文件\libuv\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\callbacks.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ZUI\dukluv\src\duv.h">
       <Filter>头文件\dukluv\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\fs.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\handle.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ZUI\dukluv\src\miniz.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\misc.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\pipe.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\refs.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\req.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\schema.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\stream.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\tcp.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\timer.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\utils.h">
       <Filter>头文件\dukluv\src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ZUI\dukluv\src\uv_schema.h">
@@ -1259,6 +1226,42 @@
     <ClInclude Include="..\..\ZUI\control\ProgressBar.h">
       <Filter>头文件\control</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_tcp.h">
+      <Filter>头文件\dukluv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_timer.h">
+      <Filter>头文件\dukluv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_utils.h">
+      <Filter>头文件\dukluv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_stream.h">
+      <Filter>头文件\dukluv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_req.h">
+      <Filter>头文件\dukluv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_refs.h">
+      <Filter>头文件\dukluv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_schema.h">
+      <Filter>头文件\dukluv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_callbacks.h">
+      <Filter>头文件\dukluv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_fs.h">
+      <Filter>头文件\dukluv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_handle.h">
+      <Filter>头文件\dukluv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_misc.h">
+      <Filter>头文件\dukluv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_pipe.h">
+      <Filter>头文件\dukluv\src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\ZUI\res\onload.js">
@@ -1268,9 +1271,6 @@
       <Filter>res</Filter>
     </None>
     <None Include="..\..\ZUI\res\default.zip" />
-    <None Include="..\..\ZUI\res\modules\classes.js">
-      <Filter>res\modules</Filter>
-    </None>
     <None Include="..\..\ZUI\res\modules\test.js">
       <Filter>res\modules</Filter>
     </None>
@@ -1346,5 +1346,10 @@
     <Image Include="..\..\ZUI\res\default\24.png">
       <Filter>res\default</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\ZUI\res\modules\classes.js">
+      <Filter>res\modules</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

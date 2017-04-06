@@ -1,4 +1,4 @@
-#include "callbacks.h"
+#include "duv_callbacks.h"
 
 void duv_close_cb(uv_handle_t* handle) {
   duv_handle_t* data = handle->data;
@@ -38,7 +38,7 @@ void duv_connection_cb(uv_stream_t* handle, int status) {
 void duv_read_cb(uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf) {
   duk_context *ctx = ((duv_handle_t*)handle->data)->ctx;
 
-  if (nread >= 0) {
+  if (nread > 0) {
     char* out;
     duk_push_null(ctx);
     out = duk_push_fixed_buffer(ctx, nread);
@@ -53,10 +53,31 @@ void duv_read_cb(uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf) {
     duk_push_undefined(ctx); // undefined value to signify EOF
   }
   else if (nread < 0) {
-    duv_push_status(ctx, nread);
+    duv_push_status(ctx, nread);//error
+    duk_push_undefined(ctx); // undefined value to signify EOF
   }
-
   duv_emit_event(ctx, handle->data, DUV_READ, 2);
+}
+
+void duv_read_udp_cb(uv_udp_t* handle, ssize_t nread, const uv_buf_t* buf, const struct sockaddr* addr, unsigned flags) {
+    duk_context *ctx = ((duv_handle_t*)handle->data)->ctx;
+
+    if (nread >= 0) {
+        char* out;
+        duk_push_null(ctx);
+        out = duk_push_fixed_buffer(ctx, nread);
+        memcpy(out, buf->base, nread);
+        duv_push_sockaddr(ctx, (struct sockaddr_storage*)addr, sizeof(*addr));
+    }
+
+    free(buf->base);
+    
+    if (nread < 0) {
+        duv_push_status(ctx, nread);//error
+        duk_push_undefined(ctx); // undefined value to signify EOF
+        duk_push_undefined(ctx); // undefined value to signify EOF
+    }
+    duv_emit_event(ctx, handle->data, DUV_READ, 3);
 }
 
 void duv_write_cb(uv_write_t* req, int status) {

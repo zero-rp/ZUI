@@ -71,25 +71,25 @@ typedef enum { false, true } bool;
 // Ref for userdata and event callbacks
 typedef struct {
     duk_context *ctx;
-  int ref;
-  int context;
-  int callbacks[2];
+    int ref;
+    int context;
+    int callbacks[2];
 } duv_handle_t;
 
 typedef struct {
-  int req_ref; // ref for uv_req_t's userdata
-  int context;
-  int callback_ref; // ref for callback
-  int data_ref;
-  void* data; // extra data
+    int req_ref; // ref for uv_req_t's userdata
+    int context;
+    int callback_ref; // ref for callback
+    int data_ref;
+    void* data; // extra data
 } duv_req_t;
 
 duk_ret_t dukopen_uv(duk_context *ctx);
 
-#include "refs.h"
-#include "utils.h"
-#include "schema.h"
+#include "duv_refs.h"
+#include "duv_utils.h"
+#include "duv_schema.h"
 #include "uv_schema.h"
-#include "callbacks.h"
+#include "duv_callbacks.h"
 
 #endif

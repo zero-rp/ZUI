@@ -1,5 +1,4 @@
 ﻿#include <ZUI.h>
-#include "../dukluv/src/refs.h"
 
 extern rb_root *Global_ControlClass;
 
@@ -234,7 +233,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             }
             duk_pop(p->m_pManager->m_ctx);
         }
-        ZuiControlNotify(L"onlbuttondown", p, Param1, Param2, NULL);
+        ZuiControlNotify(L"onsize", p, Param1, Param2, NULL);
         break;
     }
     case Proc_SetManager: {

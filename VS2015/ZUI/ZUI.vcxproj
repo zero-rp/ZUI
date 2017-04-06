@@ -97,7 +97,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;RUN_DEBUG=1;MEM_DEBUG=1;LOG_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;BUILDING_ZUI_SHARED;RUN_DEBUG=1;MEM_DEBUG=1;LOG_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -152,7 +152,7 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0500;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_MSC_VER=1400;USING_VC6RT=1;RUN_DEBUG=0;MEM_DEBUG=0;LOG_DEBUG=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0500;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_MSC_VER=1400;BUILDING_ZUI_SHARED;USING_VC6RT=1;RUN_DEBUG=0;MEM_DEBUG=0;LOG_DEBUG=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <ExceptionHandling>false</ExceptionHandling>
@@ -264,6 +264,7 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_stream.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_tcp.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_timer.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\src\duv_udp.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_utils.c" />
     <ClCompile Include="..\..\ZUI\dukluv\src\uv_schema.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_alloc_default.c" />
@@ -603,20 +604,20 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClInclude Include="..\..\ZUI\core\string.h" />
     <ClInclude Include="..\..\ZUI\core\template.h" />
     <ClInclude Include="..\..\ZUI\core\tree.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\callbacks.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_callbacks.h" />
     <ClInclude Include="..\..\ZUI\dukluv\src\duv.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\fs.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\handle.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_fs.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_handle.h" />
     <ClInclude Include="..\..\ZUI\dukluv\src\miniz.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\misc.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\pipe.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\refs.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\req.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\schema.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\stream.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\tcp.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\timer.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\utils.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_misc.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_pipe.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_refs.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_req.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_schema.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_stream.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_tcp.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_timer.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\src\duv_utils.h" />
     <ClInclude Include="..\..\ZUI\dukluv\src\uv_schema.h" />
     <ClInclude Include="..\..\ZUI\duktape\duktape.h" />
     <ClInclude Include="..\..\ZUI\duktape\duk_api_internal.h" />
@@ -731,7 +732,7 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\ZUI\res\default.zip" />
-    <None Include="..\..\ZUI\res\modules\classes.js" />
+    <CustomBuild Include="..\..\ZUI\res\modules\classes.js" />
     <None Include="..\..\ZUI\res\modules\test.js" />
     <None Include="..\..\ZUI\res\modules\theme-16.js" />
     <None Include="..\..\ZUI\res\modules\theme-256.js" />

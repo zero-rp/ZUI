@@ -51,6 +51,7 @@ duk_ret_t duv_accept(duk_context *ctx) {
     duv_check(ctx, uv_accept(server, client));
     return 0;
 }
+
 //拆包函数
 static void duv_alloc_unpack_cb(struct task_client * handle, size_t suggested_size, uv_buf_t* buf) {
     unsigned short *len = (unsigned short *)((char *)handle + sizeof(uv_tcp_t));
@@ -103,16 +104,21 @@ duk_ret_t duv_read_start(duk_context *ctx) {
     });
 
     handle = duk_get_buffer(ctx, 0, NULL);
-    unpack = (char *)((char *)handle + sizeof(uv_tcp_t) + sizeof(unsigned short) + sizeof(char));
-    if (duk_get_boolean(ctx, 2)) {
-        *unpack = 1;
-        duv_check(ctx, uv_read_start(handle, duv_alloc_unpack_cb, duv_read_unpack_cb));
+    if (handle->type == UV_UDP) {
+        uv_udp_recv_start(handle, duv_alloc_cb, duv_read_udp_cb);
     }
     else {
-        *unpack = 0;
-        duv_check(ctx, uv_read_start(handle, duv_alloc_cb, duv_read_cb));
+        unpack = (char *)((char *)handle + sizeof(uv_tcp_t) + sizeof(unsigned short) + sizeof(char));
+        if (duk_get_boolean(ctx, 2)) {
+            *unpack = 1;
+            duv_check(ctx, uv_read_start(handle, duv_alloc_unpack_cb, duv_read_unpack_cb));
+        }
+        else {
+            *unpack = 0;
+            duv_check(ctx, uv_read_start(handle, duv_alloc_cb, duv_read_cb));
+        }
+        duv_store_handler(ctx, handle->data, DUV_READ, 1);
     }
-    duv_store_handler(ctx, handle->data, DUV_READ, 1);
     return 0;
 }
 
@@ -125,9 +131,15 @@ duk_ret_t duv_read_stop(duk_context *ctx) {
     });
 
     handle = duk_get_buffer(ctx, 0, NULL);
-    duv_check(ctx, uv_read_stop(handle));
+    if (handle->type == UV_UDP) {
+        duv_check(ctx, uv_udp_recv_stop(handle));
+    }
+    else {
+        duv_check(ctx, uv_read_stop(handle));
+    }
     return 0;
 }
+
 //打包函数
 static void duv_get_unpack_data(duk_context *ctx, int index, uv_buf_t* buf) {
     duk_size_t len;
