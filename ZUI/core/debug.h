@@ -48,7 +48,7 @@
 #define LOG_DUK(ctx) do{\
     wchar_t buf[1024];   \
     duk_get_prop_string((ctx), -1, "stack");\
-    _snwprintf(buf, 1024, L"%s",duk_get_string_w((ctx), -1));\
+    _snwprintf(buf, 1024, L"%s\r\n",duk_get_string_w((ctx), -1));\
     wprintf(buf);\
     ZuiDebugLog(ZLOG_TYPE_INFO, buf);  \
 }while(0)

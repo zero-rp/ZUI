@@ -8,7 +8,20 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         ZRect *rc = &cp->m_rcItem;
         ZRect r;
         MAKEZRECT(r, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
-        ZuiDrawString(gp, Global_StringFormat, cp->m_sText, &r);
+        if (p->font)
+            ZuiDrawString(gp, p->font->p, cp->m_sText, &r);
+        else
+            ZuiDrawString(gp, Global_StringFormat, cp->m_sText, &r);
+        break;
+    }
+    case Proc_Label_SetFont: {
+        if (p->font)
+            ZuiResDBDelRes(p->font);
+        p->font = Param1;
+        break;
+    }
+    case Proc_SetAttribute: {
+        if (wcscmp(Param1, L"font") == 0) ZuiControlCall(Proc_Label_SetFont, cp, ZuiResDBGetRes(Param2, ZREST_FONT), NULL, NULL);
         break;
     }
     case Proc_OnCreate: {

@@ -14,10 +14,12 @@
 #ifndef __LABEL_H__
 #define __LABEL_H__
 #define Type_Label        0xe538ac26
+#define Proc_Label_SetFont    151    //设置字体
 /**按钮控件结构*/
 typedef struct _ZLabel
 {
     ZuiRes font;    //字体控制
+
     ZCtlProc old_call;
 }*ZuiLabel, ZLabel;
 ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);

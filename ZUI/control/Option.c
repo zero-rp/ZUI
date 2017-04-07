@@ -48,6 +48,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
                     ZuiDrawFillRect(gp, p->m_ColorSelectedPushed, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
                 }
             }
+            ZuiControlCall(Proc_OnPaintText, cp, Param1, Param2, NULL);//绘制文本
             return 0;//选择状态下不由按钮控件绘制
         }
         break;
@@ -56,18 +57,39 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
         if (p->m_bSelected == Param1) return 0;
         p->m_bSelected = Param1;
 
-        if (p->m_bGroup && Param1) {
-            for (size_t i = 0; i < (size_t)ZuiControlCall(Proc_Layout_GetCount, cp->m_pParent, NULL, NULL, NULL); i++)
-            {
-                ZuiControl pControl;
-                if ((pControl = ZuiControlCall(Proc_Layout_GetItemAt, cp->m_pParent, i, NULL, NULL)) != cp)
+        if (p->m_bGroup) {
+            if (Param1) {
+                for (size_t i = 0; i < (size_t)ZuiControlCall(Proc_Layout_GetCount, cp->m_pParent, NULL, NULL, NULL); i++)
                 {
-                    if (pControl != cp) {
-                        ZuiControlCall(Proc_Option_SetSelected, pControl, FALSE, NULL, NULL);
-                    }
-                    
-                }
+                    ZuiControl pControl;
+                    if ((pControl = ZuiControlCall(Proc_Layout_GetItemAt, cp->m_pParent, i, NULL, NULL)) != cp)
+                    {
+                        if (pControl != cp) {
+                            ZuiControlCall(Proc_Option_SetSelected, pControl, FALSE, NULL, NULL);
+                        }
 
+                    }
+
+                }
+            }
+            else {
+                //在分组情况下反选,需要保证至少一个被选中
+                int select = 0;
+                for (size_t i = 0; i < (size_t)ZuiControlCall(Proc_Layout_GetCount, cp->m_pParent, NULL, NULL, NULL); i++)
+                {
+                    ZuiControl pControl;
+                    if ((pControl = ZuiControlCall(Proc_Layout_GetItemAt, cp->m_pParent, i, NULL, NULL)) != cp)
+                    {
+                        if (pControl != cp) {
+                            select += ZuiControlCall(Proc_Option_GetSelected, pControl, NULL, NULL, NULL) ? 1 : 0;
+                        }
+
+                    }
+                }
+                if (!select) {
+                    p->m_bSelected = !p->m_bSelected;
+                    return;
+                }
             }
         }
         if (p->m_rOnselected) {

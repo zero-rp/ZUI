@@ -15,39 +15,39 @@
 #define __LAYOUT_H__
 #define Type_Layout                     0xbebc5b1a
 
-#define Proc_Layout_Add                 301 ///添加控件
-#define Proc_Layout_AddAt               302 ///插入控件
-#define Proc_Layout_Remove              303 ///移除指定控件, 参数1为真由调用方销毁成员
-#define Proc_Layout_RemoveAt            304 ///移除指定位置控件
-#define Proc_Layout_RemoveAll           305 ///移除全部控件
-#define Proc_Layout_GetCount            306 ///取容器控件数量
-#define Proc_Layout_GetItemIndex        307 ///取指定控件索引
-#define Proc_Layout_SetItemIndex        308 ///设置控件所在位置
-#define Proc_Layout_GetItemAt           309 ///索引取控件
-#define Proc_Layout_SetFloatPos         310 ///设置浮动控件位置
-#define Proc_Layout_SetInset            312 ///设置内边距
+#define Proc_Layout_Add                 101 ///添加控件
+#define Proc_Layout_AddAt               102 ///插入控件
+#define Proc_Layout_Remove              103 ///移除指定控件, 参数1为真由调用方销毁成员
+#define Proc_Layout_RemoveAt            104 ///移除指定位置控件
+#define Proc_Layout_RemoveAll           105 ///移除全部控件
+#define Proc_Layout_GetCount            106 ///取容器控件数量
+#define Proc_Layout_GetItemIndex        107 ///取指定控件索引
+#define Proc_Layout_SetItemIndex        108 ///设置控件所在位置
+#define Proc_Layout_GetItemAt           109 ///索引取控件
+#define Proc_Layout_SetFloatPos         110 ///设置浮动控件位置
+#define Proc_Layout_SetInset            112 ///设置内边距
 //--------滚动条
-#define Proc_Layout_GetScrollPos        313
-#define Proc_Layout_GetScrollRange      314
-#define Proc_Layout_SetScrollPos        315
-#define Proc_Layout_SetScrollStepSize   316
-#define Proc_Layout_GetScrollStepSize   317
-#define Proc_Layout_LineUp              318
-#define Proc_Layout_LineDown            319
-#define Proc_Layout_PageUp              320
-#define Proc_Layout_PageDown            321
-#define Proc_Layout_HomeUp              322
-#define Proc_Layout_EndDown             323
-#define Proc_Layout_LineLeft            324
-#define Proc_Layout_LineRight           325
-#define Proc_Layout_PageLeft            326
-#define Proc_Layout_PageRight           327
-#define Proc_Layout_HomeLeft            328
-#define Proc_Layout_EndRight            329
-#define Proc_Layout_EnableScrollBar     330
-#define Proc_Layout_GetVerticalScrollBar    331
-#define Proc_Layout_GetHorizontalScrollBar  332
-#define Proc_Layout_ProcessScrollBar    333 //调整滚动条位置
+#define Proc_Layout_GetScrollPos        113
+#define Proc_Layout_GetScrollRange      114
+#define Proc_Layout_SetScrollPos        115
+#define Proc_Layout_SetScrollStepSize   116
+#define Proc_Layout_GetScrollStepSize   117
+#define Proc_Layout_LineUp              118
+#define Proc_Layout_LineDown            119
+#define Proc_Layout_PageUp              120
+#define Proc_Layout_PageDown            121
+#define Proc_Layout_HomeUp              122
+#define Proc_Layout_EndDown             123
+#define Proc_Layout_LineLeft            124
+#define Proc_Layout_LineRight           125
+#define Proc_Layout_PageLeft            126
+#define Proc_Layout_PageRight           127
+#define Proc_Layout_HomeLeft            128
+#define Proc_Layout_EndRight            129
+#define Proc_Layout_EnableScrollBar     130
+#define Proc_Layout_GetVerticalScrollBar    131
+#define Proc_Layout_GetHorizontalScrollBar  132
+#define Proc_Layout_ProcessScrollBar    133 //调整滚动条位置
 
 //------Js
 

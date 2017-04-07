@@ -23,7 +23,7 @@ HWND findDesktopIconWnd()
     EnumWindows((WNDENUMPROC)enumUserWindowsCB, (LPARAM)&resultHwnd);
     return resultHwnd;
 }
-static LRESULT ZCALL __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     ZuiOsWindow pThis = NULL;
     if (uMsg == WM_NCCREATE) {
