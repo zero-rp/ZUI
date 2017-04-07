@@ -745,7 +745,8 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ResourceCompile Include="..\..\ZUI\Zui.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="..\..\ZUI\res\default.xml" />
+    <Xml Include="..\..\ZUI\res\default_ctl.xml" />
+    <Xml Include="..\..\ZUI\res\default_msgbox.xml" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\ZUI\res\default\1.png" />

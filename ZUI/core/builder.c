@@ -338,6 +338,13 @@ static duk_ret_t ZuiJsBind_Call_ZuiPopupMenu(duk_context *ctx) {
     //}
     //js_pushundefined(J);
 }
+
+static duk_ret_t ZuiJsBind_Call_MsgBox(duk_context *ctx) {
+    if (duk_is_string(ctx, 0)) {
+        ZuiMsgBox();
+    }
+    return 0;
+}
 //---------------------------------------------------------------------------JNI_End
 //致命错误
 static void duv_fatal(void *udata, const char *msg) {
@@ -369,6 +376,9 @@ duk_context *ZuiBuilderJs(ZuiPaintManager p) {
 
     duk_push_c_function(ctx, ZuiJsBind_Call_LayoutLoad, 1 /*nargs*/, 0, 0);
     duk_put_global_string(ctx, "LayoutLoad");
+
+    duk_push_c_function(ctx, ZuiJsBind_Call_MsgBox, 2 /*nargs*/, 0, 0);
+    duk_put_global_string(ctx, "MsgBox");
 
     //js_newcfunction(J, ZuiJsBind_Call_ZuiPopupMenu, L"PopupMenu", 0);
     //js_setglobal(J, L"PopupMenu");

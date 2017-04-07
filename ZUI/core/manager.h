@@ -60,12 +60,12 @@ enum EVENTTYPE_UI
 #define ZFLAG_WANTRETURN    0x00000004
 
 
-#define ZFIND_ALL           0x00000000
-#define ZFIND_VISIBLE       0x00000001
-#define ZFIND_ENABLED       0x00000002
+#define ZFIND_ALL           0x00000000  //查找全部控件
+#define ZFIND_VISIBLE       0x00000001  //查找可视的控件
+#define ZFIND_ENABLED       0x00000002  //查找可用的控件
 #define ZFIND_HITTEST       0x00000004
 #define ZFIND_UPDATETEST    0x00000008
-#define ZFIND_TOP_FIRST     0x00000010
+#define ZFIND_TOP_FIRST     0x00000010  //自顶
 #define ZFIND_ME_FIRST      0x80000000
 
 
@@ -86,7 +86,7 @@ typedef struct tagTEventUI
     int Type;			//事件类型
     ZuiControl pSender;	//事件对应的控件
     DWORD dwTimestamp;	//时间戳
-    ZPoint ptMouse;		//
+    ZPoint ptMouse;		//鼠标位置
     TCHAR chKey;		//
     WORD wKeyState;		//
     WPARAM wParam;		//

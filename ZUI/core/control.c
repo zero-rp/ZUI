@@ -55,7 +55,7 @@ ZuiControl NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny
         //在模版内查找
         node = rb_search((key_t)Zui_Hash(name), Global_TemplateClass);
         if (node) {
-            ZuiLoadTemplate(node->data, p);
+            ZuiLoadTemplate(node->data, p, Param1, Param2, Param3);
         }
         return p;
     }

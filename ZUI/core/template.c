@@ -45,32 +45,39 @@ ZuiVoid ZuiLoadTemplate(mxml_node_t *n, ZuiControl p, ZuiAny Param1, ZuiAny Para
     {
         if (wcscmp(node->value.attrs[i].name, L"layout") == 0) {
             Layout = node->value.attrs[i].value;
+            if (wcscmp(Layout, L"layout") == 0)
+            {
+                p->m_sUserData = ZuiLayoutProc(Proc_OnCreate, p, 0, Param1, Param2, Param3);
+                p->call = &ZuiLayoutProc;
+            }
+            else if (wcscmp(Layout, L"horizontal") == 0)
+            {
+                p->m_sUserData = ZuiHorizontalLayoutProc(Proc_OnCreate, p, 0, Param1, Param2, Param3);
+                p->call = &ZuiHorizontalLayoutProc;
+            }
+            else if (wcscmp(Layout, L"vertical") == 0)
+            {
+                p->m_sUserData = ZuiVerticalLayoutProc(Proc_OnCreate, p, 0, Param1, Param2, Param3);
+                p->call = &ZuiVerticalLayoutProc;
+            }
+            else if (wcscmp(Layout, L"tile") == 0)
+            {
+                p->m_sUserData = ZuiTileLayoutProc(Proc_OnCreate, p, 0, Param1, Param2, Param3);
+                p->call = &ZuiTileLayoutProc;
+            }
+            else if (wcscmp(Layout, L"window") == 0)
+            {
+                p->m_sUserData = ZuiWindowProc(Proc_OnCreate, p, 0, Param1, Param2, Param3);
+                p->call = &ZuiWindowProc;
+            }
+
         }
         else
         {
             ZuiControlCall(Proc_SetAttribute, p, node->value.attrs[i].name, node->value.attrs[i].value, NULL);
         }
     }
-    if (wcscmp(Layout, L"layout") == 0)
-    {
-        p->m_sUserData = ZuiLayoutProc(Proc_OnCreate, p, 0, Param1, Param2, Param3);
-        p->call = &ZuiLayoutProc;
-    }
-    else if (wcscmp(Layout, L"horizontal") == 0)
-    {
-        p->m_sUserData = ZuiHorizontalLayoutProc(Proc_OnCreate, p, 0, Param1, Param2, Param3);
-        p->call = &ZuiHorizontalLayoutProc;
-    }
-    else if (wcscmp(Layout, L"vertical") == 0)
-    {
-        p->m_sUserData = ZuiVerticalLayoutProc(Proc_OnCreate, p, 0, Param1, Param2, Param3);
-        p->call = &ZuiVerticalLayoutProc;
-    }
-    else if (wcscmp(Layout, L"tile") == 0)
-    {
-        p->m_sUserData = ZuiTileLayoutProc(Proc_OnCreate, p, 0, Param1, Param2, Param3);
-        p->call = &ZuiTileLayoutProc;
-    }
+
     node->user_data = p;
     for (node = mxmlFindElement(node, node, NULL, NULL, NULL, MXML_DESCEND); node != NULL; node = mxmlWalkNext(node, NULL, MXML_DESCEND))
     {

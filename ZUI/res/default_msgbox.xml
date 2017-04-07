@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="gb2312"?>
+<Template class="MessageBox" layout="window" size="300,200">
+  <VerticalLayout drag="true" height="25">
+    <HorizontalLayout name="head" drag="true">
+      <!--标题栏-->
+      <HorizontalLayout name="Title" inset="0,0,28,0" drag="true">
+        <Label name="title" text="神器" font="font:name='宋体':size=14:textcolor=#FF0000FF:align='center':valign='center'" drag="true"/>
+      </HorizontalLayout>
+      <WindowCtl name="ctl"/>
+    </HorizontalLayout>
+  </VerticalLayout>
+</Template>

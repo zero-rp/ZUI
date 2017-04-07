@@ -54,12 +54,31 @@
 #include "duktape/duktape.h"
 
 #ifdef PLATFORM_OS_WIN
-    #ifdef __cplusplus
-        #define ZEXPORT extern "C" __declspec(dllexport)
-    #else
-        #define ZEXPORT __declspec(dllexport)
-    #endif
-    #define ZCALL __stdcall
+# if defined(BUILDING_ZUI_SHARED)
+//编译成动态库
+#ifdef __cplusplus
+#define ZEXPORT extern "C" __declspec(dllexport)
+#else
+#define ZEXPORT __declspec(dllexport)
+#endif
+#define ZCALL __stdcall
+# elif defined(USING_ZUI_SHARED)
+//使用动态库
+#ifdef __cplusplus
+#define ZEXPORT extern "C" __declspec(dllimport)
+#else
+#define ZEXPORT __declspec(dllimport)
+#endif
+#define ZCALL __stdcall
+# else
+//编译成静态库
+#ifdef __cplusplus
+#define ZEXPORT extern "C"
+#else
+#define ZEXPORT
+#endif
+#define ZCALL
+# endif
 #else
     #ifdef __cplusplus
         #define ZEXPORT extern "C" 
@@ -199,8 +218,15 @@ extern "C"
 #include "layout/TileLayout.h"          //列表布局
 #include "layout/TabLayout.h"           //选择夹布局
 
+/**
+*       备注信息
+*一,功能ID号分配
+*   1,基类 1-100
+*   2,容器类 101-150
+*   定义规则:在继承的父控件id范围以50为阶梯增加
 
 
+*/
 
 
 #if defined(__cplusplus)

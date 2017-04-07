@@ -25,6 +25,7 @@ extern  DArray *m_aPreMessages;					//所有ZuiPaintManager实例数组
 extern  ZuiReal	Global_DPI_X;					//DPI
 extern  ZuiReal	Global_DPI_Y;					//DPI
 extern  uv_loop_t *Global_loop;
+extern  ZuiText Global_DefaultFontName;			//系统默认字体名称
 /**
 * 此函数用作初始化全局对象.
 * @return 成功返回TRUE.

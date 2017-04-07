@@ -138,10 +138,7 @@ ZuiAny ZCALL MsgBox_Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAn
 }
 
 ZEXPORT ZuiVoid ZCALL ZuiMsgBox() {
-    MsgBox_pRoot = NewZuiControl(L"window", NULL, NULL, NULL);
-    ZuiControlRegNotify(MsgBox_pRoot, MsgBox_Notify_ctl);
-
-
+    MsgBox_pRoot = NewZuiControl(L"MessageBox", NULL, NULL, NULL);
 
     MSG Msg;
     while (GetMessage(&Msg, NULL, 0, 0))

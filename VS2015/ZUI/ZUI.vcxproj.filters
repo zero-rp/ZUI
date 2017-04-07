@@ -1293,11 +1293,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="..\..\ZUI\res\default.xml">
-      <Filter>res</Filter>
-    </Xml>
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="..\..\ZUI\res\default\1.png">
       <Filter>res\default</Filter>
     </Image>
@@ -1351,5 +1346,13 @@
     <CustomBuild Include="..\..\ZUI\res\modules\classes.js">
       <Filter>res\modules</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\..\ZUI\res\default_ctl.xml">
+      <Filter>res</Filter>
+    </Xml>
+    <Xml Include="..\..\ZUI\res\default_msgbox.xml">
+      <Filter>res</Filter>
+    </Xml>
   </ItemGroup>
 </Project>
