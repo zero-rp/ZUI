@@ -225,7 +225,7 @@ ZEXPORT ZuiStringFormat ZCALL ZuiCreateStringFormat(ZuiText FontName, ZuiReal Fo
     memset(StringFormat, 0, sizeof(ZStringFromat));
 
     GdipCreateStringFormat(0, 0, &StringFormat->StringFormat);//创建字体格式
-    int a = GetLastError();
+    
     if (StringStyle & ZTS_ALIGN_LEFT) {
         i = 0;
     }
@@ -237,6 +237,7 @@ ZEXPORT ZuiStringFormat ZCALL ZuiCreateStringFormat(ZuiText FontName, ZuiReal Fo
         i = 2;
     }
     GdipSetStringFormatAlign(StringFormat->StringFormat, i);//设置水平对齐方式
+    
     if (StringStyle & ZTS_VALIGN_TOP) {
         i = 0;
     }
@@ -248,6 +249,7 @@ ZEXPORT ZuiStringFormat ZCALL ZuiCreateStringFormat(ZuiText FontName, ZuiReal Fo
         i = 2;
     }
     GdipSetStringFormatLineAlign(StringFormat->StringFormat, i);//设置纵向对齐方式
+    
     i = 0;
     if (StringStyle & ZTS_BOLD) {
         i = 1;
@@ -259,6 +261,7 @@ ZEXPORT ZuiStringFormat ZCALL ZuiCreateStringFormat(ZuiText FontName, ZuiReal Fo
     GdipCreateFontFamilyFromName(FontName, NULL, &StringFormat->FontFamily);
     GdipCreateFont(StringFormat->FontFamily, FontSize, i, 0, &StringFormat->font);
     GdipDeleteFontFamily(StringFormat->FontFamily);
+    
     if (StringStyle & ZTS_SHADOW)
     {
         GdipCreateSolidFill(ShadowColor, &StringFormat->BrushShadow);

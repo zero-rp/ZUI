@@ -31,11 +31,11 @@ typedef struct _ZRegion {
 
 /**文本格式*/
 typedef struct _ZStringFormat {
-    ZuiColor TextColor;
-    ZuiColor ShadowColor;
-    void *font;///字体
-    void *StringFormat;///文本格式
-    void *FontFamily;///字体族
+    ZuiColor TextColor;     ///字体颜色
+    ZuiColor ShadowColor;   ///阴影颜色
+    void *font;             ///字体
+    void *StringFormat;     ///文本格式
+    void *FontFamily;       ///字体族
     void *BrushShadow;
     void *Brush;
 }*ZuiStringFormat, ZStringFromat;

@@ -31,6 +31,11 @@ ZuiBool ZuiResDBInit() {
         p->Instance = m_hInstance;
         rb_insert(Zui_Hash(L"pe_zui"), p, Global_ResDB->resdb);
 
+        p = (ZuiResDB)ZuiMalloc(sizeof(ZResDB));
+        memset(p, 0, sizeof(ZResDB));
+        p->type = ZRESDBT_FONT;
+        rb_insert(Zui_Hash(L"font"), p, Global_ResDB->resdb);
+
         //加载默认资源包
         ZuiResDBGetRes(L"pe_zui:zip:6666", ZREST_ZIP);
         return TRUE;
@@ -323,6 +328,10 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
                 }
             }
         }
+        /*字体*/else if (db->type == ZRESDBT_FONT)
+        {
+            buf = buflen = -1;
+        }
         if (buf == 0 || buflen == 0)
             return NULL;
         {
@@ -390,6 +399,96 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
             else if (type == ZREST_STREAM) {
                 res->p = buf;
                 res->plen = buflen;
+            }
+            else if (type == ZREST_FONT)
+            {
+                ZuiText name = Global_DefaultFontName;//字体名字
+                ZuiColor color = ARGB(254, 0, 0, 0);
+                ZuiUInt size = 12;
+                ZuiInt style = NULL;
+                for (size_t i = 1; i < arrnum; i++)
+                {
+                    if (wcsncmp(arr[i], L"name='", 6) == 0) {
+                        if (arr[i][wcslen(arr[i])-1] == '\'')
+                        {
+                            name = arr[i] + 6;
+                            name[wcslen(name)-1] = 0;
+                        }
+                    }
+                    else if(wcsncmp(arr[i], L"textcolor=#", 11) == 0)
+                    {
+                        ZuiText pstr = NULL;
+                        color = _tcstoul((wchar_t *)arr[i] + 11, &pstr, 16);
+                    }
+                    else if (wcsncmp(arr[i], L"size=", 5) == 0)
+                    {
+                        size = _wtoi(arr[i] + 5);
+                    }
+                    else if (wcsncmp(arr[i], L"bold=", 5) == 0)
+                    {
+                        //粗体
+                        if (wcsncmp(arr[i] + 5, L"true", 4) == 0)
+                        {
+                            style |= ZTS_BOLD;
+                        }
+                    }
+                    else if (wcsncmp(arr[i], L"italic=", 7) == 0)
+                    {
+                        //斜体
+                        if (wcsncmp(arr[i] + 7, L"true", 4) == 0)
+                        {
+                            style |= ZTS_ITALIC;
+                        }
+                    }
+                    else if (wcsncmp(arr[i], L"underline=", 10) == 0)
+                    {
+                        //下划线
+                        if (wcsncmp(arr[i] + 10, L"true", 4) == 0)
+                        {
+
+                        }
+                    }
+                    else if (wcsncmp(arr[i], L"align='", 7) == 0)
+                    {
+                        //横向对齐方式
+                        if (wcsncmp(arr[i] + 7, L"left", 4) == 0)
+                        {
+                            //左对齐
+                            style |= ZTS_ALIGN_LEFT;
+                        }
+                        else if (wcsncmp(arr[i] + 7, L"center", 6) == 0)
+                        {
+                            //居中对齐
+                            style |= ZTS_ALIGN_CENTER;
+                        }
+                        else if (wcsncmp(arr[i] + 7, L"right", 5) == 0)
+                        {
+                            //右对齐
+                            style |= ZTS_ALIGN_RIGHT;
+                        }
+                    }
+                    else if (wcsncmp(arr[i], L"valign='", 8) == 0)
+                    {
+                        //纵向对齐方式
+                        if (wcsncmp(arr[i] + 8, L"top", 3) == 0)
+                        {
+                            //顶对齐
+                            style |= ZTS_VALIGN_TOP;
+                        }
+                        else if (wcsncmp(arr[i] + 8, L"center", 6) == 0)
+                        {
+                            //居中对齐
+                            style |= ZTS_VALIGN_MIDDLE;
+                        }
+                        else if (wcsncmp(arr[i] + 8, L"bottom", 6) == 0)
+                        {
+                            //底对齐
+                            style |= ZTS_VALIGN_BOTTOM;
+                        }
+                    }
+
+                }
+                res->p = ZuiCreateStringFormat(name, size, color, 0, style);
             }
             if (!res->p) {
                 ZuiFree(res);

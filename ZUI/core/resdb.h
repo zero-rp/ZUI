@@ -25,6 +25,7 @@ enum ZREST
 	ZREST_IMG = 1,
 	ZREST_TXT,
 	ZREST_STREAM,
+    ZREST_FONT,             //字体
 	ZREST_ZIP               ///此类型比较特殊,如果压缩包包含备注信息则作为资源包打开,由ResDB管理,反之则作为普通资源由Res管理
 };
 /*资源包类型*/
@@ -35,7 +36,8 @@ enum ZRESDBT
 	ZRESDBT_FILE,			///文件
 	ZRESDBT_STREAM,			///字节流
 	ZRESDBT_URL,			///网络资源
-	ZRESDBT_PE				///应用资源
+	ZRESDBT_PE,				///应用资源
+    ZRESDBT_FONT            ///字体也属于一类资源,由字体管理器管理
 };
 /**资源包结构*/
 typedef struct _ZResDB
