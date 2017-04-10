@@ -15,10 +15,12 @@
 #define __ZUI_CORE_TREE_H__
 
 #ifdef _WIN32
-#include <windows.h>
-#else
-#include <stdlib.h>
 
+#include <windows.h>
+
+#else
+
+#include <stdlib.h>
 #define BOOL int
 #define FALSE 0
 #define TRUE 1
@@ -29,7 +31,7 @@
 	extern "C" {
 #endif
 
-	typedef size_t key_t;
+	typedef int key_t;
 	typedef void *data_t;
 
 	typedef struct rb_node_

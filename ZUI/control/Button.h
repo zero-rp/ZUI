@@ -15,11 +15,17 @@
 #define __BUTTON_H__
 #define Type_Button                 0x5e7331d7
 
-#define Proc_Button_SetResNormal    1001    //
-#define Proc_Button_SetResHot       1002    //高亮状态
-#define Proc_Button_SetResPushed    1003    //按下状态
-#define Proc_Button_SetResFocused   1004    //焦点图片
-#define Proc_Button_SetResDisabled  1005    //非激活状态
+#define Proc_Button_SetResNormal    201    //
+#define Proc_Button_SetResHot       202    //高亮状态
+#define Proc_Button_SetResPushed    203    //按下状态
+#define Proc_Button_SetResFocused   204    //焦点图片
+#define Proc_Button_SetResDisabled  205    //非激活状态
+
+#define Proc_Button_SetColorNormal    206    //
+#define Proc_Button_SetColorHot       207    //高亮状态
+#define Proc_Button_SetColorPushed    208    //按下状态
+#define Proc_Button_SetColorFocused   209    //焦点图片
+#define Proc_Button_SetColorDisabled  210    //非激活状态
 
 //------Js
 
@@ -37,6 +43,12 @@ typedef struct _ZButton
     ZuiRes m_ResPushed;     //按下状态
     ZuiRes m_ResFocused;    //焦点图片
     ZuiRes m_ResDisabled;   //非激活状态
+
+    ZuiColor m_ColorNormal;     //正常状态
+    ZuiColor m_ColorHot;        //高亮状态
+    ZuiColor m_ColorPushed;     //按下状态
+    ZuiColor m_ColorFocused;    //焦点图片
+    ZuiColor m_ColorDisabled;   //非激活状态
 
     int type;
     ZCtlProc old_call;

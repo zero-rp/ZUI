@@ -26,7 +26,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -407,9 +407,6 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClCompile Include="..\..\ZUI\platform\os\win.c" />
     <ClCompile Include="..\..\ZUI\vc6.cpp">
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\ZUI\zlib\adler32.c" />
     <ClCompile Include="..\..\ZUI\zlib\crc32.c" />
@@ -746,7 +743,9 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\..\ZUI\res\default_ctl.xml" />
-    <Xml Include="..\..\ZUI\res\default_msgbox.xml" />
+    <Xml Include="..\..\ZUI\res\default_msgbox.xml">
+      <SubType>Designer</SubType>
+    </Xml>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\ZUI\res\default\1.png" />

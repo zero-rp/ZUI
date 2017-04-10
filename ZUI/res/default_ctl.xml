@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="gb2312"?>
 <Template class="WindowCtl" layout="horizontal" width="90" height="23">
+  <NULL/>
 	<Button name="WindowCtl_min" width="30" height="23" tooltip="最小化" normalimage="default:default/11.png" hotimage="default:default/12.png" pushedimage="default:default/13.png" />
 	<Option name="WindowCtl_max" width="30" height="23" tooltip="最大化" normalimage="default:default/5.png" hotimage="default:default/6.png" pushedimage="default:default/7.png" selectedimage="default:default/8.png" selectedhotimage="default:default/9.png" selectedpushedimage="default:default/10.png" />
 	<Button name="WindowCtl_clos" width="32" height="23" tooltip="关闭" normalimage="default:default/1.png" hotimage="default:default/2.png" pushedimage="default:default/3.png"/>

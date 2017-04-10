@@ -42,8 +42,10 @@ enum ZRESDBT
 /**资源包结构*/
 typedef struct _ZResDB
 {
+#ifdef PLATFORM_OS_WIN
 	HINSTANCE Instance; //pe句柄
-	unzFile uf;		//压缩包句柄
+#endif // PLATFORM_OS_WIN
+	void* uf;		//压缩包句柄
 	ZuiText pass;	//压缩包密码
 	ZuiInt type;	//资源包类型
 } *ZuiResDB, ZResDB;
@@ -101,6 +103,8 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type);//获取一个资
 */
 ZEXPORT ZuiVoid ZCALL ZuiResDBDelRes(ZuiRes res);//释放一个资源
 //ZEXPORT ZuiRes ZCALL ZuiResDBNewTempRes(ZuiAny buf, ZuiInt buflen, ZuiInt type);
-
+#ifdef PLATFORM_OS_WIN
+ZEXPORT ZuiBool ZCALL ZuiResDBAddPE(ZuiText name, HINSTANCE hInstance);
+#endif // PLATFORM_OS_WIN
 #endif //__ZUI_CORE_RESDB_H__
 

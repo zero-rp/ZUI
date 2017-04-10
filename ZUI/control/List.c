@@ -903,12 +903,12 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderProc(ZuiInt ProcId, ZuiControl cp, ZuiListHead
     {
     case Proc_EstimateSize: {
         ZuiLayout op = ZuiControlCall(Proc_GetObject, cp, Type_Layout, NULL, NULL);
-        p->cXY.Height = cp->m_cxyFixed.cy;
-        p->cXY.Width = 0;
-        if (p->cXY.Height == 0 && cp->m_pManager != NULL) {
+        p->cXY.cy = cp->m_cxyFixed.cy;
+        p->cXY.cx = 0;
+        if (p->cXY.cy == 0 && cp->m_pManager != NULL) {
             for (int it = 0; it < op->m_items->count; it++) {
                 SIZE * psz = (SIZE *)ZuiControlCall(Proc_EstimateSize, op->m_items->data[it], Param1, 0, 0);
-                p->cXY.Height = MAX(p->cXY.Height, psz->cy);
+                p->cXY.cy = MAX(p->cXY.cy, psz->cy);
             }
             //高度为字体大小
             //int nMin = m_pManager->GetDefaultFontInfo()->tm.tmHeight + 6;
@@ -917,7 +917,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderProc(ZuiInt ProcId, ZuiControl cp, ZuiListHead
 
         for (int it = 0; it < op->m_items->count; it++) {
             SIZE * psz = (SIZE *)ZuiControlCall(Proc_EstimateSize, op->m_items->data[it], Param1, 0, 0);
-            p->cXY.Width += psz->cx;
+            p->cXY.cx += psz->cx;
         }
 
         return &p->cXY;

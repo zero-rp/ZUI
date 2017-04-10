@@ -1,3 +1,4 @@
+#include "uv.h"
 #include <ZUI.h>
 #include "duv_utils.h"
 

@@ -34,6 +34,8 @@
     #define PLATFORM_OS_LINUX
 #elif defined MACX
     #define PLATFORM_OS_MACX
+#elif defined __ANDROID__
+	#define PLATFORM_OS_ANDROID
 #endif
 
 //#define LOG_DEBUG   0       //打印调试日志 有运行时调试功能则打印到日志窗口
@@ -50,7 +52,6 @@
 #include <malloc.h>
 #include <stdlib.h>
 
-#include <uv.h>
 #include "duktape/duktape.h"
 
 #ifdef PLATFORM_OS_WIN
@@ -141,8 +142,8 @@ typedef struct _ZPoint
 /**大小*/
 typedef struct _ZSize
 {
-    int Width;	///宽度
-    int Height;	///高度
+    int cx;	///宽度
+    int cy;	///高度
 } *ZuiSize, ZSize;
 /**点(浮点)*/
 typedef struct _ZPointR
@@ -176,7 +177,6 @@ extern "C"
 #include "core/string.h"
 #include "core/function.h"
 #include "core/tree.h"
-#include "zlib/unzip.h"
 #include "core/mxml.h"
 #include "platform/platform.h"
 #include "core/resdb.h"

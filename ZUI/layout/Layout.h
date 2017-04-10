@@ -48,7 +48,8 @@
 #define Proc_Layout_GetVerticalScrollBar    131
 #define Proc_Layout_GetHorizontalScrollBar  132
 #define Proc_Layout_ProcessScrollBar    133 //调整滚动条位置
-
+#define Proc_Layout_GetChildAlign       134
+#define Proc_Layout_GetChildVAlign      135
 //------Js
 
 #define Js_Id_Layout_Add                100
@@ -98,13 +99,16 @@
 /**容器基类结构*/
 typedef struct _ZuiLayout
 {
-    DArray *m_items;            /// 控件数组
-    ZRect m_rcInset;             /// 内边距
+    DArray *m_items;                /// 控件数组
+    ZRect m_rcInset;                /// 内边距
     ZuiBool m_bMouseChildEnabled;
     ZuiInt m_iChildPadding;
-    ZuiBool m_bFocused;            //是焦点状态
-    ZuiBool m_bScrollProcess;      //  防止SetPos循环调用
+    ZuiUInt m_iChildAlign;
+    ZuiUInt m_iChildVAlign;
+    ZuiBool m_bFocused;             //是焦点状态
+    ZuiBool m_bScrollProcess;       //  防止SetPos循环调用
     ZuiInt  m_nScrollStepSize;
+
     ZuiControl m_pVerticalScrollBar;    //纵向滚动条
     ZuiControl m_pHorizontalScrollBar;  //横向滚动条
 

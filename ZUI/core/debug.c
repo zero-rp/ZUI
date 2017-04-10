@@ -297,7 +297,7 @@ static void InsertColumn(void)
 }
 
 //刷新控件树
-static ZuiControl CALLBACK __FindControlFromAll(ZuiControl pThis, LPVOID pData)
+static ZuiControl ZCALL __FindControlFromAll(ZuiControl pThis, LPVOID pData)
 {
     TVINSERTSTRUCT pis;
     WCHAR buf[1024];

@@ -57,12 +57,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Designer\CodeEdit.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Designer\Designer.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\control\Browser.c">
       <Filter>ZUI\control</Filter>
     </ClCompile>
@@ -609,52 +603,72 @@
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_refs.c">
       <Filter>ZUI\dukluv</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Work\Work.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\ZUI\control\ProgressBar.c">
+      <Filter>ZUI\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\CheckBox.c">
       <Filter>ZUI\control</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_udp.c">
       <Filter>ZUI\dukluv</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\control\CheckBox.c">
-      <Filter>ZUI\control</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\..\Designer\Designer.rc">
-      <Filter>资源文件</Filter>
-    </ResourceCompile>
     <ResourceCompile Include="..\..\ZUI\Default.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>
+    <ResourceCompile Include="..\..\Work\Work.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CodeEdit.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ZUI\resource.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ZUI\resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Designer\res\Designer.js">
-      <Filter>res</Filter>
-    </None>
-    <None Include="..\..\Designer\res\onload.js">
-      <Filter>res</Filter>
-    </None>
     <None Include="..\..\ZUI\res\default.zip" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="..\..\Designer\res\Designer.xml">
+    <Image Include="..\..\Work\res\img\clos.png">
+      <Filter>res\img</Filter>
+    </Image>
+    <Image Include="..\..\Work\res\img\1.png">
+      <Filter>res\img</Filter>
+    </Image>
+    <Image Include="..\..\Work\res\img\2.png">
+      <Filter>res\img</Filter>
+    </Image>
+    <Image Include="..\..\Work\res\img\3.png">
+      <Filter>res\img</Filter>
+    </Image>
+    <Image Include="..\..\Work\res\img\5.png">
+      <Filter>res\img</Filter>
+    </Image>
+    <Image Include="..\..\Work\res\img\29.png">
+      <Filter>res\img</Filter>
+    </Image>
+    <Image Include="..\..\Work\res\img\bt_bk.png">
+      <Filter>res\img</Filter>
+    </Image>
+    <Image Include="..\..\Work\res\img\user.jpg">
+      <Filter>res\img</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\..\Work\res\client.xml">
       <Filter>res</Filter>
     </Xml>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\Designer\res\img\clos.png">
-      <Filter>res\img</Filter>
-    </Image>
+    <CustomBuild Include="..\..\Work\res\client.js">
+      <Filter>res</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\Work\res\onload.js">
+      <Filter>res</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

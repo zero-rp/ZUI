@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="gb2312"?>
-<Template class="MessageBox" layout="window" size="300,200">
-  <VerticalLayout drag="true" height="25">
-    <HorizontalLayout name="head" drag="true">
+<Template class="MessageBox" layout="window" size="300,200" center="true" bordercolor="#FF2d2c7a" bkcolor="#FF17E97B">
+    <HorizontalLayout name="head" drag="true" height="25">
       <!--标题栏-->
       <HorizontalLayout name="Title" inset="0,0,28,0" drag="true">
-        <Label name="title" text="神器" font="font:name='宋体':size=14:textcolor=#FF0000FF:align='center':valign='center'" drag="true"/>
+        <Label name="title" text="消息框" drag="true"/>
       </HorizontalLayout>
       <WindowCtl name="ctl"/>
     </HorizontalLayout>
-  </VerticalLayout>
+  <HorizontalLayout>
+    <Label name="text" drag="true"/>
+  </HorizontalLayout>
+  <HorizontalLayout height="28">
+    <Button name="ok" text="确定" padding="10,2,10,2"/>
+    <Button name="cancel" text="取消" padding="10,2,10,2"/>
+  </HorizontalLayout>
 </Template>

@@ -99,3 +99,5 @@ ZUI/res/default.zip
 bin/
 *.aps
 Tool/wkeStorage/*
+*.log
+Android/ZUI/ZUI.NativeActivity/x86/*

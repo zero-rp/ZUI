@@ -1,6 +1,6 @@
 #ifndef DUV_UTILS_H
 #define DUV_UTILS_H
-
+#include "uv.h"
 #include "duv.h"
 
 uv_loop_t* duv_loop(duk_context *ctx);

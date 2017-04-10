@@ -1,4 +1,6 @@
 ﻿#include <ZUI.h>
+#include "zlib/unzip.h"
+
 #include <wininet.h>
 #pragma comment(lib, "wininet.lib") 
 
@@ -582,3 +584,10 @@ ZEXPORT ZuiVoid ZCALL ZuiResDBDelRes(ZuiRes res) {
 //    res->ref++;////增加引用计数
 //    return res;
 //}
+ZEXPORT ZuiBool ZCALL ZuiResDBAddPE(ZuiText name,HINSTANCE hInstance) {
+    ZuiResDB p = (ZuiResDB)ZuiMalloc(sizeof(ZResDB));
+    memset(p, 0, sizeof(ZResDB));
+    p->type = ZRESDBT_PE;
+    p->Instance = hInstance;
+    return rb_insert(Zui_Hash(name), p, Global_ResDB->resdb);
+}

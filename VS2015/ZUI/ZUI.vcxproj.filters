@@ -348,9 +348,6 @@
     <ClCompile Include="..\..\ZUI\zlib\zutil.c">
       <Filter>源文件\zlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\vc6.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\zuidebug.c">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -791,6 +788,9 @@
     </ClCompile>
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_udp.c">
       <Filter>源文件\dukluv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\vc6.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

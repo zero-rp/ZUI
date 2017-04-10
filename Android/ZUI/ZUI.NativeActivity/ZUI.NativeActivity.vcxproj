@@ -1,0 +1,550 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x86">
+      <Configuration>Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x86">
+      <Configuration>Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{ada0a7c1-06ea-4cc6-aef6-a2c172277b1d}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>ZUI</RootNamespace>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_3_8</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_3_8</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_3_8</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_3_8</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_3_8</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_3_8</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_3_8</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_3_8</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Link>
+      <LibraryDependencies>%(LibraryDependencies);GLESv1_CM;EGL;</LibraryDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Link>
+      <LibraryDependencies>%(LibraryDependencies);GLESv1_CM;EGL;</LibraryDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Link>
+      <LibraryDependencies>%(LibraryDependencies);GLESv1_CM;EGL;</LibraryDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Link>
+      <LibraryDependencies>%(LibraryDependencies);GLESv1_CM;EGL;</LibraryDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Link>
+      <LibraryDependencies>%(LibraryDependencies);GLESv1_CM;EGL;</LibraryDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Link>
+      <LibraryDependencies>%(LibraryDependencies);GLESv1_CM;EGL;</LibraryDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <CompileAs>CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories>..\..\..\ZUI;..\..\..\ZUI\duktape;..\..\..\ZUI\libuv\include;..\..\..\ZUI\libuv\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>__ANDROID__</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <LibraryDependencies>%(LibraryDependencies);GLESv1_CM;EGL;</LibraryDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Link>
+      <LibraryDependencies>%(LibraryDependencies);GLESv1_CM;EGL;</LibraryDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\ZUI\control\Browser.h" />
+    <ClInclude Include="..\..\..\ZUI\control\Button.h" />
+    <ClInclude Include="..\..\..\ZUI\control\CheckBox.h" />
+    <ClInclude Include="..\..\..\ZUI\control\Edit.h" />
+    <ClInclude Include="..\..\..\ZUI\control\Html.h" />
+    <ClInclude Include="..\..\..\ZUI\control\Label.h" />
+    <ClInclude Include="..\..\..\ZUI\control\List.h" />
+    <ClInclude Include="..\..\..\ZUI\control\Menu.h" />
+    <ClInclude Include="..\..\..\ZUI\control\MenuBar.h" />
+    <ClInclude Include="..\..\..\ZUI\control\Option.h" />
+    <ClInclude Include="..\..\..\ZUI\control\ProgressBar.h" />
+    <ClInclude Include="..\..\..\ZUI\control\Register.h" />
+    <ClInclude Include="..\..\..\ZUI\control\ScrollBar.h" />
+    <ClInclude Include="..\..\..\ZUI\control\SplitterBar.h" />
+    <ClInclude Include="..\..\..\ZUI\control\TreeView.h" />
+    <ClInclude Include="..\..\..\ZUI\control\Virtual.h" />
+    <ClInclude Include="..\..\..\ZUI\control\Window.h" />
+    <ClInclude Include="..\..\..\ZUI\core\animation.h" />
+    <ClInclude Include="..\..\..\ZUI\core\builder.h" />
+    <ClInclude Include="..\..\..\ZUI\core\carray.h" />
+    <ClInclude Include="..\..\..\ZUI\core\control.h" />
+    <ClInclude Include="..\..\..\ZUI\core\debug.h" />
+    <ClInclude Include="..\..\..\ZUI\core\function.h" />
+    <ClInclude Include="..\..\..\ZUI\core\global.h" />
+    <ClInclude Include="..\..\..\ZUI\core\manager.h" />
+    <ClInclude Include="..\..\..\ZUI\core\memory.h" />
+    <ClInclude Include="..\..\..\ZUI\core\mxml.h" />
+    <ClInclude Include="..\..\..\ZUI\core\resdb.h" />
+    <ClInclude Include="..\..\..\ZUI\core\string.h" />
+    <ClInclude Include="..\..\..\ZUI\core\template.h" />
+    <ClInclude Include="..\..\..\ZUI\core\tree.h" />
+    <ClInclude Include="..\..\..\ZUI\dukluv\src\duv.h" />
+    <ClInclude Include="..\..\..\ZUI\dukluv\src\duv_callbacks.h" />
+    <ClInclude Include="..\..\..\ZUI\dukluv\src\duv_fs.h" />
+    <ClInclude Include="..\..\..\ZUI\dukluv\src\duv_handle.h" />
+    <ClInclude Include="..\..\..\ZUI\dukluv\src\duv_misc.h" />
+    <ClInclude Include="..\..\..\ZUI\dukluv\src\duv_pipe.h" />
+    <ClInclude Include="..\..\..\ZUI\dukluv\src\duv_refs.h" />
+    <ClInclude Include="..\..\..\ZUI\dukluv\src\duv_req.h" />
+    <ClInclude Include="..\..\..\ZUI\dukluv\src\duv_schema.h" />
+    <ClInclude Include="..\..\..\ZUI\dukluv\src\duv_stream.h" />
+    <ClInclude Include="..\..\..\ZUI\dukluv\src\duv_tcp.h" />
+    <ClInclude Include="..\..\..\ZUI\dukluv\src\duv_timer.h" />
+    <ClInclude Include="..\..\..\ZUI\dukluv\src\duv_udp.h" />
+    <ClInclude Include="..\..\..\ZUI\dukluv\src\duv_utils.h" />
+    <ClInclude Include="..\..\..\ZUI\dukluv\src\miniz.h" />
+    <ClInclude Include="..\..\..\ZUI\dukluv\src\uv_schema.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duktape.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_api_internal.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_bi_protos.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_builtins.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_config.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_debug.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_debugger.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_error.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_exception.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_forwdecl.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_harray.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_hbuffer.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_hbufobj.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_hcompfunc.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_heap.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_heaphdr.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_hnatfunc.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_hobject.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_hstring.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_hthread.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_internal.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_jmpbuf.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_js.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_json.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_js_bytecode.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_js_compiler.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_lexer.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_numconv.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_regexp.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_replacements.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_selftest.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_strings.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_trans_dvalue.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_tval.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_unicode.h" />
+    <ClInclude Include="..\..\..\ZUI\duktape\duk_util.h" />
+    <ClInclude Include="..\..\..\ZUI\layout\HorizontalLayout.h" />
+    <ClInclude Include="..\..\..\ZUI\layout\Layout.h" />
+    <ClInclude Include="..\..\..\ZUI\layout\TabLayout.h" />
+    <ClInclude Include="..\..\..\ZUI\layout\TileLayout.h" />
+    <ClInclude Include="..\..\..\ZUI\layout\VerticalLayout.h" />
+    <ClInclude Include="..\..\..\ZUI\libuv\include\android-ifaddrs.h" />
+    <ClInclude Include="..\..\..\ZUI\libuv\include\pthread-barrier.h" />
+    <ClInclude Include="..\..\..\ZUI\libuv\include\stdint-msvc2008.h" />
+    <ClInclude Include="..\..\..\ZUI\libuv\include\tree.h" />
+    <ClInclude Include="..\..\..\ZUI\libuv\include\uv-aix.h" />
+    <ClInclude Include="..\..\..\ZUI\libuv\include\uv-bsd.h" />
+    <ClInclude Include="..\..\..\ZUI\libuv\include\uv-darwin.h" />
+    <ClInclude Include="..\..\..\ZUI\libuv\include\uv-errno.h" />
+    <ClInclude Include="..\..\..\ZUI\libuv\include\uv-linux.h" />
+    <ClInclude Include="..\..\..\ZUI\libuv\include\uv-sunos.h" />
+    <ClInclude Include="..\..\..\ZUI\libuv\include\uv-threadpool.h" />
+    <ClInclude Include="..\..\..\ZUI\libuv\include\uv-unix.h" />
+    <ClInclude Include="..\..\..\ZUI\libuv\include\uv-version.h" />
+    <ClInclude Include="..\..\..\ZUI\libuv\include\uv-win.h" />
+    <ClInclude Include="..\..\..\ZUI\libuv\include\uv.h" />
+    <ClInclude Include="..\..\..\ZUI\platform\graph\graph.h" />
+    <ClInclude Include="..\..\..\ZUI\platform\graph\skia.h" />
+    <ClInclude Include="..\..\..\ZUI\platform\os\android.h" />
+    <ClInclude Include="..\..\..\ZUI\platform\os\os.h" />
+    <ClInclude Include="..\..\..\ZUI\platform\platform.h" />
+    <ClInclude Include="..\..\..\ZUI\zlib\crc32.h" />
+    <ClInclude Include="..\..\..\ZUI\zlib\deflate.h" />
+    <ClInclude Include="..\..\..\ZUI\zlib\inffast.h" />
+    <ClInclude Include="..\..\..\ZUI\zlib\inffixed.h" />
+    <ClInclude Include="..\..\..\ZUI\zlib\inflate.h" />
+    <ClInclude Include="..\..\..\ZUI\zlib\inftrees.h" />
+    <ClInclude Include="..\..\..\ZUI\zlib\trees.h" />
+    <ClInclude Include="..\..\..\ZUI\zlib\unzip.h" />
+    <ClInclude Include="..\..\..\ZUI\zlib\zconf.h" />
+    <ClInclude Include="..\..\..\ZUI\zlib\zlib.h" />
+    <ClInclude Include="..\..\..\ZUI\zlib\zutil.h" />
+    <ClInclude Include="..\..\..\ZUI\ZUI.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="android_native_app_glue.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\ZUI\control\Browser.c" />
+    <ClCompile Include="..\..\..\ZUI\control\Button.c" />
+    <ClCompile Include="..\..\..\ZUI\control\CheckBox.c" />
+    <ClCompile Include="..\..\..\ZUI\control\Edit.c" />
+    <ClCompile Include="..\..\..\ZUI\control\Label.c" />
+    <ClCompile Include="..\..\..\ZUI\control\List.c" />
+    <ClCompile Include="..\..\..\ZUI\control\Menu.c" />
+    <ClCompile Include="..\..\..\ZUI\control\MenuBar.c" />
+    <ClCompile Include="..\..\..\ZUI\control\Option.c" />
+    <ClCompile Include="..\..\..\ZUI\control\ProgressBar.c" />
+    <ClCompile Include="..\..\..\ZUI\control\Register.c" />
+    <ClCompile Include="..\..\..\ZUI\control\ScrollBar.c" />
+    <ClCompile Include="..\..\..\ZUI\control\SplitterBar.c" />
+    <ClCompile Include="..\..\..\ZUI\control\TreeView.c" />
+    <ClCompile Include="..\..\..\ZUI\control\Virtual.c" />
+    <ClCompile Include="..\..\..\ZUI\control\window.c" />
+    <ClCompile Include="..\..\..\ZUI\core\animation.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ZUI\core\builder.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ZUI\core\carray.c" />
+    <ClCompile Include="..\..\..\ZUI\core\control.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ZUI\core\debug.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ZUI\core\function.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ZUI\core\global.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ZUI\core\manager.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ZUI\core\memory.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ZUI\core\mxml.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ZUI\core\resdb.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ZUI\core\string.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ZUI\core\template.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ZUI\core\tree.c" />
+    <ClCompile Include="..\..\..\ZUI\dukluv\src\duv.c" />
+    <ClCompile Include="..\..\..\ZUI\dukluv\src\duv_callbacks.c" />
+    <ClCompile Include="..\..\..\ZUI\dukluv\src\duv_fs.c" />
+    <ClCompile Include="..\..\..\ZUI\dukluv\src\duv_handle.c" />
+    <ClCompile Include="..\..\..\ZUI\dukluv\src\duv_main.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ZUI\dukluv\src\duv_misc.c" />
+    <ClCompile Include="..\..\..\ZUI\dukluv\src\duv_pipe.c" />
+    <ClCompile Include="..\..\..\ZUI\dukluv\src\duv_refs.c" />
+    <ClCompile Include="..\..\..\ZUI\dukluv\src\duv_req.c" />
+    <ClCompile Include="..\..\..\ZUI\dukluv\src\duv_schema.c" />
+    <ClCompile Include="..\..\..\ZUI\dukluv\src\duv_stream.c" />
+    <ClCompile Include="..\..\..\ZUI\dukluv\src\duv_tcp.c" />
+    <ClCompile Include="..\..\..\ZUI\dukluv\src\duv_timer.c" />
+    <ClCompile Include="..\..\..\ZUI\dukluv\src\duv_udp.c" />
+    <ClCompile Include="..\..\..\ZUI\dukluv\src\duv_utils.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ZUI\dukluv\src\uv_schema.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_alloc_default.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_api_buffer.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_api_bytecode.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_api_call.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_api_codec.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_api_compile.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_api_debug.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_api_heap.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_api_inspect.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_api_memory.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_api_object.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_api_stack.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_api_string.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_api_time.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_array.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_boolean.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_buffer.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_date.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_date_unix.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_date_windows.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_duktape.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_encoding.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_error.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_function.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_global.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_json.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_math.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_number.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_object.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_pointer.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_proxy.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_reflect.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_regexp.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_string.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_symbol.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_thread.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_bi_thrower.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_builtins.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_debugger.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_debug_fixedbuffer.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_debug_macros.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_debug_vsnprintf.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_error_augment.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_error_longjmp.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_error_macros.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_error_misc.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_error_throw.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_hbuffer_alloc.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_hbuffer_ops.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_hbufobj_misc.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_heap_alloc.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_heap_hashstring.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_heap_markandsweep.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_heap_memory.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_heap_misc.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_heap_refcount.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_heap_stringcache.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_heap_stringtable.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_hobject_alloc.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_hobject_class.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_hobject_enum.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_hobject_finalizer.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_hobject_misc.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_hobject_pc2line.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_hobject_props.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_hstring_misc.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_hthread_alloc.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_hthread_builtins.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_hthread_misc.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_hthread_stacks.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_js_arith.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_js_call.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_js_compiler.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_js_executor.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_js_ops.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_js_var.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_lexer.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_numconv.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_regexp_compiler.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_regexp_executor.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_replacements.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_selftest.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_trans_dvalue.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_tval.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_unicode_support.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_unicode_tables.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_util_bitdecoder.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_util_bitencoder.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_util_bufwriter.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_util_hashbytes.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_util_hashprime.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_util_misc.c" />
+    <ClCompile Include="..\..\..\ZUI\duktape\duk_util_tinyrandom.c" />
+    <ClCompile Include="..\..\..\ZUI\layout\HorizontalLayout.c" />
+    <ClCompile Include="..\..\..\ZUI\layout\Layout.c" />
+    <ClCompile Include="..\..\..\ZUI\layout\TabLayout.c" />
+    <ClCompile Include="..\..\..\ZUI\layout\TileLayout.c" />
+    <ClCompile Include="..\..\..\ZUI\layout\VerticalLayout.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\fs-poll.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\inet.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\threadpool.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\android-ifaddrs.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\async.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\core.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\dl.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\fs.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\getaddrinfo.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\getnameinfo.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\linux-core.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\linux-inotify.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\linux-syscalls.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\loop-watcher.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\loop.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\pipe.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\poll.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\process.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\proctitle.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\pthread-barrier.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\pthread-fixes.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\signal.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\stream.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\tcp.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\thread.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\timer.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\unix\udp.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\uv-common.c" />
+    <ClCompile Include="..\..\..\ZUI\libuv\src\version.c" />
+    <ClCompile Include="..\..\..\ZUI\platform\graph\skia.c" />
+    <ClCompile Include="..\..\..\ZUI\platform\os\android.c" />
+    <ClCompile Include="..\..\..\ZUI\zlib\adler32.c" />
+    <ClCompile Include="..\..\..\ZUI\zlib\crc32.c" />
+    <ClCompile Include="..\..\..\ZUI\zlib\deflate.c" />
+    <ClCompile Include="..\..\..\ZUI\zlib\inffast.c" />
+    <ClCompile Include="..\..\..\ZUI\zlib\inflate.c" />
+    <ClCompile Include="..\..\..\ZUI\zlib\inftrees.c" />
+    <ClCompile Include="..\..\..\ZUI\zlib\trees.c" />
+    <ClCompile Include="..\..\..\ZUI\zlib\unzip.c" />
+    <ClCompile Include="..\..\..\ZUI\zlib\zutil.c" />
+    <ClCompile Include="android_native_app_glue.c" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

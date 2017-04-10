@@ -6,7 +6,7 @@
 #include <ZUI.h>
 
 
-#if (defined PLATFORM_GRAPH_SKIA) && (PLATFORM_GRAPH_SKIA == 1)
+#if (defined PLATFORM_GRAPH_SKIA) && (PLATFORM_GRAPH_SKIA == 1) || (defined PLATFORM_OS_ANDROID)
 	#include "graph/skia.h"
 #elif (defined PLATFORM_GRAPH_GDI) && (PLATFORM_GRAPH_GDI == 1) && (defined PLATFORM_OS_WIN)
 	//只适应于WIN平台
@@ -23,6 +23,8 @@
 	#include "os/linux.h"
 #elif (defined PLATFORM_OS_MACX)
 
+#elif (defined PLATFORM_OS_ANDROID)
+#include "os/android.h"
 #endif
 
 

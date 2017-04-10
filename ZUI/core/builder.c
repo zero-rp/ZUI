@@ -341,7 +341,8 @@ static duk_ret_t ZuiJsBind_Call_ZuiPopupMenu(duk_context *ctx) {
 
 static duk_ret_t ZuiJsBind_Call_MsgBox(duk_context *ctx) {
     if (duk_is_string(ctx, 0)) {
-        ZuiMsgBox();
+        ZuiContext c = ZuiBuilderContext(ctx);
+        ZuiMsgBox(0,duk_get_string_w(ctx, 0), duk_is_string(ctx, 1) ? duk_get_string_w(ctx, 1) : NULL);
     }
     return 0;
 }

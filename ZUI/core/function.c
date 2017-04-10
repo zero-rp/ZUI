@@ -1,5 +1,5 @@
-﻿#include <ZUI.h>
-
+﻿#include <uv.h>
+#include <ZUI.h>
 void Rect_Join(ZRect *rc, ZRect *rc1)
 {
     if (rc1->left < rc->left) rc->left = rc1->left;
@@ -137,9 +137,13 @@ ZuiAny ZCALL MsgBox_Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAn
     return 0;
 }
 
-ZEXPORT ZuiVoid ZCALL ZuiMsgBox() {
+ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp,ZuiText text,ZuiText title) {
     MsgBox_pRoot = NewZuiControl(L"MessageBox", NULL, NULL, NULL);
-
+    ZuiControl p = ZuiControlFindName(MsgBox_pRoot, L"text");
+    ZuiControlCall(Proc_SetText, p, text, NULL, NULL);
+    p = ZuiControlFindName(MsgBox_pRoot, L"title");
+    ZuiControlCall(Proc_SetText, p, title, NULL, NULL);
+    
     MSG Msg;
     while (GetMessage(&Msg, NULL, 0, 0))
     {

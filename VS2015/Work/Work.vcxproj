@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{5A0B700C-B2B1-44EA-91CF-BEC5445A030E}</ProjectGuid>
+    <ProjectGuid>{689B0DF5-76AF-4EB8-9C06-533004B186EF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Designer</RootNamespace>
+    <RootNamespace>Work</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -97,9 +97,9 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;RUN_DEBUG=1;MEM_DEBUG=1;LOG_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <MinimalRebuild>true</MinimalRebuild>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\duktape;..\..\ZUI\libuv\include;..\..\ZUI\platform\graph\agg\include</AdditionalIncludeDirectories>
@@ -147,9 +147,9 @@ echo res| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\re
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0500;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_MSC_VER=1400;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0500;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_MSC_VER=1400;USING_VC6RT=1;RUN_DEBUG=0;MEM_DEBUG=0;LOG_DEBUG=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\platform\graph\agg\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\duktape;..\..\ZUI\libuv\include;..\..\ZUI\platform\graph\agg\include</AdditionalIncludeDirectories>
       <StringPooling>true</StringPooling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
@@ -161,8 +161,9 @@ echo res| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\re
       <GenerateDebugInformation>No</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;gdiplus.lib;wininet.lib;msvcrt.lib;oldnames.lib;comctl32.lib;ole32.lib;msimg32.lib;imm32.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;gdiplus.lib;wininet.lib;msvcrt.lib;oldnames.lib;comctl32.lib;ole32.lib;msimg32.lib;imm32.lib;ws2_32.lib;IPHLPAPI.lib;Psapi.lib;Userenv.lib;Advapi32.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PreBuildEvent>
       <Command>DEL $(SolutionDir)..\$(ProjectName)\res.zip
@@ -190,8 +191,7 @@ echo res| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\re
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Designer\CodeEdit.c" />
-    <ClCompile Include="..\..\Designer\Designer.c" />
+    <ClCompile Include="..\..\Work\Work.c" />
     <ClCompile Include="..\..\ZUI\control\Browser.c" />
     <ClCompile Include="..\..\ZUI\control\Button.c" />
     <ClCompile Include="..\..\ZUI\control\CheckBox.c" />
@@ -383,24 +383,31 @@ echo res| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\re
     <ClCompile Include="..\..\ZUI\zlib\zutil.c" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\..\Designer\Designer.rc" />
+    <ResourceCompile Include="..\..\Work\Work.rc" />
     <ResourceCompile Include="..\..\ZUI\Default.rc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ZUI\resource.h" />
-    <ClInclude Include="..\ZUI\resource.h" />
-    <ClInclude Include="CodeEdit.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Designer\res\Designer.js" />
-    <None Include="..\..\Designer\res\onload.js" />
+    <CustomBuild Include="..\..\Work\res\client.js" />
+    <CustomBuild Include="..\..\Work\res\onload.js" />
     <None Include="..\..\ZUI\res\default.zip" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="..\..\Designer\res\Designer.xml" />
+    <Image Include="..\..\Work\res\img\1.png" />
+    <Image Include="..\..\Work\res\img\2.png" />
+    <Image Include="..\..\Work\res\img\29.png" />
+    <Image Include="..\..\Work\res\img\3.png" />
+    <Image Include="..\..\Work\res\img\5.png" />
+    <Image Include="..\..\Work\res\img\bt_bk.png" />
+    <Image Include="..\..\Work\res\img\clos.png" />
+    <Image Include="..\..\Work\res\img\user.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\Designer\res\img\clos.png" />
+    <Xml Include="..\..\Work\res\client.xml">
+      <SubType>Designer</SubType>
+    </Xml>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

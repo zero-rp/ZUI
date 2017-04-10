@@ -85,12 +85,12 @@ typedef struct tagTEventUI
 {
     int Type;			//事件类型
     ZuiControl pSender;	//事件对应的控件
-    DWORD dwTimestamp;	//时间戳
+    ZuiInt dwTimestamp;	//时间戳
     ZPoint ptMouse;		//鼠标位置
-    TCHAR chKey;		//
-    WORD wKeyState;		//
-    WPARAM wParam;		//
-    LPARAM lParam;		//
+    _ZuiText chKey;		//
+	ZuiInt wKeyState;		//
+    ZuiUInt wParam;		//
+	ZuiInt lParam;		//
 } TEventUI;
 
 
