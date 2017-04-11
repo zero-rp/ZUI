@@ -1071,12 +1071,14 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
         break;
     }
     case Proc_OnPaintText: {
+		if (!cp->m_sText)
+			return;
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = Param2;
         ZRect r;
         MAKEZRECT(r, rc->left + 5, rc->top + 5, rc->right - rc->left - 10, rc->bottom - rc->top - 10);
-        ZuiDrawString(gp, Global_StringFormat, cp->m_sText, &r);
-        break;
+		ZuiDrawString(gp, Global_StringFormat, cp->m_sText, wcslen(cp->m_sText), &r);
+        return;
     }
     case Proc_OnPaintStatusImage: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
@@ -1130,6 +1132,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
             ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
         }
         //DrawImage(hDC, );*/
+		return;
     }
     case Proc_ListHeaderItem_GetThumbRect: {
         if (p->m_iSepWidth >= 0) {

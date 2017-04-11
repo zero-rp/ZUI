@@ -139,18 +139,24 @@ typedef struct _ZPoint
     int x;
     int y;
 } *ZuiPoint, ZPoint;
+/**点(浮点)*/
+typedef struct _ZPointR
+{
+	ZuiReal x;
+	ZuiReal y;
+} *ZuiPointR, ZPointR;
 /**大小*/
 typedef struct _ZSize
 {
     int cx;	///宽度
     int cy;	///高度
 } *ZuiSize, ZSize;
-/**点(浮点)*/
-typedef struct _ZPointR
+/**大小(浮点)*/
+typedef struct _ZSizeR
 {
-    ZuiReal x;
-    ZuiReal y;
-} *ZuiPointR, ZPointR;
+	ZuiReal cx;	///宽度
+	ZuiReal cy;	///高度
+} *ZuiSizeR, ZSizeR;
 
 #define MAKEZRECT(r, L, T, R, B) \
     r.left = L; \

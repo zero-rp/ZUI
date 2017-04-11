@@ -33,11 +33,11 @@ typedef struct _ZRegion {
 typedef struct _ZStringFormat {
     ZuiColor TextColor;     ///字体颜色
     ZuiColor ShadowColor;   ///阴影颜色
+    ZuiReal FontSize;       ///字体大小
     void *font;             ///字体
-    void *StringFormat;     ///文本格式
     void *FontFamily;       ///字体族
-    void *BrushShadow;
-    void *Brush;
+    void *BrushShadow;      ///阴影画刷
+    void *Brush;            ///背景画刷
 }*ZuiStringFormat, ZStringFromat;
 
 #endif //PLATFORM_GRAPH_GDI

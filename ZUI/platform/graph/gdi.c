@@ -27,15 +27,25 @@ extern "C" {
     int __stdcall GdipCreatePen1(ZuiColor color, ZuiReal width, int unit, void **pen);
     int __stdcall GdipDeletePen(void *pen);
     int __stdcall GdipDrawLineI(void *graphics, void *pen, ZuiInt x1, ZuiInt y1, ZuiInt x2, ZuiInt y2);
-    int __stdcall GdipDrawString(void *graphics, ZuiText string, int length, void *font, ZuiRectR layoutRect, void *stringFormat, void *brush);
-    int __stdcall GdipMeasureString(void *graphics, ZuiText string, ZuiInt length, void *font, ZuiRectR layoutRect, void *stringFormat, ZuiRectR boundingBox, ZuiInt codepointsFitted, ZuiInt linesFilled);
+	int __stdcall GdipDrawLine(void *graphics, void *pen, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2);
+    int __stdcall GdipDrawDriverString(void *graphics, ZuiText string, int length, void *font, void *brush, ZuiRectR layoutRect, int flags, int matrix);
+    int __stdcall GdipMeasureDriverString(
+        void *graphics,
+        ZuiText text,
+        ZuiInt length,
+        void *font,
+        ZuiRectR positions,
+        INT flags,
+        int matrix,
+        ZuiRectR boundingBox
+    );
     int __stdcall GdipDrawImageI(void *graphics, void *image, int x, int y);
     int __stdcall GdipGraphicsClear(void *graphics, ZuiColor color);
     int __stdcall GdipCreateFontFamilyFromName(ZuiText name, void *fontCollection, void **fontFamily);
     int __stdcall GdipDeleteFontFamily(void *fontFamily);
     int __stdcall GdipSetStringFormatFlags(void *format, int flags);
     int __stdcall GdipCreateFont(void *fontFamily, ZuiReal emSize, int style, int unit, void **font);
-    int __stdcall GdipCreateStringFormat(int formatAttributes, int language, void **StringFormat);
+    int __stdcall GdipStringFormatGetGenericTypographic(void **StringFormat);
     int __stdcall GdipSetStringFormatAlign(void *format, int align);
     int __stdcall GdipSetStringFormatLineAlign(void *format, int align);
     int __stdcall GdipDeleteFont(void* font);
@@ -110,29 +120,42 @@ ZEXPORT ZuiVoid ZCALL ZuiDrawLine(ZuiGraphics Graphics, ZuiColor Color, ZuiInt x
     GdipDrawLineI(Graphics->graphics, pen, x1, y1, x2, y2);
     GdipDeletePen(pen);
 }
+ZEXPORT ZuiVoid ZCALL ZuiDrawLineR(ZuiGraphics Graphics, ZuiColor Color, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2, ZuiReal LineWidth) {
+	void *pen;
+	GdipCreatePen1(Color, LineWidth, 2, &pen);
+	GdipDrawLine(Graphics->graphics, pen, x1, y1, x2, y2);
+	GdipDeletePen(pen);
+}
+/*测量文本矩形*/
+ZEXPORT ZuiVoid ZCALL ZuiMeasureTextSize(ZuiGraphics Graphics, ZuiStringFormat StringFormat, _ZuiText String, ZuiSizeR Size)
+{
+    if (String && Graphics) {
+        if (!StringFormat) { StringFormat = Global_StringFormat; }//使用默认字体
+        ZRectR rc = { 0 };
+        ZPointR pt = { 0 };
+        GdipMeasureDriverString(Graphics->graphics, &String, 1, StringFormat->font, &pt, 1, 0, &rc);
+        Size->cx = rc.right;
+        Size->cy = rc.bottom;
+    }
+}
 /*画文本*/
-ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiStringFormat StringFormat, ZuiText String, ZuiRect Rect) {
+ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiStringFormat StringFormat, ZuiText String, ZuiInt StrLen, ZuiRect Rect) {
     if (String) {
         if (!StringFormat) { StringFormat = Global_StringFormat; }//使用默认字体
         ZRectR r;
         MAKEZRECT(r, (ZuiReal)Rect->left, (ZuiReal)Rect->top, (ZuiReal)Rect->right, (ZuiReal)Rect->bottom);
-        //int len = MultiByteToWideChar(0, 0, String, -1, 0, 0) * 2;
-        //void *buf = malloc(len);
-        //memset(buf, 0, len);
-        //MultiByteToWideChar(0, 0, String, strlen(String), buf, len);
-        GdipDrawString(Graphics->graphics, String, wcslen(String), StringFormat->font, &r, StringFormat->StringFormat, StringFormat->Brush);
-        //free(buf);
+        GdipDrawDriverString(Graphics->graphics, String, StrLen, StringFormat->font, StringFormat->Brush, &r, 1, 0);
     }
 }
-/*测量文本矩形*/
-ZEXPORT ZuiVoid ZCALL ZuiMeasureStringRect(ZuiGraphics Graphics, ZuiStringFormat StringFormat, ZuiText String, ZuiRectR Rect, ZuiRectR LRect)
-{
-    if (String && Graphics) {
-        if (!StringFormat) { StringFormat = Global_StringFormat; }//使用默认字体
-        if (!LRect) { LRect = &ZeroRectR; }
-        GdipMeasureString(Graphics->graphics, String, wcslen(String), StringFormat->font, LRect, StringFormat->StringFormat, Rect, 0, 0);
-    }
+/*画文本*/
+ZEXPORT ZuiVoid ZCALL ZuiDrawStringR(ZuiGraphics Graphics, ZuiStringFormat StringFormat, ZuiText String, ZuiInt StrLen, ZPointR Pt[]) {
+	if (String) {
+		if (!StringFormat) { StringFormat = Global_StringFormat; }//使用默认字体
+        GdipDrawDriverString(Graphics->graphics, String, StrLen, StringFormat->font, StringFormat->Brush, Pt, 1, 0);
+        return;
+	}
 }
+
 /*填充圆角矩形*/
 ZEXPORT ZuiVoid ZCALL ZuiDrawFilledRoundRect(ZuiGraphics Graphics, ZuiColor Color, ZuiColor BorderColor, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiInt LineWidth, ZuiReal Round) {
 
@@ -217,6 +240,7 @@ ZEXPORT ZuiVoid ZCALL ZuiGraphicsClear(ZuiGraphics Graphics, ZuiColor Color) {
         GdipGraphicsClear(Graphics->graphics, Color);
     }
 }
+
 /*创建字体格式*/
 ZEXPORT ZuiStringFormat ZCALL ZuiCreateStringFormat(ZuiText FontName, ZuiReal FontSize, ZuiColor TextColor, ZuiColor ShadowColor, ZuiInt StringStyle) {
     int i = 0;
@@ -224,33 +248,7 @@ ZEXPORT ZuiStringFormat ZCALL ZuiCreateStringFormat(ZuiText FontName, ZuiReal Fo
     if (!StringFormat) { return NULL; }
     memset(StringFormat, 0, sizeof(ZStringFromat));
 
-    GdipCreateStringFormat(0, 0, &StringFormat->StringFormat);//创建字体格式
     
-    if (StringStyle & ZTS_ALIGN_LEFT) {
-        i = 0;
-    }
-    else if (StringStyle & ZTS_ALIGN_CENTER) {
-        i = 1;
-    }
-    else if (StringStyle & ZTS_ALIGN_RIGHT)
-    {
-        i = 2;
-    }
-    GdipSetStringFormatAlign(StringFormat->StringFormat, i);//设置水平对齐方式
-    
-    if (StringStyle & ZTS_VALIGN_TOP) {
-        i = 0;
-    }
-    else if (StringStyle & ZTS_VALIGN_MIDDLE) {
-        i = 1;
-    }
-    else if (StringStyle & ZTS_VALIGN_BOTTOM)
-    {
-        i = 2;
-    }
-    GdipSetStringFormatLineAlign(StringFormat->StringFormat, i);//设置纵向对齐方式
-    
-    i = 0;
     if (StringStyle & ZTS_BOLD) {
         i = 1;
     }
@@ -260,6 +258,7 @@ ZEXPORT ZuiStringFormat ZCALL ZuiCreateStringFormat(ZuiText FontName, ZuiReal Fo
 
     GdipCreateFontFamilyFromName(FontName, NULL, &StringFormat->FontFamily);
     GdipCreateFont(StringFormat->FontFamily, FontSize, i, 0, &StringFormat->font);
+    StringFormat->FontSize = FontSize;
     GdipDeleteFontFamily(StringFormat->FontFamily);
     
     if (StringStyle & ZTS_SHADOW)

@@ -79,6 +79,7 @@ extern "C"
     * @return 此函数没有返回值.
     */
     ZEXPORT ZuiVoid ZCALL ZuiDrawLine(ZuiGraphics Graphics, ZuiColor Color, ZuiInt x1, ZuiInt y1, ZuiInt x2, ZuiInt y2, ZuiInt LineWidth);
+	ZEXPORT ZuiVoid ZCALL ZuiDrawLineR(ZuiGraphics Graphics, ZuiColor Color, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2, ZuiReal LineWidth);
     /** 此函数用作绘制文本.
     * @param Graphics ZuiGraphics对象
     * @param StringFormat 文本格式
@@ -86,7 +87,8 @@ extern "C"
     * @param Rect 矩形区域
     * @return 此函数没有返回值.
     */
-    ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiStringFormat StringFormat, ZuiText String, ZuiRect Rect);
+    ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiStringFormat StringFormat, ZuiText String, ZuiInt StrLens, ZPointR Rect[]);
+	ZEXPORT ZuiVoid ZCALL ZuiDrawStringR(ZuiGraphics Graphics, ZuiStringFormat StringFormat, ZuiText String, ZuiInt StrLens, ZPointR Pt[]);
     /** 此函数用作测量文本矩形.
     * @param Graphics ZuiGraphics对象
     * @param StringFormat 文本格式
@@ -95,7 +97,7 @@ extern "C"
     * @param LRect 参考矩形区域 指针
     * @return 此函数没有返回值.
     */
-    ZEXPORT ZuiVoid ZCALL ZuiMeasureStringRect(ZuiGraphics Graphics, ZuiStringFormat StringFormat, ZuiText String, ZuiRectR Rect, ZuiRectR LRect);
+    ZEXPORT ZuiVoid ZCALL ZuiMeasureTextSize(ZuiGraphics Graphics, ZuiStringFormat StringFormat, _ZuiText String, ZuiSizeR Size);
     /** 此函数用作绘制并填充圆角矩形.
     * @param Graphics ZuiGraphics对象
     * @param Color 用作填充的颜色

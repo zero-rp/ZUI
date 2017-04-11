@@ -4,15 +4,17 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
     switch (ProcId)
     {
     case Proc_OnPaintText: {
+		if (!cp->m_sText)
+			return;
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = &cp->m_rcItem;
         ZRect r;
         MAKEZRECT(r, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
-        if (p->font)
-            ZuiDrawString(gp, p->font->p, cp->m_sText, &r);
-        else
-            ZuiDrawString(gp, Global_StringFormat, cp->m_sText, &r);
-        break;
+		if (p->font)
+			ZuiDrawString(gp, p->font->p, cp->m_sText, wcslen(cp->m_sText), &r);
+		else
+			ZuiDrawString(gp, Global_StringFormat, cp->m_sText, wcslen(cp->m_sText), &r);
+        return;
     }
     case Proc_Label_SetFont: {
         if (p->font)

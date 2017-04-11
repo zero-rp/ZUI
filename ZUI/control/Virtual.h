@@ -14,7 +14,7 @@
 #ifndef __Virtual_H__
 #define __Virtual_H__
 #define Type_Virtual            0xbc68c001
-#define Proc_Virtual_SetHost    601 ///添加控件
+#define Proc_Virtual_SetHost    601 ///设置句柄
 /**按钮控件结构*/
 typedef struct _ZVirtual
 {

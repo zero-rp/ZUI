@@ -18,7 +18,7 @@
 typedef struct _ZuiHorizontalLayout
 {
     ZCtlProc old_call;
-    void *old_udata;
+    ZuiAny old_udata;
 }*ZuiHorizontalLayout, ZHorizontalLayout;
 
 void* ZCALL ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalLayout p, void* Param1, void* Param2, void* Param3);

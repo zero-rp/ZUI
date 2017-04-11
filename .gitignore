@@ -101,3 +101,4 @@ bin/
 Tool/wkeStorage/*
 *.log
 Android/ZUI/ZUI.NativeActivity/x86/*
+Work/res.zip
