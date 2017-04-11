@@ -76,6 +76,7 @@ extern "C" {
 
 ZRectR ZeroRectR;//零坐标矩形
 ZuiInt pGdiToken;
+ZuiGraphics dgp;//默认图形
 /*初始化图形接口*/
 ZuiBool ZuiGraphInitialize() {
     GdiplusStartupInput gdiplusStartupInput;
@@ -83,6 +84,7 @@ ZuiBool ZuiGraphInitialize() {
     gdiplusStartupInput.GdiplusVersion = 1;
     GdiplusStartup(&pGdiToken, &gdiplusStartupInput, NULL);//初始化GDI+
     MAKEZRECT(ZeroRectR, 0, 0, 0, 0);
+    dgp = ZuiCreateGraphicsInMemory(10, 10);
     return TRUE;
 }
 /*反初始化图形接口*/
@@ -127,13 +129,13 @@ ZEXPORT ZuiVoid ZCALL ZuiDrawLineR(ZuiGraphics Graphics, ZuiColor Color, ZuiReal
 	GdipDeletePen(pen);
 }
 /*测量文本矩形*/
-ZEXPORT ZuiVoid ZCALL ZuiMeasureTextSize(ZuiGraphics Graphics, ZuiStringFormat StringFormat, _ZuiText String, ZuiSizeR Size)
+ZEXPORT ZuiVoid ZCALL ZuiMeasureTextSize(ZuiStringFormat StringFormat, _ZuiText String, ZuiSizeR Size)
 {
-    if (String && Graphics) {
+    if (String) {
         if (!StringFormat) { StringFormat = Global_StringFormat; }//使用默认字体
         ZRectR rc = { 0 };
         ZPointR pt = { 0 };
-        GdipMeasureDriverString(Graphics->graphics, &String, 1, StringFormat->font, &pt, 1, 0, &rc);
+        GdipMeasureDriverString(dgp->graphics, &String, 1, StringFormat->font, &pt, 1, 0, &rc);
         Size->cx = rc.right;
         Size->cy = rc.bottom;
     }

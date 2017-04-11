@@ -97,7 +97,7 @@ extern "C"
     * @param LRect 参考矩形区域 指针
     * @return 此函数没有返回值.
     */
-    ZEXPORT ZuiVoid ZCALL ZuiMeasureTextSize(ZuiGraphics Graphics, ZuiStringFormat StringFormat, _ZuiText String, ZuiSizeR Size);
+    ZEXPORT ZuiVoid ZCALL ZuiMeasureTextSize(ZuiStringFormat StringFormat, _ZuiText String, ZuiSizeR Size);
     /** 此函数用作绘制并填充圆角矩形.
     * @param Graphics ZuiGraphics对象
     * @param Color 用作填充的颜色

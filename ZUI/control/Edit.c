@@ -60,6 +60,14 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
                 //删除符
                 ZuiControlCall(Proc_Edit_Delete, cp, NULL, NULL, NULL);
             }
+            else if (event->wParam == '\r') {
+                //回车
+                ZuiEditProc(Proc_Edit_AddLine, cp, p, NULL, NULL, NULL);//添加一行
+                p->write_pos.x = -1;
+                p->write_pos.y++;//移动到新行
+                ZuiControlNeedUpdate(cp);//重新布局
+                ZuiControlInvalidate(cp, TRUE);
+            }
             else {
                 ZuiControlCall(Proc_Edit_AddChar, cp, event->wParam, NULL, NULL);//在当前读写位置添加一个字符
             }
@@ -109,11 +117,12 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
         //通知父容器调整布局
         ZuiLayoutProc(ProcId, cp, p->old_udata, Param1, Param2, Param3);
         ZRect *rc = &cp->m_rcItem;
-        ZPointR outpos = { rc->left + 2,rc->top };
+        ZPointR outpos = { 0,rc->top };
         for (size_t it1 = 0; it1 < p->line_data->count; it1++)//行
         {
             ZuiReal height = 0;//保存行高
-            ZuiEditLine line = p->line_data->data[it1];
+            ZuiEditLine line = p->line_data->data[it1];//得到行对象
+            outpos.x = rc->left + 2;
             for (size_t it2 = 0; it2 < line->m_array->count; it2++)
             {
                 ZuiEditObject eo = line->m_array->data[it2];
@@ -123,7 +132,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
                     ot->obj.size.cx = 0;
                     for (size_t i = 0; i < ot->write_len; i++)
                     {
-                        ZuiMeasureTextSize(cp->m_pManager->m_hDcOffscreen, ot->sf, ot->buf[i], &sz);//测量单个字符的大小
+                        ZuiMeasureTextSize(ot->sf, ot->buf[i], &sz);//测量单个字符的大小
 
                         ot->obj.size.cx += sz.cx;//累加对象宽度
                         ot->out_pt[i].x = outpos.x;
@@ -136,7 +145,9 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 
                 height = MAX(height, eo->size.cy);//得到行高,最高的行高为准
             }
-
+            line->rc.top = outpos.y;
+            outpos.y += height;
+            line->rc.bottom = outpos.y;
         }
         //布局完毕计算光标位置
         ZuiControlCall(Proc_Edit_CalcCurPos, cp, NULL, NULL, NULL);
@@ -165,7 +176,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = &cp->m_rcItem;
         //画光标
-        ZuiDrawLineR(gp, ARGB(255, 0, 0, 0), rc->left + p->cur_pos.x, rc->top + 2, rc->left + p->cur_pos.x, rc->top + p->cur_height - 4, 1);
+        ZuiDrawLineR(gp, ARGB(255, 0, 0, 0), rc->left + p->cur_pos.x, p->cur_pos.y, rc->left + p->cur_pos.x, p->cur_pos.y + p->cur_height, 1);
         return;
     }
     case Proc_OnPaintBorder: {
@@ -191,11 +202,12 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
         ZuiEditLine line = darray_getat(p->line_data, p->write_pos.y);
         if (!line)
             return 0;
+        p->cur_pos.y = line->rc.top + 2;
         //获取输入对象
         ZuiEditObject eo = NULL;
-        if (darray_len(line->m_array) == 0) {
-            //当前行没有输入对象
-            p->cur_pos.x = 2;
+        if (darray_len(line->m_array) == 0 || p->write_pos.x < 0) {
+            //当前行没有输入对象,或当前编辑框读写位置在起始位置
+            p->cur_pos.x = 1;
         }
         else {
             //从当前读写位置得到对象
@@ -204,10 +216,17 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
                 //当前对象为文本对象
                 ZuiEditObjectText ot = (ZuiEditObjectText)eo;
                 ZSizeR sz = { 0 };
-                ZuiMeasureTextSize(cp->m_pManager->m_hDcOffscreen, ot->sf, ot->buf[ot->write_pos], &sz);
-                //更具当前对象的输入位置得到字符位置
-                p->cur_pos.x = ot->out_pt[ot->write_pos].x + sz.cx;
-
+                if (ot->write_pos < 0) {
+                    //起始位置
+                    p->cur_pos.x = 1;
+                    
+                }
+                else {
+                    ZuiMeasureTextSize(ot->sf, ot->buf[ot->write_pos], &sz);
+                    //更具当前对象的输入位置得到字符位置
+                    p->cur_pos.x = ot->out_pt[ot->write_pos].x + sz.cx;
+                }
+                p->cur_height = eo->size.cy;
             }
         }
 
@@ -220,7 +239,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
         if (line) {
             if (darray_len(line->m_array) == 0) {
                 //当前行没有输入对象,退行
-
+                return ZuiControlCall(Proc_Edit_MoveLine, cp, -1, 1, NULL);
             }
             else {
                 //从当前读写位置得到对象
@@ -247,7 +266,6 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 
             }
 
-            //获取文本输入对象
 
             ZuiControlNeedUpdate(cp);//重新布局
             ZuiControlInvalidate(cp, TRUE);
@@ -258,11 +276,118 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
     }
     case Proc_Edit_MovePos: {
         //移动光标(读写位置)
+        if (Param1 == 0)
+            return FALSE;
+        //获取输入行
+        ZuiEditLine line = darray_getat(p->line_data, p->write_pos.y);
+        if (line) {
+            if (p->write_pos.x < 0 && darray_len(line->m_array) != 0) {
+                //当前编辑框读写位置在起始位置,且当前行有对象
+                if (((ZuiInt)Param1) < 0) {
+                    //左移移动到上一行的结尾
+                    return ZuiControlCall(Proc_Edit_MoveLine, cp, -1, 1, NULL);
+                }
+                else
+                {
+                    //右移移动到下一个对象
+                    p->write_pos.x++;
+                }
+            }
+
+            if (darray_len(line->m_array) == 0) {
+                //当前行没有输入对象,或当前编辑框读写位置在起始位置
+                if (((ZuiInt)Param1) < 0) {
+                    //左移移动到上一行的结尾
+                    return ZuiControlCall(Proc_Edit_MoveLine, cp, -1, 1, NULL);
+                }
+                else
+                {
+                    //右移移动到下一行的开始
+                    return ZuiControlCall(Proc_Edit_MoveLine, cp, 1, -1, NULL);
+                }
+            }
+            else {
+                //从当前读写位置得到对象
+                ZuiEditObject eo = darray_getat(line->m_array, p->write_pos.x);
+                if (eo->type == ZEOT_TXT) {
+                    //当前读写对象为文本对象
+                    ZuiEditObjectText ot = (ZuiEditObjectText)eo;
+                    //移动读写位置
+                    if (((ZuiInt)Param1) < 0) {
+                        //左移
+                        if (ot->write_pos < 0) {
+                            //超出了当前对象
+                            if (p->write_pos.x == 0) {
+                                //已经是在当前行的头对象
+                                //左移移动到上一行的尾部
+                                return ZuiControlCall(Proc_Edit_MoveLine, cp, -1, 1, NULL);
+                            }
+                            else {
+                                //当前行左边还有对象
+                                p->write_pos.x--;
+                                ot->write_pos = -1;//重置当前对象的写入位置
+                            }
+                        }
+                        else
+                            ot->write_pos--;
+                    }
+                    else
+                    {
+                        //右移
+                        if (ot->write_pos + 1 == ot->write_len)
+                        {
+                            //超出了当前对象
+                            if (p->write_pos.x + 1 == darray_len(line->m_array)) {
+                                //已经是在当前行的行尾
+                                //右移移动到下一行的开始
+                                return ZuiControlCall(Proc_Edit_MoveLine, cp, 1, -1, NULL);
+                            }
+                            else {
+                                //当前行后面还有对象
+                                p->write_pos.x++;
+                                ot->write_pos = -1;//重置当前对象的写入位置
+                            }
+                        }
+                        else
+                            ot->write_pos++;
+                    }
+                }
 
 
+            }
+            //重新计算光标位置
+            ZuiControlCall(Proc_Edit_CalcCurPos, cp, NULL, NULL, NULL);
+            if (cp->m_bFocused)
+                p->cur_type = TRUE;//焦点状态,移动读写位置后立即显示光标位置
+            ZuiControlInvalidate(cp, TRUE);
+            return TRUE;
+        }
+        return FALSE;
+    }
+    case Proc_Edit_MovePosLineEnd: {
+        
         return FALSE;
     }
     case Proc_Edit_MoveLine: {
+        //在行间移动读写位置,参数二指定新读写位置在行头或者行尾,空为自动计算,负数为头部,正数为尾部
+        if (((ZuiInt)Param1) < 0) {
+            //上移
+            if (p->write_pos.y > 0)
+                p->write_pos.y--;
+        }
+        else
+        {
+            //下移
+            if (p->write_pos.y + 1 < darray_len(p->line_data))
+                p->write_pos.y++;
+        }
+
+
+        //重新计算光标位置
+        ZuiControlCall(Proc_Edit_CalcCurPos, cp, NULL, NULL, NULL);
+        if (cp->m_bFocused)
+            p->cur_type = TRUE;//焦点状态,移动读写位置后立即显示光标位置
+        ZuiControlInvalidate(cp, TRUE);
         return FALSE;
     }
     case Proc_Edit_AddLine: {
@@ -352,8 +477,8 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
     }
     case Proc_GetImePoint: {
         ZPoint pt;
-        pt.x = p->cur_pos.x + 1;
-        pt.y = p->cur_pos.y + 2;
+        pt.x = p->cur_pos.x - cp->m_rcItem.left + 1;
+        pt.y = p->cur_pos.y -cp->m_rcItem.top+ 2;
         return &pt;
     }
     case Proc_OnInit: {
@@ -376,7 +501,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
         ZuiEditProc(Proc_Edit_AddLine, cp, p, NULL, NULL, NULL);
 
         //默认光标
-        p->cur_pos.x = 2;
+        p->cur_pos.x = 1;
         p->cur_height = 24;
 
         //初始读写位置
