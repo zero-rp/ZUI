@@ -535,7 +535,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     }
     case Proc_OnPaintBkColor: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        ZRect *rc = (ZRect *)Param2;
+        ZRect *rc = (ZRect *)&p->m_rcItem;
         if (p->m_BkgColor)
             ZuiDrawFillRect(gp, p->m_BkgColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
         break;

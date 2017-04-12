@@ -45,7 +45,7 @@ typedef struct _ZEditObject
 typedef struct _ZEditObjectText
 {
     ZEditObject obj;
-    ZuiStringFormat sf;     //文本格式
+    ZuiFont font;           //文本格式
     ZuiText	buf;            //文本数据
     ZuiInt	buflen;         //缓冲区长度
     ZuiInt	write_len;      //写入数据的长度
@@ -70,7 +70,7 @@ typedef struct _ZEditLine
 /**编辑框控件结构*/
 typedef struct _ZEdit
 {
-    ZuiStringFormat sf;     //编辑框默认文本格式
+    ZuiFont font;           //编辑框默认文本格式
 
     ZuiUInt m_uState;		//控件状态
     ZuiColor FrameColor;    //边框颜色

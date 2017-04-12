@@ -407,7 +407,8 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
                 ZuiText name = Global_DefaultFontName;//字体名字
                 ZuiColor color = ARGB(254, 0, 0, 0);
                 ZuiUInt size = 12;
-                ZuiInt style = NULL;
+                ZuiBool bold = FALSE;
+                ZuiBool italic = FALSE;
                 for (size_t i = 1; i < arrnum; i++)
                 {
                     if (wcsncmp(arr[i], L"name='", 6) == 0) {
@@ -416,11 +417,6 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
                             name = arr[i] + 6;
                             name[wcslen(name)-1] = 0;
                         }
-                    }
-                    else if(wcsncmp(arr[i], L"textcolor=#", 11) == 0)
-                    {
-                        ZuiText pstr = NULL;
-                        color = _tcstoul((wchar_t *)arr[i] + 11, &pstr, 16);
                     }
                     else if (wcsncmp(arr[i], L"size=", 5) == 0)
                     {
@@ -431,7 +427,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
                         //粗体
                         if (wcsncmp(arr[i] + 5, L"true", 4) == 0)
                         {
-                            style |= ZTS_BOLD;
+                            bold = TRUE;
                         }
                     }
                     else if (wcsncmp(arr[i], L"italic=", 7) == 0)
@@ -439,58 +435,11 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
                         //斜体
                         if (wcsncmp(arr[i] + 7, L"true", 4) == 0)
                         {
-                            style |= ZTS_ITALIC;
+                            italic = TRUE;
                         }
                     }
-                    else if (wcsncmp(arr[i], L"underline=", 10) == 0)
-                    {
-                        //下划线
-                        if (wcsncmp(arr[i] + 10, L"true", 4) == 0)
-                        {
-
-                        }
-                    }
-                    else if (wcsncmp(arr[i], L"align='", 7) == 0)
-                    {
-                        //横向对齐方式
-                        if (wcsncmp(arr[i] + 7, L"left", 4) == 0)
-                        {
-                            //左对齐
-                            style |= ZTS_ALIGN_LEFT;
-                        }
-                        else if (wcsncmp(arr[i] + 7, L"center", 6) == 0)
-                        {
-                            //居中对齐
-                            style |= ZTS_ALIGN_CENTER;
-                        }
-                        else if (wcsncmp(arr[i] + 7, L"right", 5) == 0)
-                        {
-                            //右对齐
-                            style |= ZTS_ALIGN_RIGHT;
-                        }
-                    }
-                    else if (wcsncmp(arr[i], L"valign='", 8) == 0)
-                    {
-                        //纵向对齐方式
-                        if (wcsncmp(arr[i] + 8, L"top", 3) == 0)
-                        {
-                            //顶对齐
-                            style |= ZTS_VALIGN_TOP;
-                        }
-                        else if (wcsncmp(arr[i] + 8, L"center", 6) == 0)
-                        {
-                            //居中对齐
-                            style |= ZTS_VALIGN_MIDDLE;
-                        }
-                        else if (wcsncmp(arr[i] + 8, L"bottom", 6) == 0)
-                        {
-                            //底对齐
-                            style |= ZTS_VALIGN_BOTTOM;
-                        }
-                    }
-
                 }
-                res->p = ZuiCreateStringFormat(name, size, color, 0, style);
+                res->p = ZuiCreateFont(name, size, bold, italic);
             }
             if (!res->p) {
                 ZuiFree(res);

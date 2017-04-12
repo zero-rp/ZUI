@@ -764,7 +764,7 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
     }
     case Proc_OnPaintBkColor: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        ZRect *rc = (ZRect*)Param2;
+        ZRect *rc = (ZRect*)&cp->m_rcItem;
         if (p->m_pOwner == NULL) return;
         ZuiListInfo pInfo = ZuiControlCall(Proc_List_GetListInfo, p->m_pOwner, cp, NULL, NULL);
         
@@ -1068,21 +1068,21 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
             }
             return;
         }
-        break;
+        return;
     }
     case Proc_OnPaintText: {
-		if (!cp->m_sText)
-			return;
+        if (!cp->m_sText)
+            return;
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        ZRect *rc = Param2;
+        ZRect *rc = &cp->m_rcItem;
         ZRect r;
         MAKEZRECT(r, rc->left + 5, rc->top + 5, rc->right - rc->left - 10, rc->bottom - rc->top - 10);
-		ZuiDrawString(gp, Global_StringFormat, cp->m_sText, wcslen(cp->m_sText), &r);
+        ZuiDrawString(gp, Global_Font, cp->m_sText, wcslen(cp->m_sText), &r);
         return;
     }
     case Proc_OnPaintStatusImage: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        ZRect *rc = (ZRect *)Param2;
+        ZRect *rc = (ZRect *)&cp->m_rcItem;
         ZuiImage img;
         if (cp->m_bFocused)
             p->m_uButtonState |= ZSTATE_FOCUSED;

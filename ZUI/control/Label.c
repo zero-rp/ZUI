@@ -13,7 +13,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
 		if (p->font)
 			ZuiDrawString(gp, p->font->p, cp->m_sText, wcslen(cp->m_sText), &r);
 		else
-			ZuiDrawString(gp, Global_StringFormat, cp->m_sText, wcslen(cp->m_sText), &r);
+			ZuiDrawString(gp, Global_Font, cp->m_sText, wcslen(cp->m_sText), &r);
         return;
     }
     case Proc_Label_SetFont: {

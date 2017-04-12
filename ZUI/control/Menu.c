@@ -5,7 +5,6 @@
 ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNodeMenu(mxml_node_t *tree, ZuiControl win) {
     mxml_node_t *node;
     ZuiText ClassName = NULL;
-    ZuiStringFormat StringFormat = NULL;
     ZuiBool Visible = FALSE, Enabled = TRUE;
     ZuiControl Control;
     for (node = mxmlFindElement(tree, tree, NULL, NULL, NULL, MXML_DESCEND); node != NULL; node = mxmlWalkNext(node, NULL, MXML_DESCEND)/*node = mxmlFindElement(node, tree, NULL,NULL,NULL,MXML_DESCEND)*/) {

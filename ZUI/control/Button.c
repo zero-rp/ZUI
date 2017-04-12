@@ -80,7 +80,7 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
     }
     case Proc_OnPaintStatusImage: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        ZRect *rc = (ZRect *)Param2;
+        ZRect *rc = (ZRect *)&cp->m_rcItem;
         HPEN hPen = 0;
         ZuiImage img;
         if (p->type == 0) {

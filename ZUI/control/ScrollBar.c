@@ -345,7 +345,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
     }
     case Proc_OnPaintStatusImage: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        ZRect *rc = (ZRect *)Param2;
+        ZRect *rc = (ZRect *)&cp->m_rcItem;
         ZuiImage img;
         //绘制第一个按钮
         if (p->m_bShowButton1) {

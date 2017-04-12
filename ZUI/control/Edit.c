@@ -132,7 +132,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
                     ot->obj.size.cx = 0;
                     for (size_t i = 0; i < ot->write_len; i++)
                     {
-                        ZuiMeasureTextSize(ot->sf, ot->buf[i], &sz);//测量单个字符的大小
+                        ZuiMeasureTextSize(ot->font, ot->buf[i], &sz);//测量单个字符的大小
 
                         ot->obj.size.cx += sz.cx;//累加对象宽度
                         ot->out_pt[i].x = outpos.x;
@@ -166,7 +166,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
                 ZuiEditObject eo = line->m_array->data[it2];
                 if (eo->type == ZEOT_TXT) {
                     ZuiEditObjectText ot = (ZuiEditObjectText)eo;
-                    ZuiDrawStringR(gp, ot->sf, ot->buf, ot->write_len, ot->out_pt);
+                    ZuiDrawString(gp, ot->font, ot->buf, ot->write_len, ot->out_pt);
                 }
             }
         }
@@ -176,7 +176,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = &cp->m_rcItem;
         //画光标
-        ZuiDrawLineR(gp, ARGB(255, 0, 0, 0), rc->left + p->cur_pos.x, p->cur_pos.y, rc->left + p->cur_pos.x, p->cur_pos.y + p->cur_height, 1);
+        ZuiDrawLine(gp, ARGB(255, 0, 0, 0), p->cur_pos.x, p->cur_pos.y, p->cur_pos.x, p->cur_pos.y + p->cur_height, 1);
         return;
     }
     case Proc_OnPaintBorder: {
@@ -207,7 +207,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
         ZuiEditObject eo = NULL;
         if (darray_len(line->m_array) == 0 || p->write_pos.x < 0) {
             //当前行没有输入对象,或当前编辑框读写位置在起始位置
-            p->cur_pos.x = 1;
+            p->cur_pos.x = cp->m_rcItem.left+1;
         }
         else {
             //从当前读写位置得到对象
@@ -218,11 +218,11 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
                 ZSizeR sz = { 0 };
                 if (ot->write_pos < 0) {
                     //起始位置
-                    p->cur_pos.x = 1;
+                    p->cur_pos.x = cp->m_rcItem.left+1;
                     
                 }
                 else {
-                    ZuiMeasureTextSize(ot->sf, ot->buf[ot->write_pos], &sz);
+                    ZuiMeasureTextSize(ot->font, ot->buf[ot->write_pos], &sz);
                     //更具当前对象的输入位置得到字符位置
                     p->cur_pos.x = ot->out_pt[ot->write_pos].x + sz.cx;
                 }
@@ -412,7 +412,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
                 ot = (ZuiEditObjectText)ZuiMalloc(sizeof(ZEditObjectText));
                 memset(ot, 0, sizeof(ZEditObjectText));
                 ot->obj.type = ZEOT_TXT;
-                ot->sf = p->sf;
+                ot->font = p->font;
                 ot->buflen = Proc_Edit_ObjectTextBufLen;
                 ot->buf = (ZuiText)ZuiMalloc(sizeof(_ZuiText)*Proc_Edit_ObjectTextBufLen);
                 ot->write_pos = -1;
@@ -433,7 +433,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
                     ot = (ZuiEditObjectText)ZuiMalloc(sizeof(ZEditObjectText));
                     memset(ot, 0, sizeof(ZEditObjectText));
                     ot->obj.type = ZEOT_TXT;
-                    ot->sf = p->sf;
+                    ot->font = p->font;
                     ot->buflen = Proc_Edit_ObjectTextBufLen;
                     ot->buf = (ZuiText)ZuiMalloc(sizeof(_ZuiText)*Proc_Edit_ObjectTextBufLen);
                     ot->write_pos = -1;
@@ -493,7 +493,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         p->old_udata = ZuiLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
         p->old_call = (ZCtlProc)&ZuiLayoutProc;
-        p->sf = ZuiCreateStringFormat(L"微软雅黑", 12, ARGB(255, 255, 0, 0), ARGB(255, 255, 255, 255), 0);
+        p->font = ZuiCreateFont(L"微软雅黑", 12, FALSE, FALSE);
 
         p->line_data = darray_create();
 
