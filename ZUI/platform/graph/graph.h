@@ -38,167 +38,38 @@ extern "C"
     */
     ZuiBool ZuiGraphInitialize();
     ZuiVoid ZuiGraphUnInitialize();
-    /** 此函数用作填充一个矩形区域.
-    * @param Graphics ZuiGraphics对象
-    * @param Color 用作填充的颜色
-    * @param Left 左边
-    * @param Top 顶边
-    * @param Width 宽度
-    * @param Height 高度
-    * @return 此函数没有返回值.
-    */
-    ZEXPORT ZuiVoid ZCALL ZuiDrawFillRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt Left, ZuiInt Top, ZuiInt Width, ZuiInt Height);
-    /** 此函数用作绘制一个矩形.
-    * @param Graphics ZuiGraphics对象
-    * @param Color 用作填充的颜色
-    * @param Left 左边
-    * @param Top 顶边
-    * @param Width 宽度
-    * @param Height 高度
-    * @param LineWidth 线宽
-    * @return 此函数没有返回值.
-    */
-    ZEXPORT ZuiVoid ZCALL ZuiDrawRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt Left, ZuiInt Top, ZuiInt Width, ZuiInt Height, ZuiInt LineWidth);
-    /** 此函数用作绘制一个多边形.
-    * @param Graphics ZuiGraphics对象
-    * @param Color 用作填充的颜色
-    * @param point 顶点数组
-    * @param count 顶点数量
-    * @param LineWidth 线宽
-    * @return 此函数没有返回值.
-    */
-    ZEXPORT ZuiVoid ZCALL ZuiDrawPolygon(ZuiGraphics Graphics, ZuiColor Color, ZuiPoint *point, ZuiInt count, ZuiInt LineWidth);
-    /** 此函数用作绘制一条直线.
-    * @param Graphics ZuiGraphics对象
-    * @param Color 直线的颜色
-    * @param x1 起始点
-    * @param y1
-    * @param x2 结束点
-    * @param y2
-    * @param LineWidth 线宽
-    * @return 此函数没有返回值.
-    */
-    ZEXPORT ZuiVoid ZCALL ZuiDrawLine(ZuiGraphics Graphics, ZuiColor Color, ZuiInt x1, ZuiInt y1, ZuiInt x2, ZuiInt y2, ZuiInt LineWidth);
-	ZEXPORT ZuiVoid ZCALL ZuiDrawLineR(ZuiGraphics Graphics, ZuiColor Color, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2, ZuiReal LineWidth);
-    /** 此函数用作绘制文本.
-    * @param Graphics ZuiGraphics对象
-    * @param StringFormat 文本格式
-    * @param String 文本
-    * @param Rect 矩形区域
-    * @return 此函数没有返回值.
-    */
-    ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiStringFormat StringFormat, ZuiText String, ZuiInt StrLens, ZPointR Rect[]);
-	ZEXPORT ZuiVoid ZCALL ZuiDrawStringR(ZuiGraphics Graphics, ZuiStringFormat StringFormat, ZuiText String, ZuiInt StrLens, ZPointR Pt[]);
-    /** 此函数用作测量文本矩形.
-    * @param Graphics ZuiGraphics对象
-    * @param StringFormat 文本格式
-    * @param String 文本
-    * @param Rect 矩形区域 指针
-    * @param LRect 参考矩形区域 指针
-    * @return 此函数没有返回值.
-    */
-    ZEXPORT ZuiVoid ZCALL ZuiMeasureTextSize(ZuiStringFormat StringFormat, _ZuiText String, ZuiSizeR Size);
-    /** 此函数用作绘制并填充圆角矩形.
-    * @param Graphics ZuiGraphics对象
-    * @param Color 用作填充的颜色
-    * @param BorderColor 用作描边的颜色
-    * @param x
-    * @param y
-    * @param Width
-    * @param Height
-    * @param LineWidth
-    * @param Round
-    * @return 此函数没有返回值.
-    */
-    ZEXPORT ZuiVoid ZCALL ZuiDrawFilledRoundRect(ZuiGraphics Graphics, ZuiColor Color, ZuiColor BorderColor, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiInt LineWidth, ZuiReal Round);
-    /** 此函数用作绘制圆角矩形.
-    * @param Graphics ZuiGraphics对象
-    * @param Color 颜色
-    * @param x
-    * @param y
-    * @param Width
-    * @param Height
-    * @param LineWidth
-    * @param Round
-    * @return 此函数没有返回值.
-    */
-    ZEXPORT ZuiVoid ZCALL ZuiDrawRoundRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiInt LineWidth, ZuiReal Round);
-    /** 此函数用作绘制图像.
-    * @param Graphics ZuiGraphics对象
-    * @param Image ZuiImage对象
-    * @param x
-    * @param y
-    * @return 此函数没有返回值.
-    */
-    ZEXPORT ZuiVoid ZCALL ZuiDrawImage(ZuiGraphics Graphics, ZuiImage Image, ZuiInt x, ZuiInt y);
-    /** 此函数用作绘制图像(扩展).
-    * @param Graphics ZuiGraphics对象
-    * @param Image ZuiImage对象
-    * @param x 左边
-    * @param y 顶边
-    * @param Width 宽度
-    * @param Height 高度
-    * @param xSrc 源坐标
-    * @param ySrc 源顶边
-    * @param WidthSrc 源宽度
-    * @param HeightSrc 源高度
-    * @param Alpha 透明度
-    * @return 此函数没有返回值.
-    */
-    ZEXPORT ZuiVoid ZCALL ZuiDrawImageEx(ZuiGraphics Graphics, ZuiImage Image, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiInt xSrc, ZuiInt ySrc, ZuiInt WidthSrc, ZuiInt HeightSrc, ZuiByte Alpha);
+    //填充矩形
+    ZEXPORT ZuiVoid ZCALL ZuiDrawFillRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Width, ZuiReal Height);
+    //绘制矩形
+    ZEXPORT ZuiVoid ZCALL ZuiDrawRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Width, ZuiReal Height, ZuiReal LineWidth);
+    //绘制多边形
+    ZEXPORT ZuiVoid ZCALL ZuiDrawPolygon(ZuiGraphics Graphics, ZuiColor Color, ZuiPointR *point, ZuiInt count, ZuiReal LineWidth);
+    //绘制直线
+    ZEXPORT ZuiVoid ZCALL ZuiDrawLine(ZuiGraphics Graphics, ZuiColor Color, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2, ZuiReal LineWidth);
+    //绘制文本
+	ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiFont Font, ZuiText String, ZuiInt StrLens, ZPointR Pt[]);
+    //测量字符大小
+    ZEXPORT ZuiVoid ZCALL ZuiMeasureTextSize(ZuiFont Font, ZuiText String, ZuiSizeR Size);
+    //绘制图像
+    ZEXPORT ZuiVoid ZCALL ZuiDrawImageEx(ZuiGraphics Graphics, ZuiImage Image, ZuiReal x, ZuiReal y, ZuiReal Width, ZuiReal Height, ZuiReal xSrc, ZuiReal ySrc, ZuiReal WidthSrc, ZuiReal HeightSrc, ZuiByte Alpha);
+    //复制图形
     ZEXPORT ZuiVoid ZCALL ZuiAlphaBlendEx(ZuiGraphics Dest, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiGraphics Src, ZuiInt xSrc, ZuiInt ySrc, ZuiInt WidthSrc, ZuiInt HeightSrc, ZuiByte Alpha);
-    /** 此函数用作以透明通道复制图形.
-    * @param Dest 目标图形
-    * @param x 左边
-    * @param y 顶边
-    * @param Width 宽度
-    * @param Height 高度
-    * @param Src 源图形
-    * @param xSrc 源坐标
-    * @param ySrc 源顶边
-    * @param Alpha 透明度
-    * @return 此函数没有返回值.
-    */
     ZEXPORT ZuiVoid ZCALL ZuiAlphaBlend(ZuiGraphics Dest, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiGraphics Src, ZuiInt xSrc, ZuiInt ySrc, ZuiByte Alpha);
-    /** 此函数用作使用指定颜色清空ZuiGraphics对象.
-    * @param Graphics ZuiGraphics对象
-    * @param Color 颜色
-    * @return 此函数没有返回值.
-    */
+    //清空图形
     ZEXPORT ZuiVoid ZCALL ZuiGraphicsClear(ZuiGraphics Graphics, ZuiColor Color);
-    /** 此函数用作创建ZuiStringFormat(文本格式)对象.
-    * @param FontName 字体名称
-    * @param FontSize 字体大小
-    * @param TextColor 字体颜色
-    * @param ShadowColor 阴影颜色
-    * @param StringStyle 字体风格 VTS_开头的常量
-    * @return 成功返回ZuiStringFormat对象.
-    */
-    ZEXPORT ZuiStringFormat ZCALL ZuiCreateStringFormat(ZuiText FontName, ZuiReal FontSize, ZuiColor TextColor, ZuiColor ShadowColor, ZuiInt StringStyle);
-    /** 此函数用作销毁ZuiStringFormat对象.
-    * @param StringFormat ZuiStringFormat对象
-    * @return 此函数没有返回值.
-    */
-    ZEXPORT ZuiVoid ZCALL ZuiDestroyStringFormat(ZuiStringFormat StringFormat);
-    /** 此函数用作在内存中创建ZuiGraphics对象.
-    * @param Width 宽度
-    * @param Height 高度
-    * @return 成功返回创建的ZuiGraphics对象.
-    */
+    //创建字体
+    ZEXPORT ZuiFont ZCALL ZuiCreateFont(ZuiText FontName, ZuiReal FontSize, ZuiBool Bold, ZuiBool Italic);
+    //销毁字体
+    ZEXPORT ZuiVoid ZCALL ZuiDestroyStringFormat(ZuiFont StringFormat);
+    //创建图形
     ZEXPORT ZuiGraphics ZCALL ZuiCreateGraphicsInMemory(ZuiInt Width, ZuiInt Height);
-    /** 此函数用作销毁ZuiGraphics对象.
-    * @param Graphics ZuiGraphics对象
-    * @return 此函数没有返回值.
-    */
+    //销毁图形
     ZEXPORT ZuiVoid ZCALL ZuiDestroyGraphics(ZuiGraphics Graphics);
-    ZEXPORT ZuiRegion ZCALL ZuiCreateRegion();
-    ZEXPORT ZuiRegion ZCALL ZuiCreateRegionRect(ZuiRect layoutRect);
-    ZEXPORT ZuiVoid ZCALL ZuiDestroyRegion(ZuiRegion region);
-    ZEXPORT ZuiBool ZCALL ZuiRegionIsVisiblePoint(ZuiRegion region, ZuiInt x, ZuiInt y);
-    ZEXPORT ZuiVoid ZCALL ZuiRegionCombineExclude(ZuiRegion region, ZuiRegion region1);
-    ZEXPORT ZuiVoid ZCALL ZuiRegionTranslate(ZuiRegion region, ZuiInt x, ZuiInt y);
-    ZEXPORT ZuiBool ZCALL ZuiGraphicsSetClipRegion(ZuiGraphics Graphics, ZuiRegion region, ZuiInt mod);
-    ZEXPORT ZuiBool ZCALL ZuiGraphicsGetClipRegion(ZuiGraphics Graphics, ZuiRegion region);
+    //设置剪辑区
+    ZEXPORT ZuiBool ZCALL ZuiGraphicsSetClipBox(ZuiGraphics Graphics, ZuiRectR box);
+    //获取剪辑区
+    ZEXPORT ZuiBool ZCALL ZuiGraphicsGetClipBox(ZuiGraphics Graphics, ZuiRectR box);
+    //重置剪辑区
     ZEXPORT ZuiBool ZCALL ZuiGraphicsResetClip(ZuiGraphics Graphics);
     /** 此函数用作从文件载入图像.
     * @param FileName 路径
@@ -211,6 +82,8 @@ extern "C"
     * @return 成功返回ZuiImage对象.
     */
     ZEXPORT ZuiImage ZCALL ZuiLoadImageFromBinary(ZuiAny buf, ZuiInt len);
+
+
     /*取图像帧数*/
     ZEXPORT ZuiInt ZCALL ZuiImageGetFrameCount(ZuiImage Image);
     /*取图像各帧延时*/

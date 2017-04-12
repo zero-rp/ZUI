@@ -42,12 +42,8 @@ namespace agg
 
         image_accessor_clip() {}
         explicit image_accessor_clip(const pixfmt_type& pixf, 
-                                     const color_type& bk,int sx,int sy,int sw, int sh) : 
-            m_pixf(&pixf),
-			src_x(sx),
-			src_y(sy),
-			src_w(sw), 
-			src_h(sh)
+                                     const color_type& bk) : 
+            m_pixf(&pixf)
         {
             pixfmt_type::make_pix(m_bk_buf, bk);
         }
@@ -76,13 +72,12 @@ namespace agg
     public:
         AGG_INLINE const int8u* span(int x, int y, unsigned len)
         {
-			m_x = m_x0 = x + src_x;
-			m_y = y + src_y;
-            
-			if(y >= 0 && y < (int)src_h &&
-               x >= 0 && x+(int)len <= (int)src_w)
+            m_x = m_x0 = x;
+            m_y = y;
+            if(y >= 0 && y < (int)m_pixf->height() &&
+               x >= 0 && x+(int)len <= (int)m_pixf->width())
             {
-				return m_pix_ptr = m_pixf->pix_ptr(x + src_x, y + src_y);
+                return m_pix_ptr = m_pixf->pix_ptr(x, y);
             }
             m_pix_ptr = 0;
             return pixel();
@@ -111,7 +106,7 @@ namespace agg
     private:
         const pixfmt_type* m_pixf;
         int8u              m_bk_buf[4];
-        int                m_x, m_x0, m_y, src_x, src_y, src_w, src_h;
+        int                m_x, m_x0, m_y;
         const int8u*       m_pix_ptr;
     };
 

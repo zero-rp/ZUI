@@ -130,6 +130,12 @@
     <Filter Include="源文件\dukluv\src\hash">
       <UniqueIdentifier>{3f3968f2-7b20-4c21-92e9-0306431bb97a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\platform\graph\agg">
+      <UniqueIdentifier>{1e7bdc32-ef46-4dbe-badc-ddab43acf130}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\platform\graph\agg\include">
+      <UniqueIdentifier>{bcba82ae-cd8a-4787-ac81-01255d700389}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="control\html\lout\container.cc">
@@ -792,6 +798,24 @@
     <ClCompile Include="..\..\ZUI\vc6.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\graph\agg\agg_font_freetype.cpp">
+      <Filter>源文件\platform\graph\AGG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\graph\agg\agg2d.cpp">
+      <Filter>源文件\platform\graph\AGG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\graph\agg\src\agg_bezier_arc.cpp">
+      <Filter>源文件\platform\graph\AGG\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\graph\agg\src\agg_image_filters.cpp">
+      <Filter>源文件\platform\graph\AGG\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\graph\agg\src\agg_arc.cpp">
+      <Filter>源文件\platform\graph\AGG\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\graph\agg\src\agg_rounded_rect.cpp">
+      <Filter>源文件\platform\graph\AGG\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="control\html\lout\container.hh">
@@ -1261,6 +1285,381 @@
     </ClInclude>
     <ClInclude Include="..\..\ZUI\dukluv\src\duv_pipe.h">
       <Filter>头文件\dukluv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\agg_font_freetype.h">
+      <Filter>头文件\platform\graph\agg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\agg_font_win32_tt.h">
+      <Filter>头文件\platform\graph\agg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\agg2d.h">
+      <Filter>头文件\platform\graph\agg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_alpha_mask_u8.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_arc.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_array.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_arrowhead.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_basics.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_bezier_arc.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_bitset_iterator.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_blur.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_bounding_rect.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_bspline.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_clip_liang_barsky.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_color_gray.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_color_rgba.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_config.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_conv_adaptor_vcgen.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_conv_adaptor_vpgen.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_conv_bspline.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_conv_clip_polygon.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_conv_clip_polyline.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_conv_close_polygon.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_conv_concat.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_conv_contour.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_conv_curve.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_conv_dash.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_conv_gpc.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_conv_marker.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_conv_marker_adaptor.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_conv_segmentator.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_conv_shorten_path.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_conv_smooth_poly1.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_conv_stroke.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_conv_transform.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_conv_unclose_polygon.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_curves.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_dda_line.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_ellipse.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_ellipse_bresenham.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_embedded_raster_fonts.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_font_cache_manager.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_gamma_functions.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_gamma_lut.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_glyph_raster_bin.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_gradient_lut.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_gsv_text.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_image_accessors.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_image_filters.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_line_aa_basics.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_math.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_math_stroke.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_path_length.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_path_storage.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_path_storage_integer.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_pattern_filters_rgba.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_pixfmt_amask_adaptor.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_pixfmt_gray.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_pixfmt_rgb.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_pixfmt_rgb_packed.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_pixfmt_rgba.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_pixfmt_transposer.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_rasterizer_cells_aa.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_rasterizer_compound_aa.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_rasterizer_outline.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_rasterizer_outline_aa.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_rasterizer_scanline_aa.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_rasterizer_sl_clip.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_renderer_base.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_renderer_markers.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_renderer_mclip.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_renderer_outline_aa.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_renderer_outline_image.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_renderer_primitives.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_renderer_raster_text.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_renderer_scanline.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_rendering_buffer.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_rendering_buffer_dynarow.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_rounded_rect.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_scanline_bin.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_scanline_boolean_algebra.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_scanline_p.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_scanline_storage_aa.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_scanline_storage_bin.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_scanline_u.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_shorten_path.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_simul_eq.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_allocator.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_converter.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_gouraud.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_gouraud_gray.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_gouraud_rgba.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_gradient.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_gradient_alpha.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_image_filter.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_image_filter_gray.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_image_filter_rgb.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_image_filter_rgba.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_interpolator_adaptor.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_interpolator_linear.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_interpolator_persp.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_interpolator_trans.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_pattern_gray.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_pattern_rgb.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_pattern_rgba.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_solid.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_span_subdiv_adaptor.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_trans_affine.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_trans_bilinear.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_trans_double_path.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_trans_perspective.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_trans_single_path.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_trans_viewport.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_trans_warp_magnifier.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_vcgen_bspline.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_vcgen_contour.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_vcgen_dash.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_vcgen_markers_term.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_vcgen_smooth_poly1.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_vcgen_stroke.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_vcgen_vertex_sequence.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_vertex_sequence.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_vpgen_clip_polygon.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_vpgen_clip_polyline.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_vpgen_segmentator.h">
+      <Filter>头文件\platform\graph\agg\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

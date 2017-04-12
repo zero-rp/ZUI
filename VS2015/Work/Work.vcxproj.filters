@@ -55,6 +55,12 @@
     <Filter Include="ZUI\dukluv">
       <UniqueIdentifier>{661f3a22-1f53-407a-b305-d968b449e768}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ZUI\platform\graph\AGG">
+      <UniqueIdentifier>{d66b24ac-32f0-417a-8900-9eed45d5593f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ZUI\platform\graph\AGG\src">
+      <UniqueIdentifier>{e1704cf2-48dd-4848-b150-722c2acf593d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\ZUI\control\Browser.c">
@@ -614,6 +620,36 @@
     </ClCompile>
     <ClCompile Include="..\..\ZUI\dukluv\src\duv_udp.c">
       <Filter>ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\graph\agg.cpp">
+      <Filter>ZUI\platform\graph</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\graph\agg\agg_font_win32_tt.cpp">
+      <Filter>ZUI\platform\graph\AGG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\graph\agg\agg2d.cpp">
+      <Filter>ZUI\platform\graph\AGG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\graph\agg\src\agg_arc.cpp">
+      <Filter>ZUI\platform\graph\AGG\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\graph\agg\src\agg_bezier_arc.cpp">
+      <Filter>ZUI\platform\graph\AGG\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\graph\agg\src\agg_curves.cpp">
+      <Filter>ZUI\platform\graph\AGG\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\graph\agg\src\agg_image_filters.cpp">
+      <Filter>ZUI\platform\graph\AGG\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\graph\agg\src\agg_rounded_rect.cpp">
+      <Filter>ZUI\platform\graph\AGG\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\graph\agg\src\agg_trans_affine.cpp">
+      <Filter>ZUI\platform\graph\AGG\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\graph\agg\src\agg_vcgen_stroke.cpp">
+      <Filter>ZUI\platform\graph\AGG\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

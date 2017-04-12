@@ -25,6 +25,10 @@
 //图像解码器
 
 #include <vector>
+
+
+#include "agg\agg2d.h"
+
 typedef struct
 {
     ZuiInt GdiplusVersion;
@@ -64,34 +68,22 @@ extern "C"
 #define ARGBTORGBA8P(A) (new agg::rgba8(((A) >> 16) & 0xFF, ((A) >> 8) & 0xFF, (A) & 0xff, ((A) >> 24) & 0xFF))
     /**AGG图形*/
     struct ZuiAggGraphics {
-        agg::rendering_buffer *rbuf;		//内存管理器
-        agg::pixfmt_bgra32 *pixf;			//颜色管理器
-        agg::renderer_base<agg::pixfmt_bgra32> *renb;//基础渲染器
-        agg::renderer_scanline_aa_solid<agg::renderer_base<agg::pixfmt_bgra32>> *rensl;//高级渲染器
-        agg::renderer_primitives<agg::renderer_base<agg::pixfmt_bgra32>> *rendp;//基础操作,矩形,线段什么的
-        agg::path_storage ps;//路径存储
-        agg::rasterizer_scanline_aa<> ras;//光栅化
+        Agg2D *graphics;                    //图形对象
     };
+    /**AGG图像*/
     struct ZuiAggImage {
         HDC hdc;
         HBITMAP HBitmap;///位图句柄
         void *graphics;
         void *buf;
         void *image;
-        agg::rendering_buffer *rbuf;		//内存管理器
-        agg::pixfmt_bgra32 *pixf;			//颜色管理器
+        Agg2D::Image *img;
     };
+    /**AGG字体*/
     struct ZuiAggFont {
-        HDC dc;
-        agg::font_engine_win32_tt_int16 *font;//字体
-        agg::font_cache_manager<agg::font_engine_win32_tt_int16> *font_manager;//字体管理器  
-        agg::font_engine_win32_tt_int16::path_adaptor_type *vs;// 顶点源
-        agg::conv_curve<agg::font_engine_win32_tt_int16::path_adaptor_type> *ccvs;//转换后的顶点
-        agg::rgba8 *color;
+        Agg2D::Font *font;
     };
 
-    ZRectR ZeroRectR;//零坐标矩形
-    agg::scanline_u8 sl;//扫描线
     ZuiInt pGdiToken;
     /*初始化图形接口*/
     ZuiBool ZuiGraphInitialize() {
@@ -99,210 +91,134 @@ extern "C"
         memset(&gdiplusStartupInput, 0, sizeof(GdiplusStartupInput));
         gdiplusStartupInput.GdiplusVersion = 1;
         GdiplusStartup(&pGdiToken, &gdiplusStartupInput, NULL);//初始化GDI+
-        MAKEZRECT(ZeroRectR, 0, 0, 0, 0);
         return TRUE;
     }
     /*反初始化图形接口*/
     ZuiVoid ZuiGraphUnInitialize() {
         GdiplusShutdown(pGdiToken);
     }
+    
     /*填充矩形*/
-    ZEXPORT ZuiVoid ZCALL ZuiDrawFillRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt Left, ZuiInt Top, ZuiInt Width, ZuiInt Height) {
+    ZEXPORT ZuiVoid ZCALL ZuiDrawFillRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Width, ZuiReal Height) {
         if (Graphics)
         {
-            Graphics->graphics->rendp->fill_color(ARGBTORGBA8(Color));
-            Graphics->graphics->rendp->solid_rectangle(Left, Top, Left + Width - 1, Top + Height - 1);
+            Graphics->graphics->graphics->fillColor(ARGBTORGBA8(Color));
+            Graphics->graphics->graphics->noLine();//不画边框
+            Graphics->graphics->graphics->rectangle(Left, Top, Left + Width, Top + Height);
         }
     }
     /*画矩形*/
-    ZEXPORT ZuiVoid ZCALL ZuiDrawRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt Left, ZuiInt Top, ZuiInt Width, ZuiInt Height, ZuiInt LineWidth) {
+    ZEXPORT ZuiVoid ZCALL ZuiDrawRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Width, ZuiReal Height, ZuiReal LineWidth) {
         if (Graphics) {
-            Graphics->graphics->rendp->line_color(ARGBTORGBA8(Color));
-            Graphics->graphics->rendp->rectangle(Left, Top, Width + Left - 1, Top + Height - 1);
+            Graphics->graphics->graphics->lineWidth(LineWidth);
+            Graphics->graphics->graphics->lineColor(ARGBTORGBA8(Color));
+            Graphics->graphics->graphics->noFill();//不填充
+            Graphics->graphics->graphics->rectangle(Left + 0.5, Top + 0.5, Left + Width - 0.5, Top + Height - 0.5);
         }
     }
     /*画直线*/
-    ZEXPORT ZuiVoid ZCALL ZuiDrawLine(ZuiGraphics Graphics, ZuiColor Color, ZuiInt x1, ZuiInt y1, ZuiInt x2, ZuiInt y2, ZuiInt LineWidth)
+    ZEXPORT ZuiVoid ZCALL ZuiDrawLine(ZuiGraphics Graphics, ZuiColor Color, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2, ZuiReal LineWidth)
     {
         if (Graphics) {
-            Graphics->graphics->ps.move_to(x1, y1);
-            Graphics->graphics->ps.line_to(x2, y2);
-
-            agg::conv_stroke<agg::path_storage> stroke(Graphics->graphics->ps);
-            //stroke.width(1);
-            Graphics->graphics->ras.add_path(stroke);
-
-            Graphics->graphics->rensl->color(ARGBTORGBA8(Color));
-            agg::render_scanlines(Graphics->graphics->ras, sl, *Graphics->graphics->rensl);
-            //重置
-            Graphics->graphics->ps.remove_all();
-            Graphics->graphics->ras.reset();
+            Graphics->graphics->graphics->lineWidth(LineWidth);
+            Graphics->graphics->graphics->lineColor(ARGBTORGBA8(Color));
+            Graphics->graphics->graphics->line(x1 + 0.5, y1 + 0.5, x2 + 0.5, y2 - 0.5);
         }
     }
-
-
     /*画文本*/
-    ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiStringFormat StringFormat, ZuiText String, ZuiRect Rect) {
-        if (String) {
-            // 字体串  
-            wchar_t *s = String;
-
-            // 字符输出的位置  
-            double x = Rect->Left, y = Rect->Top + Rect->Height / 2;
-            for (; *s; s++) {      // 让字体引擎准备好字体数据 
-                const agg::glyph_cache* glyph = StringFormat->font->font_manager->glyph(*s);
-                if (glyph) {
-                    StringFormat->font->vs->init(glyph->data, glyph->data_size, x, y);
-                    Graphics->graphics->ras.add_path(*StringFormat->font->ccvs);
-                    agg::render_scanlines_aa_solid(Graphics->graphics->ras, sl, *Graphics->graphics->renb, *StringFormat->font->color);
-                    // 前进  
-                    x += glyph->advance_x;
-                    y += glyph->advance_y;
-                    Graphics->graphics->ras.reset();
-                }
-            }
-        }
+    ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiFont StringFormat, ZuiText String, ZuiInt StrLens, ZPointR Pt[]) {
+        //if (String) {
+        //    // 字体串  
+        //    wchar_t *s = String;
+        //    for (int i=0; *s; s++) {      // 让字体引擎准备好字体数据 
+        //        const agg::glyph_cache* glyph = StringFormat->font->font_manager->glyph(*s);
+        //        if (glyph) {
+        //            StringFormat->font->vs->init(glyph->data, glyph->data_size, Pt[i].x, Pt[i].y);
+        //            Graphics->graphics->ras.add_path(*StringFormat->font->ccvs);
+        //            agg::render_scanlines_aa_solid(Graphics->graphics->ras, sl, *Graphics->graphics->renb, *StringFormat->font->color);
+        //            Graphics->graphics->ras.reset();
+        //        }
+        //        i++;
+        //    }
+        //}
     }
     /*测量文本矩形*/
-    ZEXPORT ZuiVoid ZCALL ZuiMeasureStringRect(ZuiGraphics Graphics, ZuiStringFormat StringFormat, ZuiText String, ZuiRectR Rect, ZuiRectR LRect)
+    ZEXPORT ZuiVoid ZCALL ZuiMeasureTextSize(ZuiFont Font, ZuiText String, ZuiSizeR Size)
     {
-        if (String && Graphics) {
-            // 字体串  
-            wchar_t *s = String;
-            double x = 0, y = 0;
-            for (; *s; s++) {      // 让字体引擎准备好字体数据 
-                const agg::glyph_cache* glyph = StringFormat->font->font_manager->glyph(*s);
-                if (glyph) {
-                    // 前进  
-                    x += glyph->advance_x;
-                    y += glyph->advance_y;
-                }
-            }
-            Rect->Height = y;
-            Rect->Width = x;
-            Rect->Left = 0;
-            Rect->Top = 0;
+        if (String && Font) {
+            Size->cx = Font->font->font->textWidth(String);
+            Size->cy = Font->font->font->fontHeight();
         }
     }
-    /*画圆角矩形*/
-    ZEXPORT ZuiVoid ZCALL ZuiDrawRoundRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiInt LineWidth, ZuiReal Round) {
-
-    }
-
     /*画图像缩放*/
-    ZEXPORT ZuiVoid ZCALL ZuiDrawImageEx(ZuiGraphics Graphics, ZuiImage Image, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiInt xSrc, ZuiInt ySrc, ZuiInt WidthSrc, ZuiInt HeightSrc, ZuiByte Alpha) {
+    ZEXPORT ZuiVoid ZCALL ZuiDrawImageEx(ZuiGraphics Graphics, ZuiImage Image, ZuiReal x, ZuiReal y, ZuiReal Width, ZuiReal Height, ZuiReal xSrc, ZuiReal ySrc, ZuiReal WidthSrc, ZuiReal HeightSrc, ZuiByte Alpha) {
         if (!(Graphics && Image)) {
             return;
         }
-        if (Image->src.Left)
-            xSrc = Image->src.Left;
-        if (Image->src.Top)
-            ySrc = Image->src.Top;
+        if (Image->src.left)
+            xSrc = Image->src.left;
+        if (Image->src.top)
+            ySrc = Image->src.top;
 
         if (Width <= 0) {
-            if (Image->src.Width)
-                Width = Image->src.Width - xSrc;
+            if (Image->src.right)
+                Width = Image->src.right - xSrc;
             else
                 Width = (ZuiInt)(Image->Width - xSrc);
         }
         if (Height <= 0) {
-            if (Image->src.Height)
-                Height = Image->src.Height - ySrc;
+            if (Image->src.bottom)
+                Height = Image->src.bottom - ySrc;
             else
                 Height = (ZuiInt)(Image->Height - ySrc);
         }
 
+
         if (WidthSrc <= 0 || WidthSrc + xSrc > Image->Width) {
-            if (Image->src.Width)
-                WidthSrc = Image->src.Width;
+            if (Image->src.right)
+                WidthSrc = Image->src.right;
             else
                 WidthSrc = (ZuiInt)(Image->Width - xSrc);
         }
         if (HeightSrc <= 0 || HeightSrc + ySrc > Image->Height) {
-            if (Image->src.Height)
-                HeightSrc = Image->src.Height;
+            if (Image->src.bottom)
+                HeightSrc = Image->src.bottom;
             else
                 HeightSrc = (ZuiInt)(Image->Height - ySrc);
         }
 
-        //目标路径
-        agg::path_storage p2;
-        p2.move_to(x, y);
-        p2.line_to(x + Width, y);
-        p2.line_to(x + Width, y + Height);
-        p2.line_to(x, y + Height);
-        p2.close_polygon();
-        Graphics->graphics->ras.add_path(p2);
-
-        typedef agg::image_accessor_clip<agg::pixfmt_bgra32> img_source_type;//图像访问器 图像以外的地方用指定颜色填充
-        typedef agg::span_image_filter_rgba_bilinear<img_source_type, agg::span_interpolator_linear<>> span_gen_type;//线段生成器
-        typedef agg::renderer_scanline_aa<agg::renderer_base<agg::pixfmt_bgra32>, agg::span_allocator<agg::rgba8>, span_gen_type> renderer_type;//渲染器
-        agg::trans_affine mtx_Work;
-        mtx_Work.translate(x, y);
-        mtx_Work.premultiply(agg::trans_affine_scaling(Width / float(WidthSrc), Height / float(HeightSrc)));//缩放
-        mtx_Work.invert();
-        agg::span_interpolator_linear<> interpolator(mtx_Work); //插值器
-        {
-            img_source_type img_src(*Image->image->pixf, agg::rgba(0, 0.4, 0, 0.5), xSrc, ySrc, HeightSrc, WidthSrc);
-            span_gen_type sg(img_src, interpolator);
-            agg::span_allocator<agg::rgba8> span_allocator;
-            renderer_type ri(*Graphics->graphics->renb, span_allocator, sg);
-            agg::render_scanlines(Graphics->graphics->ras, sl, ri);
-        }
-
-        //重置
-        Graphics->graphics->ras.reset();
-
+        Graphics->graphics->graphics->transformImage(*Image->image->img, xSrc, ySrc, xSrc+WidthSrc, ySrc+HeightSrc,
+            x, y, x + Width, y + Height);
         return;
     }
     /*复制位图*/
     ZEXPORT ZuiVoid ZCALL ZuiAlphaBlend(ZuiGraphics Dest, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiGraphics Src, ZuiInt xSrc, ZuiInt ySrc, ZuiByte Alpha) {
         if (Dest && Src) {
-            agg::rect_i sr(xSrc, ySrc, Width, Height);
-            Dest->graphics->renb->blend_from(agg::pixfmt_bgra32(*Src->graphics->rbuf), &sr, x, y, unsigned(Alpha));
+            //agg::rect_i sr(xSrc, ySrc, Width, Height);
+            //Dest->graphics->renb->blend_from(agg::pixfmt_bgra32(*Src->graphics->rbuf), &sr, x, y, unsigned(Alpha));
         }
     }
     /*清除图形*/
     ZEXPORT ZuiVoid ZCALL ZuiGraphicsClear(ZuiGraphics Graphics, ZuiColor Color) {
         if (Graphics)
         {
-            Graphics->graphics->renb->clear(ARGBTORGBA8(Color));
+            Graphics->graphics->graphics->clearAll(ARGBTORGBA8(Color));
         }
     }
-    /*创建字体格式*/
-    ZEXPORT ZuiStringFormat ZCALL ZuiCreateStringFormat(ZuiText FontName, ZuiReal FontSize, ZuiColor TextColor, ZuiColor ShadowColor, ZuiInt StringStyle) {
+    /*创建字体*/
+    ZEXPORT ZuiFont ZCALL ZuiCreateFont(ZuiText FontName, ZuiReal FontSize, ZuiBool Bold, ZuiBool Italic) {
         int i = 0;
-        ZuiStringFormat StringFormat = (ZuiStringFormat)ZuiMalloc(sizeof(ZStringFromat));
-        if (!StringFormat) { return NULL; }
-        memset(StringFormat, 0, sizeof(ZStringFromat));
-        StringFormat->font = new ZuiAggFont;
-        StringFormat->font->dc = ::GetDC(::GetActiveWindow());
-        //创建字体引擎
-        StringFormat->font->font = new agg::font_engine_win32_tt_int16(StringFormat->font->dc);
-
-        StringFormat->font->font->height(FontSize);
-        StringFormat->font->font->flip_y(true);
-        StringFormat->font->font->hinting(true);
-
-        // 注意后面的 glyph_rendering ren_type 参数  
-        StringFormat->font->font->create_font(FontName, agg::glyph_ren_outline);
-
-        StringFormat->font->font_manager = new agg::font_cache_manager<agg::font_engine_win32_tt_int16>(*StringFormat->font->font);
-        // 顶点源
-        StringFormat->font->vs = new agg::font_engine_win32_tt_int16::path_adaptor_type();
-        // 注意这里，使用 conv_curve 转换  
-        StringFormat->font->ccvs = new agg::conv_curve<agg::font_engine_win32_tt_int16::path_adaptor_type>(*StringFormat->font->vs);
-
-        StringFormat->font->color = ARGBTORGBA8P(TextColor);
-        return StringFormat;
+        ZuiFont Font = (ZuiFont)ZuiMalloc(sizeof(ZuiFont));
+        if (!Font) { return NULL; }
+        memset(Font, 0, sizeof(ZuiFont));
+        Font->font = new ZuiAggFont;
+        Font->font->font = new Agg2D::Font(FontName, FontSize, Bold, Italic);
+        return Font;
     }
-    /*销毁字体格式*/
-    ZEXPORT ZuiVoid ZCALL ZuiDestroyStringFormat(ZuiStringFormat StringFormat) {
+    /*销毁字体*/
+    ZEXPORT ZuiVoid ZCALL ZuiDestroyStringFormat(ZuiFont StringFormat) {
         if (StringFormat) {
-            delete StringFormat->font->ccvs;
-            delete StringFormat->font->vs;
             delete StringFormat->font->font;
-            delete StringFormat->font->font_manager;
             delete StringFormat->font;
             ZuiFree(StringFormat);
         }
@@ -334,73 +250,48 @@ extern "C"
 
         Graphics->graphics = new ZuiAggGraphics();
 
-        Graphics->graphics->rbuf = new agg::rendering_buffer((agg::int8u *)Graphics->Bits, Width, Height, -Width * 4);
-        Graphics->graphics->pixf = new agg::pixfmt_bgra32(*Graphics->graphics->rbuf);
-        Graphics->graphics->renb = new agg::renderer_base<agg::pixfmt_bgra32>(*Graphics->graphics->pixf);
+        
+        Graphics->graphics->graphics = new Agg2D;
+        Graphics->graphics->graphics->antiAliasGamma(1.4);
 
-
-        Graphics->graphics->rensl = new agg::renderer_scanline_aa_solid<agg::renderer_base<agg::pixfmt_bgra32>>(*Graphics->graphics->renb);
-        Graphics->graphics->rendp = new agg::renderer_primitives<agg::renderer_base<agg::pixfmt_bgra32>>(*Graphics->graphics->renb);
+        Graphics->graphics->graphics->attach((agg::int8u *)Graphics->Bits, Width, Height, -Width * 4);
 
         return Graphics;
     }
     /*销毁图形*/
     ZEXPORT ZuiVoid ZCALL ZuiDestroyGraphics(ZuiGraphics Graphics) {
         if (Graphics) {
-
-            delete Graphics->graphics->rbuf;
-            delete Graphics->graphics->pixf;
-            delete Graphics->graphics->renb;
-            delete Graphics->graphics->rensl;
-            delete Graphics->graphics->rendp;
+            delete Graphics->graphics->graphics;
             delete (ZuiAggGraphics*)Graphics->graphics;
             DeleteDC(Graphics->hdc);
             DeleteObject(Graphics->HBitmap);
             ZuiFree(Graphics);
         }
     }
-    /*创建区域*/
-    ZEXPORT ZuiRegion ZCALL ZuiCreateRegion() {
-        ZuiRegion region = (ZuiRegion)ZuiMalloc(sizeof(ZRegion));
-        if (!region) { return NULL; }
-        memset(region, 0, sizeof(ZRegion));
-
-
-
-        return region;
-    }
-    ZEXPORT ZuiRegion ZCALL ZuiCreateRegionRect(ZuiRect layoutRect) {
-        ZuiRegion region = (ZuiRegion)ZuiMalloc(sizeof(ZRegion));
-        if (!region) { return NULL; }
-
-
-
-        return region;
-    }
-    ZEXPORT ZuiVoid ZCALL ZuiDestroyRegion(ZuiRegion region) {
-        if (region) {
-
-
-
-            ZuiFree(region);
-        }
-    }
-
-    ZEXPORT ZuiBool ZCALL ZuiGraphicsSetClipRegion(ZuiGraphics Graphics, ZuiRegion region, ZuiInt mod) {
-        if (Graphics && region) {
-
+    //设置剪裁区
+    ZEXPORT ZuiBool ZCALL ZuiGraphicsSetClipBox(ZuiGraphics Graphics, ZuiRectR box) {
+        if (Graphics && box) {
+            Graphics->graphics->graphics->clipBox(box->left, box->top, box->right, box->bottom);
+            return TRUE;
         }
         return FALSE;
     }
-    ZEXPORT ZuiBool ZCALL ZuiGraphicsGetClipRegion(ZuiGraphics Graphics, ZuiRegion region) {
-        if (Graphics && region) {
-
+    //获取剪裁区
+    ZEXPORT ZuiBool ZCALL ZuiGraphicsGetClipBox(ZuiGraphics Graphics, ZuiRectR box) {
+        if (Graphics && box) {
+            Agg2D::RectD rc = Graphics->graphics->graphics->clipBox();
+            box->left = rc.x1;
+            box->top = rc.y1;
+            box->right = rc.x2;
+            box->bottom = rc.y2;
+            return TRUE;
         }
         return FALSE;
     }
+    //重置剪裁区
     ZEXPORT ZuiBool ZCALL ZuiGraphicsResetClip(ZuiGraphics Graphics) {
         if (Graphics) {
-
+            Graphics->graphics->graphics->clipBox(0, 0, 0, 0);
         }
         return FALSE;
     }
@@ -452,9 +343,7 @@ extern "C"
 
 
         //创建AGG对象
-        Image->image->rbuf = new agg::rendering_buffer((agg::int8u *)Image->image->buf, Image->Width, Image->Height, -Image->Width * 4);
-        Image->image->pixf = new agg::pixfmt_bgra32(*Image->image->rbuf);
-
+        Image->image->img = new Agg2D::Image((agg::int8u *)Image->image->buf, Image->Width, Image->Height, -Image->Width * 4);
         return Image;
     }
     /*销毁图像*/
@@ -464,12 +353,11 @@ extern "C"
             DeleteDC(Image->image->hdc);
             DeleteObject(Image->image->HBitmap);
             GdipDisposeImage(Image->image->image);
+            delete Image->image->img;
             delete Image->image;
             ZuiFree(Image);
         }
     }
-
-
 
 #ifdef __cplusplus
 }

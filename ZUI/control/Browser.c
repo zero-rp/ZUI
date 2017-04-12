@@ -299,7 +299,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
     }
     case Proc_OnPaint: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        ZRect *rc = (ZRect *)Param2;
+        ZRect *rc = (ZRect *)&cp->m_rcItem;
         if (p->init) {
             //ZGraphics sp;
             //sp.hdc = wkeGetViewDC(p->view);

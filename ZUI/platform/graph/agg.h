@@ -25,18 +25,13 @@ typedef struct _ZGraphics {
     void* Bits;		///内存指针
 }*ZuiGraphics, ZGraphics;
 
-/**区域*/
-typedef struct _ZRegion {
-
-    void *region;	///区域句柄
-}*ZuiRegion, ZRegion;
-
-/**文本格式*/
-typedef struct _ZStringFormat {
+/**字体*/
+typedef struct _ZFont {
     ZuiColor TextColor;
     ZuiColor ShadowColor;
+    ZuiReal FontSize;       ///字体大小
     struct ZuiAggFont *font;
-}*ZuiStringFormat, ZStringFromat;
+}*ZuiFont, ZFont;
 
-#endif //PLATFORM_GRAPH_GDI
+#endif //PLATFORM_GRAPH_AGG
 #endif //__ZUI_PLATFORM_GRAPH_AGG_H__

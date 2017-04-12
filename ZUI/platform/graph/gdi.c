@@ -20,10 +20,10 @@ extern "C" {
     int __stdcall GdipSetTextRenderingHint(void *graphics, int a);
     int __stdcall GdipDeleteGraphics(void *graphics);
     int __stdcall GdipCreateSolidFill(ZuiColor color, void **brush);
-    int __stdcall GdipFillRectangleI(void *graphics, void *brush, int x, int y, int width, int height);
+    int __stdcall GdipFillRectangle(void *graphics, void *brush, ZuiReal x, ZuiReal y, ZuiReal width, ZuiReal height);
     int __stdcall GdipDeleteBrush(void *brush);
-    int __stdcall GdipDrawRectangleI(void *graphics, void *pen, int x, int y, int width, int height);
-    int __stdcall GdipDrawPolygonI(void *graphics, void *pen, void* points, int count);
+    int __stdcall GdipDrawRectangle(void *graphics, void *pen, ZuiReal x, ZuiReal y, ZuiReal width, ZuiReal height);
+    int __stdcall GdipDrawPolygon(void *graphics, void *pen, void* points, int count);
     int __stdcall GdipCreatePen1(ZuiColor color, ZuiReal width, int unit, void **pen);
     int __stdcall GdipDeletePen(void *pen);
     int __stdcall GdipDrawLineI(void *graphics, void *pen, ZuiInt x1, ZuiInt y1, ZuiInt x2, ZuiInt y2);
@@ -92,37 +92,30 @@ ZuiVoid ZuiGraphUnInitialize() {
     GdiplusShutdown(pGdiToken);
 }
 /*填充矩形*/
-ZEXPORT ZuiVoid ZCALL ZuiDrawFillRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt Left, ZuiInt Top, ZuiInt Width, ZuiInt Height) {
+ZEXPORT ZuiVoid ZCALL ZuiDrawFillRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Width, ZuiReal Height) {
     void *Brush;
     GdipCreateSolidFill(Color, &Brush);
-    GdipFillRectangleI(Graphics->graphics, Brush, Left, Top, Width, Height);
+    GdipFillRectangle(Graphics->graphics, Brush, Left, Top, Width, Height);
     GdipDeleteBrush(Brush);
 }
 /*画矩形*/
-ZEXPORT ZuiVoid ZCALL ZuiDrawRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt Left, ZuiInt Top, ZuiInt Width, ZuiInt Height, ZuiInt LineWidth) {
+ZEXPORT ZuiVoid ZCALL ZuiDrawRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Width, ZuiReal Height, ZuiReal LineWidth) {
     if (Graphics) {
         void *pen;
         GdipCreatePen1(Color, (ZuiReal)LineWidth, 2, &pen);
-        GdipDrawRectangleI(Graphics->graphics, pen, Left, Top, Width - 1, Height - 1);
+        GdipDrawRectangle(Graphics->graphics, pen, Left, Top, Width - 1, Height - 1);
         GdipDeletePen(pen);
     }
 }
 /*画多边形*/
-ZEXPORT ZuiVoid ZCALL ZuiDrawPolygon(ZuiGraphics Graphics, ZuiColor Color, ZuiPoint *point, ZuiInt count, ZuiInt LineWidth) {
+ZEXPORT ZuiVoid ZCALL ZuiDrawPolygon(ZuiGraphics Graphics, ZuiColor Color, ZuiPointR *point, ZuiInt count, ZuiReal LineWidth) {
     void *pen;
-    GdipCreatePen1(Color, (ZuiReal)LineWidth, 2, &pen);
-    GdipDrawPolygonI(Graphics->graphics, pen, point, count);
+    GdipCreatePen1(Color, LineWidth, 2, &pen);
+    GdipDrawPolygon(Graphics->graphics, pen, point, count);
     GdipDeletePen(pen);
 }
 /*画直线*/
-ZEXPORT ZuiVoid ZCALL ZuiDrawLine(ZuiGraphics Graphics, ZuiColor Color, ZuiInt x1, ZuiInt y1, ZuiInt x2, ZuiInt y2, ZuiInt LineWidth)
-{
-    void *pen;
-    GdipCreatePen1(Color, (ZuiReal)LineWidth, 2, &pen);
-    GdipDrawLineI(Graphics->graphics, pen, x1, y1, x2, y2);
-    GdipDeletePen(pen);
-}
-ZEXPORT ZuiVoid ZCALL ZuiDrawLineR(ZuiGraphics Graphics, ZuiColor Color, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2, ZuiReal LineWidth) {
+ZEXPORT ZuiVoid ZCALL ZuiDrawLine(ZuiGraphics Graphics, ZuiColor Color, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2, ZuiReal LineWidth) {
 	void *pen;
 	GdipCreatePen1(Color, LineWidth, 2, &pen);
 	GdipDrawLine(Graphics->graphics, pen, x1, y1, x2, y2);
@@ -141,16 +134,7 @@ ZEXPORT ZuiVoid ZCALL ZuiMeasureTextSize(ZuiStringFormat StringFormat, _ZuiText 
     }
 }
 /*画文本*/
-ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiStringFormat StringFormat, ZuiText String, ZuiInt StrLen, ZuiRect Rect) {
-    if (String) {
-        if (!StringFormat) { StringFormat = Global_StringFormat; }//使用默认字体
-        ZRectR r;
-        MAKEZRECT(r, (ZuiReal)Rect->left, (ZuiReal)Rect->top, (ZuiReal)Rect->right, (ZuiReal)Rect->bottom);
-        GdipDrawDriverString(Graphics->graphics, String, StrLen, StringFormat->font, StringFormat->Brush, &r, 1, 0);
-    }
-}
-/*画文本*/
-ZEXPORT ZuiVoid ZCALL ZuiDrawStringR(ZuiGraphics Graphics, ZuiStringFormat StringFormat, ZuiText String, ZuiInt StrLen, ZPointR Pt[]) {
+ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiStringFormat StringFormat, ZuiText String, ZuiInt StrLen, ZPointR Pt[]) {
 	if (String) {
 		if (!StringFormat) { StringFormat = Global_StringFormat; }//使用默认字体
         GdipDrawDriverString(Graphics->graphics, String, StrLen, StringFormat->font, StringFormat->Brush, Pt, 1, 0);
@@ -158,27 +142,15 @@ ZEXPORT ZuiVoid ZCALL ZuiDrawStringR(ZuiGraphics Graphics, ZuiStringFormat Strin
 	}
 }
 
-/*填充圆角矩形*/
-ZEXPORT ZuiVoid ZCALL ZuiDrawFilledRoundRect(ZuiGraphics Graphics, ZuiColor Color, ZuiColor BorderColor, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiInt LineWidth, ZuiReal Round) {
-
-}
-/*画圆角矩形*/
-ZEXPORT ZuiVoid ZCALL ZuiDrawRoundRect(ZuiGraphics Graphics, ZuiColor Color, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiInt LineWidth, ZuiReal Round) {
-    if (Round <= 0) {
-        ZuiDrawRect(Graphics, Color, x, y, Width, Height, LineWidth);
-        return;
-    }
-
-}
 /*画图像*/
-ZEXPORT ZuiVoid ZCALL ZuiDrawImage(ZuiGraphics Graphics, ZuiImage Image, ZuiInt x, ZuiInt y) {
+ZEXPORT ZuiVoid ZCALL ZuiDrawImage(ZuiGraphics Graphics, ZuiImage Image, ZuiReal x, ZuiReal y) {
     if (!(Graphics && Image)) {
         return;
     }
     GdipDrawImageI(Graphics->graphics, Image->image, x, y);
 }
 /*画图像缩放*/
-ZEXPORT ZuiVoid ZCALL ZuiDrawImageEx(ZuiGraphics Graphics, ZuiImage Image, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiInt xSrc, ZuiInt ySrc, ZuiInt WidthSrc, ZuiInt HeightSrc, ZuiByte Alpha) {
+ZEXPORT ZuiVoid ZCALL ZuiDrawImageEx(ZuiGraphics Graphics, ZuiImage Image, ZuiReal x, ZuiReal y, ZuiReal Width, ZuiReal Height, ZuiReal xSrc, ZuiInt ySrc, ZuiInt WidthSrc, ZuiInt HeightSrc, ZuiByte Alpha) {
     if (!(Graphics && Image)) {
         return;
     }

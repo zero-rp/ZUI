@@ -1,6 +1,6 @@
 ﻿#include <stdio.h>
 #include <ZUI.h>
-#if (defined NDEBUG) && (defined AGG)
+#if (defined NDEBUG) && (defined PLATFORM_GRAPH_AGG)
 void __cdecl operator delete(void* p, unsigned int)
 {
 	free(p);
