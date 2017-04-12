@@ -60,25 +60,22 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
             if (((UINT)Param3 & ZFIND_HITTEST) == 0 || cp->m_bMouseEnabled) pResult = ((FINDCONTROLPROC)Param1)(cp, Param2);
         }
         return pResult;
-        break;
     }
     case Proc_OnPaint: {
         //这里是所有绘制的调度中心
         ZRect rcTemp = { 0 };
-        ZuiRegion OldRgn;
+        ZuiRect rc = Param2;
         if (!IntersectRect(&rcTemp, (ZRect *)Param2, &cp->m_rcItem))
             //不在绘制区域
             return 0;
         //保存原始剪裁区
-        OldRgn = ZuiCreateRegion();
-        ZuiGraphicsGetClipRegion((ZuiGraphics)Param1, OldRgn);
+        ZRectR OldBox;
+        ZuiGraphicsGetClipBox((ZuiGraphics)Param1, &OldBox);
         //设置新剪裁区
 
-        ZRect rcClip;
-        MAKEZRECT(rcClip, rcTemp.left, rcTemp.top, rcTemp.right - rcTemp.left, rcTemp.bottom - rcTemp.top);
-        ZuiRegion rgn = ZuiCreateRegionRect(&rcClip);
-        ZuiGraphicsSetClipRegion((ZuiGraphics)Param1, rgn, 1);
-
+        ZRectR rcClip;
+        MAKEZRECT(rcClip, rcTemp.left, rcTemp.top, rcTemp.right, rcTemp.bottom);
+        ZuiGraphicsSetClipBox((ZuiGraphics)Param1, &rcClip);
 
         p->old_call(Proc_OnPaint, cp, 0, Param1, Param2, 0);
         if (darray_len(p->m_items) > 0) {
@@ -97,18 +94,20 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
                     if (!IntersectRect(&rcTemp, (ZRect *)Param2, (ZRect *)ZuiControlCall(Proc_GetPos, pControl, 0, 0, 0))) continue;
                     if (pControl->m_bFloat) {
                         if (!IntersectRect(&rcTemp, &cp->m_rcItem, (ZRect *)ZuiControlCall(Proc_GetPos, pControl, 0, 0, 0))) continue;
-                        ZuiControlCall(Proc_OnPaint, pControl, Param1, Param2, Param3);
+                        IntersectRect(&rcTemp, (ZRect *)Param2, &pControl->m_rcItem);
+                        MAKEZRECT(rcClip, rcTemp.left, rcTemp.top, rcTemp.right, rcTemp.bottom);
+                        ZuiGraphicsSetClipBox((ZuiGraphics)Param1, &rcClip);
+                        ZuiControlCall(Proc_OnPaint, pControl, Param1, &rcTemp, Param3);
                     }
                 }
             }
             else {
                 //保存原始剪裁区
-                ZuiRegion OldRgn_child = ZuiCreateRegion();
-                ZuiGraphicsGetClipRegion((ZuiGraphics)Param1, OldRgn_child);
+                ZRectR OldBox_child;
+                ZuiGraphicsGetClipBox((ZuiGraphics)Param1, &OldBox_child);
                 //设置子剪裁区
-                MAKEZRECT(rcClip, rcTemp.left, rcTemp.top, rcTemp.right - rcTemp.left, rcTemp.bottom - rcTemp.top);
-                ZuiRegion rgn_child = ZuiCreateRegionRect(&rcClip);
-                ZuiGraphicsSetClipRegion((ZuiGraphics)Param1, rgn_child, 1);
+                MAKEZRECT(rcClip, rcTemp.left, rcTemp.top, rcTemp.right, rcTemp.bottom);
+                ZuiGraphicsSetClipBox((ZuiGraphics)Param1, &rcClip);
 
                 for (int it = 0; it < darray_len(p->m_items); it++) {
                     ZuiControl pControl = (ZuiControl)(p->m_items->data[it]);
@@ -117,26 +116,30 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
                     if (pControl->m_bFloat) {
                         if (!IntersectRect(&rcTemp, (ZRect *)Param2, (ZRect *)ZuiControlCall(Proc_GetPos, pControl, 0, 0, 0)))
                             continue;
-                        ZuiGraphicsSetClipRegion((ZuiGraphics)Param1, OldRgn_child, 0);
+                        IntersectRect(&rcTemp, (ZRect *)Param2, &pControl->m_rcItem);
+                        MAKEZRECT(rcClip, rcTemp.left, rcTemp.top, rcTemp.right, rcTemp.bottom);
+                        ZuiGraphicsSetClipBox((ZuiGraphics)Param1, &rcClip);
                         if (pControl->m_aAnime)
                             pControl->m_aAnime->OnPaint(pControl, Param1, Param2);
                         else
-                            ZuiControlCall(Proc_OnPaint, pControl, Param1, &pControl->m_rcItem, Param3);
-                        ZuiGraphicsSetClipRegion((ZuiGraphics)Param1, rgn_child, 0);
+                            ZuiControlCall(Proc_OnPaint, pControl, Param1, &rcTemp, Param3);
+                        ZuiGraphicsSetClipBox((ZuiGraphics)Param1, &OldBox_child);
                     }
                     else {
                         if (!IntersectRect(&rcTemp, &rc, (ZRect *)ZuiControlCall(Proc_GetPos, pControl, 0, 0, 0))) continue;
                         if (pControl->m_aAnime)
                             pControl->m_aAnime->OnPaint(pControl, Param1, Param2);
-                        else
-                            ZuiControlCall(Proc_OnPaint, pControl, Param1, &pControl->m_rcItem, Param3);
+                        else {
+                            IntersectRect(&rcTemp, (ZRect *)Param2, &pControl->m_rcItem);
+                            MAKEZRECT(rcClip, rcTemp.left, rcTemp.top, rcTemp.right, rcTemp.bottom);
+                            ZuiGraphicsSetClipBox((ZuiGraphics)Param1, &rcClip);
+                            ZuiControlCall(Proc_OnPaint, pControl, Param1, &rcTemp, Param3);
+                        }
                     }
                 }
 
                 //恢复剪裁区
-                ZuiGraphicsSetClipRegion((ZuiGraphics)Param1, OldRgn_child, 0);
-                ZuiDestroyRegion(OldRgn_child);
-                ZuiDestroyRegion(rgn_child);
+                ZuiGraphicsSetClipBox((ZuiGraphics)Param1, &OldBox_child);
             }
         }
         //绘制滚动条
@@ -151,14 +154,11 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
                 ZuiControlCall(Proc_OnPaint, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
             }
         }
-        ZuiControlCall(Proc_EndPaint, cp, Param1, Param2, 0);
+        //ZuiControlCall(Proc_EndPaint, cp, Param1, Param2, 0);
 
 
         //恢复剪裁区
-
-        ZuiGraphicsSetClipRegion((ZuiGraphics)Param1, OldRgn, 0);
-        ZuiDestroyRegion(OldRgn);
-        ZuiDestroyRegion(rgn);
+        ZuiGraphicsSetClipBox((ZuiGraphics)Param1, &OldBox);
         return 0;//绘图完毕,不需要默认
     }
     case Proc_SetPos: {
