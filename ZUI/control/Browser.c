@@ -1,4 +1,5 @@
 ﻿#include <ZUI.h>
+#include "../dukluv/duv_module_core.h"
 
 struct _tagWkeWebView;
 typedef struct _tagWkeWebView* wkeWebView;
@@ -22,11 +23,34 @@ typedef struct {
     int h;
 
 } wkeRect;
+
+typedef struct
+{
+    int navigationType;
+    void* url;
+    void* target;
+
+    int x;
+    int y;
+    int width;
+    int height;
+
+    BOOL menuBarVisible;
+    BOOL statusBarVisible;
+    BOOL toolBarVisible;
+    BOOL locationBarVisible;
+    BOOL scrollbarsVisible;
+    BOOL resizable;
+    BOOL fullscreen;
+
+} wkeNewViewInfo;
+
 typedef void(*t_wkeInitialize)();
 typedef void(*t_wkeDestroyWebView)(wkeWebView webView);
 typedef void(*t_wkeOnTitleChanged)(wkeWebView webView, void *callback, void* callbackParam);
 typedef void(*t_wkeOnURLChanged)(wkeWebView webView, void *callback, void* callbackParam);
 typedef void(*t_wkeOnPaintUpdated)(wkeWebView webView, void *callback, void* callbackParam);
+typedef void(*t_wkeOnInitGraphics)(wkeWebView webView, void *callback, void* callbackParam);
 typedef void(*t_wkeOnCreateView)(wkeWebView webView, void *callback, void* param);
 typedef void(*t_wkeRepaintIfNeeded)(wkeWebView webView);
 typedef void(*t_wkeResize)(wkeWebView webView, int w, int h);
@@ -53,12 +77,14 @@ typedef void(*t_wkeSetUserAgentW)(wkeWebView webView, const wchar_t* userAgent);
 typedef void*(*t_wkeRunJSW)(wkeWebView webView, const wchar_t* script);
 typedef wchar_t*(*t_jsToTempStringW)(void *es, long long v);
 typedef void*(*t_wkeGlobalExec)(wkeWebView webView);
+typedef void*(*t_ZuvModuleInit)(ZuvFuncs *);
 
 t_wkeInitialize wkeInitialize;
 t_wkeDestroyWebView wkeDestroyWebView;
 t_wkeOnTitleChanged wkeOnTitleChanged;
 t_wkeOnURLChanged wkeOnURLChanged;
 t_wkeOnPaintUpdated wkeOnPaintUpdated;
+t_wkeOnInitGraphics wkeOnInitGraphics;
 t_wkeOnCreateView wkeOnCreateView;
 t_wkeRepaintIfNeeded wkeRepaintIfNeeded;
 t_wkeResize wkeResize;
@@ -85,6 +111,7 @@ t_wkeSetUserAgentW wkeSetUserAgentW;
 t_wkeRunJSW wkeRunJSW;
 t_jsToTempStringW jsToTempStringW;
 t_wkeGlobalExec wkeGlobalExec;
+t_ZuvModuleInit ZuvModuleInit;
 // 回调：重绘
 void _staticOnPaintUpdated(wkeWebView webView, void* param, const HDC hdc, int x, int y, int cx, int cy)
 {
@@ -94,6 +121,12 @@ void _staticOnPaintUpdated(wkeWebView webView, void* param, const HDC hdc, int x
     {
         ZuiControlInvalidate(pthis->cp, TRUE);
     }
+}
+// 回调：初始化图形
+void _staticOnInitGraphics(wkeWebView webView, void* param, const void* pixels, int cx, int cy)
+{
+    ZuiBrowser pthis = (ZuiBrowser)param;
+    ZuiCreateGraphicsAttach(pthis->dc, pixels, cx, cy, cx);
 }
 // 回调：页面标题改变
 void _staticOnTitleChanged(wkeWebView webWindow, void* param, void *title)
@@ -111,15 +144,15 @@ void _staticOnTitleChanged(wkeWebView webWindow, void* param, void *title)
     ZuiControlNotify(L"titlechanged", ((ZuiBrowser)param)->cp, wkeGetStringW(title), NULL, NULL);
 }
 // 回调：创建新的页面，比如说调用了 window.open 或者点击了 <a target="_blank" .../>
-wkeWebView _staticOnCreateView(wkeWebView webWindow, void* param, int navType, void *url, void* features)
+wkeWebView _staticOnCreateView(wkeWebView webWindow, void* param, const wkeNewViewInfo* info)
 {
     ZuiControl bro = NULL;
     ZuiBrowser p = (ZuiBrowser)param;
     if (p->newwindow) {
         duv_push_ref(p->cp->m_pManager->m_ctx, p->newwindow);
         ZuiBuilderJs_pushControl(p->cp->m_pManager->m_ctx, p->cp);
-        duk_push_uint(p->cp->m_pManager->m_ctx, navType);
-        duk_push_string_w(p->cp->m_pManager->m_ctx, wkeGetStringW(url));
+        duk_push_uint(p->cp->m_pManager->m_ctx, info->navigationType);
+        duk_push_string_w(p->cp->m_pManager->m_ctx, wkeGetStringW(info->url));
         if (duk_pcall_method(p->cp->m_pManager->m_ctx, 3)) {
             LOG_DUK(p->cp->m_pManager->m_ctx);
         }
@@ -300,13 +333,9 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
     case Proc_OnPaint: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = (ZRect *)&cp->m_rcItem;
+
         if (p->init) {
-            //ZGraphics sp;
-            //sp.hdc = wkeGetViewDC(p->view);
-            //sp.Width = rc->right - rc->left;
-            //sp.Height = rc->bottom - rc->top;
-            //ZuiAlphaBlend(gp, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, &sp, 0, 0, 255);
-            BitBlt(gp->hdc, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, wkeGetViewDC(p->view), 0, 0, SRCCOPY);
+            ZuiBitBltEx(gp, 0, 0, rc->right - rc->left, rc->bottom - rc->top, rc->left, rc->top, p->dc);
         }
         break;
     }
@@ -455,7 +484,10 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         p->old_call = cp->call;
         p->cp = cp;
         p->view = wkeCreateWebView();
+        p->dc = ZuiCreateGraphics();
+
         wkeOnPaintUpdated(p->view, _staticOnPaintUpdated, p);//界面刷新
+        wkeOnInitGraphics(p->view, _staticOnInitGraphics, p);
         wkeOnTitleChanged(p->view, _staticOnTitleChanged, p);
         wkeOnCreateView(p->view, _staticOnCreateView, p);
         wkeOnURLChanged(p->view, _staticOnURLChanged, p);
@@ -491,6 +523,9 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
             goto LoadLibraryErro;
         wkeOnPaintUpdated = (t_wkeOnPaintUpdated)GetProcAddress(dll, "wkeOnPaintUpdated");
         if (!wkeOnPaintUpdated)
+            goto LoadLibraryErro;
+        wkeOnInitGraphics= (t_wkeOnInitGraphics)GetProcAddress(dll, "wkeOnInitGraphics");
+        if (!wkeOnInitGraphics)
             goto LoadLibraryErro;
         wkeOnCreateView = (t_wkeOnCreateView)GetProcAddress(dll, "wkeOnCreateView");
         if (!wkeOnCreateView)
@@ -570,7 +605,10 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         wkeGlobalExec = (t_wkeGlobalExec)GetProcAddress(dll, "wkeGlobalExec");
         if (!wkeGlobalExec)
             goto LoadLibraryErro;
-
+        ZuvModuleInit= (t_wkeGlobalExec)GetProcAddress(dll, "ZuvModuleInit");
+        if (!ZuvModuleInit)
+            goto LoadLibraryErro;
+        ZuvModuleInit(ZuiGetZuvFunc());
         wkeInitialize();
         return TRUE;
     LoadLibraryErro:

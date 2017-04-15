@@ -40,6 +40,8 @@ typedef struct _ZuiBrowser
     ZuiInt urlchanged;
     ZuiInt navigation;
 
+    ZuiGraphics dc;
+    ZuiAny bits;    //之前的图像指针
     ZuiText url;///当前URL
     ZuiAny view;
     ZuiControl cp;
