@@ -2,25 +2,7 @@
 #if (defined PLATFORM_GRAPH_AGG) && (PLATFORM_GRAPH_AGG == 1)
 
 #if defined(__cplusplus)
-#include "agg\include\agg_rendering_buffer.h"//内存管理器
-#include "agg\include\agg_pixfmt_rgba.h"//颜色空间管理
-#include "agg\include\agg_renderer_base.h"//基础渲染器
-#include "agg\include\agg_renderer_scanline.h"//扫描线渲染器
-#include "agg\include\agg_rasterizer_scanline_aa.h"//光栅化器
-#include "agg\include\agg_scanline_u.h"//扫描线
-#include "agg\include\agg_path_storage.h"//路径
 #include "agg\include\agg_color_rgba.h"
-#include "agg\include\agg_renderer_primitives.h"
-#include "agg\include\agg_span_allocator.h"//线段分配器
-#include "agg\include\agg_span_interpolator_linear.h"//插值器
-#include "agg\include\agg_trans_affine.h"//变换矩阵
-#include "agg\include\agg_span_image_filter_rgba.h"
-#include "agg\include\agg_image_accessors.h"
-//图像线段生成器
-#include "agg\include\agg_math_stroke.h"
-#include "agg\include\agg_conv_stroke.h"
-#include "agg\include\agg_font_cache_manager.h"
-#include "agg\agg_font_win32_tt.h"
 
 //图像解码器
 
@@ -125,9 +107,9 @@ extern "C"
             Graphics->graphics->graphics->line(x1 + 0.5, y1 + 0.5, x2 + 0.5, y2 - 0.5);
         }
     }
-    /*画文本*/
-    ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiFont StringFormat, ZuiText String, ZuiInt StrLens, ZPointR Pt[]) {
-        //if (String) {
+    /*画文本(按照计算好的坐标)*/
+    ZEXPORT ZuiVoid ZCALL ZuiDrawStringPt(ZuiGraphics Graphics, ZuiFont Font, ZuiText String, ZuiInt StrLens, ZPointR Pt[]) {
+        if (String && Font && Graphics) {
         //    // 字体串  
         //    wchar_t *s = String;
         //    for (int i=0; *s; s++) {      // 让字体引擎准备好字体数据 
@@ -140,10 +122,18 @@ extern "C"
         //        }
         //        i++;
         //    }
-        //}
+        }
     }
-    /*测量文本矩形*/
-    ZEXPORT ZuiVoid ZCALL ZuiMeasureTextSize(ZuiFont Font, ZuiText String, ZuiSizeR Size)
+    ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiFont Font, ZuiText String, ZuiInt StrLen, ZRectR *Rect, ZuiColor Color, ZuiUInt TextStyle) {
+        if (String && Font && Graphics) {
+            //指定文字颜色
+            Graphics->graphics->graphics->fillColor(ARGBTORGBA8(Color));
+            Graphics->graphics->graphics->noLine();//不描边
+            Graphics->graphics->graphics->text(*Font->font->font, Rect->left, Rect->top, Rect->right, Rect->bottom, String, StrLen, TextStyle);
+        }
+    }
+    /*测量文本大小*/
+    ZEXPORT ZuiVoid ZCALL ZuiMeasureTextSize(ZuiFont Font, _ZuiText String, ZuiSizeR Size)
     {
         if (String && Font) {
             Size->cx = Font->font->font->textWidth(String);
@@ -192,10 +182,14 @@ extern "C"
         return;
     }
     /*复制位图*/
-    ZEXPORT ZuiVoid ZCALL ZuiAlphaBlend(ZuiGraphics Dest, ZuiInt x, ZuiInt y, ZuiInt Width, ZuiInt Height, ZuiGraphics Src, ZuiInt xSrc, ZuiInt ySrc, ZuiByte Alpha) {
+    ZEXPORT ZuiVoid ZCALL ZuiAlphaBlendEx(ZuiGraphics Dest, ZuiInt srcX1, ZuiInt srcY1, ZuiInt srcX2, ZuiInt srcY2, ZuiInt dstX, ZuiInt dstY, ZuiGraphics Src, ZuiByte Alpha) {
         if (Dest && Src) {
-            //agg::rect_i sr(xSrc, ySrc, Width, Height);
-            //Dest->graphics->renb->blend_from(agg::pixfmt_bgra32(*Src->graphics->rbuf), &sr, x, y, unsigned(Alpha));
+            Dest->graphics->graphics->blend(*Src->graphics->graphics, srcX1, srcY1, srcX2, srcY2, dstX, dstY, Alpha);
+        }
+    }
+    ZEXPORT ZuiVoid ZCALL ZuiBitBltEx(ZuiGraphics Dest, ZuiInt srcX1, ZuiInt srcY1, ZuiInt srcX2, ZuiInt srcY2, ZuiInt dstX, ZuiInt dstY, ZuiGraphics Src) {
+        if (Dest && Src) {
+            Dest->graphics->graphics->copy(*Src->graphics->graphics, srcX1, srcY1, srcX2, srcY2, dstX, dstY);
         }
     }
     /*清除图形*/
@@ -212,7 +206,8 @@ extern "C"
         if (!Font) { return NULL; }
         memset(Font, 0, sizeof(ZuiFont));
         Font->font = new ZuiAggFont;
-        Font->font->font = new Agg2D::Font(FontName, FontSize, Bold, Italic);
+        Font->font->font = new Agg2D::Font(FontName, FontSize, Bold, Italic, Agg2D::VectorFontCache);
+        Font->font->font->flipText(true);
         return Font;
     }
     /*销毁字体*/
@@ -252,19 +247,53 @@ extern "C"
 
         
         Graphics->graphics->graphics = new Agg2D;
-        Graphics->graphics->graphics->antiAliasGamma(1.4);
+        Graphics->graphics->graphics->antiAliasGamma(1.0);
 
         Graphics->graphics->graphics->attach((agg::int8u *)Graphics->Bits, Width, Height, -Width * 4);
 
         return Graphics;
     }
+    /*创建一个可复用的图形*/
+    ZEXPORT ZuiGraphics ZCALL ZuiCreateGraphics() {
+        ZuiGraphics Graphics = (ZuiGraphics)ZuiMalloc(sizeof(ZGraphics));
+        if (!Graphics) { return NULL; }
+        memset(Graphics, 0, sizeof(ZGraphics));
+        Graphics->graphics = new ZuiAggGraphics();
+        Graphics->graphics->graphics = new Agg2D;
+        Graphics->graphics->graphics->antiAliasGamma(1.0);
+        return Graphics;
+    }
+    /*附加到一块内存上*/
+    ZEXPORT ZuiGraphics ZCALL ZuiCreateGraphicsAttach(ZuiGraphics Graphics, ZuiAny bits, ZuiInt Width, ZuiInt Height, ZuiInt stride) {
+        if (!Graphics) { return NULL; }
+        if (Graphics->hdc) {
+            DeleteDC(Graphics->hdc);
+            Graphics->hdc = NULL;
+        }
+        if (Graphics->HBitmap) {
+            DeleteObject(Graphics->HBitmap);
+            Graphics->HBitmap = NULL;
+        }
+        Graphics->Bits = bits;
+        Graphics->Width = Width;
+        Graphics->Height = Height;
+        Graphics->graphics->graphics->attach((agg::int8u *)Graphics->Bits, Width, Height, stride * 4);
+        return Graphics;
+    }
+
     /*销毁图形*/
     ZEXPORT ZuiVoid ZCALL ZuiDestroyGraphics(ZuiGraphics Graphics) {
         if (Graphics) {
             delete Graphics->graphics->graphics;
             delete (ZuiAggGraphics*)Graphics->graphics;
-            DeleteDC(Graphics->hdc);
-            DeleteObject(Graphics->HBitmap);
+            if (Graphics->hdc) {
+                DeleteDC(Graphics->hdc);
+                Graphics->hdc = NULL;
+            }
+            if (Graphics->HBitmap) {
+                DeleteObject(Graphics->HBitmap);
+                Graphics->HBitmap = NULL;
+            }
             ZuiFree(Graphics);
         }
     }

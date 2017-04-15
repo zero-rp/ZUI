@@ -94,6 +94,8 @@ public:
     typedef agg::rgba8       Color;
     typedef agg::rect_i       Rect;
     typedef agg::rect_d       RectD;
+    typedef agg::point_i       Point;
+    typedef agg::point_d       PointD;
     typedef agg::trans_affine Affine;
 
     enum LineJoin
@@ -108,15 +110,6 @@ public:
         CapButt   = agg::butt_cap,
         CapSquare = agg::square_cap,
         CapRound  = agg::round_cap
-    };
-
-    enum TextAlignment
-    {
-        AlignLeft,
-        AlignRight,
-        AlignCenter,
-        AlignTop = AlignRight,
-        AlignBottom = AlignLeft
     };
 
     enum DrawPathFlag
@@ -169,7 +162,8 @@ public:
         double fontHeight() const;
         bool   textHints() const;
         void   textHints(bool hints);
-        double textWidth(const wchar_t* str);
+        double textWidth(const wchar_t str);
+        PointD textSize(const wchar_t* str, const int len, unsigned int style);
 
 
         double                          m_textAngle;
@@ -257,15 +251,6 @@ public:
 
     void  clearClipBox(Color c);
     void  clearClipBox(unsigned r, unsigned g, unsigned b, unsigned a = 255);
-
-    // Conversions  转换
-    //-----------------------
-    void   worldToScreen(double& x, double& y) const;
-    void   screenToWorld(double& x, double& y) const;
-    double worldToScreen(double scalar) const;
-    double screenToWorld(double scalar) const;
-    void   alignPoint(double& x, double& y) const;
-    bool   inBox(double worldX, double worldY) const;
 
     // 一般属性
     //-----------------------
@@ -366,9 +351,8 @@ public:
 
     // Text 文本
     //-----------------------    
-    void   text(Font& font, double x, double y, const wchar_t* str, bool roundOff = false, double dx = 0.0, double dy = 0.0,
-        TextAlignment m_textAlignX = AlignLeft,
-        TextAlignment m_textAlignY = AlignBottom);
+    void   text(Font& font, double x, double y, double x1, double y1, const wchar_t* str, const int len, unsigned int style);
+    void   text(Font& font, double x, double y, const wchar_t* str, const int len);
 
     // Path commands    路径命令
     //-----------------------
@@ -475,6 +459,18 @@ public:
                    double dstX, double dstY);
     void copyImage(Image& img, double dstX, double dstY);
 
+    // Image Blending (no transformations available)   -图形混合（不使用变换）
+    void blend(Agg2D& gp,
+        int srcX1, int srcY1, int srcX2, int srcY2,
+        double dstX, double dstY, unsigned alpha = 255);
+    void blend(Agg2D& gp, double dstX, double dstY, unsigned alpha = 255);
+
+
+    // Copy directly, together with alpha-channel        直接复制图形，连同alpha通道
+    void copy(Agg2D& gp,
+        int imgX1, int imgY1, int imgX2, int imgY2,
+        double dstX, double dstY);
+    void copy(Agg2D& gp, double dstX, double dstY);
 
     // Auxiliary    辅助
     //-----------------------

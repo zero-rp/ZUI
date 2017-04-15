@@ -296,6 +296,15 @@ namespace agg
             return x1 <= x2 && y1 <= y2;
         }
 
+        bool clip(T x1_, T y1_, T x2_, T y2_)
+        {
+            if (x2 > x2_) x2 = x2_;
+            if (y2 > y2_) y2 = y2_;
+            if (x1 < x1_) x1 = x1_;
+            if (y1 < y1_) y1 = y1_;
+            return x1 <= x2 && y1 <= y2;
+        }
+
         bool is_valid() const
         {
             return x1 <= x2 && y1 <= y2;
