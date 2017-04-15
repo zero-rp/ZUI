@@ -1,5 +1,6 @@
 ﻿#include <uv.h>
 #include <ZUI.h>
+#include "dukluv\duv_module_core.h"
 void Rect_Join(ZRect *rc, ZRect *rc1)
 {
     if (rc1->left < rc->left) rc->left = rc1->left;
@@ -54,6 +55,11 @@ ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
 
     /*初始化模版管理器*/
     if (!ZuiTemplateInit())
+    {
+        return FALSE;
+    }
+    /*初始化导出接口*/
+    if (!ZuiInitZuvFunc())
     {
         return FALSE;
     }
