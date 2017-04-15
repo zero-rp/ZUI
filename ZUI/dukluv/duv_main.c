@@ -380,7 +380,7 @@ static duk_ret_t duv_mod_compile(duk_context *ctx) {
 
   return 1;
 }
-
+DUK_EXTERNAL duk_ret_t hash_mod_init(duk_context* ctx);
 static duk_ret_t duv_main(duk_context *ctx) {
 
   duk_push_global_object(ctx);
@@ -394,7 +394,11 @@ static duk_ret_t duv_main(duk_context *ctx) {
   duk_push_c_function(ctx, dukopen_uv, 0);
   duk_call(ctx, 0);
   duk_put_prop_string(ctx, -2, "uv");
-
+#if (defined DUV_HAVE_HASH) && (DUV_HAVE_HASH == 1)
+  duk_push_c_function(ctx, hash_mod_init, 0);
+  duk_call(ctx, 0);
+  duk_put_prop_string(ctx, -2, "hash");
+#endif
   // Replace the module loader with Duktape 2.x polyfill.
   duk_get_prop_string(ctx, -1, "Duktape");
   //duk_del_prop_string(ctx, -1, "modSearch");
@@ -417,7 +421,12 @@ static duk_ret_t duv_main(duk_context *ctx) {
 
   return 0;
 }
-
+static DArray *module_array = NULL;//主动加载模块列表
+void duv_add_module(duk_c_function f) {
+    if (module_array == NULL)
+        module_array = darray_create();
+    darray_append(module_array, f);
+}
 int duv_bind(duk_context *ctx) {
     //uv_setup_args(argc, argv);
   /* Stash 'Duktape' in case it's modified. */
@@ -443,8 +452,18 @@ int duv_bind(duk_context *ctx) {
     LOG_DUK(ctx, -1);
     return 1;
   }
+  //加载附加模块
+  if (module_array)
+      for (size_t i = 0; i < module_array->count; i++)
+      {
+          duk_push_c_function(ctx, module_array->data[i], 0);
+          if (duk_pcall(ctx, 0)) {
+              LOG_DUK(ctx, -1);
+          }
+      }
   return 0;
 }
+
 duk_ret_t duv_load(duk_context *ctx) {
     //require.call({id:uv.cwd()+"/main.c"}, path);
     duk_push_c_function(ctx, duv_require, 1);
