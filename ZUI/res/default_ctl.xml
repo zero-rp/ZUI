@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="gb2312"?>
+ï»¿<?xml version="1.0" encoding="gb2312"?>
 <Template class="WindowCtl" layout="horizontal" width="90" height="23">
   <NULL/>
-	<Button name="WindowCtl_min" width="30" height="23" tooltip="×îÐ¡»¯" normalimage="default:default/11.png" hotimage="default:default/12.png" pushedimage="default:default/13.png" />
-	<Option name="WindowCtl_max" width="30" height="23" tooltip="×î´ó»¯" normalimage="default:default/5.png" hotimage="default:default/6.png" pushedimage="default:default/7.png" selectedimage="default:default/8.png" selectedhotimage="default:default/9.png" selectedpushedimage="default:default/10.png" />
-	<Button name="WindowCtl_clos" width="32" height="23" tooltip="¹Ø±Õ" normalimage="default:default/1.png" hotimage="default:default/2.png" pushedimage="default:default/3.png"/>
+	<Button name="WindowCtl_min" width="30" height="23" tooltip="æœ€å°åŒ–" normalimage="default:default/11.png" hotimage="default:default/12.png" pushedimage="default:default/13.png" />
+	<Option name="WindowCtl_max" width="30" height="23" tooltip="æœ€å¤§åŒ–" normalimage="default:default/5.png" hotimage="default:default/6.png" pushedimage="default:default/7.png" selectedimage="default:default/8.png" selectedhotimage="default:default/9.png" selectedpushedimage="default:default/10.png" />
+	<Button name="WindowCtl_clos" width="32" height="23" tooltip="å…³é—­" normalimage="default:default/1.png" hotimage="default:default/2.png" pushedimage="default:default/3.png"/>
 </Template>

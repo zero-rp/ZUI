@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="gb2312"?>
+ï»¿<?xml version="1.0" encoding="gb2312"?>
 <Template class="MessageBox" layout="window" size="300,200" center="true" bordercolor="#FF2d2c7a" bkcolor="#FF17E97B">
     <HorizontalLayout name="head" drag="true" height="25">
-      <!--±êÌâÀ¸-->
+      <!--æ ‡é¢˜æ -->
       <HorizontalLayout name="Title" inset="0,0,28,0" drag="true">
-        <Label name="title" text="ÏûÏ¢¿ò" drag="true"/>
+        <Label name="title" text="æ¶ˆæ¯æ¡†" drag="true"/>
       </HorizontalLayout>
       <WindowCtl name="ctl"/>
     </HorizontalLayout>
@@ -11,7 +11,7 @@
     <Label name="text" drag="true"/>
   </HorizontalLayout>
   <HorizontalLayout height="28">
-    <Button name="ok" text="È·¶¨" padding="10,2,10,2"/>
-    <Button name="cancel" text="È¡Ïû" padding="10,2,10,2"/>
+    <Button name="ok" text="ç¡®å®š" padding="10,2,10,2"/>
+    <Button name="cancel" text="å–æ¶ˆ" padding="10,2,10,2"/>
   </HorizontalLayout>
 </Template>
