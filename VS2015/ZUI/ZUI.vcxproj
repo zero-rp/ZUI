@@ -152,7 +152,7 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0500;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_MSC_VER=1400;BUILDING_ZUI_SHARED;USING_VC6RT=1;RUN_DEBUG=0;MEM_DEBUG=0;LOG_DEBUG=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0500;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_MSC_VER=1400;BUILDING_ZUI_SHARED;USING_VC6RT=1;RUN_DEBUG=0;MEM_DEBUG=0;LOG_DEBUG=0;DUV_HAVE_HASH=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <ExceptionHandling>false</ExceptionHandling>
@@ -224,6 +224,7 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClCompile Include="..\..\ZUI\control\Browser.c" />
     <ClCompile Include="..\..\ZUI\control\Button.c" />
     <ClCompile Include="..\..\ZUI\control\CheckBox.c" />
+    <ClCompile Include="..\..\ZUI\control\DrawPanel.c" />
     <ClCompile Include="..\..\ZUI\control\Edit.c" />
     <ClCompile Include="..\..\ZUI\control\Label.c" />
     <ClCompile Include="..\..\ZUI\control\List.c" />
@@ -251,22 +252,27 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClCompile Include="..\..\ZUI\core\string.c" />
     <ClCompile Include="..\..\ZUI\core\template.c" />
     <ClCompile Include="..\..\ZUI\core\tree.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_callbacks.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_fs.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_handle.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_main.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_misc.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_pipe.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_refs.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_req.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_schema.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_stream.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_tcp.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_timer.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_udp.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_utils.c" />
-    <ClCompile Include="..\..\ZUI\dukluv\src\uv_schema.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\duv.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\duv_callbacks.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\duv_fs.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\duv_handle.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\duv_main.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\duv_misc.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\duv_module.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\duv_pipe.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\duv_refs.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\duv_req.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\duv_schema.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\duv_stream.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\duv_tcp.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\duv_timer.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\duv_udp.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\duv_utils.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\hash\hash.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\hash\md5.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\hash\sha1.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\hash\sha2.c" />
+    <ClCompile Include="..\..\ZUI\dukluv\uv_schema.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_alloc_default.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_api_buffer.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_api_bytecode.c" />
@@ -588,6 +594,7 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClInclude Include="..\..\ZUI\control\Browser.h" />
     <ClInclude Include="..\..\ZUI\control\Button.h" />
     <ClInclude Include="..\..\ZUI\control\CheckBox.h" />
+    <ClInclude Include="..\..\ZUI\control\DrawPanel.h" />
     <ClInclude Include="..\..\ZUI\control\Edit.h" />
     <ClInclude Include="..\..\ZUI\control\Html.h" />
     <ClInclude Include="..\..\ZUI\control\Label.h" />
@@ -616,21 +623,27 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClInclude Include="..\..\ZUI\core\string.h" />
     <ClInclude Include="..\..\ZUI\core\template.h" />
     <ClInclude Include="..\..\ZUI\core\tree.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_callbacks.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_fs.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_handle.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\miniz.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_misc.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_pipe.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_refs.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_req.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_schema.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_stream.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_tcp.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_timer.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_utils.h" />
-    <ClInclude Include="..\..\ZUI\dukluv\src\uv_schema.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\duv.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\duv_callbacks.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\duv_fs.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\duv_handle.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\duv_misc.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\duv_module.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\duv_module_core.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\duv_pipe.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\duv_refs.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\duv_req.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\duv_schema.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\duv_stream.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\duv_tcp.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\duv_timer.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\duv_udp.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\duv_utils.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\hash\includes.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\hash\md5.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\hash\sha1.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\hash\sha2.h" />
+    <ClInclude Include="..\..\ZUI\dukluv\uv_schema.h" />
     <ClInclude Include="..\..\ZUI\duktape\duktape.h" />
     <ClInclude Include="..\..\ZUI\duktape\duk_api_internal.h" />
     <ClInclude Include="..\..\ZUI\duktape\duk_bi_protos.h" />
@@ -815,6 +828,7 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_vpgen_clip_polyline.h" />
     <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_vpgen_segmentator.h" />
     <ClInclude Include="..\..\ZUI\platform\graph\cairo.h" />
+    <ClInclude Include="..\..\ZUI\platform\graph\format.h" />
     <ClInclude Include="..\..\ZUI\platform\graph\gdi.h" />
     <ClInclude Include="..\..\ZUI\platform\graph\graph.h" />
     <ClInclude Include="..\..\ZUI\platform\graph\skia.h" />

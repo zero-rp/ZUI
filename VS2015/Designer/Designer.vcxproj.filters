@@ -55,6 +55,9 @@
     <Filter Include="ZUI\dukluv">
       <UniqueIdentifier>{661f3a22-1f53-407a-b305-d968b449e768}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ZUI\dukluv\hash">
+      <UniqueIdentifier>{fff8b1f9-7965-415a-af3b-79ef38e451a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Designer\CodeEdit.c">
@@ -564,59 +567,71 @@
     <ClCompile Include="..\..\ZUI\libuv\src\win\winsock.c">
       <Filter>ZUI\libuv\win</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv.c">
-      <Filter>ZUI\dukluv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_fs.c">
-      <Filter>ZUI\dukluv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_handle.c">
-      <Filter>ZUI\dukluv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_pipe.c">
-      <Filter>ZUI\dukluv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_req.c">
-      <Filter>ZUI\dukluv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_stream.c">
-      <Filter>ZUI\dukluv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_tcp.c">
-      <Filter>ZUI\dukluv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_timer.c">
-      <Filter>ZUI\dukluv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\uv_schema.c">
-      <Filter>ZUI\dukluv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_callbacks.c">
-      <Filter>ZUI\dukluv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_main.c">
-      <Filter>ZUI\dukluv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_misc.c">
-      <Filter>ZUI\dukluv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_schema.c">
-      <Filter>ZUI\dukluv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_utils.c">
-      <Filter>ZUI\dukluv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_refs.c">
-      <Filter>ZUI\dukluv</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\control\ProgressBar.c">
       <Filter>ZUI\control</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_udp.c">
-      <Filter>ZUI\dukluv</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\control\CheckBox.c">
       <Filter>ZUI\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\hash\hash.c">
+      <Filter>ZUI\dukluv\hash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\hash\md5.c">
+      <Filter>ZUI\dukluv\hash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\hash\sha1.c">
+      <Filter>ZUI\dukluv\hash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\hash\sha2.c">
+      <Filter>ZUI\dukluv\hash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv.c">
+      <Filter>ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_callbacks.c">
+      <Filter>ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_fs.c">
+      <Filter>ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_handle.c">
+      <Filter>ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_main.c">
+      <Filter>ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_misc.c">
+      <Filter>ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_pipe.c">
+      <Filter>ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_refs.c">
+      <Filter>ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_req.c">
+      <Filter>ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_schema.c">
+      <Filter>ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_stream.c">
+      <Filter>ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_tcp.c">
+      <Filter>ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_timer.c">
+      <Filter>ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_udp.c">
+      <Filter>ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_utils.c">
+      <Filter>ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\uv_schema.c">
+      <Filter>ZUI\dukluv</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

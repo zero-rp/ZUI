@@ -115,26 +115,23 @@
     <Filter Include="头文件\libuv\include">
       <UniqueIdentifier>{c40db1f0-d5ad-467f-ac81-931fc768faa5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\dukluv\src">
-      <UniqueIdentifier>{86d3cd1f-bfea-418d-a1f8-aff34af89031}</UniqueIdentifier>
-    </Filter>
     <Filter Include="头文件\dukluv">
       <UniqueIdentifier>{b56834e5-746e-4992-83b1-a4b3cc60fbd8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件\dukluv\src">
-      <UniqueIdentifier>{a672d3f7-932b-4274-8157-5b9c11937665}</UniqueIdentifier>
-    </Filter>
     <Filter Include="res\modules">
       <UniqueIdentifier>{006a5695-9b0d-40ff-a1cf-be4f43d535b0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\dukluv\src\hash">
-      <UniqueIdentifier>{3f3968f2-7b20-4c21-92e9-0306431bb97a}</UniqueIdentifier>
     </Filter>
     <Filter Include="头文件\platform\graph\agg">
       <UniqueIdentifier>{1e7bdc32-ef46-4dbe-badc-ddab43acf130}</UniqueIdentifier>
     </Filter>
     <Filter Include="头文件\platform\graph\agg\include">
       <UniqueIdentifier>{bcba82ae-cd8a-4787-ac81-01255d700389}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\dukluv\hash">
+      <UniqueIdentifier>{5f8aea60-3150-446d-b1d6-c6a5b6f268b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\dukluv\hash">
+      <UniqueIdentifier>{bdfd4377-222c-4ba4-8793-3eb8ed803ee3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -735,48 +732,6 @@
     <ClCompile Include="..\..\ZUI\libuv\src\win\winsock.c">
       <Filter>源文件\libuv\win</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv.c">
-      <Filter>源文件\dukluv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\uv_schema.c">
-      <Filter>源文件\dukluv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_handle.c">
-      <Filter>源文件\dukluv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_fs.c">
-      <Filter>源文件\dukluv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_pipe.c">
-      <Filter>源文件\dukluv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_req.c">
-      <Filter>源文件\dukluv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_stream.c">
-      <Filter>源文件\dukluv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_tcp.c">
-      <Filter>源文件\dukluv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_timer.c">
-      <Filter>源文件\dukluv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_schema.c">
-      <Filter>源文件\dukluv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_callbacks.c">
-      <Filter>源文件\dukluv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_utils.c">
-      <Filter>源文件\dukluv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_main.c">
-      <Filter>源文件\dukluv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_misc.c">
-      <Filter>源文件\dukluv\src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\libuv\src\win\process.c">
       <Filter>源文件\libuv\win</Filter>
     </ClCompile>
@@ -788,12 +743,6 @@
     </ClCompile>
     <ClCompile Include="..\..\ZUI\control\ProgressBar.c">
       <Filter>源文件\control</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_refs.c">
-      <Filter>源文件\dukluv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\dukluv\src\duv_udp.c">
-      <Filter>源文件\dukluv\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ZUI\vc6.cpp">
       <Filter>源文件</Filter>
@@ -815,6 +764,72 @@
     </ClCompile>
     <ClCompile Include="..\..\ZUI\platform\graph\agg\src\agg_rounded_rect.cpp">
       <Filter>源文件\platform\graph\AGG\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\DrawPanel.c">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv.c">
+      <Filter>源文件\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_callbacks.c">
+      <Filter>源文件\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_fs.c">
+      <Filter>源文件\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_handle.c">
+      <Filter>源文件\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_main.c">
+      <Filter>源文件\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_misc.c">
+      <Filter>源文件\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_pipe.c">
+      <Filter>源文件\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_refs.c">
+      <Filter>源文件\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_req.c">
+      <Filter>源文件\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_schema.c">
+      <Filter>源文件\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_stream.c">
+      <Filter>源文件\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_tcp.c">
+      <Filter>源文件\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_timer.c">
+      <Filter>源文件\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_udp.c">
+      <Filter>源文件\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_utils.c">
+      <Filter>源文件\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\uv_schema.c">
+      <Filter>源文件\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\hash\hash.c">
+      <Filter>源文件\dukluv\hash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\hash\md5.c">
+      <Filter>源文件\dukluv\hash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\hash\sha1.c">
+      <Filter>源文件\dukluv\hash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\hash\sha2.c">
+      <Filter>源文件\dukluv\hash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\dukluv\duv_module.c">
+      <Filter>源文件\dukluv</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1232,15 +1247,6 @@
     <ClInclude Include="..\..\ZUI\libuv\include\uv-win.h">
       <Filter>头文件\libuv\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\miniz.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\uv_schema.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ZUI\duktape\duk_trans_dvalue.h">
       <Filter>头文件\duktape</Filter>
     </ClInclude>
@@ -1249,42 +1255,6 @@
     </ClInclude>
     <ClInclude Include="..\..\ZUI\control\ProgressBar.h">
       <Filter>头文件\control</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_tcp.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_timer.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_utils.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_stream.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_req.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_refs.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_schema.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_callbacks.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_fs.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_handle.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_misc.h">
-      <Filter>头文件\dukluv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ZUI\dukluv\src\duv_pipe.h">
-      <Filter>头文件\dukluv\src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ZUI\platform\graph\agg\agg_font_freetype.h">
       <Filter>头文件\platform\graph\agg</Filter>
@@ -1660,6 +1630,75 @@
     </ClInclude>
     <ClInclude Include="..\..\ZUI\platform\graph\agg\include\agg_vpgen_segmentator.h">
       <Filter>头文件\platform\graph\agg\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\control\DrawPanel.h">
+      <Filter>头文件\control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\format.h">
+      <Filter>头文件\platform\graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\duv.h">
+      <Filter>头文件\dukluv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\duv_callbacks.h">
+      <Filter>头文件\dukluv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\duv_fs.h">
+      <Filter>头文件\dukluv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\duv_handle.h">
+      <Filter>头文件\dukluv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\duv_misc.h">
+      <Filter>头文件\dukluv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\duv_pipe.h">
+      <Filter>头文件\dukluv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\duv_refs.h">
+      <Filter>头文件\dukluv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\duv_req.h">
+      <Filter>头文件\dukluv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\duv_schema.h">
+      <Filter>头文件\dukluv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\duv_stream.h">
+      <Filter>头文件\dukluv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\duv_tcp.h">
+      <Filter>头文件\dukluv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\duv_timer.h">
+      <Filter>头文件\dukluv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\duv_udp.h">
+      <Filter>头文件\dukluv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\duv_utils.h">
+      <Filter>头文件\dukluv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\uv_schema.h">
+      <Filter>头文件\dukluv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\hash\includes.h">
+      <Filter>头文件\dukluv\hash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\hash\md5.h">
+      <Filter>头文件\dukluv\hash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\hash\sha1.h">
+      <Filter>头文件\dukluv\hash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\hash\sha2.h">
+      <Filter>头文件\dukluv\hash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\duv_module.h">
+      <Filter>头文件\dukluv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\dukluv\duv_module_core.h">
+      <Filter>头文件\dukluv</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
