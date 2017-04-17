@@ -425,6 +425,9 @@ DUK_LOCAL void duk__print_hobject(duk__dprint_state *st, duk_hobject *h) {
 		}
 	}
 	if (st->internal) {
+		if (DUK_HOBJECT_IS_ARRAY(h)) {
+			DUK__COMMA(); duk_fb_sprintf(fb, "__array:true");
+		}
 		if (DUK_HOBJECT_HAS_EXTENSIBLE(h)) {
 			DUK__COMMA(); duk_fb_sprintf(fb, "__extensible:true");
 		}
@@ -443,7 +446,7 @@ DUK_LOCAL void duk__print_hobject(duk__dprint_state *st, duk_hobject *h) {
 		if (DUK_HOBJECT_HAS_BUFOBJ(h)) {
 			DUK__COMMA(); duk_fb_sprintf(fb, "__bufobj:true");
 		}
-		if (DUK_HOBJECT_HAS_THREAD(h)) {
+		if (DUK_HOBJECT_IS_THREAD(h)) {
 			DUK__COMMA(); duk_fb_sprintf(fb, "__thread:true");
 		}
 		if (DUK_HOBJECT_HAS_ARRAY_PART(h)) {
@@ -463,9 +466,6 @@ DUK_LOCAL void duk__print_hobject(duk__dprint_state *st, duk_hobject *h) {
 		}
 		if (DUK_HOBJECT_HAS_CREATEARGS(h)) {
 			DUK__COMMA(); duk_fb_sprintf(fb, "__createargs:true");
-		}
-		if (DUK_HOBJECT_HAS_ENVRECCLOSED(h)) {
-			DUK__COMMA(); duk_fb_sprintf(fb, "__envrecclosed:true");
 		}
 		if (DUK_HOBJECT_HAS_EXOTIC_ARRAY(h)) {
 			DUK__COMMA(); duk_fb_sprintf(fb, "__exotic_array:true");
@@ -511,6 +511,15 @@ DUK_LOCAL void duk__print_hobject(duk__dprint_state *st, duk_hobject *h) {
 		duk_fb_put_funcptr(fb, (duk_uint8_t *) &f->func, sizeof(f->func));
 		DUK__COMMA(); duk_fb_sprintf(fb, "__nargs:%ld", (long) f->nargs);
 		DUK__COMMA(); duk_fb_sprintf(fb, "__magic:%ld", (long) f->magic);
+	} else if (st->internal && DUK_HOBJECT_IS_DECENV(h)) {
+		duk_hdecenv *e = (duk_hdecenv *) h;
+		DUK__COMMA(); duk_fb_sprintf(fb, "__thread:"); duk__print_hobject(st, (duk_hobject *) e->thread);
+		DUK__COMMA(); duk_fb_sprintf(fb, "__varmap:"); duk__print_hobject(st, (duk_hobject *) e->varmap);
+		DUK__COMMA(); duk_fb_sprintf(fb, "__regbase:%ld", (long) e->regbase);
+	} else if (st->internal && DUK_HOBJECT_IS_OBJENV(h)) {
+		duk_hobjenv *e = (duk_hobjenv *) h;
+		DUK__COMMA(); duk_fb_sprintf(fb, "__target:"); duk__print_hobject(st, (duk_hobject *) e->target);
+		DUK__COMMA(); duk_fb_sprintf(fb, "__has_this:%ld", (long) e->has_this);
 #if defined(DUK_USE_BUFFEROBJECT_SUPPORT)
 	} else if (st->internal && DUK_HOBJECT_IS_BUFOBJ(h)) {
 		duk_hbufobj *b = (duk_hbufobj *) h;
@@ -744,6 +753,10 @@ DUK_LOCAL void duk__print_tval(duk__dprint_state *st, duk_tval *tv) {
 	}
 #if defined(DUK_USE_FASTINT)
 	case DUK_TAG_FASTINT:
+		DUK_ASSERT(!DUK_TVAL_IS_UNUSED(tv));
+		DUK_ASSERT(DUK_TVAL_IS_NUMBER(tv));
+		duk_fb_sprintf(fb, "%.18gF", (double) DUK_TVAL_GET_NUMBER(tv));
+		break;
 #endif
 	default: {
 		/* IEEE double is approximately 16 decimal digits; print a couple extra */
@@ -837,7 +850,7 @@ DUK_INTERNAL duk_int_t duk_debug_vsnprintf(char *str, duk_size_t size, const cha
 
 			if (ch == DUK_ASC_STAR) {
 				/* unsupported: would consume multiple args */
-				goto error;
+				goto format_error;
 			} else if (ch == DUK_ASC_PERCENT) {
 				duk_fb_put_byte(&fb, (duk_uint8_t) DUK_ASC_PERCENT);
 				break;
@@ -889,7 +902,7 @@ DUK_INTERNAL duk_int_t duk_debug_vsnprintf(char *str, duk_size_t size, const cha
 				fmtlen = (duk_size_t) (p - p_begfmt);
 				if (fmtlen >= sizeof(fmtbuf)) {
 					/* format is too large, abort */
-					goto error;
+					goto format_error;
 				}
 				DUK_MEMZERO(fmtbuf, sizeof(fmtbuf));
 				DUK_MEMCPY(fmtbuf, p_begfmt, fmtlen);
@@ -964,7 +977,7 @@ DUK_INTERNAL duk_int_t duk_debug_vsnprintf(char *str, duk_size_t size, const cha
 	}
 	goto done;
 
- error:
+ format_error:
 	duk_fb_put_cstring(&fb, "FMTERR");
 	/* fall through */
 

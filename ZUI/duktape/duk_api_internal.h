@@ -101,7 +101,7 @@ DUK_INTERNAL_DECL duk_hthread *duk_get_hthread(duk_context *ctx, duk_idx_t idx);
 DUK_INTERNAL_DECL duk_hcompfunc *duk_get_hcompfunc(duk_context *ctx, duk_idx_t idx);
 DUK_INTERNAL_DECL duk_hnatfunc *duk_get_hnatfunc(duk_context *ctx, duk_idx_t idx);
 
-DUK_INTERNAL_DECL void *duk_get_buffer_data_raw(duk_context *ctx, duk_idx_t idx, duk_size_t *out_size, duk_bool_t throw_flag, duk_bool_t *out_found);
+DUK_INTERNAL_DECL void *duk_get_buffer_data_raw(duk_context *ctx, duk_idx_t idx, duk_size_t *out_size, void *def_ptr, duk_size_t def_len, duk_bool_t throw_flag, duk_bool_t *out_isbuffer);
 
 DUK_INTERNAL_DECL duk_hobject *duk_get_hobject_with_class(duk_context *ctx, duk_idx_t idx, duk_small_uint_t classnum);
 
@@ -281,6 +281,8 @@ DUK_INTERNAL_DECL void duk_resolve_nonbound_function(duk_context *ctx);
 
 DUK_INTERNAL_DECL duk_idx_t duk_get_top_require_min(duk_context *ctx, duk_idx_t min_top);
 DUK_INTERNAL_DECL duk_idx_t duk_get_top_index_unsafe(duk_context *ctx);
+DUK_INTERNAL_DECL void duk_pop_n_unsafe(duk_context *ctx, duk_idx_t count);
+DUK_INTERNAL_DECL void duk_pop_n_nodecref_unsafe(duk_context *ctx, duk_idx_t count);
 DUK_INTERNAL_DECL void duk_pop_unsafe(duk_context *ctx);
 
 DUK_INTERNAL_DECL void duk_compact_m1(duk_context *ctx);

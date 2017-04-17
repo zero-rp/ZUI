@@ -79,7 +79,7 @@
         */
 #define DUK_HSTRING_IS_ASCII(x)                     (DUK_HSTRING_GET_BYTELEN((x)) == DUK_HSTRING_GET_CHARLEN((x)))
 #endif
-#define DUK_HSTRING_IS_ASCII(x)                     DUK_HSTRING_HAS_ASCII((x))
+#define DUK_HSTRING_IS_ASCII(x)                     DUK_HSTRING_HAS_ASCII((x))  /* lazily set! */
 #define DUK_HSTRING_IS_EMPTY(x)                     (DUK_HSTRING_GET_BYTELEN((x)) == 0)
 
 #if defined(DUK_USE_STRHASH16)
@@ -100,7 +100,7 @@
 		(x)->hdr.h_strextra16 = (v); \
 	} while (0)
 #if defined(DUK_USE_HSTRING_CLEN)
-#define DUK_HSTRING_GET_CHARLEN(x)                  ((x)->clen16)
+#define DUK_HSTRING_GET_CHARLEN(x)                  duk_hstring_get_charlen((x))
 #define DUK_HSTRING_SET_CHARLEN(x,v) do { \
 		(x)->clen16 = (v); \
 	} while (0)
@@ -115,7 +115,7 @@
 #define DUK_HSTRING_SET_BYTELEN(x,v) do { \
 		(x)->blen = (v); \
 	} while (0)
-#define DUK_HSTRING_GET_CHARLEN(x)                  ((x)->clen)
+#define DUK_HSTRING_GET_CHARLEN(x)                  duk_hstring_get_charlen((x))
 #define DUK_HSTRING_SET_CHARLEN(x,v) do { \
 		(x)->clen = (v); \
 	} while (0)
@@ -146,11 +146,11 @@
  * avoids helper call if string has no array index value.
  */
 #define DUK_HSTRING_GET_ARRIDX_FAST(h)  \
-	(DUK_HSTRING_HAS_ARRIDX((h)) ? duk_js_to_arrayindex_string_helper((h)) : DUK_HSTRING_NO_ARRAY_INDEX)
+	(DUK_HSTRING_HAS_ARRIDX((h)) ? duk_js_to_arrayindex_hstring_fast_known((h)) : DUK_HSTRING_NO_ARRAY_INDEX)
 
 /* Slower but more compact variant. */
 #define DUK_HSTRING_GET_ARRIDX_SLOW(h)  \
-	(duk_js_to_arrayindex_string_helper((h)))
+	(duk_js_to_arrayindex_hstring_fast((h)))
 #endif
 
 /*
@@ -165,30 +165,26 @@ struct duk_hstring {
 	 */
 	duk_heaphdr_string hdr;
 
-	/* Note: we could try to stuff a partial hash (e.g. 16 bits) into the
-	 * shared heap header.  Good hashing needs more hash bits though.
-	 */
-
-	/* string hash */
+	/* String hash. */
 #if defined(DUK_USE_STRHASH16)
 	/* If 16-bit hash is in use, stuff it into duk_heaphdr_string flags. */
 #else
 	duk_uint32_t hash;
 #endif
 
-	/* precomputed array index (or DUK_HSTRING_NO_ARRAY_INDEX) */
+	/* Precomputed array index (or DUK_HSTRING_NO_ARRAY_INDEX). */
 #if defined(DUK_USE_HSTRING_ARRIDX)
 	duk_uarridx_t arridx;
 #endif
 
-	/* length in bytes (not counting NUL term) */
+	/* Length in bytes (not counting NUL term). */
 #if defined(DUK_USE_STRLEN16)
 	/* placed in duk_heaphdr_string */
 #else
 	duk_uint32_t blen;
 #endif
 
-	/* length in codepoints (must be E5 compatible) */
+	/* Length in codepoints (must be E5 compatible). */
 #if defined(DUK_USE_STRLEN16)
 #if defined(DUK_USE_HSTRING_CLEN)
 	duk_uint16_t clen16;
@@ -200,7 +196,7 @@ struct duk_hstring {
 #endif
 
 	/*
-	 *  String value of 'blen+1' bytes follows (+1 for NUL termination
+	 *  String data of 'blen+1' bytes follows (+1 for NUL termination
 	 *  convenience for C API).  No alignment needs to be guaranteed
 	 *  for strings, but fields above should guarantee alignment-by-4
 	 *  (but not alignment-by-8).
@@ -225,9 +221,6 @@ struct duk_hstring_external {
  */
 
 DUK_INTERNAL_DECL duk_ucodepoint_t duk_hstring_char_code_at_raw(duk_hthread *thr, duk_hstring *h, duk_uint_t pos, duk_bool_t surrogate_aware);
-
-#if !defined(DUK_USE_HSTRING_CLEN)
 DUK_INTERNAL_DECL duk_size_t duk_hstring_get_charlen(duk_hstring *h);
-#endif
 
 #endif  /* DUK_HSTRING_H_INCLUDED */

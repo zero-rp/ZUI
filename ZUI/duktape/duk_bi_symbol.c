@@ -104,7 +104,8 @@ DUK_LOCAL duk_hstring *duk__auto_unbox_symbol(duk_context *ctx, duk_tval *tv_arg
 	h_str = DUK_TVAL_GET_STRING(tv);
 	DUK_ASSERT(h_str != NULL);
 
-	if (!DUK_HSTRING_HAS_SYMBOL(h_str)) {
+	/* Here symbol is more expected than not. */
+	if (DUK_UNLIKELY(!DUK_HSTRING_HAS_SYMBOL(h_str))) {
 		return NULL;
 	}
 
@@ -124,6 +125,7 @@ DUK_INTERNAL duk_ret_t duk_bi_symbol_tostring_shared(duk_context *ctx) {
 		duk_push_symbol_descriptive_string(ctx, h_str);
 	} else {
 		/* .valueOf() */
+		duk_push_hstring(ctx, h_str);
 	}
 	return 1;
 }

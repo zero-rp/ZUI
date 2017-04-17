@@ -1,5 +1,5 @@
 /*
- *  Hobject property set/get functionality.
+ *  duk_hobject property access functionality.
  *
  *  This is very central functionality for size, performance, and compliance.
  *  It is also rather intricate; see hobject-algorithms.rst for discussion on
@@ -40,10 +40,6 @@
  *  might be more appropriate.
  */
 
-/*
- *  XXX: duk_uint_fast32_t should probably be used in many places here.
- */
-
 #include "duk_internal.h"
 
 /*
@@ -51,10 +47,6 @@
  */
 
 #define DUK__NO_ARRAY_INDEX             DUK_HSTRING_NO_ARRAY_INDEX
-
-/* hash probe sequence */
-#define DUK__HASH_INITIAL(hash,h_size)  DUK_HOBJECT_HASH_INITIAL((hash),(h_size))
-#define DUK__HASH_PROBE_STEP(hash)      DUK_HOBJECT_HASH_PROBE_STEP((hash))
 
 /* marker values for hash part */
 #define DUK__HASH_UNUSED                DUK_HOBJECT_HASHIDX_UNUSED
@@ -218,14 +210,26 @@ DUK_LOCAL duk_bool_t duk__key_is_plain_buf_ownprop(duk_hthread *thr, duk_hbuffer
 DUK_LOCAL duk_uint32_t duk__get_default_h_size(duk_uint32_t e_size) {
 	DUK_ASSERT(e_size <= DUK_HOBJECT_MAX_PROPERTIES);
 
-	if (e_size >= DUK_HOBJECT_E_USE_HASH_LIMIT) {
+	if (e_size >= DUK_USE_HOBJECT_HASH_PROP_LIMIT) {
 		duk_uint32_t res;
+		duk_uint32_t tmp;
 
-		/* result: hash_prime(floor(1.2 * e_size)) */
-		res = duk_util_get_hash_prime(e_size + e_size / DUK_HOBJECT_H_SIZE_DIVISOR);
-
-		/* if fails, e_size will be zero = not an issue, except performance-wise */
-		DUK_ASSERT(res == 0 || res > e_size);
+		/* Hash size should be 2^N where N is chosen so that 2^N is
+		 * larger than e_size.  Extra shifting is used to ensure hash
+		 * is relatively sparse.
+		 */
+		tmp = e_size;
+		res = 2;  /* Result will be 2 ** (N + 1). */
+		while (tmp >= 0x40) {
+			tmp >>= 6;
+			res <<= 6;
+		}
+		while (tmp != 0) {
+			tmp >>= 1;
+			res <<= 1;
+		}
+		DUK_ASSERT((DUK_HOBJECT_MAX_PROPERTIES << 2U) > DUK_HOBJECT_MAX_PROPERTIES);  /* Won't wrap, even shifted by 2. */
+		DUK_ASSERT(res > e_size);
 		return res;
 	} else {
 		return 0;
@@ -239,7 +243,7 @@ DUK_LOCAL duk_uint32_t duk__get_min_grow_e(duk_uint32_t e_size) {
 
 	DUK_ASSERT(e_size <= DUK_HOBJECT_MAX_PROPERTIES);
 
-	res = (e_size + DUK_HOBJECT_E_MIN_GROW_ADD) / DUK_HOBJECT_E_MIN_GROW_DIVISOR;
+	res = (e_size + DUK_USE_HOBJECT_ENTRY_MINGROW_ADD) / DUK_USE_HOBJECT_ENTRY_MINGROW_DIVISOR;
 	DUK_ASSERT(res >= 1);  /* important for callers */
 	return res;
 }
@@ -250,7 +254,7 @@ DUK_LOCAL duk_uint32_t duk__get_min_grow_a(duk_uint32_t a_size) {
 
 	DUK_ASSERT((duk_size_t) a_size <= DUK_HOBJECT_MAX_PROPERTIES);
 
-	res = (a_size + DUK_HOBJECT_A_MIN_GROW_ADD) / DUK_HOBJECT_A_MIN_GROW_DIVISOR;
+	res = (a_size + DUK_USE_HOBJECT_ARRAY_MINGROW_ADD) / DUK_USE_HOBJECT_ARRAY_MINGROW_DIVISOR;
 	DUK_ASSERT(res >= 1);  /* important for callers */
 	return res;
 }
@@ -325,7 +329,7 @@ DUK_LOCAL duk_bool_t duk__abandon_array_density_check(duk_uint32_t a_used, duk_u
 	 *  of the check, but may confuse debugging.
 	 */
 
-	return (a_used < DUK_HOBJECT_A_ABANDON_LIMIT * (a_size >> 3));
+	return (a_used < DUK_USE_HOBJECT_ARRAY_ABANDON_LIMIT * (a_size >> 3));
 }
 
 /* Fast check for extending array: check whether or not a slow density check is required. */
@@ -351,7 +355,7 @@ DUK_LOCAL duk_bool_t duk__abandon_array_slow_check_required(duk_uint32_t arr_idx
 	 *    arr_idx > limit'' * ((old_size + 7) / 8)
 	 */
 
-	return (arr_idx > DUK_HOBJECT_A_FAST_RESIZE_LIMIT * ((old_size + 7) >> 3));
+	return (arr_idx > DUK_USE_HOBJECT_ARRAY_FAST_RESIZE_LIMIT * ((old_size + 7) >> 3));
 }
 
 /*
@@ -503,29 +507,26 @@ DUK_LOCAL duk_bool_t duk__proxy_check_prop(duk_hthread *thr, duk_hobject *obj, d
 /*
  *  Reallocate property allocation, moving properties to the new allocation.
  *
- *  Includes key compaction, rehashing, and can also optionally abandoning
+ *  Includes key compaction, rehashing, and can also optionally abandon
  *  the array part, 'migrating' array entries into the beginning of the
- *  new entry part.  Arguments are not validated here, so e.g. new_h_size
- *  MUST be a valid prime.
+ *  new entry part.
  *
  *  There is no support for in-place reallocation or just compacting keys
  *  without resizing the property allocation.  This is intentional to keep
- *  code size minimal.
+ *  code size minimal, but would be useful future work.
  *
  *  The implementation is relatively straightforward, except for the array
  *  abandonment process.  Array abandonment requires that new string keys
  *  are interned, which may trigger GC.  All keys interned so far must be
- *  reachable for GC at all times; valstack is used for that now.
+ *  reachable for GC at all times and correctly refcounted for; valstack is
+ *  used for that now.
  *
  *  Also, a GC triggered during this reallocation process must not interfere
- *  with the object being resized.  This is currently controlled by using
- *  heap->mark_and_sweep_base_flags to indicate that no finalizers will be
- *  executed (as they can affect ANY object) and no objects are compacted
- *  (it would suffice to protect this particular object only, though).
- *
- *  Note: a non-checked variant would be nice but is a bit tricky to
- *  implement for the array abandonment process.  It's easy for
- *  everything else.
+ *  with the object being resized.  This is currently controlled by preventing
+ *  finalizers (as they may affect ANY object) and object compaction in
+ *  mark-and-sweep.  It would suffice to protect only this particular object
+ *  from compaction, however.  DECREF refzero cascades are side effect free
+ *  and OK.
  *
  *  Note: because we need to potentially resize the valstack (as part
  *  of abandoning the array part), any tval pointers to the valstack
@@ -539,7 +540,7 @@ DUK_INTERNAL void duk_hobject_realloc_props(duk_hthread *thr,
                                             duk_uint32_t new_h_size,
                                             duk_bool_t abandon_array) {
 	duk_context *ctx = (duk_context *) thr;
-	duk_small_uint_t prev_mark_and_sweep_base_flags;
+	duk_small_uint_t prev_ms_base_flags;
 	duk_uint32_t new_alloc_size;
 	duk_uint32_t new_e_size_adjusted;
 	duk_uint8_t *new_p;
@@ -550,6 +551,10 @@ DUK_INTERNAL void duk_hobject_realloc_props(duk_hthread *thr,
 	duk_uint32_t *new_h;
 	duk_uint32_t new_e_next;
 	duk_uint_fast32_t i;
+	duk_size_t array_copy_size;
+#if defined(DUK_USE_ASSERTIONS)
+	duk_bool_t prev_error_not_allowed;
+#endif
 
 	DUK_ASSERT(thr != NULL);
 	DUK_ASSERT(ctx != NULL);
@@ -619,9 +624,8 @@ DUK_INTERNAL void duk_hobject_realloc_props(duk_hthread *thr,
 	/*
 	 *  Property count check.  This is the only point where we ensure that
 	 *  we don't get more (allocated) property space that we can handle.
-	 *  There aren't hard limits as such, but some algorithms fail (e.g.
-	 *  finding next higher prime, selecting hash part size) if we get too
-	 *  close to the 4G property limit.
+	 *  There aren't hard limits as such, but some algorithms may fail
+	 *  if we get too close to the 4G property limit.
 	 *
 	 *  Since this works based on allocation size (not actually used size),
 	 *  the limit is a bit approximate but good enough in practice.
@@ -634,43 +638,46 @@ DUK_INTERNAL void duk_hobject_realloc_props(duk_hthread *thr,
 	/*
 	 *  Compute new alloc size and alloc new area.
 	 *
-	 *  The new area is allocated as a dynamic buffer and placed into the
-	 *  valstack for reachability.  The actual buffer is then detached at
-	 *  the end.
-	 *
-	 *  Note: heap_mark_and_sweep_base_flags are altered here to ensure
-	 *  no-one touches this object while we're resizing and rehashing it.
-	 *  The flags must be reset on every exit path after it.  Finalizers
-	 *  and compaction is prevented currently for all objects while it
-	 *  would be enough to restrict it only for the current object.
+	 *  The new area is not tracked in the heap at all, so it's critical
+	 *  we get to free/keep it in a controlled manner.
 	 */
 
-	prev_mark_and_sweep_base_flags = thr->heap->mark_and_sweep_base_flags;
-	thr->heap->mark_and_sweep_base_flags |=
-	        DUK_MS_FLAG_NO_FINALIZERS |         /* avoid attempts to add/remove object keys */
-	        DUK_MS_FLAG_NO_OBJECT_COMPACTION;   /* avoid attempt to compact the current object */
+#if defined(DUK_USE_ASSERTIONS)
+	/* Whole path must be error throw free, but we may be called from
+	 * within error handling so can't assert for error_not_allowed == 0.
+	 */
+	prev_error_not_allowed = thr->heap->error_not_allowed;
+	thr->heap->error_not_allowed = 1;
+#endif
+	prev_ms_base_flags = thr->heap->ms_base_flags;
+	thr->heap->ms_base_flags |=
+	        DUK_MS_FLAG_NO_OBJECT_COMPACTION;      /* Avoid attempt to compact the current object (all objects really). */
+	thr->heap->pf_prevent_count++;                 /* Avoid finalizers. */
+	DUK_ASSERT(thr->heap->pf_prevent_count != 0);  /* Wrap. */
 
 	new_alloc_size = DUK_HOBJECT_P_COMPUTE_SIZE(new_e_size_adjusted, new_a_size, new_h_size);
 	DUK_DDD(DUK_DDDPRINT("new hobject allocation size is %ld", (long) new_alloc_size));
 	if (new_alloc_size == 0) {
-		/* for zero size, don't push anything on valstack */
 		DUK_ASSERT(new_e_size_adjusted == 0);
 		DUK_ASSERT(new_a_size == 0);
 		DUK_ASSERT(new_h_size == 0);
 		new_p = NULL;
 	} else {
-		/* This may trigger mark-and-sweep with arbitrary side effects,
-		 * including an attempted resize of the object we're resizing,
-		 * executing a finalizer which may add or remove properties of
-		 * the object we're resizing etc.
+		/* Alloc may trigger mark-and-sweep but no compaction, and
+		 * cannot throw.
 		 */
-
-		/* Note: buffer is dynamic so that we can 'steal' the actual
-		 * allocation later.
-		 */
-
-		new_p = (duk_uint8_t *) duk_push_dynamic_buffer(ctx, new_alloc_size);  /* errors out if out of memory */
-		DUK_ASSERT(new_p != NULL);  /* since new_alloc_size > 0 */
+#if 0  /* XXX: inject test */
+		if (1) {
+			goto alloc_failed;
+		}
+#endif
+		new_p = (duk_uint8_t *) DUK_ALLOC(thr->heap, new_alloc_size);
+		if (new_p == NULL) {
+			/* NULL always indicates alloc failure because
+			 * new_alloc_size > 0.
+			 */
+			goto alloc_failed;
+		}
 	}
 
 	/* Set up pointers to the new property area: this is hidden behind a macro
@@ -691,27 +698,27 @@ DUK_INTERNAL void duk_hobject_realloc_props(duk_hthread *thr,
 	                     (void *) new_a, (void *) new_h));
 
 	/*
-	 *  Migrate array to start of entries if requested.
+	 *  Migrate array part to start of entries if requested.
 	 *
 	 *  Note: from an enumeration perspective the order of entry keys matters.
 	 *  Array keys should appear wherever they appeared before the array abandon
-	 *  operation.
+	 *  operation.  (This no longer matters much because keys are ES2015 sorted.)
 	 */
 
 	if (abandon_array) {
-		/*
-		 *  Note: assuming new_a_size == 0, and that entry part contains
-		 *  no conflicting keys, refcounts do not need to be adjusted for
-		 *  the values, as they remain exactly the same.
+		/* Assuming new_a_size == 0, and that entry part contains
+		 * no conflicting keys, refcounts do not need to be adjusted for
+		 * the values, as they remain exactly the same.
 		 *
-		 *  The keys, however, need to be interned, incref'd, and be
-		 *  reachable for GC.  Any intern attempt may trigger a GC and
-		 *  claim any non-reachable strings, so every key must be reachable
-		 *  at all times.
+		 * The keys, however, need to be interned, incref'd, and be
+		 * reachable for GC.  Any intern attempt may trigger a GC and
+		 * claim any non-reachable strings, so every key must be reachable
+		 * at all times.  Refcounts must be correct to satisfy refcount
+		 * assertions.
 		 *
-		 *  A longjmp must not occur here, as the new_p allocation would
-		 *  be freed without these keys being decref'd, hence the messy
-		 *  decref handling if intern fails.
+		 * A longjmp must not occur here, as the new_p allocation would
+		 * leak.  Refcounts would come out correctly as the interned
+		 * strings are valstack tracked.
 		 */
 		DUK_ASSERT(new_a_size == 0);
 
@@ -740,20 +747,29 @@ DUK_INTERNAL void duk_hobject_realloc_props(duk_hthread *thr,
 			 *  must be careful.
 			 */
 
-			/* never shrinks; auto-adds DUK_VALSTACK_INTERNAL_EXTRA, which is generous */
+#if 0  /* XXX: inject test */
+			if (1) {
+				goto abandon_error;
+			}
+#endif
+			/* Never shrinks; auto-adds DUK_VALSTACK_INTERNAL_EXTRA, which
+			 * is generous.
+			 */
 			if (!duk_check_stack(ctx, 1)) {
 				goto abandon_error;
 			}
 			DUK_ASSERT_VALSTACK_SPACE(thr, 1);
-			key = duk_heap_string_intern_u32(thr->heap, i);
-			if (!key) {
+			key = duk_heap_strtable_intern_u32(thr->heap, i);
+			if (key == NULL) {
 				goto abandon_error;
 			}
 			duk_push_hstring(ctx, key);  /* keep key reachable for GC etc; guaranteed not to fail */
 
-			/* key is now reachable in the valstack */
+			/* Key is now reachable in the valstack, don't INCREF
+			 * the new allocation yet (we'll steal the refcounts
+			 * from the value stack once all keys are done).
+			 */
 
-			DUK_HSTRING_INCREF(thr, key);   /* second incref for the entry reference */
 			new_e_k[new_e_next] = key;
 			tv2 = &new_e_pv[new_e_next].v;  /* array entries are all plain values */
 			DUK_TVAL_SET_TVAL(tv2, tv1);
@@ -767,8 +783,9 @@ DUK_INTERNAL void duk_hobject_realloc_props(duk_hthread *thr,
 			 */
 		}
 
+		/* Steal refcounts from value stack. */
 		DUK_DDD(DUK_DDDPRINT("abandon array: pop %ld key temps from valstack", (long) new_e_next));
-		duk_pop_n(ctx, new_e_next);
+		duk_pop_n_nodecref_unsafe(ctx, new_e_next);
 	}
 
 	/*
@@ -781,7 +798,7 @@ DUK_INTERNAL void duk_hobject_realloc_props(duk_hthread *thr,
 		DUK_ASSERT(DUK_HOBJECT_GET_PROPS(thr->heap, obj) != NULL);
 
 		key = DUK_HOBJECT_E_GET_KEY(thr->heap, obj, i);
-		if (!key) {
+		if (key == NULL) {
 			continue;
 		}
 
@@ -796,53 +813,46 @@ DUK_INTERNAL void duk_hobject_realloc_props(duk_hthread *thr,
 	/* the entries [new_e_next, new_e_size_adjusted[ are left uninitialized on purpose (ok, not gc reachable) */
 
 	/*
-	 *  Copy array elements to new array part.
+	 *  Copy array elements to new array part.  If the new array part is
+	 *  larger, initialize the unused entries as UNUSED because they are
+	 *  GC reachable.
 	 */
 
-	if (new_a_size > DUK_HOBJECT_GET_ASIZE(obj)) {
-		/* copy existing entries as is */
-		DUK_ASSERT(new_p != NULL && new_a != NULL);
-		if (DUK_HOBJECT_GET_ASIZE(obj) > 0) {
-			/* Avoid zero copy with an invalid pointer.  If obj->p is NULL,
-			 * the 'new_a' pointer will be invalid which is not allowed even
-			 * when copy size is zero.
-			 */
-			DUK_ASSERT(DUK_HOBJECT_GET_PROPS(thr->heap, obj) != NULL);
-			DUK_ASSERT(DUK_HOBJECT_GET_ASIZE(obj) > 0);
-			DUK_MEMCPY((void *) new_a, (void *) DUK_HOBJECT_A_GET_BASE(thr->heap, obj), sizeof(duk_tval) * DUK_HOBJECT_GET_ASIZE(obj));
-		}
-
-		/* fill new entries with -unused- (required, gc reachable) */
-		for (i = DUK_HOBJECT_GET_ASIZE(obj); i < new_a_size; i++) {
-			duk_tval *tv = &new_a[i];
-			DUK_TVAL_SET_UNUSED(tv);
-		}
-	} else {
 #if defined(DUK_USE_ASSERTIONS)
-		/* caller must have decref'd values above new_a_size (if that is necessary) */
-		if (!abandon_array) {
-			for (i = new_a_size; i < DUK_HOBJECT_GET_ASIZE(obj); i++) {
-				duk_tval *tv;
-				tv = DUK_HOBJECT_A_GET_VALUE_PTR(thr->heap, obj, i);
-
-				/* current assertion is quite strong: decref's and set to unused */
-				DUK_ASSERT(DUK_TVAL_IS_UNUSED(tv));
-			}
+	/* Caller must have decref'd values above new_a_size (if that is necessary). */
+	if (!abandon_array) {
+		for (i = new_a_size; i < DUK_HOBJECT_GET_ASIZE(obj); i++) {
+			duk_tval *tv;
+			tv = DUK_HOBJECT_A_GET_VALUE_PTR(thr->heap, obj, i);
+			DUK_ASSERT(DUK_TVAL_IS_UNUSED(tv));
 		}
+	}
 #endif
-		if (new_a_size > 0) {
-			/* Avoid zero copy with an invalid pointer.  If obj->p is NULL,
-			 * the 'new_a' pointer will be invalid which is not allowed even
-			 * when copy size is zero.
-			 */
-			DUK_ASSERT(DUK_HOBJECT_GET_PROPS(thr->heap, obj) != NULL);
-			DUK_ASSERT(new_a_size > 0);
-			DUK_MEMCPY((void *) new_a, (void *) DUK_HOBJECT_A_GET_BASE(thr->heap, obj), sizeof(duk_tval) * new_a_size);
-		}
+	if (new_a_size > DUK_HOBJECT_GET_ASIZE(obj)) {
+		array_copy_size = sizeof(duk_tval) * DUK_HOBJECT_GET_ASIZE(obj);
+	} else {
+		array_copy_size = sizeof(duk_tval) * new_a_size;
+	}
+	if (array_copy_size > 0) {
+		/* Avoid zero copy with an invalid pointer.  If obj->p is NULL,
+		 * the 'new_a' pointer will be invalid which is not allowed even
+		 * when copy size is zero.
+		 */
+		DUK_ASSERT(new_a != NULL);
+		DUK_ASSERT(DUK_HOBJECT_GET_PROPS(thr->heap, obj) != NULL);
+		DUK_ASSERT(DUK_HOBJECT_GET_ASIZE(obj) > 0);
+		DUK_MEMCPY((void *) new_a,
+		           (const void *) DUK_HOBJECT_A_GET_BASE(thr->heap, obj),
+		           array_copy_size);
+	}
+	for (i = DUK_HOBJECT_GET_ASIZE(obj); i < new_a_size; i++) {
+		duk_tval *tv = &new_a[i];
+		DUK_TVAL_SET_UNUSED(tv);
 	}
 
 	/*
-	 *  Rebuild the hash part always from scratch (guaranteed to finish).
+	 *  Rebuild the hash part always from scratch (guaranteed to finish
+	 *  as long as caller gave consistent parameters).
 	 *
 	 *  Any resize of hash part requires rehashing.  In addition, by rehashing
 	 *  get rid of any elements marked deleted (DUK__HASH_DELETED) which is critical
@@ -850,7 +860,11 @@ DUK_INTERNAL void duk_hobject_realloc_props(duk_hthread *thr,
 	 */
 
 #if defined(DUK_USE_HOBJECT_HASH_PART)
-	if (DUK_UNLIKELY(new_h_size > 0)) {
+	if (new_h_size == 0) {
+		DUK_DDD(DUK_DDDPRINT("no hash part, no rehash"));
+	} else {
+		duk_uint32_t mask;
+
 		DUK_ASSERT(new_h != NULL);
 
 		/* fill new_h with u32 0xff = UNUSED */
@@ -859,13 +873,15 @@ DUK_INTERNAL void duk_hobject_realloc_props(duk_hthread *thr,
 		DUK_MEMSET(new_h, 0xff, sizeof(duk_uint32_t) * new_h_size);
 
 		DUK_ASSERT(new_e_next <= new_h_size);  /* equality not actually possible */
+
+		mask = new_h_size - 1;
 		for (i = 0; i < new_e_next; i++) {
 			duk_hstring *key = new_e_k[i];
 			duk_uint32_t j, step;
 
 			DUK_ASSERT(key != NULL);
-			j = DUK__HASH_INITIAL(DUK_HSTRING_GET_HASH(key), new_h_size);
-			step = DUK__HASH_PROBE_STEP(DUK_HSTRING_GET_HASH(key));
+			j = DUK_HSTRING_GET_HASH(key) & mask;
+			step = 1;  /* Cache friendly but clustering prone. */
 
 			for (;;) {
 				DUK_ASSERT(new_h[j] != DUK__HASH_DELETED);  /* should never happen */
@@ -875,14 +891,11 @@ DUK_INTERNAL void duk_hobject_realloc_props(duk_hthread *thr,
 					break;
 				}
 				DUK_DDD(DUK_DDDPRINT("rebuild miss %ld, step %ld", (long) j, (long) step));
-				j = (j + step) % new_h_size;
+				j = (j + step) & mask;
 
-				/* guaranteed to finish */
-				DUK_ASSERT(j != (duk_uint32_t) DUK__HASH_INITIAL(DUK_HSTRING_GET_HASH(key), new_h_size));
+				/* Guaranteed to finish (hash is larger than #props). */
 			}
 		}
-	} else {
-		DUK_DDD(DUK_DDDPRINT("no hash part, no rehash"));
 	}
 #endif  /* DUK_USE_HOBJECT_HASH_PART */
 
@@ -921,30 +934,20 @@ DUK_INTERNAL void duk_hobject_realloc_props(duk_hthread *thr,
 	DUK_HOBJECT_SET_ASIZE(obj, new_a_size);
 	DUK_HOBJECT_SET_HSIZE(obj, new_h_size);
 
-	if (new_p) {
-		/*
-		 *  Detach actual buffer from dynamic buffer in valstack, and
-		 *  pop it from the stack.
-		 *
-		 *  XXX: the buffer object is certainly not reachable at this point,
-		 *  so it would be nice to free it forcibly even with only
-		 *  mark-and-sweep enabled.  Not a big issue though.
-		 */
-		(void) duk_steal_buffer(ctx, -1, NULL);
-		duk_pop(ctx);
-	} else {
-		DUK_ASSERT(new_alloc_size == 0);
-		/* no need to pop, nothing was pushed */
-	}
-
-	/* clear array part flag only after switching */
+	/* Clear array part flag only after switching. */
 	if (abandon_array) {
 		DUK_HOBJECT_CLEAR_ARRAY_PART(obj);
 	}
 
 	DUK_DDD(DUK_DDDPRINT("resize result: %!O", (duk_heaphdr *) obj));
 
-	thr->heap->mark_and_sweep_base_flags = prev_mark_and_sweep_base_flags;
+	DUK_ASSERT(thr->heap->pf_prevent_count > 0);
+	thr->heap->pf_prevent_count--;
+	thr->heap->ms_base_flags = prev_ms_base_flags;
+#if defined(DUK_USE_ASSERTIONS)
+	DUK_ASSERT(thr->heap->error_not_allowed == 1);
+	thr->heap->error_not_allowed = prev_error_not_allowed;
+#endif
 
 	/*
 	 *  Post resize assertions.
@@ -956,21 +959,25 @@ DUK_INTERNAL void duk_hobject_realloc_props(duk_hthread *thr,
 	return;
 
 	/*
-	 *  Abandon array failed, need to decref keys already inserted
-	 *  into the beginning of new_e_k before unwinding valstack.
+	 *  Abandon array failed.  We don't need to DECREF anything
+	 *  because the references in the new allocation are not
+	 *  INCREF'd until abandon is complete.  The string interned
+	 *  keys are on the value stack and are handled normally by
+	 *  unwind.
 	 */
 
  abandon_error:
-	DUK_D(DUK_DPRINT("hobject resize failed during abandon array, decref keys"));
-	i = new_e_next;
-	while (i > 0) {
-		i--;
-		DUK_ASSERT(new_e_k != NULL);
-		DUK_ASSERT(new_e_k[i] != NULL);
-		DUK_HSTRING_DECREF(thr, new_e_k[i]);  /* side effects */
-	}
+ alloc_failed:
+	DUK_D(DUK_DPRINT("object property table resize failed"));
 
-	thr->heap->mark_and_sweep_base_flags = prev_mark_and_sweep_base_flags;
+	DUK_FREE(thr->heap, new_p);  /* OK for NULL. */
+
+	thr->heap->pf_prevent_count--;
+	thr->heap->ms_base_flags = prev_ms_base_flags;
+#if defined(DUK_USE_ASSERTIONS)
+	DUK_ASSERT(thr->heap->error_not_allowed == 1);
+	thr->heap->error_not_allowed = prev_error_not_allowed;
+#endif
 
 	DUK_ERROR_ALLOC_FAILED(thr);
 }
@@ -1122,7 +1129,7 @@ DUK_INTERNAL void duk_hobject_compact_props(duk_hthread *thr, duk_hobject *obj) 
 	}
 
 #if defined(DUK_USE_HOBJECT_HASH_PART)
-	if (e_size >= DUK_HOBJECT_E_USE_HASH_LIMIT) {
+	if (e_size >= DUK_USE_HOBJECT_HASH_PROP_LIMIT) {
 		h_size = duk__get_default_h_size(e_size);
 	} else {
 		h_size = 0;
@@ -1183,13 +1190,15 @@ DUK_INTERNAL void duk_hobject_find_existing_entry(duk_heap *heap, duk_hobject *o
 		duk_uint32_t n;
 		duk_uint32_t i, step;
 		duk_uint32_t *h_base;
+		duk_uint32_t mask;
 
 		DUK_DDD(DUK_DDDPRINT("duk_hobject_find_existing_entry() using hash part for lookup"));
 
 		h_base = DUK_HOBJECT_H_GET_BASE(heap, obj);
 		n = DUK_HOBJECT_GET_HSIZE(obj);
-		i = DUK__HASH_INITIAL(DUK_HSTRING_GET_HASH(key), n);
-		step = DUK__HASH_PROBE_STEP(DUK_HSTRING_GET_HASH(key));
+		mask = n - 1;
+		i = DUK_HSTRING_GET_HASH(key) & mask;
+		step = 1;  /* Cache friendly but clustering prone. */
 
 		for (;;) {
 			duk_uint32_t t;
@@ -1217,10 +1226,9 @@ DUK_INTERNAL void duk_hobject_find_existing_entry(duk_heap *heap, duk_hobject *o
 				DUK_DDD(DUK_DDDPRINT("lookup miss i=%ld, t=%ld",
 				                     (long) i, (long) t));
 			}
-			i = (i + step) % n;
+			i = (i + step) & mask;
 
-			/* guaranteed to finish, as hash is never full */
-			DUK_ASSERT(i != (duk_uint32_t) DUK__HASH_INITIAL(DUK_HSTRING_GET_HASH(key), n));
+			/* Guaranteed to finish (hash is larger than #props). */
 		}
 	}
 #endif  /* DUK_USE_HOBJECT_HASH_PART */
@@ -1325,13 +1333,14 @@ DUK_LOCAL duk_bool_t duk__alloc_entry_checked(duk_hthread *thr, duk_hobject *obj
 
 #if defined(DUK_USE_HOBJECT_HASH_PART)
 	if (DUK_UNLIKELY(DUK_HOBJECT_GET_HSIZE(obj) > 0)) {
-		duk_uint32_t n;
+		duk_uint32_t n, mask;
 		duk_uint32_t i, step;
 		duk_uint32_t *h_base = DUK_HOBJECT_H_GET_BASE(thr->heap, obj);
 
 		n = DUK_HOBJECT_GET_HSIZE(obj);
-		i = DUK__HASH_INITIAL(DUK_HSTRING_GET_HASH(key), n);
-		step = DUK__HASH_PROBE_STEP(DUK_HSTRING_GET_HASH(key));
+		mask = n - 1;
+		i = DUK_HSTRING_GET_HASH(key) & mask;
+		step = 1;  /* Cache friendly but clustering prone. */
 
 		for (;;) {
 			duk_uint32_t t = h_base[i];
@@ -1346,10 +1355,9 @@ DUK_LOCAL duk_bool_t duk__alloc_entry_checked(duk_hthread *thr, duk_hobject *obj
 				break;
 			}
 			DUK_DDD(DUK_DDDPRINT("duk__alloc_entry_checked() miss %ld", (long) i));
-			i = (i + step) % n;
+			i = (i + step) & mask;
 
-			/* guaranteed to find an empty slot */
-			DUK_ASSERT(i != (duk_uint32_t) DUK__HASH_INITIAL(DUK_HSTRING_GET_HASH(key), DUK_HOBJECT_GET_HSIZE(obj)));
+			/* Guaranteed to finish (hash is larger than #props). */
 		}
 	}
 #endif  /* DUK_USE_HOBJECT_HASH_PART */
@@ -1749,6 +1757,8 @@ DUK_LOCAL duk_bool_t duk__get_own_propdesc_raw(duk_hthread *thr, duk_hobject *ob
 		DUK_DDD(DUK_DDDPRINT("string object exotic property get for key: %!O, arr_idx: %ld",
 		                     (duk_heaphdr *) key, (long) arr_idx));
 
+		/* XXX: charlen; avoid multiple lookups? */
+
 		if (arr_idx != DUK__NO_ARRAY_INDEX) {
 			duk_hstring *h_val;
 
@@ -1989,7 +1999,7 @@ DUK_LOCAL duk_bool_t duk__get_propdesc(duk_hthread *thr, duk_hobject *obj, duk_h
 		}
 
 		/* not found in 'curr', next in prototype chain; impose max depth */
-		if (sanity-- == 0) {
+		if (DUK_UNLIKELY(sanity-- == 0)) {
 			if (flags & DUK_GETDESC_FLAG_IGNORE_PROTOLOOP) {
 				/* treat like property not found */
 				break;
@@ -1998,7 +2008,7 @@ DUK_LOCAL duk_bool_t duk__get_propdesc(duk_hthread *thr, duk_hobject *obj, duk_h
 			}
 		}
 		curr = DUK_HOBJECT_GET_PROTOTYPE(thr->heap, curr);
-	} while (curr);
+	} while (curr != NULL);
 
 	/* out_desc is left untouched (possibly garbage), caller must use return
 	 * value to determine whether out_desc can be looked up
@@ -2348,7 +2358,7 @@ DUK_INTERNAL duk_bool_t duk_hobject_getprop(duk_hthread *thr, duk_tval *tv_obj, 
 		duk_hstring *h = DUK_TVAL_GET_STRING(tv_obj);
 		duk_int_t pop_count;
 
-		if (DUK_HSTRING_HAS_SYMBOL(h)) {
+		if (DUK_UNLIKELY(DUK_HSTRING_HAS_SYMBOL(h))) {
 			/* Symbols (ES2015 or hidden) don't have virtual properties. */
 			DUK_DDD(DUK_DDDPRINT("base object is a symbol, start lookup from symbol prototype"));
 			curr = thr->builtins[DUK_BIDX_SYMBOL_PROTOTYPE];
@@ -2689,11 +2699,11 @@ DUK_INTERNAL duk_bool_t duk_hobject_getprop(duk_hthread *thr, duk_tval *tv_obj, 
 		/* XXX: option to pretend property doesn't exist if sanity limit is
 		 * hit might be useful.
 		 */
-		if (sanity-- == 0) {
+		if (DUK_UNLIKELY(sanity-- == 0)) {
 			DUK_ERROR_RANGE(thr, DUK_STR_PROTOTYPE_CHAIN_LIMIT);
 		}
 		curr = DUK_HOBJECT_GET_PROTOTYPE(thr->heap, curr);
-	} while (curr);
+	} while (curr != NULL);
 
 	/*
 	 *  Not found
@@ -3373,7 +3383,7 @@ DUK_INTERNAL duk_bool_t duk_hobject_putprop(duk_hthread *thr, duk_tval *tv_obj, 
 		arr_idx = duk__push_tval_to_property_key(ctx, tv_key, &key);
 		DUK_ASSERT(key != NULL);
 
-		if (DUK_HSTRING_HAS_SYMBOL(h)) {
+		if (DUK_UNLIKELY(DUK_HSTRING_HAS_SYMBOL(h))) {
 			/* Symbols (ES2015 or hidden) don't have virtual properties. */
 			curr = thr->builtins[DUK_BIDX_SYMBOL_PROTOTYPE];
 			goto lookup;
@@ -3789,11 +3799,11 @@ DUK_INTERNAL duk_bool_t duk_hobject_putprop(duk_hthread *thr, duk_tval *tv_obj, 
 		/* XXX: option to pretend property doesn't exist if sanity limit is
 		 * hit might be useful.
 		 */
-		if (sanity-- == 0) {
+		if (DUK_UNLIKELY(sanity-- == 0)) {
 			DUK_ERROR_RANGE(thr, DUK_STR_PROTOTYPE_CHAIN_LIMIT);
 		}
 		curr = DUK_HOBJECT_GET_PROTOTYPE(thr->heap, curr);
-	} while (curr);
+	} while (curr != NULL);
 
 	/*
 	 *  Property not found in prototype chain.
@@ -4420,10 +4430,10 @@ DUK_INTERNAL duk_bool_t duk_hobject_delprop(duk_hthread *thr, duk_tval *tv_obj, 
 			/* Note: proxy handling must happen before key is string coerced. */
 
 			if (duk__proxy_check_prop(thr, obj, DUK_STRIDX_DELETE_PROPERTY, tv_key, &h_target)) {
-				/* -> [ ... trap handler ] */
+				/* -> [ ... obj key trap handler ] */
 				DUK_DDD(DUK_DDDPRINT("-> proxy object 'deleteProperty' for key %!T", (duk_tval *) tv_key));
 				duk_push_hobject(ctx, h_target);  /* target */
-				duk_push_tval(ctx, tv_key);       /* P */
+				duk_dup_m4(ctx);  /* P */
 				duk_call_method(ctx, 2 /*nargs*/);
 				tmp_bool = duk_to_boolean(ctx, -1);
 				duk_pop(ctx);
@@ -4434,6 +4444,7 @@ DUK_INTERNAL duk_bool_t duk_hobject_delprop(duk_hthread *thr, duk_tval *tv_obj, 
 				/* Target object must be checked for a conflicting
 				 * non-configurable property.
 				 */
+				tv_key = DUK_GET_TVAL_NEGIDX(ctx, -1);
 				arr_idx = duk__push_tval_to_property_key(ctx, tv_key, &key);
 				DUK_ASSERT(key != NULL);
 
@@ -4778,6 +4789,41 @@ DUK_INTERNAL duk_size_t duk_hobject_get_length(duk_hthread *thr, duk_hobject *ob
 	if (val >= 0.0 && val <= (duk_double_t) DUK_SIZE_MAX) {
 		return (duk_size_t) val;
 	}
+	return 0;
+}
+
+/*
+ *  Fast finalizer check for an object.  Walks the prototype chain, checking
+ *  for finalizer presence using DUK_HOBJECT_FLAG_HAVE_FINALIZER which is kept
+ *  in sync with the actual property when setting/removing the finalizer.
+ */
+
+#if defined(DUK_USE_HEAPPTR16)
+DUK_INTERNAL duk_bool_t duk_hobject_has_finalizer_fast_raw(duk_heap *heap, duk_hobject *obj) {
+#else
+DUK_INTERNAL duk_bool_t duk_hobject_has_finalizer_fast_raw(duk_hobject *obj) {
+#endif
+	duk_uint_t sanity;
+
+	DUK_ASSERT(obj != NULL);
+
+	sanity = DUK_HOBJECT_PROTOTYPE_CHAIN_SANITY;
+	do {
+		if (DUK_UNLIKELY(DUK_HOBJECT_HAS_HAVE_FINALIZER(obj))) {
+			return 1;
+		}
+		if (DUK_UNLIKELY(sanity-- == 0)) {
+			DUK_D(DUK_DPRINT("prototype loop when checking for finalizer existence; returning false"));
+			return 0;
+		}
+#if defined(DUK_USE_HEAPPTR16)
+		DUK_ASSERT(heap != NULL);
+		obj = DUK_HOBJECT_GET_PROTOTYPE(heap, obj);
+#else
+		obj = DUK_HOBJECT_GET_PROTOTYPE(NULL, obj);  /* 'heap' arg ignored */
+#endif
+	} while (obj != NULL);
+
 	return 0;
 }
 

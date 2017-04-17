@@ -41,6 +41,7 @@ DUK_USE_USER_DECLARE()
  *  dependencies.
  */
 
+#include "duk_dblunion.h"
 #include "duk_replacements.h"
 #include "duk_jmpbuf.h"
 #include "duk_exception.h"
@@ -55,6 +56,7 @@ DUK_USE_USER_DECLARE()
 #include "duk_js_compiler.h"
 #include "duk_regexp.h"
 #include "duk_heaphdr.h"
+#include "duk_refcount.h"
 #include "duk_api_internal.h"
 #include "duk_hstring.h"
 #include "duk_hobject.h"
@@ -63,6 +65,7 @@ DUK_USE_USER_DECLARE()
 #include "duk_hbufobj.h"
 #include "duk_hthread.h"
 #include "duk_harray.h"
+#include "duk_henv.h"
 #include "duk_hbuffer.h"
 #include "duk_heap.h"
 #include "duk_debugger.h"

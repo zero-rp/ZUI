@@ -8,22 +8,7 @@ DUK_LOCAL_DECL void duk__mark_heaphdr(duk_heap *heap, duk_heaphdr *h);
 DUK_LOCAL_DECL void duk__mark_tval(duk_heap *heap, duk_tval *tv);
 
 /*
- *  Misc
- */
-
-/* Select a thread for mark-and-sweep use.
- *
- * XXX: This needs to change later.
- */
-DUK_LOCAL duk_hthread *duk__get_temp_hthread(duk_heap *heap) {
-	if (heap->curr_thread) {
-		return heap->curr_thread;
-	}
-	return heap->heap_thread;  /* may be NULL, too */
-}
-
-/*
- *  Marking functions for heap types: mark children recursively
+ *  Marking functions for heap types: mark children recursively.
  */
 
 DUK_LOCAL void duk__mark_hstring(duk_heap *heap, duk_hstring *h) {
@@ -47,7 +32,7 @@ DUK_LOCAL void duk__mark_hobject(duk_heap *heap, duk_hobject *h) {
 
 	for (i = 0; i < (duk_uint_fast32_t) DUK_HOBJECT_GET_ENEXT(h); i++) {
 		duk_hstring *key = DUK_HOBJECT_E_GET_KEY(heap, h, i);
-		if (!key) {
+		if (key == NULL) {
 			continue;
 		}
 		duk__mark_heaphdr(heap, (duk_heaphdr *) key);
@@ -63,15 +48,19 @@ DUK_LOCAL void duk__mark_hobject(duk_heap *heap, duk_hobject *h) {
 		duk__mark_tval(heap, DUK_HOBJECT_A_GET_VALUE_PTR(heap, h, i));
 	}
 
-	/* hash part is a 'weak reference' and does not contribute */
+	/* Hash part is a 'weak reference' and does not contribute. */
 
 	duk__mark_heaphdr(heap, (duk_heaphdr *) DUK_HOBJECT_GET_PROTOTYPE(heap, h));
 
-	/* XXX: rearrange bits to allow a switch case to be used here? */
-	/* XXX: add a fast path for objects (and arrays)? */
-	/* DUK_HOBJECT_IS_ARRAY(h): needs no special handling now as there are
-	 * no extra fields in need of marking.
+	/* Fast path for objects which don't have a subclass struct, or have a
+	 * subclass struct but nothing that needs marking in the subclass struct.
 	 */
+	if (DUK_HOBJECT_HAS_FASTREFS(h)) {
+		DUK_ASSERT(DUK_HOBJECT_ALLOWS_FASTREFS(h));
+		return;
+	}
+	DUK_ASSERT(DUK_HOBJECT_PROHIBITS_FASTREFS(h));
+
 	if (DUK_HOBJECT_IS_COMPFUNC(h)) {
 		duk_hcompfunc *f = (duk_hcompfunc *) h;
 		duk_tval *tv, *tv_end;
@@ -103,16 +92,21 @@ DUK_LOCAL void duk__mark_hobject(duk_heap *heap, duk_hobject *h) {
 			/* May happen in some out-of-memory corner cases. */
 			DUK_D(DUK_DPRINT("duk_hcompfunc 'data' is NULL, skipping marking"));
 		}
-	} else if (DUK_HOBJECT_IS_NATFUNC(h)) {
-		duk_hnatfunc *f = (duk_hnatfunc *) h;
-		DUK_UNREF(f);
-		/* nothing to mark */
 #if defined(DUK_USE_BUFFEROBJECT_SUPPORT)
 	} else if (DUK_HOBJECT_IS_BUFOBJ(h)) {
 		duk_hbufobj *b = (duk_hbufobj *) h;
 		duk__mark_heaphdr(heap, (duk_heaphdr *) b->buf);
 		duk__mark_heaphdr(heap, (duk_heaphdr *) b->buf_prop);
 #endif  /* DUK_USE_BUFFEROBJECT_SUPPORT */
+	} else if (DUK_HOBJECT_IS_DECENV(h)) {
+		duk_hdecenv *e = (duk_hdecenv *) h;
+		DUK_ASSERT_HDECENV_VALID(e);
+		duk__mark_heaphdr(heap, (duk_heaphdr *) e->thread);
+		duk__mark_heaphdr(heap, (duk_heaphdr *) e->varmap);
+	} else if (DUK_HOBJECT_IS_OBJENV(h)) {
+		duk_hobjenv *e = (duk_hobjenv *) h;
+		DUK_ASSERT_HOBJENV_VALID(e);
+		duk__mark_heaphdr(heap, (duk_heaphdr *) e->target);
 	} else if (DUK_HOBJECT_IS_THREAD(h)) {
 		duk_hthread *t = (duk_hthread *) h;
 		duk_tval *tv;
@@ -141,19 +135,25 @@ DUK_LOCAL void duk__mark_hobject(duk_heap *heap, duk_hobject *h) {
 
 		duk__mark_heaphdr(heap, (duk_heaphdr *) t->resumer);
 
-		/* XXX: duk_small_uint_t would be enough for this loop */
 		for (i = 0; i < DUK_NUM_BUILTINS; i++) {
 			duk__mark_heaphdr(heap, (duk_heaphdr *) t->builtins[i]);
 		}
+	} else {
+		/* We may come here if the object should have a FASTREFS flag
+		 * but it's missing for some reason.  Assert for never getting
+		 * here; however, other than performance, this is harmless.
+		 */
+		DUK_D(DUK_DPRINT("missing FASTREFS flag for: %!iO", h));
+		DUK_ASSERT(0);
 	}
 }
 
-/* recursion tracking happens here only */
+/* Mark any duk_heaphdr type.  Recursion tracking happens only here. */
 DUK_LOCAL void duk__mark_heaphdr(duk_heap *heap, duk_heaphdr *h) {
 	DUK_DDD(DUK_DDDPRINT("duk__mark_heaphdr %p, type %ld",
 	                     (void *) h,
 	                     (h != NULL ? (long) DUK_HEAPHDR_GET_TYPE(h) : (long) -1)));
-	if (!h) {
+	if (h == NULL) {
 		return;
 	}
 #if defined(DUK_USE_ROM_OBJECTS)
@@ -162,21 +162,24 @@ DUK_LOCAL void duk__mark_heaphdr(duk_heap *heap, duk_heaphdr *h) {
 		return;
 	}
 #endif
+#if defined(DUK_USE_ASSERTIONS) && defined(DUK_USE_REFERENCE_COUNTING)
+	h->h_assert_refcount++;  /* Comparison refcount: bump even if already reachable. */
+#endif
 	if (DUK_HEAPHDR_HAS_REACHABLE(h)) {
 		DUK_DDD(DUK_DDDPRINT("already marked reachable, skip"));
 		return;
 	}
 	DUK_HEAPHDR_SET_REACHABLE(h);
 
-	if (heap->mark_and_sweep_recursion_depth >= DUK_USE_MARK_AND_SWEEP_RECLIMIT) {
-		/* log this with a normal debug level because this should be relatively rare */
+	if (heap->ms_recursion_depth >= DUK_USE_MARK_AND_SWEEP_RECLIMIT) {
 		DUK_D(DUK_DPRINT("mark-and-sweep recursion limit reached, marking as temproot: %p", (void *) h));
 		DUK_HEAP_SET_MARKANDSWEEP_RECLIMIT_REACHED(heap);
 		DUK_HEAPHDR_SET_TEMPROOT(h);
 		return;
 	}
 
-	heap->mark_and_sweep_recursion_depth++;
+	heap->ms_recursion_depth++;
+	DUK_ASSERT(heap->ms_recursion_depth != 0);  /* Wrap. */
 
 	switch (DUK_HEAPHDR_GET_TYPE(h)) {
 	case DUK_HTYPE_STRING:
@@ -193,12 +196,13 @@ DUK_LOCAL void duk__mark_heaphdr(duk_heap *heap, duk_heaphdr *h) {
 		DUK_UNREACHABLE();
 	}
 
-	heap->mark_and_sweep_recursion_depth--;
+	DUK_ASSERT(heap->ms_recursion_depth > 0);
+	heap->ms_recursion_depth--;
 }
 
 DUK_LOCAL void duk__mark_tval(duk_heap *heap, duk_tval *tv) {
 	DUK_DDD(DUK_DDDPRINT("duk__mark_tval %p", (void *) tv));
-	if (!tv) {
+	if (tv == NULL) {
 		return;
 	}
 	if (DUK_TVAL_IS_HEAP_ALLOCATED(tv)) {
@@ -234,37 +238,12 @@ DUK_LOCAL void duk__mark_roots_heap(duk_heap *heap) {
 }
 
 /*
- *  Mark refzero_list objects.
- *
- *  Objects on the refzero_list have no inbound references.  They might have
- *  outbound references to objects that we might free, which would invalidate
- *  any references held by the refzero objects.  A refzero object might also
- *  be rescued by refcount finalization.  Refzero objects are treated as
- *  reachability roots to ensure they (or anything they point to) are not
- *  freed in mark-and-sweep.
- */
-
-#if defined(DUK_USE_REFERENCE_COUNTING)
-DUK_LOCAL void duk__mark_refzero_list(duk_heap *heap) {
-	duk_heaphdr *hdr;
-
-	DUK_DD(DUK_DDPRINT("duk__mark_refzero_list: %p", (void *) heap));
-
-	hdr = heap->refzero_list;
-	while (hdr) {
-		duk__mark_heaphdr(heap, hdr);
-		hdr = DUK_HEAPHDR_GET_NEXT(heap, hdr);
-	}
-}
-#endif
-
-/*
  *  Mark unreachable, finalizable objects.
  *
- *  Such objects will be moved aside and their finalizers run later.  They have
- *  to be treated as reachability roots for their properties etc to remain
- *  allocated.  This marking is only done for unreachable values which would
- *  be swept later (refzero_list is thus excluded).
+ *  Such objects will be moved aside and their finalizers run later.  They
+ *  have to be treated as reachability roots for their properties etc to
+ *  remain allocated.  This marking is only done for unreachable values which
+ *  would be swept later.
  *
  *  Objects are first marked FINALIZABLE and only then marked as reachability
  *  roots; otherwise circular references might be handled inconsistently.
@@ -272,32 +251,30 @@ DUK_LOCAL void duk__mark_refzero_list(duk_heap *heap) {
 
 #if defined(DUK_USE_FINALIZER_SUPPORT)
 DUK_LOCAL void duk__mark_finalizable(duk_heap *heap) {
-	duk_hthread *thr;
 	duk_heaphdr *hdr;
 	duk_size_t count_finalizable = 0;
 
 	DUK_DD(DUK_DDPRINT("duk__mark_finalizable: %p", (void *) heap));
 
-	thr = duk__get_temp_hthread(heap);
-	DUK_ASSERT(thr != NULL);
+	DUK_ASSERT(heap->heap_thread != NULL);
 
 	hdr = heap->heap_allocated;
-	while (hdr) {
-		/* A finalizer is looked up from the object and up its prototype chain
-		 * (which allows inherited finalizers).  A prototype loop must not cause
-		 * an error to be thrown here; duk_hobject_hasprop_raw() will ignore a
-		 * prototype loop silently and indicate that the property doesn't exist.
+	while (hdr != NULL) {
+		/* A finalizer is looked up from the object and up its
+		 * prototype chain (which allows inherited finalizers).
+		 * The finalizer is checked for using a duk_hobject flag
+		 * which is kept in sync with the presence and callability
+		 * of a _Finalizer hidden symbol.
 		 */
 
 		if (!DUK_HEAPHDR_HAS_REACHABLE(hdr) &&
-		    DUK_HEAPHDR_GET_TYPE(hdr) == DUK_HTYPE_OBJECT &&
+		    DUK_HEAPHDR_IS_OBJECT(hdr) &&
 		    !DUK_HEAPHDR_HAS_FINALIZED(hdr) &&
-		    duk_hobject_hasprop_raw(thr, (duk_hobject *) hdr, DUK_HTHREAD_STRING_INT_FINALIZER(thr))) {
-
+		    DUK_HOBJECT_HAS_FINALIZER_FAST(heap, (duk_hobject *) hdr)) {
 			/* heaphdr:
 			 *  - is not reachable
 			 *  - is an object
-			 *  - is not a finalized object
+			 *  - is not a finalized object waiting for rescue/keep decision
 			 *  - has a finalizer
 			 */
 
@@ -307,7 +284,7 @@ DUK_LOCAL void duk__mark_finalizable(duk_heap *heap) {
 			                   (void *) hdr));
 			DUK_ASSERT(!DUK_HEAPHDR_HAS_READONLY(hdr));
 			DUK_HEAPHDR_SET_FINALIZABLE(hdr);
-			count_finalizable ++;
+			count_finalizable++;
 		}
 
 		hdr = DUK_HEAPHDR_GET_NEXT(heap, hdr);
@@ -321,7 +298,7 @@ DUK_LOCAL void duk__mark_finalizable(duk_heap *heap) {
 	                   (long) count_finalizable));
 
 	hdr = heap->heap_allocated;
-	while (hdr) {
+	while (hdr != NULL) {
 		if (DUK_HEAPHDR_HAS_FINALIZABLE(hdr)) {
 			duk__mark_heaphdr(heap, hdr);
 		}
@@ -335,7 +312,6 @@ DUK_LOCAL void duk__mark_finalizable(duk_heap *heap) {
 
 /*
  *  Mark objects on finalize_list.
- *
  */
 
 #if defined(DUK_USE_FINALIZER_SUPPORT)
@@ -348,7 +324,7 @@ DUK_LOCAL void duk__mark_finalize_list(duk_heap *heap) {
 	DUK_DD(DUK_DDPRINT("duk__mark_finalize_list: %p", (void *) heap));
 
 	hdr = heap->finalize_list;
-	while (hdr) {
+	while (hdr != NULL) {
 		duk__mark_heaphdr(heap, hdr);
 		hdr = DUK_HEAPHDR_GET_NEXT(heap, hdr);
 #if defined(DUK_USE_DEBUG)
@@ -368,15 +344,18 @@ DUK_LOCAL void duk__mark_finalize_list(duk_heap *heap) {
 /*
  *  Fallback marking handler if recursion limit is reached.
  *
- *  Iterates 'temproots' until recursion limit is no longer hit.  Note
- *  that temproots may reside either in heap allocated list or the
- *  refzero work list.  This is a slow scan, but guarantees that we
- *  finish with a bounded C stack.
+ *  Iterates 'temproots' until recursion limit is no longer hit.  Temproots
+ *  can be in heap_allocated or finalize_list; refzero_list is now always
+ *  empty for mark-and-sweep.  A temproot may occur in finalize_list now if
+ *  there are objects on the finalize_list and user code creates a reference
+ *  from an object in heap_allocated to the object in finalize_list (which is
+ *  now allowed), and it happened to coincide with the recursion depth limit.
  *
- *  Note that nodes may have been marked as temproots before this
- *  scan begun, OR they may have been marked during the scan (as
- *  we process nodes recursively also during the scan).  This is
- *  intended behavior.
+ *  This is a slow scan, but guarantees that we finish with a bounded C stack.
+ *
+ *  Note that nodes may have been marked as temproots before this scan begun,
+ *  OR they may have been marked during the scan (as we process nodes
+ *  recursively also during the scan).  This is intended behavior.
  */
 
 #if defined(DUK_USE_DEBUG)
@@ -391,7 +370,10 @@ DUK_LOCAL void duk__handle_temproot(duk_heap *heap, duk_heaphdr *hdr) {
 
 	DUK_DDD(DUK_DDDPRINT("found a temp root: %p", (void *) hdr));
 	DUK_HEAPHDR_CLEAR_TEMPROOT(hdr);
-	DUK_HEAPHDR_CLEAR_REACHABLE(hdr);  /* done so that duk__mark_heaphdr() works correctly */
+	DUK_HEAPHDR_CLEAR_REACHABLE(hdr);  /* Done so that duk__mark_heaphdr() works correctly. */
+#if defined(DUK_USE_ASSERTIONS) && defined(DUK_USE_REFERENCE_COUNTING)
+	hdr->h_assert_refcount--;  /* Same node visited twice. */
+#endif
 	duk__mark_heaphdr(heap, hdr);
 
 #if defined(DUK_USE_DEBUG)
@@ -425,9 +407,8 @@ DUK_LOCAL void duk__mark_temproots_by_heap_scan(duk_heap *heap) {
 			hdr = DUK_HEAPHDR_GET_NEXT(heap, hdr);
 		}
 
-		/* must also check refzero_list */
-#if defined(DUK_USE_REFERENCE_COUNTING)
-		hdr = heap->refzero_list;
+#if defined(DUK_USE_FINALIZER_SUPPORT)
+		hdr = heap->finalize_list;
 		while (hdr) {
 #if defined(DUK_USE_DEBUG)
 			duk__handle_temproot(heap, hdr, &count);
@@ -436,7 +417,7 @@ DUK_LOCAL void duk__mark_temproots_by_heap_scan(duk_heap *heap) {
 #endif
 			hdr = DUK_HEAPHDR_GET_NEXT(heap, hdr);
 		}
-#endif  /* DUK_USE_REFERENCE_COUNTING */
+#endif
 
 #if defined(DUK_USE_DEBUG)
 		DUK_DD(DUK_DDPRINT("temproot mark heap scan processed %ld temp roots", (long) count));
@@ -455,14 +436,11 @@ DUK_LOCAL void duk__mark_temproots_by_heap_scan(duk_heap *heap) {
 
 #if defined(DUK_USE_REFERENCE_COUNTING)
 DUK_LOCAL void duk__finalize_refcounts(duk_heap *heap) {
-	duk_hthread *thr;
 	duk_heaphdr *hdr;
 
-	thr = duk__get_temp_hthread(heap);
-	DUK_ASSERT(thr != NULL);
+	DUK_ASSERT(heap->heap_thread != NULL);
 
-	DUK_DD(DUK_DDPRINT("duk__finalize_refcounts: heap=%p, hthread=%p",
-	                   (void *) heap, (void *) thr));
+	DUK_DD(DUK_DDPRINT("duk__finalize_refcounts: heap=%p", (void *) heap));
 
 	hdr = heap->heap_allocated;
 	while (hdr) {
@@ -478,7 +456,12 @@ DUK_LOCAL void duk__finalize_refcounts(duk_heap *heap) {
 			 */
 
 			DUK_DDD(DUK_DDDPRINT("unreachable object, refcount finalize before sweeping: %p", (void *) hdr));
-			duk_heaphdr_refcount_finalize(thr, hdr);
+
+			/* Finalize using heap->heap_thread; DECREF has a
+			 * suppress check for mark-and-sweep which is based
+			 * on heap->ms_running.
+			 */
+			duk_heaphdr_refcount_finalize_norz(heap, hdr);
 		}
 
 		hdr = DUK_HEAPHDR_GET_NEXT(heap, hdr);
@@ -487,28 +470,7 @@ DUK_LOCAL void duk__finalize_refcounts(duk_heap *heap) {
 #endif  /* DUK_USE_REFERENCE_COUNTING */
 
 /*
- *  Clear (reachable) flags of refzero work list.
- */
-
-#if defined(DUK_USE_REFERENCE_COUNTING)
-DUK_LOCAL void duk__clear_refzero_list_flags(duk_heap *heap) {
-	duk_heaphdr *hdr;
-
-	DUK_DD(DUK_DDPRINT("duk__clear_refzero_list_flags: %p", (void *) heap));
-
-	hdr = heap->refzero_list;
-	while (hdr) {
-		DUK_HEAPHDR_CLEAR_REACHABLE(hdr);
-		DUK_ASSERT(!DUK_HEAPHDR_HAS_FINALIZABLE(hdr));
-		/* DUK_HEAPHDR_HAS_FINALIZED may or may not be set. */
-		DUK_ASSERT(!DUK_HEAPHDR_HAS_TEMPROOT(hdr));
-		hdr = DUK_HEAPHDR_GET_NEXT(heap, hdr);
-	}
-}
-#endif  /* DUK_USE_REFERENCE_COUNTING */
-
-/*
- *  Clear (reachable) flags of finalize_list
+ *  Clear (reachable) flags of finalize_list.
  *
  *  We could mostly do in the sweep phase when we move objects from the
  *  heap into the finalize_list.  However, if a finalizer run is skipped
@@ -527,8 +489,11 @@ DUK_LOCAL void duk__clear_finalize_list_flags(duk_heap *heap) {
 	hdr = heap->finalize_list;
 	while (hdr) {
 		DUK_HEAPHDR_CLEAR_REACHABLE(hdr);
-		DUK_ASSERT(!DUK_HEAPHDR_HAS_FINALIZABLE(hdr));
-		DUK_ASSERT(!DUK_HEAPHDR_HAS_FINALIZED(hdr));
+#if defined(DUK_USE_ASSERTIONS)
+		DUK_ASSERT(DUK_HEAPHDR_HAS_FINALIZABLE(hdr) || \
+		           (heap->currently_finalizing == hdr));
+#endif
+		/* DUK_HEAPHDR_FLAG_FINALIZED may be set. */
 		DUK_ASSERT(!DUK_HEAPHDR_HAS_TEMPROOT(hdr));
 		hdr = DUK_HEAPHDR_GET_NEXT(heap, hdr);
 	}
@@ -536,126 +501,13 @@ DUK_LOCAL void duk__clear_finalize_list_flags(duk_heap *heap) {
 #endif  /* DUK_USE_FINALIZER_SUPPORT */
 
 /*
- *  Sweep stringtable
+ *  Sweep stringtable.
  */
 
-#if defined(DUK_USE_STRTAB_CHAIN)
-
-/* XXX: skip count_free w/o debug? */
-#if defined(DUK_USE_HEAPPTR16)
-DUK_LOCAL void duk__sweep_string_chain16(duk_heap *heap, duk_uint16_t *slot, duk_size_t *count_keep, duk_size_t *count_free) {
-	duk_uint16_t h16 = *slot;
+DUK_LOCAL void duk__sweep_stringtable(duk_heap *heap, duk_size_t *out_count_keep) {
 	duk_hstring *h;
-	duk_uint16_t null16 = heap->heapptr_null16;
-
-	if (h16 == null16) {
-		/* nop */
-		return;
-	}
-	h = (duk_hstring *) DUK_USE_HEAPPTR_DEC16(heap->heap_udata, h16);
-	DUK_ASSERT(h != NULL);
-
-	if (DUK_HEAPHDR_HAS_REACHABLE((duk_heaphdr *) h)) {
-		DUK_HEAPHDR_CLEAR_REACHABLE((duk_heaphdr *) h);
-		(*count_keep)++;
-	} else {
-#if defined(DUK_USE_REFERENCE_COUNTING)
-		DUK_ASSERT(DUK_HEAPHDR_GET_REFCOUNT((duk_heaphdr *) h) == 0);
-#endif
-		/* deal with weak references first */
-		duk_heap_strcache_string_remove(heap, (duk_hstring *) h);
-		*slot = null16;
-
-		/* free inner references (these exist e.g. when external
-		 * strings are enabled)
-		 */
-		duk_free_hstring(heap, h);
-		(*count_free)++;
-	}
-}
-#else  /* DUK_USE_HEAPPTR16 */
-DUK_LOCAL void duk__sweep_string_chain(duk_heap *heap, duk_hstring **slot, duk_size_t *count_keep, duk_size_t *count_free) {
-	duk_hstring *h = *slot;
-
-	if (h == NULL) {
-		/* nop */
-		return;
-	}
-
-	if (DUK_HEAPHDR_HAS_REACHABLE((duk_heaphdr *) h)) {
-		DUK_HEAPHDR_CLEAR_REACHABLE((duk_heaphdr *) h);
-		(*count_keep)++;
-	} else {
-#if defined(DUK_USE_REFERENCE_COUNTING)
-		DUK_ASSERT(DUK_HEAPHDR_GET_REFCOUNT((duk_heaphdr *) h) == 0);
-#endif
-		/* deal with weak references first */
-		duk_heap_strcache_string_remove(heap, (duk_hstring *) h);
-		*slot = NULL;
-
-		/* free inner references (these exist e.g. when external
-		 * strings are enabled)
-		 */
-		duk_free_hstring(heap, h);
-		(*count_free)++;
-	}
-}
-#endif  /* DUK_USE_HEAPPTR16 */
-
-DUK_LOCAL void duk__sweep_stringtable_chain(duk_heap *heap, duk_size_t *out_count_keep) {
-	duk_strtab_entry *e;
-	duk_uint_fast32_t i;
-	duk_size_t count_free = 0;
-	duk_size_t count_keep = 0;
-	duk_size_t j, n;
-#if defined(DUK_USE_HEAPPTR16)
-	duk_uint16_t *lst;
-#else
-	duk_hstring **lst;
-#endif
-
-	DUK_DD(DUK_DDPRINT("duk__sweep_stringtable: %p", (void *) heap));
-
-	/* Non-zero refcounts should not happen for unreachable strings,
-	 * because we refcount finalize all unreachable objects which
-	 * should have decreased unreachable string refcounts to zero
-	 * (even for cycles).
-	 */
-
-	for (i = 0; i < DUK_STRTAB_CHAIN_SIZE; i++) {
-		e = heap->strtable + i;
-		if (e->listlen == 0) {
-#if defined(DUK_USE_HEAPPTR16)
-			duk__sweep_string_chain16(heap, &e->u.str16, &count_keep, &count_free);
-#else
-			duk__sweep_string_chain(heap, &e->u.str, &count_keep, &count_free);
-#endif
-		} else {
-#if defined(DUK_USE_HEAPPTR16)
-			lst = (duk_uint16_t *) DUK_USE_HEAPPTR_DEC16(heap->heap_udata, e->u.strlist16);
-#else
-			lst = e->u.strlist;
-#endif
-			for (j = 0, n = e->listlen; j < n; j++) {
-#if defined(DUK_USE_HEAPPTR16)
-				duk__sweep_string_chain16(heap, lst + j, &count_keep, &count_free);
-#else
-				duk__sweep_string_chain(heap, lst + j, &count_keep, &count_free);
-#endif
-			}
-		}
-	}
-
-	DUK_D(DUK_DPRINT("mark-and-sweep sweep stringtable: %ld freed, %ld kept",
-	                 (long) count_free, (long) count_keep));
-	*out_count_keep = count_keep;
-}
-#endif  /* DUK_USE_STRTAB_CHAIN */
-
-#if defined(DUK_USE_STRTAB_PROBE)
-DUK_LOCAL void duk__sweep_stringtable_probe(duk_heap *heap, duk_size_t *out_count_keep) {
-	duk_hstring *h;
-	duk_uint_fast32_t i;
+	duk_hstring *prev;
+	duk_uint32_t i;
 #if defined(DUK_USE_DEBUG)
 	duk_size_t count_free = 0;
 #endif
@@ -663,64 +515,71 @@ DUK_LOCAL void duk__sweep_stringtable_probe(duk_heap *heap, duk_size_t *out_coun
 
 	DUK_DD(DUK_DDPRINT("duk__sweep_stringtable: %p", (void *) heap));
 
+#if defined(DUK_USE_STRTAB_PTRCOMP)
+	if (heap->strtable16 == NULL) {
+#else
+	if (heap->strtable == NULL) {
+#endif
+		goto done;
+	}
+
 	for (i = 0; i < heap->st_size; i++) {
-#if defined(DUK_USE_HEAPPTR16)
-		h = (duk_hstring *) DUK_USE_HEAPPTR_DEC16(heap->heap_udata, heap->strtable16[i]);
+#if defined(DUK_USE_STRTAB_PTRCOMP)
+		h = DUK_USE_HEAPPTR_DEC16(heap->heap_udata, heap->strtable16[i]);
 #else
 		h = heap->strtable[i];
 #endif
-		if (h == NULL || h == DUK_STRTAB_DELETED_MARKER(heap)) {
-			continue;
-		} else if (DUK_HEAPHDR_HAS_REACHABLE((duk_heaphdr *) h)) {
-			DUK_HEAPHDR_CLEAR_REACHABLE((duk_heaphdr *) h);
-			count_keep++;
-			continue;
-		}
+		prev = NULL;
+		while (h != NULL) {
+			duk_hstring *next;
+			next = h->hdr.h_next;
 
+			if (DUK_HEAPHDR_HAS_REACHABLE((duk_heaphdr *) h)) {
+				DUK_HEAPHDR_CLEAR_REACHABLE((duk_heaphdr *) h);
+				count_keep++;
+				prev = h;
+			} else {
 #if defined(DUK_USE_DEBUG)
-		count_free++;
+				count_free++;
 #endif
 
 #if defined(DUK_USE_REFERENCE_COUNTING)
-		/* Non-zero refcounts should not happen for unreachable strings,
-		 * because we refcount finalize all unreachable objects which
-		 * should have decreased unreachable string refcounts to zero
-		 * (even for cycles).
-		 */
-		DUK_ASSERT(DUK_HEAPHDR_GET_REFCOUNT((duk_heaphdr *) h) == 0);
+				/* Non-zero refcounts should not happen for unreachable strings,
+				 * because we refcount finalize all unreachable objects which
+				 * should have decreased unreachable string refcounts to zero
+				 * (even for cycles).
+				 */
+				DUK_ASSERT(DUK_HEAPHDR_GET_REFCOUNT((duk_heaphdr *) h) == 0);
 #endif
 
-		DUK_DDD(DUK_DDDPRINT("sweep string, not reachable: %p", (void *) h));
+				/* Deal with weak references first. */
+				duk_heap_strcache_string_remove(heap, (duk_hstring *) h);
 
-		/* deal with weak references first */
-		duk_heap_strcache_string_remove(heap, (duk_hstring *) h);
+				/* Remove the string from the string table. */
+				duk_heap_strtable_unlink_prev(heap, (duk_hstring *) h, (duk_hstring *) prev);
 
-		/* remove the string (mark DELETED), could also call
-		 * duk_heap_string_remove() but that would be slow and
-		 * pointless because we already know the slot.
-		 */
-#if defined(DUK_USE_HEAPPTR16)
-		heap->strtable16[i] = heap->heapptr_deleted16;
-#else
-		heap->strtable[i] = DUK_STRTAB_DELETED_MARKER(heap);
-#endif
+				/* Free inner references (these exist e.g. when external
+				 * strings are enabled) and the struct itself.
+				 */
+				duk_free_hstring(heap, (duk_hstring *) h);
 
-		/* free inner references (these exist e.g. when external
-		 * strings are enabled) and the struct itself.
-		 */
-		duk_free_hstring(heap, (duk_hstring *) h);
+				/* Don't update 'prev'; it should be last string kept. */
+			}
+
+			h = next;
+		}
 	}
 
+ done:
 #if defined(DUK_USE_DEBUG)
 	DUK_D(DUK_DPRINT("mark-and-sweep sweep stringtable: %ld freed, %ld kept",
 	                 (long) count_free, (long) count_keep));
 #endif
 	*out_count_keep = count_keep;
 }
-#endif  /* DUK_USE_STRTAB_PROBE */
 
 /*
- *  Sweep heap
+ *  Sweep heap.
  */
 
 DUK_LOCAL void duk__sweep_heap(duk_heap *heap, duk_int_t flags, duk_size_t *out_count_keep) {
@@ -749,65 +608,62 @@ DUK_LOCAL void duk__sweep_heap(duk_heap *heap, duk_int_t flags, duk_size_t *out_
 
 		if (DUK_HEAPHDR_HAS_REACHABLE(curr)) {
 			/*
-			 *  Reachable object, keep
+			 *  Reachable object:
+			 *    - If FINALIZABLE -> actually unreachable (but marked
+			 *      artificially reachable), queue to finalize_list.
+			 *    - If !FINALIZABLE but FINALIZED -> rescued after
+			 *      finalizer execution.
+			 *    - Otherwise just a normal, reachable object.
+			 *
+			 *  Objects which are kept are queued to heap_allocated
+			 *  tail (we're essentially filtering heap_allocated in
+			 *  practice).
 			 */
 
-			DUK_DDD(DUK_DDDPRINT("sweep, reachable: %p", (void *) curr));
-
-			if (DUK_HEAPHDR_HAS_FINALIZABLE(curr)) {
-				/*
-				 *  If object has been marked finalizable, move it to the
-				 *  "to be finalized" work list.  It will be collected on
-				 *  the next mark-and-sweep if it is still unreachable
-				 *  after running the finalizer.
-				 */
-
+#if defined(DUK_USE_FINALIZER_SUPPORT)
+			if (DUK_UNLIKELY(DUK_HEAPHDR_HAS_FINALIZABLE(curr))) {
 				DUK_ASSERT(!DUK_HEAPHDR_HAS_FINALIZED(curr));
 				DUK_ASSERT(DUK_HEAPHDR_GET_TYPE(curr) == DUK_HTYPE_OBJECT);
-				DUK_DDD(DUK_DDDPRINT("object has finalizer, move to finalization work list: %p", (void *) curr));
+				DUK_DD(DUK_DDPRINT("sweep; reachable, finalizable --> move to finalize_list: %p", (void *) curr));
 
-#if defined(DUK_USE_DOUBLE_LINKED_HEAP)
-				if (heap->finalize_list) {
-					DUK_HEAPHDR_SET_PREV(heap, heap->finalize_list, curr);
-				}
-				DUK_HEAPHDR_SET_PREV(heap, curr, NULL);
+#if defined(DUK_USE_REFERENCE_COUNTING)
+				DUK_HEAPHDR_PREINC_REFCOUNT(curr);  /* Bump refcount so that refzero never occurs when pending a finalizer call. */
 #endif
-				DUK_HEAPHDR_SET_NEXT(heap, curr, heap->finalize_list);
-				DUK_ASSERT_HEAPHDR_LINKS(heap, curr);
-				heap->finalize_list = curr;
+				DUK_HEAP_INSERT_INTO_FINALIZE_LIST(heap, curr);
 #if defined(DUK_USE_DEBUG)
 				count_finalize++;
 #endif
-			} else {
-				/*
-				 *  Object will be kept; queue object back to heap_allocated (to tail)
-				 */
-
-				if (DUK_HEAPHDR_HAS_FINALIZED(curr)) {
-					/*
-					 *  Object's finalizer was executed on last round, and
-					 *  object has been happily rescued.
-					 */
-
+			}
+			else
+#endif  /* DUK_USE_FINALIZER_SUPPORT */
+			{
+				if (DUK_UNLIKELY(DUK_HEAPHDR_HAS_FINALIZED(curr))) {
 					DUK_ASSERT(!DUK_HEAPHDR_HAS_FINALIZABLE(curr));
 					DUK_ASSERT(DUK_HEAPHDR_GET_TYPE(curr) == DUK_HTYPE_OBJECT);
-					DUK_DD(DUK_DDPRINT("object rescued during mark-and-sweep finalization: %p", (void *) curr));
-#if defined(DUK_USE_DEBUG)
-					count_rescue++;
+
+					if (flags & DUK_MS_FLAG_POSTPONE_RESCUE) {
+						DUK_DD(DUK_DDPRINT("sweep; reachable, finalized, but postponing rescue decisions --> keep object (with FINALIZED set): %!iO", curr));
+						count_keep++;
+					} else {
+						DUK_DD(DUK_DDPRINT("sweep; reachable, finalized --> rescued after finalization: %p", (void *) curr));
+#if defined(DUK_USE_FINALIZER_SUPPORT)
+						DUK_HEAPHDR_CLEAR_FINALIZED(curr);
 #endif
+#if defined(DUK_USE_DEBUG)
+						count_rescue++;
+#endif
+					}
 				} else {
-					/*
-					 *  Plain, boring reachable object.
-					 */
-					DUK_DD(DUK_DDPRINT("keep object: %!iO", curr));
+					DUK_DD(DUK_DDPRINT("sweep; reachable --> keep: %!iO", curr));
 					count_keep++;
 				}
 
-				if (!heap->heap_allocated) {
-					heap->heap_allocated = curr;
-				}
-				if (prev) {
+				if (prev != NULL) {
+					DUK_ASSERT(heap->heap_allocated != NULL);
 					DUK_HEAPHDR_SET_NEXT(heap, prev, curr);
+				} else {
+					DUK_ASSERT(heap->heap_allocated == NULL);
+					heap->heap_allocated = curr;
 				}
 #if defined(DUK_USE_DOUBLE_LINKED_HEAP)
 				DUK_HEAPHDR_SET_PREV(heap, curr, prev);
@@ -818,20 +674,22 @@ DUK_LOCAL void duk__sweep_heap(duk_heap *heap, duk_int_t flags, duk_size_t *out_
 			}
 
 			DUK_HEAPHDR_CLEAR_REACHABLE(curr);
-			DUK_HEAPHDR_CLEAR_FINALIZED(curr);
-			DUK_HEAPHDR_CLEAR_FINALIZABLE(curr);
-
+			/* Keep FINALIZED if set, used if rescue decisions are postponed. */
+			/* Keep FINALIZABLE for objects on finalize_list. */
 			DUK_ASSERT(!DUK_HEAPHDR_HAS_REACHABLE(curr));
-			DUK_ASSERT(!DUK_HEAPHDR_HAS_FINALIZED(curr));
-			DUK_ASSERT(!DUK_HEAPHDR_HAS_FINALIZABLE(curr));
-
-			curr = next;
 		} else {
 			/*
-			 *  Unreachable object, free
+			 *  Unreachable object:
+			 *    - If FINALIZED, object was finalized but not
+			 *      rescued.  This doesn't affect freeing.
+			 *    - Otherwise normal unreachable object.
+			 *
+			 *  There's no guard preventing a FINALIZED object
+			 *  from being freed while finalizers execute: the
+			 *  artificial finalize_list reachability roots can't
+			 *  cause an incorrect free decision (but can cause
+			 *  an incorrect rescue decision).
 			 */
-
-			DUK_DDD(DUK_DDDPRINT("sweep, not reachable: %p", (void *) curr));
 
 #if defined(DUK_USE_REFERENCE_COUNTING)
 			/* Non-zero refcounts should not happen because we refcount
@@ -842,9 +700,14 @@ DUK_LOCAL void duk__sweep_heap(duk_heap *heap, duk_int_t flags, duk_size_t *out_
 #endif
 			DUK_ASSERT(!DUK_HEAPHDR_HAS_FINALIZABLE(curr));
 
+#if defined(DUK_USE_DEBUG)
 			if (DUK_HEAPHDR_HAS_FINALIZED(curr)) {
-				DUK_DDD(DUK_DDDPRINT("finalized object not rescued: %p", (void *) curr));
+				DUK_DD(DUK_DDPRINT("sweep; unreachable, finalized --> finalized object not rescued: %p", (void *) curr));
+			} else {
+				DUK_DD(DUK_DDPRINT("sweep; not reachable --> free: %p", (void *) curr));
 			}
+
+#endif
 
 			/* Note: object cannot be a finalizable unreachable object, as
 			 * they have been marked temporarily reachable for this round,
@@ -855,17 +718,18 @@ DUK_LOCAL void duk__sweep_heap(duk_heap *heap, duk_int_t flags, duk_size_t *out_
 			count_free++;
 #endif
 
-			/* weak refs should be handled here, but no weak refs for
+			/* Weak refs should be handled here, but no weak refs for
 			 * any non-string objects exist right now.
 			 */
 
-			/* free object and all auxiliary (non-heap) allocs */
+			/* Free object and all auxiliary (non-heap) allocs. */
 			duk_heap_free_heaphdr_raw(heap, curr);
-
-			curr = next;
 		}
+
+		curr = next;
 	}
-	if (prev) {
+
+	if (prev != NULL) {
 		DUK_HEAPHDR_SET_NEXT(heap, prev, NULL);
 	}
 	DUK_ASSERT_HEAPHDR_LINKS(heap, prev);
@@ -876,81 +740,6 @@ DUK_LOCAL void duk__sweep_heap(duk_heap *heap, duk_int_t flags, duk_size_t *out_
 #endif
 	*out_count_keep = count_keep;
 }
-
-/*
- *  Run (object) finalizers in the "to be finalized" work list.
- */
-
-#if defined(DUK_USE_FINALIZER_SUPPORT)
-DUK_LOCAL void duk__run_object_finalizers(duk_heap *heap, duk_small_uint_t flags) {
-	duk_heaphdr *curr;
-	duk_heaphdr *next;
-#if defined(DUK_USE_DEBUG)
-	duk_size_t count = 0;
-#endif
-	duk_hthread *thr;
-
-	DUK_DD(DUK_DDPRINT("duk__run_object_finalizers: %p", (void *) heap));
-
-	thr = duk__get_temp_hthread(heap);
-	DUK_ASSERT(thr != NULL);
-
-	curr = heap->finalize_list;
-	while (curr) {
-		DUK_DDD(DUK_DDDPRINT("mark-and-sweep finalize: %p", (void *) curr));
-
-		DUK_ASSERT(DUK_HEAPHDR_GET_TYPE(curr) == DUK_HTYPE_OBJECT);  /* only objects have finalizers */
-		DUK_ASSERT(!DUK_HEAPHDR_HAS_REACHABLE(curr));                /* flags have been already cleared */
-		DUK_ASSERT(!DUK_HEAPHDR_HAS_TEMPROOT(curr));
-		DUK_ASSERT(!DUK_HEAPHDR_HAS_FINALIZABLE(curr));
-		DUK_ASSERT(!DUK_HEAPHDR_HAS_FINALIZED(curr));
-		DUK_ASSERT(!DUK_HEAPHDR_HAS_READONLY(curr));  /* No finalizers for ROM objects */
-
-		/* Keep heap->finalize_list up-to-date during the list walk.
-		 * This has no functional impact, but does matter e.g. for
-		 * duk_push_heapptr() asserts when assertions are enabled.
-		 */
-		heap->finalize_list = curr;
-
-		if (DUK_LIKELY((flags & DUK_MS_FLAG_SKIP_FINALIZERS) == 0)) {
-			/* Run the finalizer, duk_hobject_run_finalizer() sets FINALIZED.
-			 * Next mark-and-sweep will collect the object unless it has
-			 * become reachable (i.e. rescued).  FINALIZED prevents the
-			 * finalizer from being executed again before that.
-			 */
-			duk_hobject_run_finalizer(thr, (duk_hobject *) curr);  /* must never longjmp */
-			DUK_ASSERT(DUK_HEAPHDR_HAS_FINALIZED(curr));
-
-			/* XXX: could clear FINALIZED already here; now cleared in
-			 * next mark-and-sweep.
-			 */
-		} else {
-			/* Used during heap destruction: don't actually run finalizers
-			 * because we're heading into forced finalization.  Instead,
-			 * queue finalizable objects back to the heap_allocated list.
-			 */
-			DUK_D(DUK_DPRINT("skip finalizers flag set, queue object to heap_allocated without finalizing"));
-			DUK_ASSERT(!DUK_HEAPHDR_HAS_FINALIZED(curr));
-		}
-
-		/* queue back to heap_allocated */
-		next = DUK_HEAPHDR_GET_NEXT(heap, curr);
-		DUK_HEAP_INSERT_INTO_HEAP_ALLOCATED(heap, curr);
-
-		curr = next;
-#if defined(DUK_USE_DEBUG)
-		count++;
-#endif
-	}
-
-	/* finalize_list will always be processed completely */
-	heap->finalize_list = NULL;
-
-#if defined(DUK_USE_DEBUG)
-	DUK_D(DUK_DPRINT("mark-and-sweep finalize objects: %ld finalizers called", (long) count));
-#endif
-}
-#endif  /* DUK_USE_FINALIZER_SUPPORT */
 
 /*
  *  Object compaction.
@@ -1027,25 +816,24 @@ DUK_LOCAL void duk__compact_objects(duk_heap *heap) {
 	duk_size_t count_compact = 0;
 	duk_size_t count_bytes_saved = 0;
 #endif
-	duk_hthread *thr;
 
 	DUK_DD(DUK_DDPRINT("duk__compact_objects: %p", (void *) heap));
 
-	thr = duk__get_temp_hthread(heap);
-	DUK_ASSERT(thr != NULL);
+	DUK_ASSERT(heap->heap_thread != NULL);
 
 #if defined(DUK_USE_DEBUG)
-	duk__compact_object_list(heap, thr, heap->heap_allocated, &count_check, &count_compact, &count_bytes_saved);
-	duk__compact_object_list(heap, thr, heap->finalize_list, &count_check, &count_compact, &count_bytes_saved);
-#if defined(DUK_USE_REFERENCE_COUNTING)
-	duk__compact_object_list(heap, thr, heap->refzero_list, &count_check, &count_compact, &count_bytes_saved);
+	duk__compact_object_list(heap, heap->heap_thread, heap->heap_allocated, &count_check, &count_compact, &count_bytes_saved);
+#if defined(DUK_USE_FINALIZER_SUPPORT)
+	duk__compact_object_list(heap, heap->heap_thread, heap->finalize_list, &count_check, &count_compact, &count_bytes_saved);
 #endif
 #else
-	duk__compact_object_list(heap, thr, heap->heap_allocated);
-	duk__compact_object_list(heap, thr, heap->finalize_list);
-#if defined(DUK_USE_REFERENCE_COUNTING)
-	duk__compact_object_list(heap, thr, heap->refzero_list);
+	duk__compact_object_list(heap, heap->heap_thread, heap->heap_allocated);
+#if defined(DUK_USE_FINALIZER_SUPPORT)
+	duk__compact_object_list(heap, heap->heap_thread, heap->finalize_list);
 #endif
+#endif
+#if defined(DUK_USE_REFERENCE_COUNTING)
+	DUK_ASSERT(heap->refzero_list == NULL);  /* Always handled to completion inline in DECREF. */
 #endif
 
 #if defined(DUK_USE_DEBUG)
@@ -1072,175 +860,189 @@ DUK_LOCAL void duk__assert_heaphdr_flags(duk_heap *heap) {
 	}
 
 #if defined(DUK_USE_REFERENCE_COUNTING)
-	hdr = heap->refzero_list;
-	while (hdr) {
-		DUK_ASSERT(!DUK_HEAPHDR_HAS_REACHABLE(hdr));
-		DUK_ASSERT(!DUK_HEAPHDR_HAS_TEMPROOT(hdr));
-		DUK_ASSERT(!DUK_HEAPHDR_HAS_FINALIZABLE(hdr));
-		/* DUK_HEAPHDR_HAS_FINALIZED may be set if we're doing a
-		 * refzero finalization and mark-and-sweep gets triggered
-		 * during the finalizer.
-		 */
-		/* DUK_HEAPHDR_HAS_FINALIZED may or may not be set. */
-		hdr = DUK_HEAPHDR_GET_NEXT(heap, hdr);
-	}
-#endif  /* DUK_USE_REFERENCE_COUNTING */
+	DUK_ASSERT(heap->refzero_list == NULL);  /* Always handled to completion inline in DECREF. */
+#endif
 }
 
 #if defined(DUK_USE_REFERENCE_COUNTING)
 DUK_LOCAL void duk__assert_valid_refcounts(duk_heap *heap) {
 	duk_heaphdr *hdr = heap->heap_allocated;
 	while (hdr) {
+		/* Cannot really assert much w.r.t. refcounts now. */
+
 		if (DUK_HEAPHDR_GET_REFCOUNT(hdr) == 0 &&
 		    DUK_HEAPHDR_HAS_FINALIZED(hdr)) {
 			/* An object may be in heap_allocated list with a zero
 			 * refcount if it has just been finalized and is waiting
 			 * to be collected by the next cycle.
+			 * (This doesn't currently happen however.)
 			 */
 		} else if (DUK_HEAPHDR_GET_REFCOUNT(hdr) == 0) {
 			/* An object may be in heap_allocated list with a zero
-			 * refcount also if it is a temporary object created by
-			 * a finalizer; because finalization now runs inside
-			 * mark-and-sweep, such objects will not be queued to
-			 * refzero_list and will thus appear here with refcount
-			 * zero.
+			 * refcount also if it is a temporary object created
+			 * during debugger paused state.  It will get collected
+			 * by mark-and-sweep based on its reachability status
+			 * (presumably not reachable because refcount is 0).
 			 */
-#if 0  /* this case can no longer occur because refcount is unsigned */
-		} else if (DUK_HEAPHDR_GET_REFCOUNT(hdr) < 0) {
-			DUK_D(DUK_DPRINT("invalid refcount: %ld, %p -> %!O",
-			                 (hdr != NULL ? (long) DUK_HEAPHDR_GET_REFCOUNT(hdr) : (long) 0),
-			                 (void *) hdr, (duk_heaphdr *) hdr));
-			DUK_ASSERT(DUK_HEAPHDR_GET_REFCOUNT(hdr) > 0);
-#endif
 		}
+		DUK_ASSERT_DISABLE(DUK_HEAPHDR_GET_REFCOUNT(hdr) >= 0);  /* Unsigned. */
 		hdr = DUK_HEAPHDR_GET_NEXT(heap, hdr);
+	}
+}
+
+DUK_LOCAL void duk__clear_assert_refcounts(duk_heap *heap) {
+	duk_heaphdr *curr;
+	duk_uint32_t i;
+
+	for (curr = heap->heap_allocated; curr != NULL; curr = DUK_HEAPHDR_GET_NEXT(heap, curr)) {
+		curr->h_assert_refcount = 0;
+	}
+#if defined(DUK_USE_FINALIZER_SUPPORT)
+	for (curr = heap->finalize_list; curr != NULL; curr = DUK_HEAPHDR_GET_NEXT(heap, curr)) {
+		curr->h_assert_refcount = 0;
+	}
+#endif
+#if defined(DUK_USE_REFERENCE_COUNTING)
+	for (curr = heap->refzero_list; curr != NULL; curr = DUK_HEAPHDR_GET_NEXT(heap, curr)) {
+		curr->h_assert_refcount = 0;
+	}
+#endif
+
+	for (i = 0; i < heap->st_size; i++) {
+		duk_hstring *h;
+
+#if defined(DUK_USE_STRTAB_PTRCOMP)
+		h = DUK_USE_HEAPPTR_DEC16(heap->heap_udata, heap->strtable16[i]);
+#else
+		h = heap->strtable[i];
+#endif
+		while (h != NULL) {
+			((duk_heaphdr *) h)->h_assert_refcount = 0;
+			h = h->hdr.h_next;
+		}
+	}
+}
+
+DUK_LOCAL void duk__check_refcount_heaphdr(duk_heaphdr *hdr) {
+	duk_bool_t count_ok;
+
+	/* The refcount check only makes sense for reachable objects on
+	 * heap_allocated or string table, after the sweep phase.  Prior to
+	 * sweep phase refcounts will include references that are not visible
+	 * via reachability roots.
+	 *
+	 * Because we're called after the sweep phase, all heap objects on
+	 * heap_allocated are reachable.  REACHABLE flags have already been
+	 * cleared so we can't check them.
+	 */
+
+	/* ROM objects have intentionally incorrect refcount (1), but we won't
+	 * check them.
+	 */
+	DUK_ASSERT(!DUK_HEAPHDR_HAS_READONLY(hdr));
+
+	count_ok = ((duk_size_t) DUK_HEAPHDR_GET_REFCOUNT(hdr) == hdr->h_assert_refcount);
+	if (!count_ok) {
+		DUK_D(DUK_DPRINT("refcount mismatch for: %p: header=%ld counted=%ld --> %!iO",
+		                 (void *) hdr, (long) DUK_HEAPHDR_GET_REFCOUNT(hdr),
+		                 (long) hdr->h_assert_refcount, hdr));
+		DUK_ASSERT(0);
+	}
+}
+
+DUK_LOCAL void duk__check_assert_refcounts(duk_heap *heap) {
+	duk_heaphdr *curr;
+	duk_uint32_t i;
+
+	for (curr = heap->heap_allocated; curr != NULL; curr = DUK_HEAPHDR_GET_NEXT(heap, curr)) {
+		duk__check_refcount_heaphdr(curr);
+	}
+#if defined(DUK_USE_FINALIZER_SUPPORT)
+	for (curr = heap->finalize_list; curr != NULL; curr = DUK_HEAPHDR_GET_NEXT(heap, curr)) {
+		duk__check_refcount_heaphdr(curr);
+	}
+#endif
+
+	for (i = 0; i < heap->st_size; i++) {
+		duk_hstring *h;
+
+#if defined(DUK_USE_STRTAB_PTRCOMP)
+		h = DUK_USE_HEAPPTR_DEC16(heap->heap_udata, heap->strtable16[i]);
+#else
+		h = heap->strtable[i];
+#endif
+		while (h != NULL) {
+			duk__check_refcount_heaphdr((duk_heaphdr *) h);
+			h = h->hdr.h_next;
+		}
 	}
 }
 #endif  /* DUK_USE_REFERENCE_COUNTING */
 #endif  /* DUK_USE_ASSERTIONS */
 
 /*
- *  Finalizer torture.  Do one fake finalizer call which causes side effects
- *  similar to one or more finalizers on actual objects.
- */
-
-#if defined(DUK_USE_FINALIZER_SUPPORT)
-#if defined(DUK_USE_MARKANDSWEEP_FINALIZER_TORTURE)
-DUK_LOCAL duk_ret_t duk__markandsweep_fake_finalizer(duk_context *ctx) {
-	DUK_D(DUK_DPRINT("fake mark-and-sweep torture finalizer executed"));
-
-	/* Require a lot of stack to force a value stack grow/shrink.
-	 * Recursive mark-and-sweep is prevented by allocation macros
-	 * so this won't trigger another mark-and-sweep.
-	 */
-	duk_require_stack(ctx, 100000);
-
-	/* XXX: do something to force a callstack grow/shrink, perhaps
-	 * just a manual forced resize or a forced relocating realloc?
-	 */
-
-	return 0;
-}
-
-DUK_LOCAL void duk__markandsweep_torture_finalizer(duk_hthread *thr) {
-	duk_context *ctx;
-	duk_int_t rc;
-
-	DUK_ASSERT(thr != NULL);
-	ctx = (duk_context *) thr;
-
-	/* Avoid fake finalization when callstack limit has been reached.
-	 * Otherwise a callstack limit error will be created, then refzero'ed.
-	 */
-	if (thr->heap->call_recursion_depth >= thr->heap->call_recursion_limit ||
-	    thr->callstack_size + 2 * DUK_CALLSTACK_GROW_STEP >= thr->callstack_max /*approximate*/) {
-		DUK_D(DUK_DPRINT("call recursion depth reached, avoid fake mark-and-sweep torture finalizer"));
-		return;
-	}
-
-	/* Run fake finalizer.  Avoid creating unnecessary garbage. */
-	duk_push_c_function(ctx, duk__markandsweep_fake_finalizer, 0 /*nargs*/);
-	rc = duk_pcall(ctx, 0 /*nargs*/);
-	DUK_UNREF(rc);  /* ignored */
-	duk_pop(ctx);
-}
-#endif  /* DUK_USE_MARKANDSWEEP_FINALIZER_TORTURE */
-#endif  /* DUK_USE_FINALIZER_SUPPORT */
-
-/*
  *  Main mark-and-sweep function.
  *
  *  'flags' represents the features requested by the caller.  The current
- *  heap->mark_and_sweep_base_flags is ORed automatically into the flags;
- *  the base flags mask typically prevents certain mark-and-sweep operations
- *  to avoid trouble.
+ *  heap->ms_base_flags is ORed automatically into the flags; the base flags
+ *  mask typically prevents certain mark-and-sweep operation to avoid trouble.
  */
 
-DUK_INTERNAL duk_bool_t duk_heap_mark_and_sweep(duk_heap *heap, duk_small_uint_t flags) {
-	duk_hthread *thr;
+DUK_INTERNAL void duk_heap_mark_and_sweep(duk_heap *heap, duk_small_uint_t flags) {
 	duk_size_t count_keep_obj;
 	duk_size_t count_keep_str;
 #if defined(DUK_USE_VOLUNTARY_GC)
 	duk_size_t tmp;
 #endif
 
-	if (DUK_HEAP_HAS_MARKANDSWEEP_RUNNING(heap)) {
-		DUK_D(DUK_DPRINT("refuse to do a recursive mark-and-sweep"));
-		return 0;
-	}
-
-	/* XXX: thread selection for mark-and-sweep is currently a hack.
-	 * If we don't have a thread, the entire mark-and-sweep is now
-	 * skipped (although we could just skip finalizations).
+	/* If debugger is paused, garbage collection is disabled by default.
+	 * This is achieved by bumping ms_prevent_count when becoming paused.
 	 */
+	DUK_ASSERT(!DUK_HEAP_HAS_DEBUGGER_PAUSED(heap) || heap->ms_prevent_count > 0);
 
-	/* If thr != NULL, the thr may still be in the middle of
-	 * initialization.
-	 * XXX: Improve the thread viability test.
+	/* Prevention/recursion check as soon as possible because we may
+	 * be called a number of times when voluntary mark-and-sweep is
+	 * pending.
 	 */
-	thr = duk__get_temp_hthread(heap);
-	if (thr == NULL) {
-		DUK_D(DUK_DPRINT("gc skipped because we don't have a temp thread"));
-
-		/* reset voluntary gc trigger count */
-#if defined(DUK_USE_VOLUNTARY_GC)
-		heap->mark_and_sweep_trigger_counter = DUK_HEAP_MARK_AND_SWEEP_TRIGGER_SKIP;
-#endif
-		return 0;  /* OK */
+	if (heap->ms_prevent_count != 0) {
+		DUK_DD(DUK_DDPRINT("reject recursive mark-and-sweep"));
+		return;
 	}
+	DUK_ASSERT(heap->ms_running == 0);  /* ms_prevent_count is bumped when ms_running is set */
 
-	/* If debugger is paused, garbage collection is disabled by default. */
-	/* XXX: will need a force flag if garbage collection is triggered
-	 * explicitly during paused state.
+	/* Heap_thread is used during mark-and-sweep for refcount finalization
+	 * (it's also used for finalizer execution once mark-and-sweep is
+	 * complete).  Heap allocation code ensures heap_thread is set and
+	 * properly initialized before setting ms_prevent_count to 0.
 	 */
-#if defined(DUK_USE_DEBUGGER_SUPPORT)
-	if (DUK_HEAP_IS_PAUSED(heap)) {
-		/* Checking this here rather that in memory alloc primitives
-		 * reduces checking code there but means a failed allocation
-		 * will go through a few retries before giving up.  That's
-		 * fine because this only happens during debugging.
-		 */
-		DUK_D(DUK_DPRINT("gc skipped because debugger is paused"));
-		return 0;
-	}
-#endif
+	DUK_ASSERT(heap->heap_thread != NULL);
+	DUK_ASSERT(heap->heap_thread->valstack != NULL);
+	DUK_ASSERT(heap->heap_thread->callstack != NULL);
+	DUK_ASSERT(heap->heap_thread->catchstack != NULL);
 
 	DUK_D(DUK_DPRINT("garbage collect (mark-and-sweep) starting, requested flags: 0x%08lx, effective flags: 0x%08lx",
-	                 (unsigned long) flags, (unsigned long) (flags | heap->mark_and_sweep_base_flags)));
+	                 (unsigned long) flags, (unsigned long) (flags | heap->ms_base_flags)));
 
-	flags |= heap->mark_and_sweep_base_flags;
+	flags |= heap->ms_base_flags;
+#if defined(DUK_USE_FINALIZER_SUPPORT)
+	if (heap->finalize_list != NULL) {
+		flags |= DUK_MS_FLAG_POSTPONE_RESCUE;
+	}
+#endif
 
 	/*
 	 *  Assertions before
 	 */
 
 #if defined(DUK_USE_ASSERTIONS)
-	DUK_ASSERT(!DUK_HEAP_HAS_MARKANDSWEEP_RUNNING(heap));
+	DUK_ASSERT(heap->ms_prevent_count == 0);
+	DUK_ASSERT(heap->ms_running == 0);
+	DUK_ASSERT(!DUK_HEAP_HAS_DEBUGGER_PAUSED(heap));
 	DUK_ASSERT(!DUK_HEAP_HAS_MARKANDSWEEP_RECLIMIT_REACHED(heap));
-	DUK_ASSERT(heap->mark_and_sweep_recursion_depth == 0);
+	DUK_ASSERT(heap->ms_recursion_depth == 0);
 	duk__assert_heaphdr_flags(heap);
 #if defined(DUK_USE_REFERENCE_COUNTING)
-	/* Note: DUK_HEAP_HAS_REFZERO_FREE_RUNNING(heap) may be true; a refcount
+	/* Note: heap->refzero_free_running may be true; a refcount
 	 * finalizer may trigger a mark-and-sweep.
 	 */
 	duk__assert_valid_refcounts(heap);
@@ -1251,7 +1053,10 @@ DUK_INTERNAL duk_bool_t duk_heap_mark_and_sweep(duk_heap *heap, duk_small_uint_t
 	 *  Begin
 	 */
 
-	DUK_HEAP_SET_MARKANDSWEEP_RUNNING(heap);
+	DUK_ASSERT(heap->ms_prevent_count == 0);
+	DUK_ASSERT(heap->ms_running == 0);
+	heap->ms_prevent_count = 1;
+	heap->ms_running = 1;
 
 	/*
 	 *  Mark roots, hoping that recursion limit is not normally hit.
@@ -1269,17 +1074,20 @@ DUK_INTERNAL duk_bool_t duk_heap_mark_and_sweep(duk_heap *heap, duk_small_uint_t
 	 *  previous run had finalizer skip flag.
 	 */
 
-	duk__mark_roots_heap(heap);               /* main reachability roots */
-#if defined(DUK_USE_REFERENCE_COUNTING)
-	duk__mark_refzero_list(heap);             /* refzero_list treated as reachability roots */
+#if defined(DUK_USE_ASSERTIONS) && defined(DUK_USE_REFERENCE_COUNTING)
+	duk__clear_assert_refcounts(heap);
 #endif
-	duk__mark_temproots_by_heap_scan(heap);   /* temproots */
+	duk__mark_roots_heap(heap);               /* Mark main reachability roots. */
+#if defined(DUK_USE_REFERENCE_COUNTING)
+	DUK_ASSERT(heap->refzero_list == NULL);   /* Always handled to completion inline in DECREF. */
+#endif
+	duk__mark_temproots_by_heap_scan(heap);   /* Temproots. */
 
 #if defined(DUK_USE_FINALIZER_SUPPORT)
-	duk__mark_finalizable(heap);              /* mark finalizable as reachability roots */
-	duk__mark_finalize_list(heap);            /* mark finalizer work list as reachability roots */
+	duk__mark_finalizable(heap);              /* Mark finalizable as reachability roots. */
+	duk__mark_finalize_list(heap);            /* Mark finalizer work list as reachability roots. */
 #endif
-	duk__mark_temproots_by_heap_scan(heap);   /* temproots */
+	duk__mark_temproots_by_heap_scan(heap);   /* Temproots. */
 
 	/*
 	 *  Sweep garbage and remove marking flags, and move objects with
@@ -1301,15 +1109,12 @@ DUK_INTERNAL duk_bool_t duk_heap_mark_and_sweep(duk_heap *heap, duk_small_uint_t
 	duk__finalize_refcounts(heap);
 #endif
 	duk__sweep_heap(heap, flags, &count_keep_obj);
-#if defined(DUK_USE_STRTAB_CHAIN)
-	duk__sweep_stringtable_chain(heap, &count_keep_str);
-#elif defined(DUK_USE_STRTAB_PROBE)
-	duk__sweep_stringtable_probe(heap, &count_keep_str);
-#else
-#error internal error, invalid strtab options
+	duk__sweep_stringtable(heap, &count_keep_str);
+#if defined(DUK_USE_ASSERTIONS) && defined(DUK_USE_REFERENCE_COUNTING)
+	duk__check_assert_refcounts(heap);
 #endif
 #if defined(DUK_USE_REFERENCE_COUNTING)
-	duk__clear_refzero_list_flags(heap);
+	DUK_ASSERT(heap->refzero_list == NULL);   /* Always handled to completion inline in DECREF. */
 #endif
 #if defined(DUK_USE_FINALIZER_SUPPORT)
 	duk__clear_finalize_list_flags(heap);
@@ -1340,94 +1145,39 @@ DUK_INTERNAL duk_bool_t duk_heap_mark_and_sweep(duk_heap *heap, duk_small_uint_t
 	/*
 	 *  String table resize check.
 	 *
-	 *  Note: this may silently (and safely) fail if GC is caused by an
-	 *  allocation call in stringtable resize_hash().  Resize_hash()
-	 *  will prevent a recursive call to itself by setting the
-	 *  DUK_MS_FLAG_NO_STRINGTABLE_RESIZE in heap->mark_and_sweep_base_flags.
+	 *  This is mainly useful in emergency GC: if the string table load
+	 *  factor is really low for some reason, we can shrink the string
+	 *  table to a smaller size and free some memory in the process.
+	 *  Only execute in emergency GC.  String table has internal flags
+	 *  to protect against recursive resizing if this mark-and-sweep pass
+	 *  was triggered by a string table resize.
 	 */
 
-	/* XXX: stringtable emergency compaction? */
-
-	/* XXX: remove this feature entirely? it would only matter for
-	 * emergency GC.  Disable for lowest memory builds.
-	 */
-#if defined(DUK_USE_MS_STRINGTABLE_RESIZE)
-	if (!(flags & DUK_MS_FLAG_NO_STRINGTABLE_RESIZE)) {
-		DUK_DD(DUK_DDPRINT("resize stringtable: %p", (void *) heap));
-		duk_heap_force_strtab_resize(heap);
-	} else {
-		DUK_D(DUK_DPRINT("stringtable resize skipped because DUK_MS_FLAG_NO_STRINGTABLE_RESIZE is set"));
+	if (flags & DUK_MS_FLAG_EMERGENCY) {
+		DUK_D(DUK_DPRINT("stringtable resize check in emergency gc"));
+		duk_heap_strtable_force_resize(heap);
 	}
-#endif
-
-	/*
-	 *  Finalize objects in the finalization work list.  Finalized
-	 *  objects are queued back to heap_allocated with FINALIZED set.
-	 *
-	 *  Since finalizers may cause arbitrary side effects, they are
-	 *  prevented during string table and object property allocation
-	 *  resizing using the DUK_MS_FLAG_NO_FINALIZERS flag in
-	 *  heap->mark_and_sweep_base_flags.  In this case the objects
-	 *  remain in the finalization work list after mark-and-sweep
-	 *  exits and they may be finalized on the next pass.
-	 *
-	 *  Finalization currently happens inside "MARKANDSWEEP_RUNNING"
-	 *  protection (no mark-and-sweep may be triggered by the
-	 *  finalizers).  As a side effect:
-	 *
-	 *    1) an out-of-memory error inside a finalizer will not
-	 *       cause a mark-and-sweep and may cause the finalizer
-	 *       to fail unnecessarily
-	 *
-	 *    2) any temporary objects whose refcount decreases to zero
-	 *       during finalization will not be put into refzero_list;
-	 *       they can only be collected by another mark-and-sweep
-	 *
-	 *  This is not optimal, but since the sweep for this phase has
-	 *  already happened, this is probably good enough for now.
-	 */
-
-#if defined(DUK_USE_FINALIZER_SUPPORT)
-#if defined(DUK_USE_MARKANDSWEEP_FINALIZER_TORTURE)
-	/* Cannot simulate individual finalizers because finalize_list only
-	 * contains objects with actual finalizers.  But simulate side effects
-	 * from finalization by doing a bogus function call and resizing the
-	 * stacks.
-	 */
-	if (flags & DUK_MS_FLAG_NO_FINALIZERS) {
-		DUK_D(DUK_DPRINT("skip mark-and-sweep torture finalizer, DUK_MS_FLAG_NO_FINALIZERS is set"));
-	} else if (!(thr->valstack != NULL && thr->callstack != NULL && thr->catchstack != NULL)) {
-		DUK_D(DUK_DPRINT("skip mark-and-sweep torture finalizer, thread not yet viable"));
-	} else {
-		DUK_D(DUK_DPRINT("run mark-and-sweep torture finalizer"));
-		duk__markandsweep_torture_finalizer(thr);
-	}
-#endif  /* DUK_USE_MARKANDSWEEP_FINALIZER_TORTURE */
-
-	if (flags & DUK_MS_FLAG_NO_FINALIZERS) {
-		DUK_D(DUK_DPRINT("finalizer run skipped because DUK_MS_FLAG_NO_FINALIZERS is set"));
-	} else {
-		duk__run_object_finalizers(heap, flags);
-	}
-#endif  /* DUK_USE_FINALIZER_SUPPORT */
 
 	/*
 	 *  Finish
 	 */
 
-	DUK_HEAP_CLEAR_MARKANDSWEEP_RUNNING(heap);
+	DUK_ASSERT(heap->ms_prevent_count == 1);
+	heap->ms_prevent_count = 0;
+	DUK_ASSERT(heap->ms_running == 1);
+	heap->ms_running = 0;
 
 	/*
 	 *  Assertions after
 	 */
 
 #if defined(DUK_USE_ASSERTIONS)
-	DUK_ASSERT(!DUK_HEAP_HAS_MARKANDSWEEP_RUNNING(heap));
+	DUK_ASSERT(heap->ms_prevent_count == 0);
 	DUK_ASSERT(!DUK_HEAP_HAS_MARKANDSWEEP_RECLIMIT_REACHED(heap));
-	DUK_ASSERT(heap->mark_and_sweep_recursion_depth == 0);
+	DUK_ASSERT(heap->ms_recursion_depth == 0);
 	duk__assert_heaphdr_flags(heap);
 #if defined(DUK_USE_REFERENCE_COUNTING)
-	/* Note: DUK_HEAP_HAS_REFZERO_FREE_RUNNING(heap) may be true; a refcount
+	/* Note: heap->refzero_free_running may be true; a refcount
 	 * finalizer may trigger a mark-and-sweep.
 	 */
 	duk__assert_valid_refcounts(heap);
@@ -1440,15 +1190,47 @@ DUK_INTERNAL duk_bool_t duk_heap_mark_and_sweep(duk_heap *heap, duk_small_uint_t
 
 #if defined(DUK_USE_VOLUNTARY_GC)
 	tmp = (count_keep_obj + count_keep_str) / 256;
-	heap->mark_and_sweep_trigger_counter = (duk_int_t) (
+	heap->ms_trigger_counter = (duk_int_t) (
 	    (tmp * DUK_HEAP_MARK_AND_SWEEP_TRIGGER_MULT) +
 	    DUK_HEAP_MARK_AND_SWEEP_TRIGGER_ADD);
 	DUK_D(DUK_DPRINT("garbage collect (mark-and-sweep) finished: %ld objects kept, %ld strings kept, trigger reset to %ld",
-	                 (long) count_keep_obj, (long) count_keep_str, (long) heap->mark_and_sweep_trigger_counter));
+	                 (long) count_keep_obj, (long) count_keep_str, (long) heap->ms_trigger_counter));
 #else
 	DUK_D(DUK_DPRINT("garbage collect (mark-and-sweep) finished: %ld objects kept, %ld strings kept, no voluntary trigger",
 	                 (long) count_keep_obj, (long) count_keep_str));
 #endif
 
-	return 0;  /* OK */
+	/*
+	 *  Finalize objects in the finalization work list.  Finalized
+	 *  objects are queued back to heap_allocated with FINALIZED set.
+	 *
+	 *  Since finalizers may cause arbitrary side effects, they are
+	 *  prevented e.g. during string table and object property allocation
+	 *  resizing using heap->pf_prevent_count.  In this case the objects
+	 *  remain in the finalization work list after mark-and-sweep exits
+	 *  and they may be finalized on the next pass or any DECREF checking
+	 *  for finalize_list.
+	 *
+	 *  As of Duktape 2.1 finalization happens outside mark-and-sweep
+	 *  protection.  Mark-and-sweep is allowed while the finalize_list
+	 *  is being processed, but no rescue decisions are done while the
+	 *  process is on-going.  This avoids incorrect rescue decisions
+	 *  if an object is considered reachable (and thus rescued) because
+	 *  of a reference via finalize_list (which is considered a reachability
+	 *  root).  When finalize_list is being processed, reachable objects
+	 *  with FINALIZED set will just keep their FINALIZED flag for later
+	 *  mark-and-sweep processing.
+	 *
+	 *  This could also be handled (a bit better) by having a more refined
+	 *  notion of reachability for rescue/free decisions.
+	 *
+	 *  XXX: avoid finalizer execution when doing emergency GC?
+	 */
+
+#if defined(DUK_USE_FINALIZER_SUPPORT)
+	/* Attempt to process finalize_list, pf_prevent_count check
+	 * is inside the target.
+	 */
+	duk_heap_process_finalize_list(heap);
+#endif  /* DUK_USE_FINALIZER_SUPPORT */
 }

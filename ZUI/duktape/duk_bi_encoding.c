@@ -143,6 +143,7 @@ DUK_LOCAL duk_codepoint_t duk__utf8_decode_next(duk__decode_context *dec_ctx, du
 	}
 }
 
+#if defined(DUK_USE_ENCODING_BUILTINS)
 DUK_LOCAL void duk__utf8_encode_char(void *udata, duk_codepoint_t codepoint) {
 	duk__encode_context *enc_ctx;
 
@@ -197,6 +198,7 @@ DUK_LOCAL void duk__utf8_encode_char(void *udata, duk_codepoint_t codepoint) {
 	 */
 	enc_ctx->out += duk_unicode_encode_xutf8(codepoint, enc_ctx->out);
 }
+#endif  /* DUK_USE_ENCODING_BUILTINS */
 
 /* Shared helper for buffer-to-string using a TextDecoder() compatible UTF-8
  * decoder.
@@ -459,8 +461,8 @@ DUK_INTERNAL duk_ret_t duk_bi_textdecoder_constructor(duk_context *ctx) {
 	 * initialized explicitly.
 	 */
 	dec_ctx = (duk__decode_context *) duk_push_fixed_buffer(ctx, sizeof(duk__decode_context));
-	dec_ctx->fatal = fatal;
-	dec_ctx->ignore_bom = ignore_bom;
+	dec_ctx->fatal = (duk_uint8_t) fatal;
+	dec_ctx->ignore_bom = (duk_uint8_t) ignore_bom;
 	duk__utf8_decode_init(dec_ctx);  /* Initializes remaining fields. */
 
 	duk_put_prop_string(ctx, -2, "\xff" "Context");

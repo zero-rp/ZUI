@@ -384,9 +384,6 @@
     <ClCompile Include="..\..\ZUI\duktape\duk_hobject_enum.c">
       <Filter>ZUI\duktape</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\duktape\duk_hobject_finalizer.c">
-      <Filter>ZUI\duktape</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\duktape\duk_hobject_misc.c">
       <Filter>ZUI\duktape</Filter>
     </ClCompile>
@@ -468,9 +465,6 @@
     <ClCompile Include="..\..\ZUI\duktape\duk_util_hashbytes.c">
       <Filter>ZUI\duktape</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\duktape\duk_util_hashprime.c">
-      <Filter>ZUI\duktape</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\duktape\duk_util_misc.c">
       <Filter>ZUI\duktape</Filter>
     </ClCompile>
@@ -538,9 +532,6 @@
       <Filter>ZUI\libuv\win</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ZUI\libuv\src\win\signal.c">
-      <Filter>ZUI\libuv\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\libuv\src\win\snprintf.c">
       <Filter>ZUI\libuv\win</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ZUI\libuv\src\win\stream.c">
@@ -671,6 +662,12 @@
     </ClCompile>
     <ClCompile Include="..\..\ZUI\dukluv\duv_module.c">
       <Filter>ZUI\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_heap_finalize.c">
+      <Filter>ZUI\duktape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_trans_dvalue.c">
+      <Filter>ZUI\duktape</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

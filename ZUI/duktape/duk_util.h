@@ -5,10 +5,6 @@
 #if !defined(DUK_UTIL_H_INCLUDED)
 #define DUK_UTIL_H_INCLUDED
 
-#define DUK_UTIL_MIN_HASH_PRIME  17  /* must match genhashsizes.py */
-
-#define DUK_UTIL_GET_HASH_PROBE_STEP(hash)  (duk_util_probe_steps[(hash) & 0x1f])
-
 #if defined(DUK_USE_GET_RANDOM_DOUBLE)
 #define DUK_UTIL_GET_RANDOM_DOUBLE(thr) DUK_USE_GET_RANDOM_DOUBLE((thr)->heap_udata)
 #else
@@ -494,7 +490,7 @@ DUK_INTERNAL_DECL const duk_int8_t duk_base64_dectab[256];
 #endif  /* !DUK_SINGLE_FILE */
 
 /* Note: assumes that duk_util_probe_steps size is 32 */
-#if defined(DUK_USE_HOBJECT_HASH_PART) || defined(DUK_USE_STRTAB_PROBE)
+#if defined(DUK_USE_HOBJECT_HASH_PART)
 #if !defined(DUK_SINGLE_FILE)
 DUK_INTERNAL_DECL duk_uint8_t duk_util_probe_steps[32];
 #endif  /* !DUK_SINGLE_FILE */
@@ -504,13 +500,10 @@ DUK_INTERNAL_DECL duk_uint8_t duk_util_probe_steps[32];
 DUK_INTERNAL_DECL duk_uint32_t duk_util_hashbytes(const duk_uint8_t *data, duk_size_t len, duk_uint32_t seed);
 #endif
 
-#if defined(DUK_USE_HOBJECT_HASH_PART) || defined(DUK_USE_STRTAB_PROBE)
-DUK_INTERNAL_DECL duk_uint32_t duk_util_get_hash_prime(duk_uint32_t size);
-#endif
-
 DUK_INTERNAL_DECL duk_uint32_t duk_bd_decode(duk_bitdecoder_ctx *ctx, duk_small_int_t bits);
 DUK_INTERNAL_DECL duk_small_uint_t duk_bd_decode_flag(duk_bitdecoder_ctx *ctx);
 DUK_INTERNAL_DECL duk_uint32_t duk_bd_decode_flagged(duk_bitdecoder_ctx *ctx, duk_small_int_t bits, duk_uint32_t def_value);
+DUK_INTERNAL_DECL duk_int32_t duk_bd_decode_flagged_signed(duk_bitdecoder_ctx *ctx, duk_small_int_t bits, duk_int32_t def_value);
 DUK_INTERNAL_DECL duk_uint32_t duk_bd_decode_varuint(duk_bitdecoder_ctx *ctx);
 DUK_INTERNAL_DECL duk_small_uint_t duk_bd_decode_bitpacked_string(duk_bitdecoder_ctx *bd, duk_uint8_t *out);
 

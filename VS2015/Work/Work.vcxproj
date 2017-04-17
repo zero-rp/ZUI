@@ -297,6 +297,7 @@ echo res| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\re
     <ClCompile Include="..\..\ZUI\duktape\duk_hbuffer_ops.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_hbufobj_misc.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_heap_alloc.c" />
+    <ClCompile Include="..\..\ZUI\duktape\duk_heap_finalize.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_heap_hashstring.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_heap_markandsweep.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_heap_memory.c" />
@@ -307,7 +308,6 @@ echo res| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\re
     <ClCompile Include="..\..\ZUI\duktape\duk_hobject_alloc.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_hobject_class.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_hobject_enum.c" />
-    <ClCompile Include="..\..\ZUI\duktape\duk_hobject_finalizer.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_hobject_misc.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_hobject_pc2line.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_hobject_props.c" />
@@ -328,6 +328,7 @@ echo res| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\re
     <ClCompile Include="..\..\ZUI\duktape\duk_regexp_executor.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_replacements.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_selftest.c" />
+    <ClCompile Include="..\..\ZUI\duktape\duk_trans_dvalue.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_tval.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_unicode_support.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_unicode_tables.c" />
@@ -335,7 +336,6 @@ echo res| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\re
     <ClCompile Include="..\..\ZUI\duktape\duk_util_bitencoder.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_util_bufwriter.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_util_hashbytes.c" />
-    <ClCompile Include="..\..\ZUI\duktape\duk_util_hashprime.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_util_misc.c" />
     <ClCompile Include="..\..\ZUI\duktape\duk_util_tinyrandom.c" />
     <ClCompile Include="..\..\ZUI\layout\HorizontalLayout.c" />
@@ -364,7 +364,6 @@ echo res| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\re
     <ClCompile Include="..\..\ZUI\libuv\src\win\process.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\win\req.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\win\signal.c" />
-    <ClCompile Include="..\..\ZUI\libuv\src\win\snprintf.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\win\stream.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\win\tcp.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\win\thread.c" />

@@ -46,7 +46,7 @@ DUK_INTERNAL void duk_proxy_ownkeys_postprocess(duk_context *ctx, duk_hobject *h
 				goto skip_key;
 			}
 		}
-		if (DUK_HSTRING_HAS_SYMBOL(h)) {
+		if (DUK_UNLIKELY(DUK_HSTRING_HAS_SYMBOL(h))) {
 			if (!(flags & DUK_ENUM_INCLUDE_SYMBOLS)) {
 				DUK_DDD(DUK_DDDPRINT("ignore symbol property: %!T", duk_get_tval(ctx, -1)));
 				goto skip_key;
@@ -123,6 +123,7 @@ DUK_INTERNAL duk_ret_t duk_bi_proxy_constructor(duk_context *ctx) {
 	 */
 	(void) duk_push_object_helper_proto(ctx,
 	                                    DUK_HOBJECT_FLAG_EXTENSIBLE |
+	                                    DUK_HOBJECT_FLAG_FASTREFS |
 	                                    DUK_HOBJECT_FLAG_EXOTIC_PROXYOBJ |
 	                                    DUK_HOBJECT_CLASS_AS_FLAGS(DUK_HOBJECT_CLASS_OBJECT),
 	                                    NULL);

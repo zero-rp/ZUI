@@ -552,9 +552,6 @@
     <ClCompile Include="..\..\ZUI\duktape\duk_hobject_enum.c">
       <Filter>源文件\duktape</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\duktape\duk_hobject_finalizer.c">
-      <Filter>源文件\duktape</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\duktape\duk_hobject_misc.c">
       <Filter>源文件\duktape</Filter>
     </ClCompile>
@@ -634,9 +631,6 @@
       <Filter>源文件\duktape</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ZUI\duktape\duk_util_hashbytes.c">
-      <Filter>源文件\duktape</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ZUI\duktape\duk_util_hashprime.c">
       <Filter>源文件\duktape</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ZUI\duktape\duk_util_misc.c">
@@ -735,9 +729,6 @@
     <ClCompile Include="..\..\ZUI\libuv\src\win\process.c">
       <Filter>源文件\libuv\win</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\duktape\duk_trans_dvalue.c">
-      <Filter>源文件\duktape</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\control\CheckBox.c">
       <Filter>源文件\control</Filter>
     </ClCompile>
@@ -830,6 +821,9 @@
     </ClCompile>
     <ClCompile Include="..\..\ZUI\dukluv\duv_module.c">
       <Filter>源文件\dukluv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\duktape\duk_heap_finalize.c">
+      <Filter>源文件\duktape</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

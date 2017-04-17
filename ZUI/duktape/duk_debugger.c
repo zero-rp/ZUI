@@ -66,7 +66,6 @@ DUK_LOCAL void duk__debug_do_detach1(duk_heap *heap, duk_int_t reason) {
 	/* heap->dbg_detached_cb: keep */
 	/* heap->dbg_udata: keep */
 	/* heap->dbg_processing: keep on purpose to avoid debugger re-entry in detaching state */
-	DUK_HEAP_CLEAR_DEBUGGER_PAUSED(heap);
 	heap->dbg_state_dirty = 0;
 	heap->dbg_force_restart = 0;
 	heap->dbg_step_type = 0;
@@ -74,6 +73,8 @@ DUK_LOCAL void duk__debug_do_detach1(duk_heap *heap, duk_int_t reason) {
 	heap->dbg_step_csindex = 0;
 	heap->dbg_step_startline = 0;
 	heap->dbg_have_next_byte = 0;
+	duk_debug_clear_paused(heap);  /* XXX: some overlap with field inits above */
+	heap->dbg_state_dirty = 0;     /* XXX: clear_paused sets dirty; rework? */
 
 	/* Ensure there are no stale active breakpoint pointers.
 	 * Breakpoint list is currently kept - we could empty it
@@ -92,7 +93,10 @@ DUK_LOCAL void duk__debug_do_detach2(duk_heap *heap) {
 	duk_context *ctx;
 
 	thr = heap->heap_thread;
-	DUK_ASSERT(thr != NULL);
+	if (thr == NULL) {
+		DUK_ASSERT(heap->dbg_detached_cb == NULL);
+		return;
+	}
 	ctx = (duk_context *) thr;
 
 	/* Safe to call multiple times. */
@@ -126,6 +130,9 @@ DUK_INTERNAL void duk_debug_do_detach(duk_heap *heap) {
  */
 DUK_LOCAL void duk__debug_null_most_callbacks(duk_hthread *thr) {
 	duk_heap *heap;
+
+	DUK_ASSERT(thr != NULL);
+
 	heap = thr->heap;
 	DUK_D(DUK_DPRINT("transport read/write error, NULL all callbacks expected detached"));
 	heap->dbg_read_cb = NULL;
@@ -973,7 +980,7 @@ DUK_INTERNAL duk_uint_fast32_t duk_debug_curr_line(duk_hthread *thr) {
 	duk_uint_fast32_t line;
 	duk_uint_fast32_t pc;
 
-	act = duk_hthread_get_current_activation(thr);  /* may be NULL */
+	act = thr->callstack_curr;
 	if (act == NULL) {
 		return 0;
 	}
@@ -1004,13 +1011,13 @@ DUK_INTERNAL void duk_debug_send_status(duk_hthread *thr) {
 	duk_debug_write_int(thr, (DUK_HEAP_HAS_DEBUGGER_PAUSED(thr->heap) ? 1 : 0));
 
 	DUK_ASSERT_DISABLE(thr->callstack_top >= 0);  /* unsigned */
-	if (thr->callstack_top == 0) {
+	act = thr->callstack_curr;
+	if (act == NULL) {
 		duk_debug_write_undefined(thr);
 		duk_debug_write_undefined(thr);
 		duk_debug_write_int(thr, 0);
 		duk_debug_write_int(thr, 0);
 	} else {
-		act = thr->callstack + thr->callstack_top - 1;
 		duk_push_tval(ctx, &act->tv_func);
 		duk_get_prop_string(ctx, -1, "fileName");
 		duk__debug_write_hstring_safe_top(thr);
@@ -1019,7 +1026,7 @@ DUK_INTERNAL void duk_debug_send_status(duk_hthread *thr) {
 		duk_pop_3(ctx);
 		/* Report next pc/line to be executed. */
 		duk_debug_write_uint(thr, (duk_uint32_t) duk_debug_curr_line(thr));
-		act = thr->callstack + thr->callstack_top - 1;
+		act = thr->callstack_curr;
 		duk_debug_write_uint(thr, (duk_uint32_t) duk_hthread_get_act_curr_pc(thr, act));
 	}
 
@@ -1058,12 +1065,12 @@ DUK_INTERNAL void duk_debug_send_throw(duk_hthread *thr, duk_bool_t fatal) {
 		 * error location directly from the current activation if one
 		 * exists.
 		 */
-		if (thr->callstack_top > 0) {
-			act = thr->callstack + thr->callstack_top - 1;
+		act = thr->callstack_curr;
+		if (act != NULL) {
 			duk_push_tval(ctx, &act->tv_func);
 			duk_get_prop_string(ctx, -1, "fileName");
 			duk__debug_write_hstring_safe_top(thr);
-			act = thr->callstack + thr->callstack_top - 1;
+			act = thr->callstack_curr;
 			pc = duk_hthread_get_act_prev_pc(thr, act);
 			duk_debug_write_uint(thr, (duk_uint32_t) duk_hobject_pc2line_query(ctx, -2, pc));
 			duk_pop_2(ctx);
@@ -1214,7 +1221,11 @@ DUK_LOCAL void duk__debug_handle_trigger_status(duk_hthread *thr, duk_heap *heap
 DUK_LOCAL void duk__debug_handle_pause(duk_hthread *thr, duk_heap *heap) {
 	DUK_D(DUK_DPRINT("debug command Pause"));
 
-	DUK_HEAP_SET_PAUSED(heap);
+	if (duk_debug_is_paused(heap)) {
+		DUK_D(DUK_DPRINT("Pause requested when already paused, ignore"));
+	} else {
+		duk_debug_set_paused(heap);
+	}
 	duk_debug_write_reply(thr);
 	duk_debug_write_eom(thr);
 }
@@ -1222,7 +1233,7 @@ DUK_LOCAL void duk__debug_handle_pause(duk_hthread *thr, duk_heap *heap) {
 DUK_LOCAL void duk__debug_handle_resume(duk_hthread *thr, duk_heap *heap) {
 	DUK_D(DUK_DPRINT("debug command Resume"));
 
-	DUK_HEAP_CLEAR_PAUSED(heap);
+	duk_debug_clear_paused(heap);
 	duk_debug_write_reply(thr);
 	duk_debug_write_eom(thr);
 }
@@ -1244,7 +1255,7 @@ DUK_LOCAL void duk__debug_handle_step(duk_hthread *thr, duk_heap *heap, duk_int3
 
 	line = duk_debug_curr_line(thr);
 	if (line > 0) {
-		DUK_HEAP_CLEAR_DEBUGGER_PAUSED(heap);
+		duk_debug_clear_paused(heap);  /* XXX: overlap with fields below; separate macro/helper? */
 		heap->dbg_step_type = step_type;
 		heap->dbg_step_thread = thr;
 		heap->dbg_step_csindex = thr->callstack_top - 1;
@@ -1506,6 +1517,7 @@ DUK_LOCAL void duk__debug_handle_eval(duk_hthread *thr, duk_heap *heap) {
 	/* Read callstack index, if non-null. */
 	if (duk_debug_peek_byte(thr) == DUK_DBG_IB_NULL) {
 		direct_eval = 0;
+		level = -1;  /* Not needed, but silences warning. */
 		(void) duk_debug_read_byte(thr);
 	} else {
 		direct_eval = 1;
@@ -1748,82 +1760,29 @@ DUK_LOCAL void duk__debug_dump_heap_allocated(duk_hthread *thr, duk_heap *heap) 
 	}
 }
 
-#if defined(DUK_USE_STRTAB_CHAIN)
-DUK_LOCAL void duk__debug_dump_strtab_chain(duk_hthread *thr, duk_heap *heap) {
-	duk_uint_fast32_t i, j;
-	duk_strtab_entry *e;
-#if defined(DUK_USE_HEAPPTR16)
-	duk_uint16_t *lst;
-#else
-	duk_hstring **lst;
-#endif
-	duk_hstring *h;
-
-	for (i = 0; i < DUK_STRTAB_CHAIN_SIZE; i++) {
-		e = heap->strtable + i;
-		if (e->listlen > 0) {
-#if defined(DUK_USE_HEAPPTR16)
-			lst = (duk_uint16_t *) DUK_USE_HEAPPTR_DEC16(heap->heap_udata, e->u.strlist16);
-#else
-			lst = e->u.strlist;
-#endif
-			DUK_ASSERT(lst != NULL);
-
-			for (j = 0; j < e->listlen; j++) {
-#if defined(DUK_USE_HEAPPTR16)
-				h = DUK_USE_HEAPPTR_DEC16(heap->heap_udata, lst[j]);
-#else
-				h = lst[j];
-#endif
-				if (h != NULL) {
-					duk__debug_dump_heaphdr(thr, heap, (duk_heaphdr *) h);
-				}
-			}
-		} else {
-#if defined(DUK_USE_HEAPPTR16)
-			h = DUK_USE_HEAPPTR_DEC16(heap->heap_udata, e->u.str16);
-#else
-			h = e->u.str;
-#endif
-			if (h != NULL) {
-				duk__debug_dump_heaphdr(thr, heap, (duk_heaphdr *) h);
-			}
-		}
-	}
-}
-#endif  /* DUK_USE_STRTAB_CHAIN */
-
-#if defined(DUK_USE_STRTAB_PROBE)
-DUK_LOCAL void duk__debug_dump_strtab_probe(duk_hthread *thr, duk_heap *heap) {
+DUK_LOCAL void duk__debug_dump_strtab(duk_hthread *thr, duk_heap *heap) {
 	duk_uint32_t i;
 	duk_hstring *h;
 
 	for (i = 0; i < heap->st_size; i++) {
-#if defined(DUK_USE_HEAPPTR16)
-		h = DUK_USE_HEAPPTR_DEC16(heap->heap_udata, heap->strtable16[i]);
+#if defined(DUK_USE_STRTAB_PTRCOMP)
+		h = DUK_USE_HEAPPTR_DEC16((heap)->heap_udata, heap->strtable16[i]);
 #else
 		h = heap->strtable[i];
 #endif
-		if (h == NULL || h == DUK_STRTAB_DELETED_MARKER(heap)) {
-			continue;
+		while (h != NULL) {
+			duk__debug_dump_heaphdr(thr, heap, (duk_heaphdr *) h);
+			h = h->hdr.h_next;
 		}
-
-		duk__debug_dump_heaphdr(thr, heap, (duk_heaphdr *) h);
 	}
 }
-#endif  /* DUK_USE_STRTAB_PROBE */
 
 DUK_LOCAL void duk__debug_handle_dump_heap(duk_hthread *thr, duk_heap *heap) {
 	DUK_D(DUK_DPRINT("debug command DumpHeap"));
 
 	duk_debug_write_reply(thr);
 	duk__debug_dump_heap_allocated(thr, heap);
-#if defined(DUK_USE_STRTAB_CHAIN)
-	duk__debug_dump_strtab_chain(thr, heap);
-#endif
-#if defined(DUK_USE_STRTAB_PROBE)
-	duk__debug_dump_strtab_probe(thr, heap);
-#endif
+	duk__debug_dump_strtab(thr, heap);
 	duk_debug_write_eom(thr);
 }
 #endif  /* DUK_USE_DEBUGGER_DUMPHEAP */
@@ -1961,14 +1920,14 @@ DUK_LOCAL const char * const duk__debug_getinfo_hobject_keys[] = {
 	"compfunc",
 	"natfunc",
 	"bufobj",
-	"thread",
+	"fastrefs",
 	"array_part",
 	"strict",
 	"notail",
 	"newenv",
 	"namebinding",
 	"createargs",
-	"envrecclosed",
+	"have_finalizer"
 	"exotic_array",
 	"exotic_stringobj",
 	"exotic_arguments",
@@ -1983,14 +1942,14 @@ DUK_LOCAL duk_uint_t duk__debug_getinfo_hobject_masks[] = {
 	DUK_HOBJECT_FLAG_COMPFUNC,
 	DUK_HOBJECT_FLAG_NATFUNC,
 	DUK_HOBJECT_FLAG_BUFOBJ,
-	DUK_HOBJECT_FLAG_THREAD,
+	DUK_HOBJECT_FLAG_FASTREFS,
 	DUK_HOBJECT_FLAG_ARRAY_PART,
 	DUK_HOBJECT_FLAG_STRICT,
 	DUK_HOBJECT_FLAG_NOTAIL,
 	DUK_HOBJECT_FLAG_NEWENV,
 	DUK_HOBJECT_FLAG_NAMEBINDING,
 	DUK_HOBJECT_FLAG_CREATEARGS,
-	DUK_HOBJECT_FLAG_ENVRECCLOSED,
+	DUK_HOBJECT_FLAG_HAVE_FINALIZER,
 	DUK_HOBJECT_FLAG_EXOTIC_ARRAY,
 	DUK_HOBJECT_FLAG_EXOTIC_STRINGOBJ,
 	DUK_HOBJECT_FLAG_EXOTIC_ARGUMENTS,
@@ -2158,9 +2117,9 @@ DUK_LOCAL void duk__debug_handle_get_heap_obj_info(duk_hthread *thr, duk_heap *h
 		                           duk__debug_getinfo_hstring_keys,
 		                           duk__debug_getinfo_hstring_masks,
 		                           DUK_HEAPHDR_GET_FLAGS_RAW(h));
-		duk__debug_getinfo_prop_uint(thr, "bytelen", DUK_HSTRING_GET_BYTELEN(h_str));
-		duk__debug_getinfo_prop_uint(thr, "charlen", DUK_HSTRING_GET_CHARLEN(h_str));
-		duk__debug_getinfo_prop_uint(thr, "hash", DUK_HSTRING_GET_HASH(h_str));
+		duk__debug_getinfo_prop_uint(thr, "bytelen", (duk_uint_t) DUK_HSTRING_GET_BYTELEN(h_str));
+		duk__debug_getinfo_prop_uint(thr, "charlen", (duk_uint_t) DUK_HSTRING_GET_CHARLEN(h_str));
+		duk__debug_getinfo_prop_uint(thr, "hash", (duk_uint_t) DUK_HSTRING_GET_HASH(h_str));
 		duk__debug_getinfo_flags_key(thr, "data");
 		duk_debug_write_hstring(thr, h_str);
 		break;
@@ -2256,6 +2215,26 @@ DUK_LOCAL void duk__debug_handle_get_heap_obj_info(duk_hthread *thr, duk_heap *h
 			duk_hthread *h_thr;
 			h_thr = (duk_hthread *) h_obj;
 			DUK_UNREF(h_thr);
+		}
+
+		if (DUK_HOBJECT_IS_DECENV(h_obj)) {
+			duk_hdecenv *h_env;
+			h_env = (duk_hdecenv *) h_obj;
+
+			duk__debug_getinfo_flags_key(thr, "thread");
+			duk_debug_write_heapptr(thr, (duk_heaphdr *) (h_env->thread));
+			duk__debug_getinfo_flags_key(thr, "varmap");
+			duk_debug_write_heapptr(thr, (duk_heaphdr *) (h_env->varmap));
+			duk__debug_getinfo_prop_uint(thr, "regbase", (duk_uint_t) h_env->regbase);
+		}
+
+		if (DUK_HOBJECT_IS_OBJENV(h_obj)) {
+			duk_hobjenv *h_env;
+			h_env = (duk_hobjenv *) h_obj;
+
+			duk__debug_getinfo_flags_key(thr, "target");
+			duk_debug_write_heapptr(thr, (duk_heaphdr *) (h_env->target));
+			duk__debug_getinfo_prop_bool(thr, "has_this", h_env->has_this);
 		}
 
 #if defined(DUK_USE_BUFFEROBJECT_SUPPORT)
@@ -2680,12 +2659,13 @@ DUK_INTERNAL void duk_debug_halt_execution(duk_hthread *thr, duk_bool_t use_prev
 
 	DUK_ASSERT(thr != NULL);
 	DUK_ASSERT(thr->heap != NULL);
-	DUK_ASSERT(DUK_HEAP_IS_DEBUGGER_ATTACHED(thr->heap));
+	DUK_ASSERT(duk_debug_is_attached(thr->heap));
 	DUK_ASSERT(thr->heap->dbg_processing == 0);
+	DUK_ASSERT(!duk_debug_is_paused(thr->heap));
 
-	DUK_HEAP_SET_PAUSED(thr->heap);
+	duk_debug_set_paused(thr->heap);
 
-	act = duk_hthread_get_current_activation(thr);
+	act = thr->callstack_curr;
 
 	/* NOTE: act may be NULL if an error is thrown outside of any activation,
 	 * which may happen in the case of, e.g. syntax errors.
@@ -2718,8 +2698,8 @@ DUK_INTERNAL void duk_debug_halt_execution(duk_hthread *thr, duk_bool_t use_prev
 
 	thr->heap->dbg_state_dirty = 1;
 	while (DUK_HEAP_HAS_DEBUGGER_PAUSED(thr->heap)) {
-		DUK_ASSERT(DUK_HEAP_IS_DEBUGGER_ATTACHED(thr->heap));
-		DUK_ASSERT(thr->heap->dbg_processing);
+		DUK_ASSERT(duk_debug_is_attached(thr->heap));
+		DUK_ASSERT(thr->heap->dbg_processing == 0);
 		duk_debug_process_messages(thr, 0 /*no_block*/);
 	}
 
@@ -2781,7 +2761,7 @@ DUK_INTERNAL duk_bool_t duk_debug_remove_breakpoint(duk_hthread *thr, duk_small_
 	DUK_ASSERT(thr != NULL);
 	heap = thr->heap;
 	DUK_ASSERT(heap != NULL);
-	DUK_ASSERT(DUK_HEAP_IS_DEBUGGER_ATTACHED(thr->heap));
+	DUK_ASSERT(duk_debug_is_attached(thr->heap));
 	DUK_ASSERT_DISABLE(breakpoint_index >= 0);  /* unsigned */
 
 	if (breakpoint_index >= heap->dbg_breakpoint_count) {
@@ -2808,6 +2788,55 @@ DUK_INTERNAL duk_bool_t duk_debug_remove_breakpoint(duk_hthread *thr, duk_small_
 	/* Breakpoint entries above the used area are left as garbage. */
 
 	return 1;
+}
+
+/*
+ *  Misc state management
+ */
+
+DUK_INTERNAL duk_bool_t duk_debug_is_attached(duk_heap *heap) {
+	return (heap->dbg_read_cb != NULL);
+}
+
+DUK_INTERNAL duk_bool_t duk_debug_is_paused(duk_heap *heap) {
+	return (DUK_HEAP_HAS_DEBUGGER_PAUSED(heap) != 0);
+}
+
+DUK_INTERNAL void duk_debug_set_paused(duk_heap *heap) {
+	if (duk_debug_is_paused(heap)) {
+		DUK_D(DUK_DPRINT("trying to set paused state when already paused, ignoring"));
+	} else {
+		DUK_HEAP_SET_DEBUGGER_PAUSED(heap);
+		heap->dbg_state_dirty = 1;
+		duk_debug_clear_step_state(heap);
+		DUK_ASSERT(heap->ms_running == 0);  /* debugger can't be triggered within mark-and-sweep */
+		heap->ms_running = 1;  /* prevent mark-and-sweep, prevent refzero queueing */
+		heap->ms_prevent_count++;
+		DUK_ASSERT(heap->ms_prevent_count != 0);  /* Wrap. */
+		DUK_ASSERT(heap->heap_thread != NULL);
+	}
+}
+
+DUK_INTERNAL void duk_debug_clear_paused(duk_heap *heap) {
+	if (duk_debug_is_paused(heap)) {
+		DUK_HEAP_CLEAR_DEBUGGER_PAUSED(heap);
+		heap->dbg_state_dirty = 1;
+		duk_debug_clear_step_state(heap);
+		DUK_ASSERT(heap->ms_running == 1);
+		DUK_ASSERT(heap->ms_prevent_count > 0);
+		heap->ms_prevent_count--;
+		heap->ms_running = 0;
+		DUK_ASSERT(heap->heap_thread != NULL);
+	} else {
+		DUK_D(DUK_DPRINT("trying to clear paused state when not paused, ignoring"));
+	}
+}
+
+DUK_INTERNAL void duk_debug_clear_step_state(duk_heap *heap) {
+	heap->dbg_step_type = DUK_STEP_TYPE_NONE;
+	heap->dbg_step_thread = NULL;
+	heap->dbg_step_csindex = 0;
+	heap->dbg_step_startline = 0;
 }
 
 #else  /* DUK_USE_DEBUGGER_SUPPORT */

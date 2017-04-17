@@ -8,7 +8,7 @@ typedef struct duk_internal_thread_state duk_internal_thread_state;
 
 struct duk_internal_thread_state {
 	duk_ljstate lj;
-	duk_bool_t handling_error;
+	duk_bool_t creating_error;
 	duk_hthread *curr_thread;
 	duk_int_t call_recursion_depth;
 };
@@ -89,14 +89,27 @@ DUK_EXTERNAL void duk_suspend(duk_context *ctx, duk_thread_state *state) {
 	DUK_ASSERT(thr->heap != NULL);
 	DUK_ASSERT(state != NULL);  /* unvalidated */
 
+	/* Currently not supported when called from within a finalizer.
+	 * If that is done, the finalizer will remain running indefinitely,
+	 * preventing other finalizers from executing.  The assert is a bit
+	 * wider, checking that it would be OK to run pending finalizers.
+	 */
+	DUK_ASSERT(thr->heap->pf_prevent_count == 0);
+
+	/* Currently not supported to duk_suspend() from an errCreate()
+	 * call.
+	 */
+	DUK_ASSERT(thr->heap->creating_error == 0);
+
 	heap = thr->heap;
 	lj = &heap->lj;
 
 	duk_push_tval(ctx, &lj->value1);
 	duk_push_tval(ctx, &lj->value2);
 
+	/* XXX: creating_error == 0 is asserted above, so no need to store. */
 	DUK_MEMCPY((void *) &snapshot->lj, (const void *) lj, sizeof(duk_ljstate));
-	snapshot->handling_error = heap->handling_error;
+	snapshot->creating_error = heap->creating_error;
 	snapshot->curr_thread = heap->curr_thread;
 	snapshot->call_recursion_depth = heap->call_recursion_depth;
 
@@ -104,7 +117,7 @@ DUK_EXTERNAL void duk_suspend(duk_context *ctx, duk_thread_state *state) {
 	lj->type = DUK_LJ_TYPE_UNKNOWN;
 	DUK_TVAL_SET_UNDEFINED(&lj->value1);
 	DUK_TVAL_SET_UNDEFINED(&lj->value2);
-	heap->handling_error = 0;
+	heap->creating_error = 0;
 	heap->curr_thread = NULL;
 	heap->call_recursion_depth = 0;
 }
@@ -119,10 +132,16 @@ DUK_EXTERNAL void duk_resume(duk_context *ctx, const duk_thread_state *state) {
 	DUK_ASSERT(thr->heap != NULL);
 	DUK_ASSERT(state != NULL);  /* unvalidated */
 
+	/* Shouldn't be necessary if duk_suspend() is called before
+	 * duk_resume(), but assert in case API sequence is incorrect.
+	 */
+	DUK_ASSERT(thr->heap->pf_prevent_count == 0);
+	DUK_ASSERT(thr->heap->creating_error == 0);
+
 	heap = thr->heap;
 
 	DUK_MEMCPY((void *) &heap->lj, (const void *) &snapshot->lj, sizeof(duk_ljstate));
-	heap->handling_error = snapshot->handling_error;
+	heap->creating_error = snapshot->creating_error;
 	heap->curr_thread = snapshot->curr_thread;
 	heap->call_recursion_depth = snapshot->call_recursion_depth;
 
@@ -134,7 +153,7 @@ DUK_EXTERNAL void duk_set_global_object(duk_context *ctx) {
 	duk_hthread *thr = (duk_hthread *) ctx;
 	duk_hobject *h_glob;
 	duk_hobject *h_prev_glob;
-	duk_hobject *h_env;
+	duk_hobjenv *h_env;
 	duk_hobject *h_prev_env;
 
 	DUK_D(DUK_DPRINT("replace global object with: %!T", duk_get_tval(ctx, -1)));
@@ -161,29 +180,30 @@ DUK_EXTERNAL void duk_set_global_object(duk_context *ctx) {
 	 *  same (initial) built-ins.
 	 */
 
-	h_env = duk_push_object_helper(ctx,
-	                               DUK_HOBJECT_FLAG_EXTENSIBLE |
-	                               DUK_HOBJECT_CLASS_AS_FLAGS(DUK_HOBJECT_CLASS_OBJENV),
-	                               -1);  /* no prototype, updated below */
+	h_env = duk_hobjenv_alloc(thr,
+	                          DUK_HOBJECT_FLAG_EXTENSIBLE |
+	                          DUK_HOBJECT_CLASS_AS_FLAGS(DUK_HOBJECT_CLASS_OBJENV));
 	DUK_ASSERT(h_env != NULL);
+	DUK_ASSERT(DUK_HOBJECT_GET_PROTOTYPE(thr->heap, (duk_hobject *) h_env) == NULL);
 
-	duk_dup_m2(ctx);
-	duk_dup_m3(ctx);
-	duk_xdef_prop_stridx_short(thr, -3, DUK_STRIDX_INT_TARGET, DUK_PROPDESC_FLAGS_NONE);
-	duk_xdef_prop_stridx_short(thr, -2, DUK_STRIDX_INT_THIS, DUK_PROPDESC_FLAGS_NONE);
+	DUK_ASSERT(h_env->target == NULL);
+	DUK_ASSERT(h_glob != NULL);
+	h_env->target = h_glob;
+	DUK_HOBJECT_INCREF(thr, h_glob);
+	DUK_ASSERT(h_env->has_this == 0);
 
-	/* [ ... new_glob new_env ] */
+	/* [ ... new_glob ] */
 
 	h_prev_env = thr->builtins[DUK_BIDX_GLOBAL_ENV];
-	thr->builtins[DUK_BIDX_GLOBAL_ENV] = h_env;
-	DUK_HOBJECT_INCREF(thr, h_env);
+	thr->builtins[DUK_BIDX_GLOBAL_ENV] = (duk_hobject *) h_env;
+	DUK_HOBJECT_INCREF(thr, (duk_hobject *) h_env);
 	DUK_HOBJECT_DECREF_ALLOWNULL(thr, h_prev_env);  /* side effects */
 	DUK_UNREF(h_env);  /* without refcounts */
 	DUK_UNREF(h_prev_env);
 
-	/* [ ... new_glob new_env ] */
+	/* [ ... new_glob ] */
 
-	duk_pop_2(ctx);
+	duk_pop(ctx);
 
 	/* [ ... ] */
 }

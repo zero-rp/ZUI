@@ -296,233 +296,224 @@
 #define DUK_STRIDX_INT_PC2LINE                                        95                             /* '\xffPc2line' */
 #define DUK_HEAP_STRING_INT_PC2LINE(heap)                             DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INT_PC2LINE)
 #define DUK_HTHREAD_STRING_INT_PC2LINE(thr)                           DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INT_PC2LINE)
-#define DUK_STRIDX_INT_ARGS                                           96                             /* '\xffArgs' */
-#define DUK_HEAP_STRING_INT_ARGS(heap)                                DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INT_ARGS)
-#define DUK_HTHREAD_STRING_INT_ARGS(thr)                              DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INT_ARGS)
-#define DUK_STRIDX_INT_MAP                                            97                             /* '\xffMap' */
-#define DUK_HEAP_STRING_INT_MAP(heap)                                 DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INT_MAP)
-#define DUK_HTHREAD_STRING_INT_MAP(thr)                               DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INT_MAP)
-#define DUK_STRIDX_INT_VARENV                                         98                             /* '\xffVarenv' */
-#define DUK_HEAP_STRING_INT_VARENV(heap)                              DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INT_VARENV)
-#define DUK_HTHREAD_STRING_INT_VARENV(thr)                            DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INT_VARENV)
-#define DUK_STRIDX_INT_FINALIZER                                      99                             /* '\xffFinalizer' */
-#define DUK_HEAP_STRING_INT_FINALIZER(heap)                           DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INT_FINALIZER)
-#define DUK_HTHREAD_STRING_INT_FINALIZER(thr)                         DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INT_FINALIZER)
-#define DUK_STRIDX_INT_HANDLER                                        100                            /* '\xffHandler' */
-#define DUK_HEAP_STRING_INT_HANDLER(heap)                             DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INT_HANDLER)
-#define DUK_HTHREAD_STRING_INT_HANDLER(thr)                           DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INT_HANDLER)
-#define DUK_STRIDX_INT_CALLEE                                         101                            /* '\xffCallee' */
-#define DUK_HEAP_STRING_INT_CALLEE(heap)                              DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INT_CALLEE)
-#define DUK_HTHREAD_STRING_INT_CALLEE(thr)                            DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INT_CALLEE)
-#define DUK_STRIDX_INT_THREAD                                         102                            /* '\xffThread' */
-#define DUK_HEAP_STRING_INT_THREAD(heap)                              DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INT_THREAD)
-#define DUK_HTHREAD_STRING_INT_THREAD(thr)                            DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INT_THREAD)
-#define DUK_STRIDX_INT_REGBASE                                        103                            /* '\xffRegbase' */
-#define DUK_HEAP_STRING_INT_REGBASE(heap)                             DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INT_REGBASE)
-#define DUK_HTHREAD_STRING_INT_REGBASE(thr)                           DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INT_REGBASE)
-#define DUK_STRIDX_INT_TARGET                                         104                            /* '\xffTarget' */
-#define DUK_HEAP_STRING_INT_TARGET(heap)                              DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INT_TARGET)
-#define DUK_HTHREAD_STRING_INT_TARGET(thr)                            DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INT_TARGET)
-#define DUK_STRIDX_INT_THIS                                           105                            /* '\xffThis' */
+#define DUK_STRIDX_INT_THIS                                           96                             /* '\xffThis' */
 #define DUK_HEAP_STRING_INT_THIS(heap)                                DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INT_THIS)
 #define DUK_HTHREAD_STRING_INT_THIS(thr)                              DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INT_THIS)
-#define DUK_STRIDX_COMPILE                                            106                            /* 'compile' */
+#define DUK_STRIDX_INT_ARGS                                           97                             /* '\xffArgs' */
+#define DUK_HEAP_STRING_INT_ARGS(heap)                                DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INT_ARGS)
+#define DUK_HTHREAD_STRING_INT_ARGS(thr)                              DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INT_ARGS)
+#define DUK_STRIDX_INT_MAP                                            98                             /* '\xffMap' */
+#define DUK_HEAP_STRING_INT_MAP(heap)                                 DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INT_MAP)
+#define DUK_HTHREAD_STRING_INT_MAP(thr)                               DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INT_MAP)
+#define DUK_STRIDX_INT_VARENV                                         99                             /* '\xffVarenv' */
+#define DUK_HEAP_STRING_INT_VARENV(heap)                              DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INT_VARENV)
+#define DUK_HTHREAD_STRING_INT_VARENV(thr)                            DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INT_VARENV)
+#define DUK_STRIDX_INT_FINALIZER                                      100                            /* '\xffFinalizer' */
+#define DUK_HEAP_STRING_INT_FINALIZER(heap)                           DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INT_FINALIZER)
+#define DUK_HTHREAD_STRING_INT_FINALIZER(thr)                         DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INT_FINALIZER)
+#define DUK_STRIDX_INT_TARGET                                         101                            /* '\xffTarget' */
+#define DUK_HEAP_STRING_INT_TARGET(heap)                              DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INT_TARGET)
+#define DUK_HTHREAD_STRING_INT_TARGET(thr)                            DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INT_TARGET)
+#define DUK_STRIDX_INT_HANDLER                                        102                            /* '\xffHandler' */
+#define DUK_HEAP_STRING_INT_HANDLER(heap)                             DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INT_HANDLER)
+#define DUK_HTHREAD_STRING_INT_HANDLER(thr)                           DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INT_HANDLER)
+#define DUK_STRIDX_COMPILE                                            103                            /* 'compile' */
 #define DUK_HEAP_STRING_COMPILE(heap)                                 DUK_HEAP_GET_STRING((heap),DUK_STRIDX_COMPILE)
 #define DUK_HTHREAD_STRING_COMPILE(thr)                               DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_COMPILE)
-#define DUK_STRIDX_INPUT                                              107                            /* 'input' */
+#define DUK_STRIDX_INPUT                                              104                            /* 'input' */
 #define DUK_HEAP_STRING_INPUT(heap)                                   DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INPUT)
 #define DUK_HTHREAD_STRING_INPUT(thr)                                 DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INPUT)
-#define DUK_STRIDX_ERR_CREATE                                         108                            /* 'errCreate' */
+#define DUK_STRIDX_ERR_CREATE                                         105                            /* 'errCreate' */
 #define DUK_HEAP_STRING_ERR_CREATE(heap)                              DUK_HEAP_GET_STRING((heap),DUK_STRIDX_ERR_CREATE)
 #define DUK_HTHREAD_STRING_ERR_CREATE(thr)                            DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_ERR_CREATE)
-#define DUK_STRIDX_ERR_THROW                                          109                            /* 'errThrow' */
+#define DUK_STRIDX_ERR_THROW                                          106                            /* 'errThrow' */
 #define DUK_HEAP_STRING_ERR_THROW(heap)                               DUK_HEAP_GET_STRING((heap),DUK_STRIDX_ERR_THROW)
 #define DUK_HTHREAD_STRING_ERR_THROW(thr)                             DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_ERR_THROW)
-#define DUK_STRIDX_ENV                                                110                            /* 'env' */
+#define DUK_STRIDX_ENV                                                107                            /* 'env' */
 #define DUK_HEAP_STRING_ENV(heap)                                     DUK_HEAP_GET_STRING((heap),DUK_STRIDX_ENV)
 #define DUK_HTHREAD_STRING_ENV(thr)                                   DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_ENV)
-#define DUK_STRIDX_HEX                                                111                            /* 'hex' */
+#define DUK_STRIDX_HEX                                                108                            /* 'hex' */
 #define DUK_HEAP_STRING_HEX(heap)                                     DUK_HEAP_GET_STRING((heap),DUK_STRIDX_HEX)
 #define DUK_HTHREAD_STRING_HEX(thr)                                   DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_HEX)
-#define DUK_STRIDX_BASE64                                             112                            /* 'base64' */
+#define DUK_STRIDX_BASE64                                             109                            /* 'base64' */
 #define DUK_HEAP_STRING_BASE64(heap)                                  DUK_HEAP_GET_STRING((heap),DUK_STRIDX_BASE64)
 #define DUK_HTHREAD_STRING_BASE64(thr)                                DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_BASE64)
-#define DUK_STRIDX_JX                                                 113                            /* 'jx' */
+#define DUK_STRIDX_JX                                                 110                            /* 'jx' */
 #define DUK_HEAP_STRING_JX(heap)                                      DUK_HEAP_GET_STRING((heap),DUK_STRIDX_JX)
 #define DUK_HTHREAD_STRING_JX(thr)                                    DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_JX)
-#define DUK_STRIDX_JC                                                 114                            /* 'jc' */
+#define DUK_STRIDX_JC                                                 111                            /* 'jc' */
 #define DUK_HEAP_STRING_JC(heap)                                      DUK_HEAP_GET_STRING((heap),DUK_STRIDX_JC)
 #define DUK_HTHREAD_STRING_JC(thr)                                    DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_JC)
-#define DUK_STRIDX_RESUME                                             115                            /* 'resume' */
+#define DUK_STRIDX_RESUME                                             112                            /* 'resume' */
 #define DUK_HEAP_STRING_RESUME(heap)                                  DUK_HEAP_GET_STRING((heap),DUK_STRIDX_RESUME)
 #define DUK_HTHREAD_STRING_RESUME(thr)                                DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_RESUME)
-#define DUK_STRIDX_JSON_EXT_UNDEFINED                                 116                            /* '{"_undef":true}' */
+#define DUK_STRIDX_JSON_EXT_UNDEFINED                                 113                            /* '{"_undef":true}' */
 #define DUK_HEAP_STRING_JSON_EXT_UNDEFINED(heap)                      DUK_HEAP_GET_STRING((heap),DUK_STRIDX_JSON_EXT_UNDEFINED)
 #define DUK_HTHREAD_STRING_JSON_EXT_UNDEFINED(thr)                    DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_JSON_EXT_UNDEFINED)
-#define DUK_STRIDX_JSON_EXT_NAN                                       117                            /* '{"_nan":true}' */
+#define DUK_STRIDX_JSON_EXT_NAN                                       114                            /* '{"_nan":true}' */
 #define DUK_HEAP_STRING_JSON_EXT_NAN(heap)                            DUK_HEAP_GET_STRING((heap),DUK_STRIDX_JSON_EXT_NAN)
 #define DUK_HTHREAD_STRING_JSON_EXT_NAN(thr)                          DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_JSON_EXT_NAN)
-#define DUK_STRIDX_JSON_EXT_POSINF                                    118                            /* '{"_inf":true}' */
+#define DUK_STRIDX_JSON_EXT_POSINF                                    115                            /* '{"_inf":true}' */
 #define DUK_HEAP_STRING_JSON_EXT_POSINF(heap)                         DUK_HEAP_GET_STRING((heap),DUK_STRIDX_JSON_EXT_POSINF)
 #define DUK_HTHREAD_STRING_JSON_EXT_POSINF(thr)                       DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_JSON_EXT_POSINF)
-#define DUK_STRIDX_JSON_EXT_NEGINF                                    119                            /* '{"_ninf":true}' */
+#define DUK_STRIDX_JSON_EXT_NEGINF                                    116                            /* '{"_ninf":true}' */
 #define DUK_HEAP_STRING_JSON_EXT_NEGINF(heap)                         DUK_HEAP_GET_STRING((heap),DUK_STRIDX_JSON_EXT_NEGINF)
 #define DUK_HTHREAD_STRING_JSON_EXT_NEGINF(thr)                       DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_JSON_EXT_NEGINF)
-#define DUK_STRIDX_JSON_EXT_FUNCTION1                                 120                            /* '{"_func":true}' */
+#define DUK_STRIDX_JSON_EXT_FUNCTION1                                 117                            /* '{"_func":true}' */
 #define DUK_HEAP_STRING_JSON_EXT_FUNCTION1(heap)                      DUK_HEAP_GET_STRING((heap),DUK_STRIDX_JSON_EXT_FUNCTION1)
 #define DUK_HTHREAD_STRING_JSON_EXT_FUNCTION1(thr)                    DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_JSON_EXT_FUNCTION1)
-#define DUK_STRIDX_JSON_EXT_FUNCTION2                                 121                            /* '{_func:true}' */
+#define DUK_STRIDX_JSON_EXT_FUNCTION2                                 118                            /* '{_func:true}' */
 #define DUK_HEAP_STRING_JSON_EXT_FUNCTION2(heap)                      DUK_HEAP_GET_STRING((heap),DUK_STRIDX_JSON_EXT_FUNCTION2)
 #define DUK_HTHREAD_STRING_JSON_EXT_FUNCTION2(thr)                    DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_JSON_EXT_FUNCTION2)
-#define DUK_STRIDX_BREAK                                              122                            /* 'break' */
+#define DUK_STRIDX_BREAK                                              119                            /* 'break' */
 #define DUK_HEAP_STRING_BREAK(heap)                                   DUK_HEAP_GET_STRING((heap),DUK_STRIDX_BREAK)
 #define DUK_HTHREAD_STRING_BREAK(thr)                                 DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_BREAK)
-#define DUK_STRIDX_CASE                                               123                            /* 'case' */
+#define DUK_STRIDX_CASE                                               120                            /* 'case' */
 #define DUK_HEAP_STRING_CASE(heap)                                    DUK_HEAP_GET_STRING((heap),DUK_STRIDX_CASE)
 #define DUK_HTHREAD_STRING_CASE(thr)                                  DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_CASE)
-#define DUK_STRIDX_CATCH                                              124                            /* 'catch' */
+#define DUK_STRIDX_CATCH                                              121                            /* 'catch' */
 #define DUK_HEAP_STRING_CATCH(heap)                                   DUK_HEAP_GET_STRING((heap),DUK_STRIDX_CATCH)
 #define DUK_HTHREAD_STRING_CATCH(thr)                                 DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_CATCH)
-#define DUK_STRIDX_CONTINUE                                           125                            /* 'continue' */
+#define DUK_STRIDX_CONTINUE                                           122                            /* 'continue' */
 #define DUK_HEAP_STRING_CONTINUE(heap)                                DUK_HEAP_GET_STRING((heap),DUK_STRIDX_CONTINUE)
 #define DUK_HTHREAD_STRING_CONTINUE(thr)                              DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_CONTINUE)
-#define DUK_STRIDX_DEBUGGER                                           126                            /* 'debugger' */
+#define DUK_STRIDX_DEBUGGER                                           123                            /* 'debugger' */
 #define DUK_HEAP_STRING_DEBUGGER(heap)                                DUK_HEAP_GET_STRING((heap),DUK_STRIDX_DEBUGGER)
 #define DUK_HTHREAD_STRING_DEBUGGER(thr)                              DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_DEBUGGER)
-#define DUK_STRIDX_DEFAULT                                            127                            /* 'default' */
+#define DUK_STRIDX_DEFAULT                                            124                            /* 'default' */
 #define DUK_HEAP_STRING_DEFAULT(heap)                                 DUK_HEAP_GET_STRING((heap),DUK_STRIDX_DEFAULT)
 #define DUK_HTHREAD_STRING_DEFAULT(thr)                               DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_DEFAULT)
-#define DUK_STRIDX_DELETE                                             128                            /* 'delete' */
+#define DUK_STRIDX_DELETE                                             125                            /* 'delete' */
 #define DUK_HEAP_STRING_DELETE(heap)                                  DUK_HEAP_GET_STRING((heap),DUK_STRIDX_DELETE)
 #define DUK_HTHREAD_STRING_DELETE(thr)                                DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_DELETE)
-#define DUK_STRIDX_DO                                                 129                            /* 'do' */
+#define DUK_STRIDX_DO                                                 126                            /* 'do' */
 #define DUK_HEAP_STRING_DO(heap)                                      DUK_HEAP_GET_STRING((heap),DUK_STRIDX_DO)
 #define DUK_HTHREAD_STRING_DO(thr)                                    DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_DO)
-#define DUK_STRIDX_ELSE                                               130                            /* 'else' */
+#define DUK_STRIDX_ELSE                                               127                            /* 'else' */
 #define DUK_HEAP_STRING_ELSE(heap)                                    DUK_HEAP_GET_STRING((heap),DUK_STRIDX_ELSE)
 #define DUK_HTHREAD_STRING_ELSE(thr)                                  DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_ELSE)
-#define DUK_STRIDX_FINALLY                                            131                            /* 'finally' */
+#define DUK_STRIDX_FINALLY                                            128                            /* 'finally' */
 #define DUK_HEAP_STRING_FINALLY(heap)                                 DUK_HEAP_GET_STRING((heap),DUK_STRIDX_FINALLY)
 #define DUK_HTHREAD_STRING_FINALLY(thr)                               DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_FINALLY)
-#define DUK_STRIDX_FOR                                                132                            /* 'for' */
+#define DUK_STRIDX_FOR                                                129                            /* 'for' */
 #define DUK_HEAP_STRING_FOR(heap)                                     DUK_HEAP_GET_STRING((heap),DUK_STRIDX_FOR)
 #define DUK_HTHREAD_STRING_FOR(thr)                                   DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_FOR)
-#define DUK_STRIDX_LC_FUNCTION                                        133                            /* 'function' */
+#define DUK_STRIDX_LC_FUNCTION                                        130                            /* 'function' */
 #define DUK_HEAP_STRING_LC_FUNCTION(heap)                             DUK_HEAP_GET_STRING((heap),DUK_STRIDX_LC_FUNCTION)
 #define DUK_HTHREAD_STRING_LC_FUNCTION(thr)                           DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_LC_FUNCTION)
-#define DUK_STRIDX_IF                                                 134                            /* 'if' */
+#define DUK_STRIDX_IF                                                 131                            /* 'if' */
 #define DUK_HEAP_STRING_IF(heap)                                      DUK_HEAP_GET_STRING((heap),DUK_STRIDX_IF)
 #define DUK_HTHREAD_STRING_IF(thr)                                    DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_IF)
-#define DUK_STRIDX_IN                                                 135                            /* 'in' */
+#define DUK_STRIDX_IN                                                 132                            /* 'in' */
 #define DUK_HEAP_STRING_IN(heap)                                      DUK_HEAP_GET_STRING((heap),DUK_STRIDX_IN)
 #define DUK_HTHREAD_STRING_IN(thr)                                    DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_IN)
-#define DUK_STRIDX_INSTANCEOF                                         136                            /* 'instanceof' */
+#define DUK_STRIDX_INSTANCEOF                                         133                            /* 'instanceof' */
 #define DUK_HEAP_STRING_INSTANCEOF(heap)                              DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INSTANCEOF)
 #define DUK_HTHREAD_STRING_INSTANCEOF(thr)                            DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INSTANCEOF)
-#define DUK_STRIDX_NEW                                                137                            /* 'new' */
+#define DUK_STRIDX_NEW                                                134                            /* 'new' */
 #define DUK_HEAP_STRING_NEW(heap)                                     DUK_HEAP_GET_STRING((heap),DUK_STRIDX_NEW)
 #define DUK_HTHREAD_STRING_NEW(thr)                                   DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_NEW)
-#define DUK_STRIDX_RETURN                                             138                            /* 'return' */
+#define DUK_STRIDX_RETURN                                             135                            /* 'return' */
 #define DUK_HEAP_STRING_RETURN(heap)                                  DUK_HEAP_GET_STRING((heap),DUK_STRIDX_RETURN)
 #define DUK_HTHREAD_STRING_RETURN(thr)                                DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_RETURN)
-#define DUK_STRIDX_SWITCH                                             139                            /* 'switch' */
+#define DUK_STRIDX_SWITCH                                             136                            /* 'switch' */
 #define DUK_HEAP_STRING_SWITCH(heap)                                  DUK_HEAP_GET_STRING((heap),DUK_STRIDX_SWITCH)
 #define DUK_HTHREAD_STRING_SWITCH(thr)                                DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_SWITCH)
-#define DUK_STRIDX_THIS                                               140                            /* 'this' */
+#define DUK_STRIDX_THIS                                               137                            /* 'this' */
 #define DUK_HEAP_STRING_THIS(heap)                                    DUK_HEAP_GET_STRING((heap),DUK_STRIDX_THIS)
 #define DUK_HTHREAD_STRING_THIS(thr)                                  DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_THIS)
-#define DUK_STRIDX_THROW                                              141                            /* 'throw' */
+#define DUK_STRIDX_THROW                                              138                            /* 'throw' */
 #define DUK_HEAP_STRING_THROW(heap)                                   DUK_HEAP_GET_STRING((heap),DUK_STRIDX_THROW)
 #define DUK_HTHREAD_STRING_THROW(thr)                                 DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_THROW)
-#define DUK_STRIDX_TRY                                                142                            /* 'try' */
+#define DUK_STRIDX_TRY                                                139                            /* 'try' */
 #define DUK_HEAP_STRING_TRY(heap)                                     DUK_HEAP_GET_STRING((heap),DUK_STRIDX_TRY)
 #define DUK_HTHREAD_STRING_TRY(thr)                                   DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_TRY)
-#define DUK_STRIDX_TYPEOF                                             143                            /* 'typeof' */
+#define DUK_STRIDX_TYPEOF                                             140                            /* 'typeof' */
 #define DUK_HEAP_STRING_TYPEOF(heap)                                  DUK_HEAP_GET_STRING((heap),DUK_STRIDX_TYPEOF)
 #define DUK_HTHREAD_STRING_TYPEOF(thr)                                DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_TYPEOF)
-#define DUK_STRIDX_VAR                                                144                            /* 'var' */
+#define DUK_STRIDX_VAR                                                141                            /* 'var' */
 #define DUK_HEAP_STRING_VAR(heap)                                     DUK_HEAP_GET_STRING((heap),DUK_STRIDX_VAR)
 #define DUK_HTHREAD_STRING_VAR(thr)                                   DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_VAR)
-#define DUK_STRIDX_CONST                                              145                            /* 'const' */
+#define DUK_STRIDX_CONST                                              142                            /* 'const' */
 #define DUK_HEAP_STRING_CONST(heap)                                   DUK_HEAP_GET_STRING((heap),DUK_STRIDX_CONST)
 #define DUK_HTHREAD_STRING_CONST(thr)                                 DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_CONST)
-#define DUK_STRIDX_VOID                                               146                            /* 'void' */
+#define DUK_STRIDX_VOID                                               143                            /* 'void' */
 #define DUK_HEAP_STRING_VOID(heap)                                    DUK_HEAP_GET_STRING((heap),DUK_STRIDX_VOID)
 #define DUK_HTHREAD_STRING_VOID(thr)                                  DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_VOID)
-#define DUK_STRIDX_WHILE                                              147                            /* 'while' */
+#define DUK_STRIDX_WHILE                                              144                            /* 'while' */
 #define DUK_HEAP_STRING_WHILE(heap)                                   DUK_HEAP_GET_STRING((heap),DUK_STRIDX_WHILE)
 #define DUK_HTHREAD_STRING_WHILE(thr)                                 DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_WHILE)
-#define DUK_STRIDX_WITH                                               148                            /* 'with' */
+#define DUK_STRIDX_WITH                                               145                            /* 'with' */
 #define DUK_HEAP_STRING_WITH(heap)                                    DUK_HEAP_GET_STRING((heap),DUK_STRIDX_WITH)
 #define DUK_HTHREAD_STRING_WITH(thr)                                  DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_WITH)
-#define DUK_STRIDX_CLASS                                              149                            /* 'class' */
+#define DUK_STRIDX_CLASS                                              146                            /* 'class' */
 #define DUK_HEAP_STRING_CLASS(heap)                                   DUK_HEAP_GET_STRING((heap),DUK_STRIDX_CLASS)
 #define DUK_HTHREAD_STRING_CLASS(thr)                                 DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_CLASS)
-#define DUK_STRIDX_ENUM                                               150                            /* 'enum' */
+#define DUK_STRIDX_ENUM                                               147                            /* 'enum' */
 #define DUK_HEAP_STRING_ENUM(heap)                                    DUK_HEAP_GET_STRING((heap),DUK_STRIDX_ENUM)
 #define DUK_HTHREAD_STRING_ENUM(thr)                                  DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_ENUM)
-#define DUK_STRIDX_EXPORT                                             151                            /* 'export' */
+#define DUK_STRIDX_EXPORT                                             148                            /* 'export' */
 #define DUK_HEAP_STRING_EXPORT(heap)                                  DUK_HEAP_GET_STRING((heap),DUK_STRIDX_EXPORT)
 #define DUK_HTHREAD_STRING_EXPORT(thr)                                DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_EXPORT)
-#define DUK_STRIDX_EXTENDS                                            152                            /* 'extends' */
+#define DUK_STRIDX_EXTENDS                                            149                            /* 'extends' */
 #define DUK_HEAP_STRING_EXTENDS(heap)                                 DUK_HEAP_GET_STRING((heap),DUK_STRIDX_EXTENDS)
 #define DUK_HTHREAD_STRING_EXTENDS(thr)                               DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_EXTENDS)
-#define DUK_STRIDX_IMPORT                                             153                            /* 'import' */
+#define DUK_STRIDX_IMPORT                                             150                            /* 'import' */
 #define DUK_HEAP_STRING_IMPORT(heap)                                  DUK_HEAP_GET_STRING((heap),DUK_STRIDX_IMPORT)
 #define DUK_HTHREAD_STRING_IMPORT(thr)                                DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_IMPORT)
-#define DUK_STRIDX_SUPER                                              154                            /* 'super' */
+#define DUK_STRIDX_SUPER                                              151                            /* 'super' */
 #define DUK_HEAP_STRING_SUPER(heap)                                   DUK_HEAP_GET_STRING((heap),DUK_STRIDX_SUPER)
 #define DUK_HTHREAD_STRING_SUPER(thr)                                 DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_SUPER)
-#define DUK_STRIDX_LC_NULL                                            155                            /* 'null' */
+#define DUK_STRIDX_LC_NULL                                            152                            /* 'null' */
 #define DUK_HEAP_STRING_LC_NULL(heap)                                 DUK_HEAP_GET_STRING((heap),DUK_STRIDX_LC_NULL)
 #define DUK_HTHREAD_STRING_LC_NULL(thr)                               DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_LC_NULL)
-#define DUK_STRIDX_TRUE                                               156                            /* 'true' */
+#define DUK_STRIDX_TRUE                                               153                            /* 'true' */
 #define DUK_HEAP_STRING_TRUE(heap)                                    DUK_HEAP_GET_STRING((heap),DUK_STRIDX_TRUE)
 #define DUK_HTHREAD_STRING_TRUE(thr)                                  DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_TRUE)
-#define DUK_STRIDX_FALSE                                              157                            /* 'false' */
+#define DUK_STRIDX_FALSE                                              154                            /* 'false' */
 #define DUK_HEAP_STRING_FALSE(heap)                                   DUK_HEAP_GET_STRING((heap),DUK_STRIDX_FALSE)
 #define DUK_HTHREAD_STRING_FALSE(thr)                                 DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_FALSE)
-#define DUK_STRIDX_IMPLEMENTS                                         158                            /* 'implements' */
+#define DUK_STRIDX_IMPLEMENTS                                         155                            /* 'implements' */
 #define DUK_HEAP_STRING_IMPLEMENTS(heap)                              DUK_HEAP_GET_STRING((heap),DUK_STRIDX_IMPLEMENTS)
 #define DUK_HTHREAD_STRING_IMPLEMENTS(thr)                            DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_IMPLEMENTS)
-#define DUK_STRIDX_INTERFACE                                          159                            /* 'interface' */
+#define DUK_STRIDX_INTERFACE                                          156                            /* 'interface' */
 #define DUK_HEAP_STRING_INTERFACE(heap)                               DUK_HEAP_GET_STRING((heap),DUK_STRIDX_INTERFACE)
 #define DUK_HTHREAD_STRING_INTERFACE(thr)                             DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_INTERFACE)
-#define DUK_STRIDX_LET                                                160                            /* 'let' */
+#define DUK_STRIDX_LET                                                157                            /* 'let' */
 #define DUK_HEAP_STRING_LET(heap)                                     DUK_HEAP_GET_STRING((heap),DUK_STRIDX_LET)
 #define DUK_HTHREAD_STRING_LET(thr)                                   DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_LET)
-#define DUK_STRIDX_PACKAGE                                            161                            /* 'package' */
+#define DUK_STRIDX_PACKAGE                                            158                            /* 'package' */
 #define DUK_HEAP_STRING_PACKAGE(heap)                                 DUK_HEAP_GET_STRING((heap),DUK_STRIDX_PACKAGE)
 #define DUK_HTHREAD_STRING_PACKAGE(thr)                               DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_PACKAGE)
-#define DUK_STRIDX_PRIVATE                                            162                            /* 'private' */
+#define DUK_STRIDX_PRIVATE                                            159                            /* 'private' */
 #define DUK_HEAP_STRING_PRIVATE(heap)                                 DUK_HEAP_GET_STRING((heap),DUK_STRIDX_PRIVATE)
 #define DUK_HTHREAD_STRING_PRIVATE(thr)                               DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_PRIVATE)
-#define DUK_STRIDX_PROTECTED                                          163                            /* 'protected' */
+#define DUK_STRIDX_PROTECTED                                          160                            /* 'protected' */
 #define DUK_HEAP_STRING_PROTECTED(heap)                               DUK_HEAP_GET_STRING((heap),DUK_STRIDX_PROTECTED)
 #define DUK_HTHREAD_STRING_PROTECTED(thr)                             DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_PROTECTED)
-#define DUK_STRIDX_PUBLIC                                             164                            /* 'public' */
+#define DUK_STRIDX_PUBLIC                                             161                            /* 'public' */
 #define DUK_HEAP_STRING_PUBLIC(heap)                                  DUK_HEAP_GET_STRING((heap),DUK_STRIDX_PUBLIC)
 #define DUK_HTHREAD_STRING_PUBLIC(thr)                                DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_PUBLIC)
-#define DUK_STRIDX_STATIC                                             165                            /* 'static' */
+#define DUK_STRIDX_STATIC                                             162                            /* 'static' */
 #define DUK_HEAP_STRING_STATIC(heap)                                  DUK_HEAP_GET_STRING((heap),DUK_STRIDX_STATIC)
 #define DUK_HTHREAD_STRING_STATIC(thr)                                DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_STATIC)
-#define DUK_STRIDX_YIELD                                              166                            /* 'yield' */
+#define DUK_STRIDX_YIELD                                              163                            /* 'yield' */
 #define DUK_HEAP_STRING_YIELD(heap)                                   DUK_HEAP_GET_STRING((heap),DUK_STRIDX_YIELD)
 #define DUK_HTHREAD_STRING_YIELD(thr)                                 DUK_HTHREAD_GET_STRING((thr),DUK_STRIDX_YIELD)
 
-#define DUK_HEAP_NUM_STRINGS                                          167
-#define DUK_STRIDX_START_RESERVED                                     122
-#define DUK_STRIDX_START_STRICT_RESERVED                              158
-#define DUK_STRIDX_END_RESERVED                                       167                            /* exclusive endpoint */
+#define DUK_HEAP_NUM_STRINGS                                          164
+#define DUK_STRIDX_START_RESERVED                                     119
+#define DUK_STRIDX_START_STRICT_RESERVED                              155
+#define DUK_STRIDX_END_RESERVED                                       164                            /* exclusive endpoint */
 
 /* To convert a heap stridx to a token number, subtract
  * DUK_STRIDX_START_RESERVED and add DUK_TOK_START_RESERVED.
  */
 #if !defined(DUK_SINGLE_FILE)
-DUK_INTERNAL_DECL const duk_uint8_t duk_strings_data[921];
+DUK_INTERNAL_DECL const duk_uint8_t duk_strings_data[903];
 #endif  /* !DUK_SINGLE_FILE */
 #define DUK_STRDATA_MAX_STRLEN                                        17
-#define DUK_STRDATA_DATA_LENGTH                                       921
+#define DUK_STRDATA_DATA_LENGTH                                       903
 #endif  /* DUK_USE_ROM_STRINGS */
 
 #if defined(DUK_USE_ROM_OBJECTS)
@@ -614,6 +605,8 @@ DUK_INTERNAL_DECL duk_ret_t duk_bi_string_prototype_substring(duk_context *ctx);
 DUK_INTERNAL_DECL duk_ret_t duk_bi_string_prototype_caseconv_shared(duk_context *ctx);
 DUK_INTERNAL_DECL duk_ret_t duk_bi_string_prototype_trim(duk_context *ctx);
 DUK_INTERNAL_DECL duk_ret_t duk_bi_string_prototype_repeat(duk_context *ctx);
+DUK_INTERNAL_DECL duk_ret_t duk_bi_string_prototype_startswith_endswith(duk_context *ctx);
+DUK_INTERNAL_DECL duk_ret_t duk_bi_string_prototype_includes(duk_context *ctx);
 DUK_INTERNAL_DECL duk_ret_t duk_bi_string_prototype_substr(duk_context *ctx);
 DUK_INTERNAL_DECL duk_ret_t duk_bi_boolean_prototype_tostring_shared(duk_context *ctx);
 DUK_INTERNAL_DECL duk_ret_t duk_bi_number_prototype_to_string(duk_context *ctx);
@@ -692,7 +685,7 @@ DUK_INTERNAL_DECL duk_ret_t duk_bi_textencoder_prototype_encode(duk_context *ctx
 DUK_INTERNAL_DECL duk_ret_t duk_bi_textdecoder_prototype_shared_getter(duk_context *ctx);
 DUK_INTERNAL_DECL duk_ret_t duk_bi_textdecoder_prototype_decode(duk_context *ctx);
 #if !defined(DUK_SINGLE_FILE)
-DUK_INTERNAL_DECL const duk_c_function duk_bi_native_functions[164];
+DUK_INTERNAL_DECL const duk_c_function duk_bi_native_functions[166];
 #endif  /* !DUK_SINGLE_FILE */
 #define DUK_BIDX_GLOBAL                                               0
 #define DUK_BIDX_GLOBAL_ENV                                           1
@@ -773,19 +766,19 @@ DUK_INTERNAL_DECL const duk_c_function duk_bi_native_functions[164];
 #define DUK_NUM_ALL_BUILTINS                                          74
 #if defined(DUK_USE_DOUBLE_LE)
 #if !defined(DUK_SINGLE_FILE)
-DUK_INTERNAL_DECL const duk_uint8_t duk_builtins_data[3790];
+DUK_INTERNAL_DECL const duk_uint8_t duk_builtins_data[3819];
 #endif  /* !DUK_SINGLE_FILE */
-#define DUK_BUILTINS_DATA_LENGTH                                      3790
+#define DUK_BUILTINS_DATA_LENGTH                                      3819
 #elif defined(DUK_USE_DOUBLE_BE)
 #if !defined(DUK_SINGLE_FILE)
-DUK_INTERNAL_DECL const duk_uint8_t duk_builtins_data[3790];
+DUK_INTERNAL_DECL const duk_uint8_t duk_builtins_data[3819];
 #endif  /* !DUK_SINGLE_FILE */
-#define DUK_BUILTINS_DATA_LENGTH                                      3790
+#define DUK_BUILTINS_DATA_LENGTH                                      3819
 #elif defined(DUK_USE_DOUBLE_ME)
 #if !defined(DUK_SINGLE_FILE)
-DUK_INTERNAL_DECL const duk_uint8_t duk_builtins_data[3790];
+DUK_INTERNAL_DECL const duk_uint8_t duk_builtins_data[3819];
 #endif  /* !DUK_SINGLE_FILE */
-#define DUK_BUILTINS_DATA_LENGTH                                      3790
+#define DUK_BUILTINS_DATA_LENGTH                                      3819
 #else
 #error invalid endianness defines
 #endif

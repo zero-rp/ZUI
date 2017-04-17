@@ -41,8 +41,8 @@ DUK_INTERNAL duk_hbuffer *duk_hbuffer_alloc(duk_heap *heap, duk_size_t size, duk
 	}
 
 	res = (duk_hbuffer *) DUK_ALLOC(heap, alloc_size);
-	if (!res) {
-		goto error;
+	if (DUK_UNLIKELY(res == NULL)) {
+		goto alloc_error;
 	}
 
 	/* zero everything unless requested not to do so */
@@ -78,9 +78,9 @@ DUK_INTERNAL duk_hbuffer *duk_hbuffer_alloc(duk_heap *heap, duk_size_t size, duk
 #else
 			ptr = DUK_ALLOC(heap, size);
 #endif
-			if (!ptr) {
+			if (DUK_UNLIKELY(ptr == NULL)) {
 				/* Because size > 0, NULL check is correct */
-				goto error;
+				goto alloc_error;
 			}
 			*out_bufdata = ptr;
 
@@ -116,7 +116,7 @@ DUK_INTERNAL duk_hbuffer *duk_hbuffer_alloc(duk_heap *heap, duk_size_t size, duk
 	DUK_DDD(DUK_DDDPRINT("allocated hbuffer: %p", (void *) res));
 	return res;
 
- error:
+ alloc_error:
 	DUK_DD(DUK_DDPRINT("hbuffer allocation failed"));
 
 	DUK_FREE(heap, res);

@@ -279,6 +279,7 @@ static duk_uint8_t *duk__dump_func(duk_context *ctx, duk_hcompfunc *func, duk_bu
 	DUK_RAW_WRITE_U32_BE(p, 0);
 #endif
 	tmp32 = DUK_HEAPHDR_GET_FLAGS((duk_heaphdr *) func);  /* masks flags, only duk_hobject flags */
+	tmp32 &= ~(DUK_HOBJECT_FLAG_HAVE_FINALIZER);  /* finalizer flag is lost */
 	DUK_RAW_WRITE_U32_BE(p, tmp32);
 
 	/* Bytecode instructions: endian conversion needed unless
@@ -458,7 +459,7 @@ static duk_uint8_t *duk__load_func(duk_context *ctx, duk_uint8_t *p, duk_uint8_t
 	DUK_ASSERT(!DUK_HOBJECT_HAS_BOUNDFUNC(&h_fun->obj));
 	DUK_ASSERT(DUK_HOBJECT_HAS_COMPFUNC(&h_fun->obj));
 	DUK_ASSERT(!DUK_HOBJECT_HAS_NATFUNC(&h_fun->obj));
-	DUK_ASSERT(!DUK_HOBJECT_HAS_THREAD(&h_fun->obj));
+	DUK_ASSERT(!DUK_HOBJECT_IS_THREAD(&h_fun->obj));
 	DUK_ASSERT(!DUK_HOBJECT_HAS_EXOTIC_ARRAY(&h_fun->obj));
 	DUK_ASSERT(!DUK_HOBJECT_HAS_EXOTIC_STRINGOBJ(&h_fun->obj));
 	DUK_ASSERT(!DUK_HOBJECT_HAS_EXOTIC_ARGUMENTS(&h_fun->obj));
@@ -584,14 +585,23 @@ static duk_uint8_t *duk__load_func(duk_context *ctx, duk_uint8_t *p, duk_uint8_t
 		 * Must create a lexical environment on loading to allow
 		 * recursive functions like 'function foo() { foo(); }'.
 		 */
-		duk_hobject *new_env;
+		duk_hdecenv *new_env;
 
-		new_env = duk_push_object_helper_proto(ctx,
-		                                       DUK_HOBJECT_FLAG_EXTENSIBLE |
-		                                       DUK_HOBJECT_CLASS_AS_FLAGS(DUK_HOBJECT_CLASS_DECENV),
-		                                       func_env);
+		new_env = duk_hdecenv_alloc(thr,
+		                            DUK_HOBJECT_FLAG_EXTENSIBLE |
+		                            DUK_HOBJECT_CLASS_AS_FLAGS(DUK_HOBJECT_CLASS_DECENV));
 		DUK_ASSERT(new_env != NULL);
-		func_env = new_env;
+		DUK_ASSERT(new_env->thread == NULL);  /* Closed. */
+		DUK_ASSERT(new_env->varmap == NULL);
+		DUK_ASSERT(new_env->regbase == 0);
+		DUK_ASSERT_HDECENV_VALID(new_env);
+		DUK_ASSERT(DUK_HOBJECT_GET_PROTOTYPE(thr->heap, (duk_hobject *) new_env) == NULL);
+		DUK_HOBJECT_SET_PROTOTYPE(thr->heap, (duk_hobject *) new_env, func_env);
+		DUK_HOBJECT_INCREF(thr, func_env);
+
+		func_env = (duk_hobject *) new_env;
+
+		duk_push_hobject(ctx, (duk_hobject *) new_env);
 
 		duk_dup_m2(ctx);                                  /* -> [ func funcname env funcname ] */
 		duk_dup(ctx, idx_base);                           /* -> [ func funcname env funcname func ] */

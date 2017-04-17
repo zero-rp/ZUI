@@ -29,15 +29,14 @@ DUK_INTERNAL duk_ret_t duk_bi_duktape_object_act(duk_context *ctx) {
 DUK_INTERNAL duk_ret_t duk_bi_duktape_object_gc(duk_context *ctx) {
 	duk_hthread *thr = (duk_hthread *) ctx;
 	duk_small_uint_t flags;
-	duk_bool_t rc;
 
 	flags = (duk_small_uint_t) duk_get_uint(ctx, 0);
-	rc = duk_heap_mark_and_sweep(thr->heap, flags);
+	duk_heap_mark_and_sweep(thr->heap, flags);
 
 	/* XXX: Not sure what the best return value would be in the API.
-	 * Return a boolean for now.  Note that rc == 0 is success (true).
+	 * Return true for now.
 	 */
-	duk_push_boolean(ctx, !rc);
+	duk_push_true(ctx);
 	return 1;
 }
 
@@ -49,15 +48,16 @@ DUK_INTERNAL duk_ret_t duk_bi_duktape_object_fin(duk_context *ctx) {
 		 * undefined; this does not remove the property at the moment.
 		 * The value could be type checked to be either a function
 		 * or something else; if something else, the property could
-		 * be deleted.
+		 * be deleted.  Must use duk_set_finalizer() to keep
+		 * DUK_HOBJECT_FLAG_HAVE_FINALIZER in sync.
 		 */
 		duk_set_top(ctx, 2);
-		(void) duk_put_prop_stridx_short(ctx, 0, DUK_STRIDX_INT_FINALIZER);
+		duk_set_finalizer(ctx, 0);
 		return 0;
 	} else {
 		/* Get. */
 		DUK_ASSERT(duk_get_top(ctx) == 1);
-		duk_get_prop_stridx_short(ctx, 0, DUK_STRIDX_INT_FINALIZER);
+		duk_get_finalizer(ctx, 0);
 		return 1;
 	}
 }

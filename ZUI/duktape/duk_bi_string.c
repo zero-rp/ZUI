@@ -20,6 +20,96 @@
 #if defined(DUK_USE_STRING_BUILTIN)
 
 /*
+ *  Helpers
+ */
+
+DUK_LOCAL duk_hstring *duk__str_tostring_notregexp(duk_context *ctx, duk_idx_t idx) {
+	duk_hstring *h;
+
+	if (duk_get_class_number(ctx, idx) == DUK_HOBJECT_CLASS_REGEXP) {
+		DUK_ERROR_TYPE_INVALID_ARGS((duk_hthread *) ctx);
+	}
+	h = duk_to_hstring(ctx, idx);
+	DUK_ASSERT(h != NULL);
+
+	return h;
+}
+
+DUK_LOCAL duk_int_t duk__str_search_shared(duk_context *ctx, duk_hstring *h_this, duk_hstring *h_search, duk_int_t start_cpos, duk_bool_t backwards) {
+	duk_int_t cpos;
+	duk_int_t bpos;
+	const duk_uint8_t *p_start, *p_end, *p;
+	const duk_uint8_t *q_start;
+	duk_int_t q_blen;
+	duk_uint8_t firstbyte;
+	duk_uint8_t t;
+
+	cpos = start_cpos;
+
+	/* Empty searchstring always matches; cpos must be clamped here.
+	 * (If q_blen were < 0 due to clamped coercion, it would also be
+	 * caught here.)
+	 */
+	q_start = DUK_HSTRING_GET_DATA(h_search);
+	q_blen = (duk_int_t) DUK_HSTRING_GET_BYTELEN(h_search);
+	if (q_blen <= 0) {
+		return cpos;
+	}
+	DUK_ASSERT(q_blen > 0);
+
+	bpos = (duk_int_t) duk_heap_strcache_offset_char2byte((duk_hthread *) ctx, h_this, (duk_uint32_t) cpos);
+
+	p_start = DUK_HSTRING_GET_DATA(h_this);
+	p_end = p_start + DUK_HSTRING_GET_BYTELEN(h_this);
+	p = p_start + bpos;
+
+	/* This loop is optimized for size.  For speed, there should be
+	 * two separate loops, and we should ensure that memcmp() can be
+	 * used without an extra "will searchstring fit" check.  Doing
+	 * the preconditioning for 'p' and 'p_end' is easy but cpos
+	 * must be updated if 'p' is wound back (backward scanning).
+	 */
+
+	firstbyte = q_start[0];  /* leading byte of match string */
+	while (p <= p_end && p >= p_start) {
+		t = *p;
+
+		/* For Ecmascript strings, this check can only match for
+		 * initial UTF-8 bytes (not continuation bytes).  For other
+		 * strings all bets are off.
+		 */
+
+		if ((t == firstbyte) && ((duk_size_t) (p_end - p) >= (duk_size_t) q_blen)) {
+			DUK_ASSERT(q_blen > 0);  /* no issues with memcmp() zero size, even if broken */
+			if (DUK_MEMCMP((const void *) p, (const void *) q_start, (size_t) q_blen) == 0) {
+				return cpos;
+			}
+		}
+
+		/* track cpos while scanning */
+		if (backwards) {
+			/* when going backwards, we decrement cpos 'early';
+			 * 'p' may point to a continuation byte of the char
+			 * at offset 'cpos', but that's OK because we'll
+			 * backtrack all the way to the initial byte.
+			 */
+			if ((t & 0xc0) != 0x80) {
+				cpos--;
+			}
+			p--;
+		} else {
+			if ((t & 0xc0) != 0x80) {
+				cpos++;
+			}
+			p++;
+		}
+	}
+
+	/* Not found.  Empty string case is handled specially above. */
+	return -1;
+}
+
+/*
  *  Constructor
  */
 
@@ -41,7 +131,7 @@ DUK_INTERNAL duk_ret_t duk_bi_string_constructor(duk_context *ctx) {
 		duk_push_hstring_empty(ctx);
 	} else {
 		h = duk_to_hstring_acceptsymbol(ctx, 0);
-		if (DUK_HSTRING_HAS_SYMBOL(h) && !duk_is_constructor_call(ctx)) {
+		if (DUK_UNLIKELY(DUK_HSTRING_HAS_SYMBOL(h) && !duk_is_constructor_call(ctx))) {
 			duk_push_symbol_descriptive_string(ctx, h);
 			duk_replace(ctx, 0);
 		}
@@ -53,6 +143,7 @@ DUK_INTERNAL duk_ret_t duk_bi_string_constructor(duk_context *ctx) {
 	if (duk_is_constructor_call(ctx)) {
 		/* String object internal value is immutable */
 		flags = DUK_HOBJECT_FLAG_EXTENSIBLE |
+		        DUK_HOBJECT_FLAG_FASTREFS |
 		        DUK_HOBJECT_FLAG_EXOTIC_STRINGOBJ |
 		        DUK_HOBJECT_CLASS_AS_FLAGS(DUK_HOBJECT_CLASS_STRING);
 		duk_push_object_helper(ctx, flags, DUK_BIDX_STRING_PROTOTYPE);
@@ -202,7 +293,7 @@ DUK_INTERNAL duk_ret_t duk_bi_string_prototype_char_code_at(duk_context *ctx) {
 	pos = duk_to_int_clamped_raw(ctx,
 	                             0 /*index*/,
 	                             0 /*min(incl)*/,
-	                             DUK_HSTRING_GET_CHARLEN(h) - 1 /*max(incl)*/,
+	                             (duk_int_t) DUK_HSTRING_GET_CHARLEN(h) - 1 /*max(incl)*/,
 	                             &clamped /*out_clamped*/);
 #if defined(DUK_USE_ES6)
 	magic = duk_get_current_magic(ctx);
@@ -364,17 +455,10 @@ DUK_INTERNAL duk_ret_t duk_bi_string_prototype_caseconv_shared(duk_context *ctx)
  */
 
 DUK_INTERNAL duk_ret_t duk_bi_string_prototype_indexof_shared(duk_context *ctx) {
-	duk_hthread *thr = (duk_hthread *) ctx;
 	duk_hstring *h_this;
 	duk_hstring *h_search;
 	duk_int_t clen_this;
 	duk_int_t cpos;
-	duk_int_t bpos;
-	const duk_uint8_t *p_start, *p_end, *p;
-	const duk_uint8_t *q_start;
-	duk_int_t q_blen;
-	duk_uint8_t firstbyte;
-	duk_uint8_t t;
 	duk_small_int_t is_lastindexof = duk_get_current_magic(ctx);  /* 0=indexOf, 1=lastIndexOf */
 
 	h_this = duk_push_this_coercible_to_string(ctx);
@@ -383,8 +467,6 @@ DUK_INTERNAL duk_ret_t duk_bi_string_prototype_indexof_shared(duk_context *ctx) 
 
 	h_search = duk_to_hstring(ctx, 0);
 	DUK_ASSERT(h_search != NULL);
-	q_start = DUK_HSTRING_GET_DATA(h_search);
-	q_blen = (duk_int_t) DUK_HSTRING_GET_BYTELEN(h_search);
 
 	duk_to_number(ctx, 1);
 	if (duk_is_nan(ctx, 1) && is_lastindexof) {
@@ -397,67 +479,8 @@ DUK_INTERNAL duk_ret_t duk_bi_string_prototype_indexof_shared(duk_context *ctx) 
 		cpos = duk_to_int_clamped(ctx, 1, 0, clen_this);
 	}
 
-	/* Empty searchstring always matches; cpos must be clamped here.
-	 * (If q_blen were < 0 due to clamped coercion, it would also be
-	 * caught here.)
-	 */
-	if (q_blen <= 0) {
-		duk_push_int(ctx, cpos);
-		return 1;
-	}
-	DUK_ASSERT(q_blen > 0);
-
-	bpos = (duk_int_t) duk_heap_strcache_offset_char2byte(thr, h_this, (duk_uint32_t) cpos);
-
-	p_start = DUK_HSTRING_GET_DATA(h_this);
-	p_end = p_start + DUK_HSTRING_GET_BYTELEN(h_this);
-	p = p_start + bpos;
-
-	/* This loop is optimized for size.  For speed, there should be
-	 * two separate loops, and we should ensure that memcmp() can be
-	 * used without an extra "will searchstring fit" check.  Doing
-	 * the preconditioning for 'p' and 'p_end' is easy but cpos
-	 * must be updated if 'p' is wound back (backward scanning).
-	 */
-
-	firstbyte = q_start[0];  /* leading byte of match string */
-	while (p <= p_end && p >= p_start) {
-		t = *p;
-
-		/* For Ecmascript strings, this check can only match for
-		 * initial UTF-8 bytes (not continuation bytes).  For other
-		 * strings all bets are off.
-		 */
-
-		if ((t == firstbyte) && ((duk_size_t) (p_end - p) >= (duk_size_t) q_blen)) {
-			DUK_ASSERT(q_blen > 0);  /* no issues with memcmp() zero size, even if broken */
-			if (DUK_MEMCMP((const void *) p, (const void *) q_start, (size_t) q_blen) == 0) {
-				duk_push_int(ctx, cpos);
-				return 1;
-			}
-		}
-
-		/* track cpos while scanning */
-		if (is_lastindexof) {
-			/* when going backwards, we decrement cpos 'early';
-			 * 'p' may point to a continuation byte of the char
-			 * at offset 'cpos', but that's OK because we'll
-			 * backtrack all the way to the initial byte.
-			 */
-			if ((t & 0xc0) != 0x80) {
-				cpos--;
-			}
-			p--;
-		} else {
-			if ((t & 0xc0) != 0x80) {
-				cpos++;
-			}
-			p++;
-		}
-	}
-
-	/* Not found.  Empty string case is handled specially above. */
-	duk_push_int(ctx, -1);
+	cpos = duk__str_search_shared(ctx, h_this, h_search, cpos, is_lastindexof /*backwards*/);
+	duk_push_int(ctx, cpos);
 	return 1;
 }
 
@@ -754,9 +777,10 @@ DUK_INTERNAL duk_ret_t duk_bi_string_prototype_replace(duk_context *ctx) {
 					/* Use match charlen instead of bytelen, just in case the input and
 					 * match codepoint encodings would have different lengths.
 					 */
+					/* XXX: charlen computed here, and also in char2byte helper. */
 					match_end_boff = duk_heap_strcache_offset_char2byte(thr,
 					                                                    h_input,
-					                                                    match_start_coff + DUK_HSTRING_GET_CHARLEN(h_match));
+					                                                    match_start_coff + (duk_uint_fast32_t) DUK_HSTRING_GET_CHARLEN(h_match));
 
 					tmp_sz = (duk_size_t) (DUK_HSTRING_GET_BYTELEN(h_input) - match_end_boff);
 					DUK_BW_WRITE_ENSURE_BYTES(thr, bw, DUK_HSTRING_GET_DATA(h_input) + match_end_boff, tmp_sz);
@@ -1106,7 +1130,7 @@ DUK_INTERNAL duk_ret_t duk_bi_string_prototype_split(duk_context *ctx) {
 	DUK_DDD(DUK_DDDPRINT("split trailer; prev_end b=%ld,c=%ld",
 	                     (long) prev_match_end_boff, (long) prev_match_end_coff));
 
-	if (DUK_HSTRING_GET_CHARLEN(h_input) > 0 || !matched) {
+	if (DUK_HSTRING_GET_BYTELEN(h_input) > 0 || !matched) {
 		/* Add trailer if:
 		 *   a) non-empty input
 		 *   b) empty input and no (zero size) match found (step 11)
@@ -1448,4 +1472,91 @@ DUK_INTERNAL duk_ret_t duk_bi_string_prototype_locale_compare(duk_context *ctx) 
 	return 1;
 }
 
+#if defined(DUK_USE_ES6)
+DUK_INTERNAL duk_ret_t duk_bi_string_prototype_startswith_endswith(duk_context *ctx) {
+	duk_int_t magic;
+	duk_hstring *h;
+	duk_hstring *h_search;
+	duk_size_t blen_search;
+	const duk_uint8_t *p_cmp_start;
+	duk_bool_t result;
+
+	h = duk_push_this_coercible_to_string(ctx);
+	DUK_ASSERT(h != NULL);
+
+	h_search = duk__str_tostring_notregexp(ctx, 0);
+	DUK_ASSERT(h_search != NULL);
+
+	magic = duk_get_current_magic(ctx);
+
+	p_cmp_start = (const duk_uint8_t *) DUK_HSTRING_GET_DATA(h);
+	blen_search = DUK_HSTRING_GET_BYTELEN(h_search);
+
+	if (duk_is_undefined(ctx, 1)) {
+		if (magic) {
+			p_cmp_start += DUK_HSTRING_GET_BYTELEN(h) - blen_search;
+		} else {
+			/* p_cmp_start already OK */
+		}
+	} else {
+		duk_int_t len;
+		duk_int_t pos;
+
+		DUK_ASSERT(DUK_HSTRING_MAX_BYTELEN <= DUK_INT_MAX);
+		len = (duk_int_t) DUK_HSTRING_GET_CHARLEN(h);
+		pos = duk_to_int_clamped(ctx, 1, 0, len);
+		DUK_ASSERT(pos >= 0 && pos <= len);
+
+		if (magic) {
+			p_cmp_start -= blen_search;  /* Conceptually subtracted last, but do already here. */
+		}
+		DUK_ASSERT(pos >= 0 && pos <= len);
+
+		p_cmp_start += duk_heap_strcache_offset_char2byte((duk_hthread *) ctx, h, pos);
+	}
+
+	/* The main comparison can be done using a memcmp() rather than
+	 * doing codepoint comparisons: for CESU-8 strings there is a
+	 * canonical representation for every codepoint.  But we do need
+	 * to deal with the char/byte offset translation to find the
+	 * comparison range.
+	 */
+
+	result = 0;
+	if (p_cmp_start >= DUK_HSTRING_GET_DATA(h) &&
+	    p_cmp_start - (const duk_uint8_t *) DUK_HSTRING_GET_DATA(h) + blen_search <= DUK_HSTRING_GET_BYTELEN(h)) {
+		if (DUK_MEMCMP((const void *) p_cmp_start,
+		               (const void *) DUK_HSTRING_GET_DATA(h_search),
+		               (size_t) blen_search) == 0) {
+			result = 1;
+		}
+	}
+
+	duk_push_boolean(ctx, result);
+	return 1;
+}
+#endif  /* DUK_USE_ES6 */
+
+#if defined(DUK_USE_ES6)
+DUK_INTERNAL duk_ret_t duk_bi_string_prototype_includes(duk_context *ctx) {
+	duk_hstring *h;
+	duk_hstring *h_search;
+	duk_int_t len;
+	duk_int_t pos;
+
+	h = duk_push_this_coercible_to_string(ctx);
+	DUK_ASSERT(h != NULL);
+
+	h_search = duk__str_tostring_notregexp(ctx, 0);
+	DUK_ASSERT(h_search != NULL);
+
+	len = (duk_int_t) DUK_HSTRING_GET_CHARLEN(h);
+	pos = duk_to_int_clamped(ctx, 1, 0, len);
+	DUK_ASSERT(pos >= 0 && pos <= len);
+
+	pos = duk__str_search_shared(ctx, h, h_search, pos, 0 /*backwards*/);
+	duk_push_boolean(ctx, pos >= 0);
+	return 1;
+}
+#endif  /* DUK_USE_ES6 */
 #endif  /* DUK_USE_STRING_BUILTIN */

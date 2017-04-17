@@ -431,7 +431,8 @@ DUK_INTERNAL duk_ret_t duk_bi_global_object_eval(duk_context *ctx) {
 
 	DUK_ASSERT(duk_get_top(ctx) == 1 || duk_get_top(ctx) == 2);  /* 2 when called by debugger */
 	DUK_ASSERT(thr->callstack_top >= 1);  /* at least this function exists */
-	DUK_ASSERT(((thr->callstack + thr->callstack_top - 1)->flags & DUK_ACT_FLAG_DIRECT_EVAL) == 0 || /* indirect eval */
+	DUK_ASSERT(thr->callstack_curr != NULL);
+	DUK_ASSERT((thr->callstack_curr->flags & DUK_ACT_FLAG_DIRECT_EVAL) == 0 || /* indirect eval */
 	           (thr->callstack_top >= 2));  /* if direct eval, calling activation must exist */
 
 	/*
@@ -461,8 +462,9 @@ DUK_INTERNAL duk_ret_t duk_bi_global_object_eval(duk_context *ctx) {
 
 	/* [ source ] */
 
-	comp_flags = DUK_JS_COMPILE_FLAG_EVAL;
-	act_eval = thr->callstack + thr->callstack_top - 1;    /* this function */
+	comp_flags = DUK_COMPILE_EVAL;
+	act_eval = thr->callstack_curr;  /* this function */
+	DUK_ASSERT(act_eval != NULL);
 	if (thr->callstack_top >= (duk_size_t) -level) {
 		/* Have a calling activation, check for direct eval (otherwise
 		 * assume indirect eval.
@@ -473,7 +475,7 @@ DUK_INTERNAL duk_ret_t duk_bi_global_object_eval(duk_context *ctx) {
 			/* Only direct eval inherits strictness from calling code
 			 * (E5.1 Section 10.1.1).
 			 */
-			comp_flags |= DUK_JS_COMPILE_FLAG_STRICT;
+			comp_flags |= DUK_COMPILE_STRICT;
 		}
 	} else {
 		DUK_ASSERT((act_eval->flags & DUK_ACT_FLAG_DIRECT_EVAL) == 0);
@@ -493,7 +495,7 @@ DUK_INTERNAL duk_ret_t duk_bi_global_object_eval(duk_context *ctx) {
 
 	/* E5 Section 10.4.2 */
 	DUK_ASSERT(thr->callstack_top >= 1);
-	act = thr->callstack + thr->callstack_top - 1;  /* this function */
+	act = thr->callstack_curr;  /* this function */
 	if (act->flags & DUK_ACT_FLAG_DIRECT_EVAL) {
 		DUK_ASSERT(thr->callstack_top >= 2);
 		act = thr->callstack + thr->callstack_top + level;  /* caller */
@@ -511,7 +513,7 @@ DUK_INTERNAL duk_ret_t duk_bi_global_object_eval(duk_context *ctx) {
 		this_to_global = 0;
 
 		if (DUK_HOBJECT_HAS_STRICT((duk_hobject *) func)) {
-			duk_hobject *new_env;
+			duk_hdecenv *new_env;
 			duk_hobject *act_lex_env;
 
 			DUK_DDD(DUK_DDDPRINT("direct eval call to a strict function -> "
@@ -521,15 +523,19 @@ DUK_INTERNAL duk_ret_t duk_bi_global_object_eval(duk_context *ctx) {
 			act_lex_env = act->lex_env;
 			act = NULL;  /* invalidated */
 
-			new_env = duk_push_object_helper_proto(ctx,
-			                                       DUK_HOBJECT_FLAG_EXTENSIBLE |
-			                                       DUK_HOBJECT_CLASS_AS_FLAGS(DUK_HOBJECT_CLASS_DECENV),
-			                                       act_lex_env);
+			new_env = duk_hdecenv_alloc(thr,
+			                            DUK_HOBJECT_FLAG_EXTENSIBLE |
+			                            DUK_HOBJECT_CLASS_AS_FLAGS(DUK_HOBJECT_CLASS_DECENV));
 			DUK_ASSERT(new_env != NULL);
+			duk_push_hobject(ctx, (duk_hobject *) new_env);
+
+			DUK_ASSERT(DUK_HOBJECT_GET_PROTOTYPE(thr->heap, (duk_hobject *) new_env) == NULL);
+			DUK_HOBJECT_SET_PROTOTYPE(thr->heap, (duk_hobject *) new_env, act_lex_env);
+			DUK_HOBJECT_INCREF_ALLOWNULL(thr, act_lex_env);
 			DUK_DDD(DUK_DDDPRINT("new_env allocated: %!iO", (duk_heaphdr *) new_env));
 
-			outer_lex_env = new_env;
-			outer_var_env = new_env;
+			outer_lex_env = (duk_hobject *) new_env;
+			outer_var_env = (duk_hobject *) new_env;
 
 			duk_insert(ctx, 0);  /* stash to bottom of value stack to keep new_env reachable for duration of eval */
 
@@ -559,7 +565,7 @@ DUK_INTERNAL duk_ret_t duk_bi_global_object_eval(duk_context *ctx) {
 	/* Eval code doesn't need an automatic .prototype object. */
 	duk_js_push_closure(thr, func, outer_var_env, outer_lex_env, 0 /*add_auto_proto*/);
 
-	/* [ source template closure ] */
+	/* [ env? source template closure ] */
 
 	if (this_to_global) {
 		DUK_ASSERT(thr->builtins[DUK_BIDX_GLOBAL] != NULL);
@@ -578,11 +584,11 @@ DUK_INTERNAL duk_ret_t duk_bi_global_object_eval(duk_context *ctx) {
 	                     (duk_heaphdr *) outer_var_env,
 	                     duk_get_tval(ctx, -1)));
 
-	/* [ source template closure this ] */
+	/* [ env? source template closure this ] */
 
 	duk_call_method(ctx, 0);
 
-	/* [ source template result ] */
+	/* [ env? source template result ] */
 
 	return 1;
 }

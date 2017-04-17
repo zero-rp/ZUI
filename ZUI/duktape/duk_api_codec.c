@@ -18,7 +18,10 @@ DUK_LOCAL const duk_uint8_t *duk__prep_codec_arg(duk_context *ctx, duk_idx_t idx
 
 	DUK_ASSERT(duk_is_valid_index(ctx, idx));  /* checked by caller */
 
-	ptr = duk_get_buffer_data_raw(ctx, idx, out_len, 0 /*throw_flag*/, &isbuffer);
+	/* XXX: with def_ptr set to a stack related pointer, isbuffer could
+	 * be removed from the helper?
+	 */
+	ptr = duk_get_buffer_data_raw(ctx, idx, out_len, NULL /*def_ptr*/, 0 /*def_size*/, 0 /*throw_flag*/, &isbuffer);
 	if (isbuffer) {
 		DUK_ASSERT(*out_len == 0 || ptr != NULL);
 		return (const duk_uint8_t *) ptr;
@@ -210,13 +213,13 @@ DUK_LOCAL duk_bool_t duk__base64_decode_helper(const duk_uint8_t *src, duk_size_
 					t <<= 6;
 				} else {
 					DUK_ASSERT(x == -1);
-					goto error;
+					goto decode_error;
 				}
 			} else {
 				DUK_ASSERT(x >= 0 && x <= 63);
 				if (n_equal > 0) {
 					/* Don't allow actual chars after equal sign. */
-					goto error;
+					goto decode_error;
 				}
 				t = (t << 6) + x;
 			}
@@ -242,7 +245,7 @@ DUK_LOCAL duk_bool_t duk__base64_decode_helper(const duk_uint8_t *src, duk_size_
 						/* XX== */
 						dst -= 2;
 					} else {
-						goto error;  /* invalid padding */
+						goto decode_error;  /* invalid padding */
 					}
 
 					/* Continue parsing after padding, allows concatenated,
@@ -266,13 +269,13 @@ DUK_LOCAL duk_bool_t duk__base64_decode_helper(const duk_uint8_t *src, duk_size_
 		 * (e.g. "xxxxyy" instead of "xxxxyy==".  Currently not
 		 * accepted.
 		 */
-		goto error;
+		goto decode_error;
 	}
 
 	*out_dst_final = dst;
 	return 1;
 
- error:
+ decode_error:
 	return 0;
 }
 #else  /* DUK_USE_BASE64_FASTPATH */
@@ -314,12 +317,12 @@ DUK_LOCAL duk_bool_t duk__base64_decode_helper(const duk_uint8_t *src, duk_size_
 			/* allow basic ASCII whitespace */
 			continue;
 		} else {
-			goto error;
+			goto decode_error;
 		}
 
 		if (n_equal > 0) {
 			/* Don't allow mixed padding and actual chars. */
-			goto error;
+			goto decode_error;
 		}
 		t = (t << 6) + y;
 	 skip_add:
@@ -338,7 +341,7 @@ DUK_LOCAL duk_bool_t duk__base64_decode_helper(const duk_uint8_t *src, duk_size_
 				} else if (n_equal == 2) {
 					dst -= 2;
 				} else {
-					goto error;  /* invalid padding */
+					goto decode_error;  /* invalid padding */
 				}
 
 				/* Here we can choose either to end parsing and ignore
@@ -361,13 +364,13 @@ DUK_LOCAL duk_bool_t duk__base64_decode_helper(const duk_uint8_t *src, duk_size_
 		 * (e.g. "xxxxyy" instead of "xxxxyy==".  Currently not
 		 * accepted.
 		 */
-		goto error;
+		goto decode_error;
 	}
 
 	*out_dst_final = dst;
 	return 1;
 
- error:
+ decode_error:
 	return 0;
 }
 #endif  /* DUK_USE_BASE64_FASTPATH */

@@ -96,3 +96,35 @@ DUK_INTERNAL_DECL duk_int_t duk_bi_date_get_local_tzoffset_windows(duk_double_t 
 	return (duk_int_t) (((LONGLONG) tmp3.QuadPart - (LONGLONG) tmp2.QuadPart) / 10000000LL);  /* seconds */
 }
 #endif  /* DUK_USE_DATE_TZO_WINDOWS */
+
+#if defined(DUK_USE_DATE_TZO_WINDOWS_NO_DST)
+DUK_INTERNAL_DECL duk_int_t duk_bi_date_get_local_tzoffset_windows_no_dst(duk_double_t d) {
+	SYSTEMTIME st1;
+	SYSTEMTIME st2;
+	FILETIME ft1;
+	FILETIME ft2;
+	ULARGE_INTEGER tmp1;
+	ULARGE_INTEGER tmp2;
+
+	/* Do a similar computation to duk_bi_date_get_local_tzoffset_windows
+	 * but without accounting for daylight savings time.  Use this on
+	 * Windows platforms (like Durango) that don't support the
+	 * SystemTimeToTzSpecificLocalTime() call.
+	 */
+
+	/* current time not needed for this computation */
+	DUK_UNREF(d);
+
+	duk__set_systime_jan1970(&st1);
+	duk__convert_systime_to_ularge((const SYSTEMTIME *) &st1, &tmp1);
+
+	ft1.dwLowDateTime = tmp1.LowPart;
+	ft1.dwHighDateTime = tmp1.HighPart;
+	FileTimeToLocalFileTime((const FILETIME *) &ft1, &ft2);
+
+	FileTimeToSystemTime((const FILETIME *) &ft2, &st2);
+	duk__convert_systime_to_ularge((const SYSTEMTIME *) &st2, &tmp2);
+
+	return (duk_int_t) (((LONGLONG) tmp2.QuadPart - (LONGLONG) tmp1.QuadPart) / 10000000LL);  /* seconds */
+}
+#endif  /* DUK_USE_DATE_TZO_WINDOWS_NO_DST */

@@ -1998,6 +1998,8 @@ DUK_LOCAL duk_bool_t duk__const_needs_refcount(duk_compiler_ctx *comp_ctx, duk_r
 	duk_pop(ctx);
 	return ret;
 #else
+	DUK_UNREF(comp_ctx);
+	DUK_UNREF(rc);
 	DUK_ASSERT((rc & DUK__CONST_MARKER) == 0);  /* caller removes const marker */
 	return 0;
 #endif
@@ -2249,15 +2251,31 @@ DUK_LOCAL void duk__ivalue_toplain_raw(duk_compiler_ctx *comp_ctx, duk_ivalue *x
 				DUK_DDD(DUK_DDDPRINT("arith inline check: d1=%lf, d2=%lf, op=%ld",
 				                     (double) d1, (double) d2, (long) x->op));
 				switch (x->op) {
-				case DUK_OP_ADD: d3 = d1 + d2; break;
-				case DUK_OP_SUB: d3 = d1 - d2; break;
-				case DUK_OP_MUL: d3 = d1 * d2; break;
-				case DUK_OP_DIV: d3 = d1 / d2; break;
+				case DUK_OP_ADD: {
+					d3 = d1 + d2;
+					break;
+				}
+				case DUK_OP_SUB: {
+					d3 = d1 - d2;
+					break;
+				}
+				case DUK_OP_MUL: {
+					d3 = d1 * d2;
+					break;
+				}
+				case DUK_OP_DIV: {
+					d3 = d1 / d2;
+					break;
+				}
 				case DUK_OP_EXP: {
 					d3 = (duk_double_t) duk_js_arith_pow((double) d1, (double) d2);
 					break;
 				}
-				default: accept_fold = 0; break;
+				default: {
+					d3 = 0.0;  /* Won't be used, but silence MSVC /W4 warning. */
+					accept_fold = 0;
+					break;
+				}
 				}
 
 				if (accept_fold) {
@@ -6171,6 +6189,7 @@ DUK_LOCAL void duk__parse_stmt(duk_compiler_ctx *comp_ctx, duk_ivalue *res, duk_
 	duk_small_uint_t stmt_flags = 0;
 	duk_int_t label_id = -1;
 	duk_small_uint_t tok;
+	duk_bool_t test_func_decl;
 
 	DUK__RECURSION_INCREASE(comp_ctx, thr);
 
@@ -6236,17 +6255,15 @@ DUK_LOCAL void duk__parse_stmt(duk_compiler_ctx *comp_ctx, duk_ivalue *res, duk_
 		 *  for function statements are modelled after V8, see
 		 *  test-dev-func-decl-outside-top.js.
 		 */
-
+		test_func_decl = allow_source_elem;
 #if defined(DUK_USE_NONSTD_FUNC_STMT)
 		/* Lenient: allow function declarations outside top level in
 		 * non-strict mode but reject them in strict mode.
 		 */
-		if (allow_source_elem || !comp_ctx->curr_func.is_strict)
-#else  /* DUK_USE_NONSTD_FUNC_STMT */
-		/* Strict: never allow function declarations outside top level. */
-		if (allow_source_elem)
+		test_func_decl = test_func_decl || !comp_ctx->curr_func.is_strict;
 #endif  /* DUK_USE_NONSTD_FUNC_STMT */
-		{
+		/* Strict: never allow function declarations outside top level. */
+		if (test_func_decl) {
 			/* FunctionDeclaration: not strictly a statement but handled as such.
 			 *
 			 * O(depth^2) parse count for inner functions is handled by recording a
@@ -6958,6 +6975,9 @@ DUK_LOCAL void duk__init_varmap_and_prologue_for_pass2(duk_compiler_ctx *comp_ct
 		                     (duk_tval *) duk_get_tval(ctx, -2),
 		                     (duk_tval *) duk_get_tval(ctx, -1)));
 
+#if defined(DUK_USE_FASTINT)
+		DUK_ASSERT(DUK_TVAL_IS_NULL(duk_get_tval(ctx, -1)) || DUK_TVAL_IS_FASTINT(duk_get_tval(ctx, -1)));
+#endif
 		duk_put_prop(ctx, comp_ctx->curr_func.varmap_idx);  /* [ ... name reg/null ] -> [ ... ] */
 	}
 
@@ -7023,8 +7043,7 @@ DUK_LOCAL void duk__init_varmap_and_prologue_for_pass2(duk_compiler_ctx *comp_ct
 				duk_push_null(ctx);
 
 				declvar_flags = DUK_PROPDESC_FLAG_WRITABLE |
-			                        DUK_PROPDESC_FLAG_ENUMERABLE |
-				                DUK_BC_DECLVAR_FLAG_UNDEF_VALUE;
+			                        DUK_PROPDESC_FLAG_ENUMERABLE;
 				if (configurable_bindings) {
 					declvar_flags |= DUK_PROPDESC_FLAG_CONFIGURABLE;
 				}
@@ -7701,9 +7720,9 @@ DUK_LOCAL duk_ret_t duk__js_compile_raw(duk_context *ctx, void *udata) {
 	DUK_ASSERT(lex_pt != NULL);
 
 	flags = comp_stk->flags;
-	is_eval = (flags & DUK_JS_COMPILE_FLAG_EVAL ? 1 : 0);
-	is_strict = (flags & DUK_JS_COMPILE_FLAG_STRICT ? 1 : 0);
-	is_funcexpr = (flags & DUK_JS_COMPILE_FLAG_FUNCEXPR ? 1 : 0);
+	is_eval = (flags & DUK_COMPILE_EVAL ? 1 : 0);
+	is_strict = (flags & DUK_COMPILE_STRICT ? 1 : 0);
+	is_funcexpr = (flags & DUK_COMPILE_FUNCEXPR ? 1 : 0);
 
 	h_filename = duk_get_hstring(ctx, -1);  /* may be undefined */
 
@@ -7779,7 +7798,7 @@ DUK_LOCAL duk_ret_t duk__js_compile_raw(duk_context *ctx, void *udata) {
 	 */
 
 	DUK_ASSERT(func->is_setget == 0);
-	func->is_strict = is_strict;
+	func->is_strict = (duk_uint8_t) is_strict;
 	DUK_ASSERT(func->is_notail == 0);
 
 	if (is_funcexpr) {
@@ -7794,8 +7813,9 @@ DUK_LOCAL duk_ret_t duk__js_compile_raw(duk_context *ctx, void *udata) {
 		(void) duk__parse_func_like_raw(comp_ctx, 0 /*flags*/);
 	} else {
 		DUK_ASSERT(func->is_function == 0);
-		func->is_eval = is_eval;
-		func->is_global = !is_eval;
+		DUK_ASSERT(is_eval == 0 || is_eval == 1);
+		func->is_eval = (duk_uint8_t) is_eval;
+		func->is_global = (duk_uint8_t) !is_eval;
 		DUK_ASSERT(func->is_namebinding == 0);
 		DUK_ASSERT(func->is_constructable == 0);
 
@@ -7835,6 +7855,7 @@ DUK_INTERNAL void duk_js_compile(duk_hthread *thr, const duk_uint8_t *src_buffer
 	DUK_LEXER_INITCTX(&comp_stk.comp_ctx_alloc.lex);
 	comp_stk.comp_ctx_alloc.lex.input = src_buffer;
 	comp_stk.comp_ctx_alloc.lex.input_length = src_length;
+	comp_stk.comp_ctx_alloc.lex.flags = flags;  /* Forward flags directly for now. */
 
 	/* [ ... filename ] */
 
