@@ -193,6 +193,9 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         p->m_ColorNormal = ARGB(200, 0, 3, 255);
         p->m_ColorHot = ARGB(200, 0, 255, 255);
         p->m_ColorPushed = ARGB(200, 255, 255, 255);
+
+        ((ZuiLabel)p->old_udata)->m_uTextStyle |= ZDT_CENTER;
+
         return p;
     }
     case Proc_OnDestroy: {
