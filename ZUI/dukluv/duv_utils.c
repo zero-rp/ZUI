@@ -11,7 +11,7 @@ duv_handle_t* duv_setup_handle(duk_context *ctx) {
   duv_handle_t* data = duk_alloc(ctx, sizeof(*data));
   data->ctx = ctx;
   duk_push_this(ctx);
-  data->context = duv_ref(ctx);
+  data->context = duv_ref(ctx);//保存上下文
   duk_dup(ctx, -1);
   data->ref = duv_ref(ctx);
   data->callbacks[0] = 0;
@@ -31,7 +31,7 @@ duv_handle_t* duv_cleanup_handle(duk_context *ctx, duv_handle_t* data) {
 duv_req_t* duv_setup_req(duk_context *ctx, int callback_index) {
   duv_req_t* data = duk_alloc(ctx, sizeof(*data));
   duk_push_this(ctx);
-  data->context = duv_ref(ctx);
+  data->context = duv_ref(ctx);//保存上下文
   duk_dup(ctx, -1);
   data->req_ref = duv_ref(ctx);
   if (duk_is_function(ctx, callback_index)) {
@@ -43,6 +43,7 @@ duv_req_t* duv_setup_req(duk_context *ctx, int callback_index) {
   }
   data->data_ref = 0;
   data->data = NULL;
+  data->ctx = ctx;
   return data;
 }
 
@@ -83,13 +84,13 @@ void duv_push_sockaddr(duk_context *ctx, struct sockaddr_storage* address, int a
         port = ntohs(addrin6->sin6_port);
     }
 
-    duk_push_object(ctx);
+    duk_idx_t obj_idx = duk_push_object(ctx);
     duk_push_string(ctx, duv_protocol_to_string(address->ss_family));
-    duk_put_prop_string(ctx, -2, "family");
+    duk_put_prop_string(ctx, obj_idx, "family");
     duk_push_number(ctx, port);
-    duk_put_prop_string(ctx, -2, "port");
+    duk_put_prop_string(ctx, obj_idx, "port");
     duk_push_string(ctx, ip);
-    duk_put_prop_string(ctx, -2, "ip");
+    duk_put_prop_string(ctx, obj_idx, "ip");
 }
 
 void duv_check(duk_context *ctx, int status) {

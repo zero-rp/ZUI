@@ -77,9 +77,10 @@ typedef struct {
 } duv_handle_t;
 
 typedef struct {
+    duk_context *ctx;
     int req_ref; // ref for uv_req_t's userdata
     int context;
-    int callback_ref; // ref for callback
+    int callback_ref; // ref for callback »Øµ÷º¯Êý
     int data_ref;
     void* data; // extra data
 } duv_req_t;

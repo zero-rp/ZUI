@@ -97,8 +97,6 @@ static const duk_function_list_entry duv_funcs[] = {
 
   // misc.c
   {"guess_handle", duv_guess_handle, 1},
-  {"version", duv_version, 0},
-  {"version_string", duv_version_string, 0},
   {"get_process_title", duv_get_process_title, 0},
   {"set_process_title", duv_set_process_title, 1},
   {"resident_set_memory", duv_resident_set_memory, 0},
@@ -106,6 +104,7 @@ static const duk_function_list_entry duv_funcs[] = {
   {"getrusage", duv_getrusage, 0},
   {"cpu_info", duv_cpu_info, 0},
   {"interface_addresses", duv_interface_addresses, 0},
+  {"getaddrinfo", duv_getaddrinfo, 3},
   {"loadavg", duv_loadavg, 0},
   {"exepath", duv_exepath, 0},
   {"os_homedir", duv_os_homedir, 0},
@@ -115,6 +114,8 @@ static const duk_function_list_entry duv_funcs[] = {
   {"update_time", duv_update_time, 0},
   {"now", duv_now, 0},
 
+  { "process_exec", duv_process_exec, 4 },
+  { "process_kill", duv_process_kill, 4 },
   // miniz.c
   //{"inflate", duv_tinfl, 2},
   //{"deflate", duv_tdefl, 2},
