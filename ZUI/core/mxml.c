@@ -262,7 +262,8 @@ mxml_node_t *mxmlClone(mxml_node_t *node, mxml_node_t *parent) {
     new_node->user_data = node->user_data;
     new_node->value.name = strdup(node->value.name);
     new_node->value.num_attrs = node->value.num_attrs;
-    new_node->value.attrs = (mxml_attr_t *)ZuiMalloc((node->value.num_attrs + 1) * sizeof(mxml_attr_t));
+    if (node->value.num_attrs)
+        new_node->value.attrs = (mxml_attr_t *)ZuiMalloc(node->value.num_attrs * sizeof(mxml_attr_t));
     for (size_t i = 0; i < node->value.num_attrs; i++)
     {
         new_node->value.attrs[i].name = strdup(node->value.attrs[i].name);
