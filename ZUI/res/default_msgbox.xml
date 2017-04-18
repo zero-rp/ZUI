@@ -3,12 +3,12 @@
     <HorizontalLayout name="head" drag="true" height="25">
       <!--标题栏-->
       <HorizontalLayout name="Title" inset="0,0,28,0" drag="true">
-        <Label name="title" text="消息框" drag="true"/>
+        <Label name="title" text="消息框" align="center" drag="true"/>
       </HorizontalLayout>
       <WindowCtl name="ctl"/>
     </HorizontalLayout>
   <HorizontalLayout>
-    <Label name="text" drag="true"/>
+    <Label name="text" align="center" drag="true"/>
   </HorizontalLayout>
   <HorizontalLayout height="28">
     <Button name="ok" text="确定" padding="10,2,10,2"/>

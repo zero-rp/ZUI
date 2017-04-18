@@ -134,28 +134,52 @@ ZEXPORT ZuiVoid ZCALL ZuiMsgLoop_exit() {
 }
 ZuiControl MsgBox_pRoot;
 ZuiAny ZCALL MsgBox_Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
-    if (wcscmp(p->m_sName, L"clos") == 0) {
-        ZuiMsgLoop_exit();
-    }
-    else if (wcscmp(p->m_sName, L"min") == 0) {
-        ZuiControlCall(Proc_Window_SetWindowMin, MsgBox_pRoot, NULL, NULL, NULL);
+    if (wcscmp(msg, L"onclick") == 0)
+    {
+        if (wcscmp(p->m_sName, L"WindowCtl_clos") == 0) {
+            FreeZuiControl(p->m_pManager->m_pRoot, TRUE);
+            PostMessage(0, WM_APP + 10, 0, 0);
+        }
     }
     return 0;
 }
 
 ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp,ZuiText text,ZuiText title) {
+    ZuiControl p;
     MsgBox_pRoot = NewZuiControl(L"MessageBox", NULL, NULL, NULL);
-    ZuiControl p = ZuiControlFindName(MsgBox_pRoot, L"text");
+    //取消最小化按钮
+    p = ZuiControlFindName(MsgBox_pRoot, L"WindowCtl_min");
+    ZuiControlCall(Proc_SetVisible, p, FALSE, NULL, NULL);
+    //取消最大化按钮
+    p = ZuiControlFindName(MsgBox_pRoot, L"WindowCtl_max");
+    ZuiControlCall(Proc_SetVisible, p, FALSE, NULL, NULL);
+    //挂接关闭按钮事件
+    p = ZuiControlFindName(MsgBox_pRoot, L"WindowCtl_clos");
+    ZuiControlRegNotify(p, MsgBox_Notify_ctl);
+    //挂接确认按钮事件
+    p = ZuiControlFindName(MsgBox_pRoot, L"ok");
+    ZuiControlRegNotify(p, MsgBox_Notify_ctl);
+    //挂接取消按钮事件
+    p = ZuiControlFindName(MsgBox_pRoot, L"cancel");
+    ZuiControlRegNotify(p, MsgBox_Notify_ctl);
+
+    p = ZuiControlFindName(MsgBox_pRoot, L"text");
     ZuiControlCall(Proc_SetText, p, text, NULL, NULL);
     p = ZuiControlFindName(MsgBox_pRoot, L"title");
     ZuiControlCall(Proc_SetText, p, title, NULL, NULL);
-    
+    //禁用掉父窗口
+    EnableWindow(rp->m_pManager->m_hWndPaint, FALSE);
     MSG Msg;
-    while (GetMessage(&Msg, NULL, 0, 0))
+    while (1)
     {
+        GetMessage(&Msg, NULL, 0, 0);
+        if (Msg.message == WM_APP + 10)
+            break;
         TranslateMessage(&Msg);
         DispatchMessage(&Msg);
     }
+    //重新开启父窗口
+    EnableWindow(rp->m_pManager->m_hWndPaint, TRUE);
     return;
 }
 ZEXPORT ZuiBool ZCALL ZuiIsPointInRect(ZuiRect Rect, ZuiPoint pt) {
