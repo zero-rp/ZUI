@@ -24,11 +24,12 @@
 
 //------Js
 
-#define Js_Id_Browser_titlechanged    100
-#define Js_Id_Browser_newwindow       101
+#define Js_Id_Browser_titlechanged  100
+#define Js_Id_Browser_newwindow     101
 #define Js_Id_Browser_urlchanged    102
-#define Js_Id_Browser_navigation   103
-#define Js_Id_Browser_url   104
+#define Js_Id_Browser_navigation    103
+#define Js_Id_Browser_loader        104
+#define Js_Id_Browser_url           105
 
 #define ZuiBrowserLoadUrl(Control, ...) ZProc(Control, Browser_LoadUrl, __VA_ARGS__);
 
@@ -39,6 +40,7 @@ typedef struct _ZuiBrowser
     ZuiInt newwindow;
     ZuiInt urlchanged;
     ZuiInt navigation;
+    ZuiInt loader;
 
     ZuiGraphics dc;
     ZuiAny bits;    //之前的图像指针

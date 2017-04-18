@@ -52,6 +52,7 @@ typedef void(*t_wkeOnURLChanged)(wkeWebView webView, void *callback, void* callb
 typedef void(*t_wkeOnPaintUpdated)(wkeWebView webView, void *callback, void* callbackParam);
 typedef void(*t_wkeOnInitGraphics)(wkeWebView webView, void *callback, void* callbackParam);
 typedef void(*t_wkeOnCreateView)(wkeWebView webView, void *callback, void* param);
+typedef void(*t_wkeOnLoader)(wkeWebView webView, void *callback, void* param);
 typedef void(*t_wkeRepaintIfNeeded)(wkeWebView webView);
 typedef void(*t_wkeResize)(wkeWebView webView, int w, int h);
 typedef void(*t_wkeSetFocus)(wkeWebView webView);
@@ -112,6 +113,7 @@ t_wkeRunJSW wkeRunJSW;
 t_jsToTempStringW jsToTempStringW;
 t_wkeGlobalExec wkeGlobalExec;
 t_ZuvModuleInit ZuvModuleInit;
+t_wkeOnLoader wkeOnLoader;
 // 回调：重绘
 void _staticOnPaintUpdated(wkeWebView webView, void* param, const HDC hdc, int x, int y, int cx, int cy)
 {
@@ -197,6 +199,24 @@ BOOL _staticOnNavigation(wkeWebView webView, void* param, int navigationType, vo
     if (ret)
         return ret;
     return !ZuiControlNotify(L"navigation", ((ZuiBrowser)param)->cp, wkeGetStringW(url), NULL, NULL);
+}
+// 回调：打开连接
+BOOL _staticOnLoader(wkeWebView webView, void* param, void *url) {
+    int ret = 0;
+    ZuiBrowser p = (ZuiBrowser)param;
+    if (p->loader) {
+        duv_push_ref(p->cp->m_pManager->m_ctx, p->loader);
+        ZuiBuilderJs_pushControl(p->cp->m_pManager->m_ctx, p->cp);
+        duk_push_string_w(p->cp->m_pManager->m_ctx, wkeGetStringW(url));
+        if (duk_pcall_method(p->cp->m_pManager->m_ctx, 2)) {
+            LOG_DUK(p->cp->m_pManager->m_ctx);
+        }
+        ret = duk_to_boolean(p->cp->m_pManager->m_ctx, -1);
+        duk_pop(p->cp->m_pManager->m_ctx);
+    }
+    if (ret)
+        return ret;
+    return ZuiControlNotify(L"loader", ((ZuiBrowser)param)->cp, wkeGetStringW(url), NULL, NULL);
 }
 ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
@@ -428,6 +448,15 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
             }
             return 0;
         }
+        case Js_Id_Browser_loader: {
+            if (duk_is_function(ctx, 0)) {
+                if (p->loader)
+                    duv_unref(ctx, p->loader);
+                duk_dup(ctx, 0);
+                p->loader = duv_ref(ctx);
+            }
+            return 0;
+        }
         case Js_Id_Browser_url: {
             if (duk_is_string(ctx, 0)) {
                 ZuiControlCall(Proc_Browser_LoadUrl, cp, (ZuiAny)duk_get_string_w(ctx, 0), NULL, NULL);
@@ -457,6 +486,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         ZuiBuilderControlInit(Param1, "newwindow", Js_Id_Browser_newwindow, TRUE);
         ZuiBuilderControlInit(Param1, "urlchanged", Js_Id_Browser_urlchanged, TRUE);
         ZuiBuilderControlInit(Param1, "navigation", Js_Id_Browser_navigation, TRUE);
+        ZuiBuilderControlInit(Param1, "loader", Js_Id_Browser_loader, TRUE);
         ZuiBuilderControlInit(Param1, "url", Js_Id_Browser_url, TRUE);
         break;
     }
@@ -492,6 +522,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         wkeOnCreateView(p->view, _staticOnCreateView, p);
         wkeOnURLChanged(p->view, _staticOnURLChanged, p);
         wkeOnNavigation(p->view, _staticOnNavigation, p);
+        wkeOnLoader(p->view, _staticOnLoader, p);
         //wkeSetUserAgentW(p->view, L"Mozilla/5.0 (Linux; Android 4.4.2; Nexus 4 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.114 Mobile Safari/537.36");
         return p;
     }
@@ -523,6 +554,9 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
             goto LoadLibraryErro;
         wkeOnPaintUpdated = (t_wkeOnPaintUpdated)GetProcAddress(dll, "wkeOnPaintUpdated");
         if (!wkeOnPaintUpdated)
+            goto LoadLibraryErro;
+        wkeOnLoader = (t_wkeOnLoader)GetProcAddress(dll, "wkeOnLoader");
+        if (!wkeOnLoader)
             goto LoadLibraryErro;
         wkeOnInitGraphics= (t_wkeOnInitGraphics)GetProcAddress(dll, "wkeOnInitGraphics");
         if (!wkeOnInitGraphics)
