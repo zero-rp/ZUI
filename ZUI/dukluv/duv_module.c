@@ -47,7 +47,9 @@ ZuiBool ZuiInitZuvFunc() {
     p->zuv_is_buffer_data = duk_is_buffer_data;
     p->zuv_is_pointer = duk_is_pointer;
     p->zuv_is_lightfunc = duk_is_lightfunc;
-
+    p->zuv_is_array = duk_is_array;
+    p->zuv_is_function = duk_is_function;
+    p->zuv_is_c_function = duk_is_c_function;
 
     p->zuv_get_boolean = duk_get_boolean;
     p->zuv_get_number = duk_get_number;
@@ -73,6 +75,8 @@ ZuiBool ZuiInitZuvFunc() {
     p->zuv_safe_call = duk_safe_call;
 
     p->zuv_put_prop_string = duk_put_prop_string;
+    p->zuv_put_prop_index = duk_put_prop_index;
+    p->zuv_get_top = duk_get_top;
     p->zuv_add_module = duv_add_module;
     return TRUE;
 }
