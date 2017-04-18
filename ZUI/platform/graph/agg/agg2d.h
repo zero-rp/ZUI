@@ -352,7 +352,8 @@ public:
     // Text 文本
     //-----------------------    
     void   text(Font& font, double x, double y, double x1, double y1, const wchar_t* str, const int len, unsigned int style);
-    void   text(Font& font, double x, double y, const wchar_t* str, const int len);
+    //按坐标绘制一个字符
+    void   text(Font& font, double x, double y, const wchar_t ch);
 
     // Path commands    路径命令
     //-----------------------

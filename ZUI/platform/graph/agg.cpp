@@ -108,20 +108,15 @@ extern "C"
         }
     }
     /*画文本(按照计算好的坐标)*/
-    ZEXPORT ZuiVoid ZCALL ZuiDrawStringPt(ZuiGraphics Graphics, ZuiFont Font, ZuiText String, ZuiInt StrLens, ZPointR Pt[]) {
+    ZEXPORT ZuiVoid ZCALL ZuiDrawStringPt(ZuiGraphics Graphics, ZuiFont Font, ZuiColor Color, ZuiText String, ZuiInt StrLens, ZPointR Pt[]) {
         if (String && Font && Graphics) {
-        //    // 字体串  
-        //    wchar_t *s = String;
-        //    for (int i=0; *s; s++) {      // 让字体引擎准备好字体数据 
-        //        const agg::glyph_cache* glyph = StringFormat->font->font_manager->glyph(*s);
-        //        if (glyph) {
-        //            StringFormat->font->vs->init(glyph->data, glyph->data_size, Pt[i].x, Pt[i].y);
-        //            Graphics->graphics->ras.add_path(*StringFormat->font->ccvs);
-        //            agg::render_scanlines_aa_solid(Graphics->graphics->ras, sl, *Graphics->graphics->renb, *StringFormat->font->color);
-        //            Graphics->graphics->ras.reset();
-        //        }
-        //        i++;
-        //    }
+            //指定文字颜色
+            Graphics->graphics->graphics->fillColor(ARGBTORGBA8(Color));
+            Graphics->graphics->graphics->noLine();//不描边
+            for (int i = 0; i < StrLens; i++)
+            {
+                Graphics->graphics->graphics->text(*Font->font->font, Pt[i].x, Pt[i].y, String[i]);
+            }
         }
     }
     ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiFont Font, ZuiText String, ZuiInt StrLen, ZRectR *Rect, ZuiColor Color, ZuiUInt TextStyle) {

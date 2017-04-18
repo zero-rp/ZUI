@@ -988,6 +988,30 @@ void Agg2D::text(Font& font, double x, double y, double x1, double y1, const wch
 }
 
 //------------------------------------------------------------------------
+void Agg2D::text(Font& font, double x, double y, const wchar_t ch) {
+    const agg::glyph_cache* glyph = font.m_fontCacheManager.glyph(ch);//È¡×ÖÄ£
+    agg::trans_affine  mtx;
+    agg::conv_transform<FontCacheManager::path_adaptor_type> tr(font.m_fontCacheManager.path_adaptor(), mtx);
+    if (glyph)
+    {
+        font.m_fontCacheManager.init_embedded_adaptors(glyph, x, y);
+        //äÖÈ¾
+        if (glyph->data_type == agg::glyph_data_outline)
+        {
+            m_path.remove_all();
+            m_path.concat_path(tr, 0); // JME
+            drawPath();
+        }
+
+        if (glyph->data_type == agg::glyph_data_gray8)
+        {
+            render(font.m_fontCacheManager.gray8_adaptor(),
+                font.m_fontCacheManager.gray8_scanline());
+        }
+    }
+}
+
+//------------------------------------------------------------------------
 void Agg2D::resetPath() { m_path.remove_all(); }
 
 //------------------------------------------------------------------------
