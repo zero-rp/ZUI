@@ -188,9 +188,11 @@ void* ZCALL ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalLayo
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
 
+        old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+
         ZuiFree(p);
 
-        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        return;
     }
     case Proc_GetObject:
         if (Param1 == Type_HorizontalLayout)

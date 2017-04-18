@@ -103,12 +103,6 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
                 pThis->root->m_bVisible = FALSE;
                 ShowWindow(hWnd, SW_HIDE);
             }
-            else if (uMsg == WM_DESTROY)
-            {
-                FreeCPaintManagerUI(pThis->m_pm);
-                pThis->m_pm = NULL;
-                return DefWindowProc(hWnd, uMsg, wParam, lParam);
-            }
         }
         if (pThis->m_pm)
             if (ZuiPaintManagerMessageHandler(pThis->m_pm, uMsg, wParam, lParam, &lRes))
@@ -141,7 +135,7 @@ ZuiBool ZuiOsUnInitialize() {
 
 ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show) {
     /*保存相关参数到ZOsWindow*/
-    ZuiOsWindow OsWindow = (ZuiOsWindow)malloc(sizeof(ZOsWindow));
+    ZuiOsWindow OsWindow = (ZuiOsWindow)ZuiMalloc(sizeof(ZOsWindow));
     if (OsWindow)
     {
         memset(OsWindow, 0, sizeof(ZOsWindow));
@@ -172,7 +166,10 @@ ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show) {
     return NULL;
 }
 ZuiVoid ZuiOsDestroyWindow(ZuiOsWindow OsWindow) {
+    SetWindowLong(OsWindow->m_hWnd, GWL_WNDPROC, DefWindowProc);
     DestroyWindow(OsWindow->m_hWnd);
+    FreeCPaintManagerUI(OsWindow->m_pm);
+    ZuiFree(OsWindow);
 }
 ZuiBool ZuiOsSetWindowTitle(ZuiOsWindow OsWindow, ZuiText Title) {
     return SetWindowText(OsWindow->m_hWnd, Title);

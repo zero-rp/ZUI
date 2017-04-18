@@ -195,7 +195,6 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
 
-        //p->m_pm->m_pRoot = NULL;
 
         old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
 

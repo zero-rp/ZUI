@@ -852,9 +852,10 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
         if (p->m_pVerticalScrollBar)
             FreeZuiControl(p->m_pVerticalScrollBar, NULL);
         darray_destroy(p->m_items);
-        ZuiFree(p);
 
-        return old_call(ProcId, cp, 0, Param1, Param2, Param3);
+        old_call(ProcId, cp, 0, Param1, Param2, Param3);
+        ZuiFree(p);
+        return;
     }
     case Proc_GetObject:
         if (Param1 == Type_Layout)

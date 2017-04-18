@@ -142,9 +142,6 @@ ZuiPaintManager NewCPaintManagerUI() {
 }
 //销毁消息管理器
 void FreeCPaintManagerUI(ZuiPaintManager p) {
-    // Delete the control-tree structures
-    if (p->m_pRoot != NULL)
-        FreeZuiControl(p->m_pRoot, NULL);
 
     ZuiPaintManagerRemoveAllTimers(p);
 
