@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Ecmascript bytecode executor.
  */
@@ -5116,3 +5117,4 @@ DUK_LOCAL DUK_NOINLINE DUK_HOT void duk__js_execute_bytecode_inner(duk_hthread *
 	DUK_ERROR_INTERNAL(thr);
 #endif
 }
+#endif

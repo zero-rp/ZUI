@@ -1,3 +1,4 @@
+#if (defined HAVE_DUV) && (HAVE_DUV == 1)
 #include "duv_schema.h"
 
 duk_bool_t dschema_is_data(duk_context* ctx, duk_idx_t index) {
@@ -24,3 +25,4 @@ void dschema_check(duk_context *ctx, const duv_schema_entry schema[]) {
     duk_error(ctx, DUK_ERR_TYPE_ERROR, "Too many arguments. Expected at %d, but got %d", i, top);
   }
 }
+#endif

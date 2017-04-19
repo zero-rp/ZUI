@@ -1,3 +1,4 @@
+#if ((defined HAVE_UV) && (HAVE_UV == 1)) || ((defined HAVE_DUV) && (HAVE_DUV == 1))
 /* Copyright Joyent, Inc. and other Node contributors. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -1371,3 +1372,4 @@ int uv__getpwuid_r(uv_passwd_t* pwd) {
 int uv_os_get_passwd(uv_passwd_t* pwd) {
   return uv__getpwuid_r(pwd);
 }
+#endif

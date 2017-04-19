@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  A tiny random number generator used for Math.random() and other internals.
  *
@@ -123,3 +124,4 @@ DUK_INTERNAL duk_double_t duk_util_tinyrandom_get_double(duk_hthread *thr) {
 #endif  /* DUK__RANDOM_XOROSHIRO128PLUS */
 
 #endif  /* !DUK_USE_GET_RANDOM_DOUBLE */
+#endif

@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Reference counting implementation.
  *
@@ -800,3 +801,4 @@ DUK_INTERNAL void duk_hobject_decref_norz(duk_hthread *thr, duk_hobject *h) {
 /* no refcounting */
 
 #endif  /* DUK_USE_REFERENCE_COUNTING */
+#endif

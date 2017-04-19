@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Memory allocation handling.
  */
@@ -356,3 +357,4 @@ DUK_INTERNAL void duk_heap_mem_free(duk_heap *heap, void *ptr) {
 	 * No need to update voluntary GC counter either.
 	 */
 }
+#endif

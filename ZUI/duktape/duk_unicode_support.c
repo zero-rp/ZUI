@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Various Unicode help functions for character classification predicates,
  *  case conversion, decoding, etc.
@@ -1181,3 +1182,4 @@ DUK_INTERNAL const duk_uint16_t duk_unicode_re_ranges_not_wordchar[10] = {
 };
 
 #endif  /* DUK_USE_REGEXP_SUPPORT */
+#endif

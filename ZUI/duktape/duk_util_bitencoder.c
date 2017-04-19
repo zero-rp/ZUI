@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Bitstream encoder.
  */
@@ -41,3 +42,4 @@ DUK_INTERNAL void duk_be_finish(duk_bitencoder_ctx *ctx) {
 	}
 	DUK_ASSERT(ctx->currbits == 0);
 }
+#endif

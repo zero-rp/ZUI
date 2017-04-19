@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Encoding and decoding basic formats: hex, base64.
  *
@@ -656,3 +657,4 @@ DUK_EXTERNAL void duk_json_decode(duk_context *ctx, duk_idx_t idx) {
 	DUK_ERROR_UNSUPPORTED((duk_hthread *) ctx);
 }
 #endif  /* DUK_USE_JSON_SUPPORT */
+#endif

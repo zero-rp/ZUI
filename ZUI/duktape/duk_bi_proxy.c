@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Proxy built-in (ES2015)
  */
@@ -148,3 +149,4 @@ DUK_INTERNAL duk_ret_t duk_bi_proxy_constructor(duk_context *ctx) {
 	DUK_DCERROR_TYPE_INVALID_ARGS((duk_hthread *) ctx);
 }
 #endif  /* DUK_USE_ES6_PROXY */
+#endif

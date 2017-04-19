@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Create and throw an Ecmascript error object based on a code and a message.
  *
@@ -173,3 +174,4 @@ DUK_INTERNAL void duk_error_throw_from_negative_rc(duk_hthread *thr, duk_ret_t r
 	duk_error_raw(ctx, -rc, NULL, 0, "error (rc %ld)", (long) rc);
 	DUK_UNREACHABLE();
 }
+#endif

@@ -47,8 +47,9 @@ typedef struct _ZOption
     ZuiColor    m_ColorSelected;        //选中的普通状态
     ZuiColor    m_ColorSelectedHot;     //选中的点燃状态
     ZuiColor    m_ColorSelectedPushed;  //选中的按下状态
-
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     ZuiInt      m_rOnselected;          //js回调
+#endif
     ZCtlProc old_call;
     ZuiAny old_udata;
 }*ZuiOption, ZOption;

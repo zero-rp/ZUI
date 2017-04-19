@@ -14,10 +14,10 @@ ZuiAny ZCALL OnPaint(ZuiControl p, ZuiAny Param1, ZuiAny Param2) {
         ZRect *rc = &p->m_rcItem;
         if (p->m_aAnime->steup * 10 > 255) {
             ZuiPaintManagerKillTimer_Id(p, 1);
-            ZuiAlphaBlend(Param1, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, p->m_aAnime->m_hDcOffscreen, 0, 0, 255);
+            //ZuiAlphaBlend(Param1, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, p->m_aAnime->m_hDcOffscreen, 0, 0, 255);
             return 0;
         }
-        ZuiAlphaBlend(Param1, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, p->m_aAnime->m_hDcOffscreen, 0, 0, p->m_aAnime->steup * 10);
+        //ZuiAlphaBlend(Param1, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, p->m_aAnime->m_hDcOffscreen, 0, 0, p->m_aAnime->steup * 10);
         
     }
     

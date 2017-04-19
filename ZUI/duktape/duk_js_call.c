@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Call handling.
  *
@@ -2770,3 +2771,4 @@ DUK_INTERNAL duk_bool_t duk_handle_ecma_call_setup(duk_hthread *thr,
 	DUK_REFZERO_CHECK_FAST(thr);
 	return 1;
 }
+#endif

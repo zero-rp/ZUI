@@ -41,6 +41,7 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         ZuiControlCall(Proc_OnPaintBorder, cp, Param1, Param2, NULL);
         return 0;
     }
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     case Proc_JsSet: {
         duk_context *ctx = (duk_context *)Param1;
         switch ((ZuiInt)Param2)
@@ -78,6 +79,7 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         ZuiBuilderControlInit(Param1, "disabledimage", Js_Id_Button_disabledimage, TRUE);
         break;
     }
+#endif
     case Proc_OnPaintStatusImage: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = (ZRect *)&cp->m_rcItem;

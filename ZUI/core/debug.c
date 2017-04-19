@@ -360,7 +360,8 @@ static VOID CALLBACK UPDATETIME(HWND H, UINT U, UINT_PTR Pt, DWORD D) {
     oldhash = hash;
     SendMessage(MemList, LVM_DELETEALLITEMS, 0, 0);
     
-    for (size_t i = mem->count-1; i > mem->count-14; i--)
+    //for (size_t i = mem->count-1; i > mem->count-14; i--)
+    for (size_t i = 0; i < mem->count; i++)
     {
         MEM* p = ((MEM *)((char *)mem->data[i] - sizeof(MEM)));
         //先需要插入一行，才能对这行输入内容

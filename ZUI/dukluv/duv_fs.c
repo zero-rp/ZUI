@@ -1,3 +1,4 @@
+#if (defined HAVE_DUV) && (HAVE_DUV == 1)
 #include "duv_fs.h"
 
 static void duv_push_timespec_table(duk_context *ctx, const uv_timespec_t* t) {
@@ -502,3 +503,4 @@ duk_ret_t duv_fs_fchown(duk_context *ctx) {
   req->data = duv_setup_req(ctx, 3);
   FS_CALL(fchown, req, file, uid, gid);
 }
+#endif

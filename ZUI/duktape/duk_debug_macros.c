@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Debugging macro calls.
  */
@@ -86,3 +87,4 @@ DUK_INTERNAL void duk_debug_log(const char *fmt, ...) {
  */
 
 #endif  /* DUK_USE_DEBUG */
+#endif

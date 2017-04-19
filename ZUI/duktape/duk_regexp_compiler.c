@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Regexp compilation.
  *
@@ -1137,3 +1138,4 @@ DUK_INTERNAL void duk_regexp_create_instance(duk_hthread *thr) {
 /* regexp support disabled */
 
 #endif  /* DUK_USE_REGEXP_SUPPORT */
+#endif

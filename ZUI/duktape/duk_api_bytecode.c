@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Bytecode dump/load
  *
@@ -772,3 +773,4 @@ DUK_EXTERNAL void duk_load_function(duk_context *ctx) {
 }
 
 #endif  /* DUK_USE_BYTECODE_DUMP_SUPPORT */
+#endif

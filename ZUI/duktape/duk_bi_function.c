@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Function built-ins
  */
@@ -420,3 +421,4 @@ DUK_INTERNAL duk_ret_t duk_bi_function_prototype_bind(duk_context *ctx) {
 	return 1;
 }
 #endif  /* DUK_USE_FUNCTION_BUILTIN */
+#endif

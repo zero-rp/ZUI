@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Type error thrower, E5 Section 13.2.3.
  */
@@ -7,3 +8,4 @@
 DUK_INTERNAL duk_ret_t duk_bi_type_error_thrower(duk_context *ctx) {
 	DUK_DCERROR_TYPE_INVALID_ARGS((duk_hthread *) ctx);
 }
+#endif

@@ -196,6 +196,7 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
         }
         break;
     }
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     case Proc_JsGet: {
         duk_context *ctx = (duk_context *)Param1;
         switch ((ZuiInt)Param2)
@@ -302,6 +303,7 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
         ZuiBuilderControlInit(Param1, "inset", Js_Id_Layout_inset, TRUE);
         break;
     }
+#endif
     case Proc_OnEvent: {
         TEventUI *event = (TEventUI *)Param1;
         //不响应鼠标消息

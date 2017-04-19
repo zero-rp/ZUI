@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  'Reflect' built-in (ES2016 Section 26.1)
  *  http://www.ecma-international.org/ecma-262/7.0/#sec-reflect-object
@@ -103,3 +104,4 @@ DUK_INTERNAL duk_ret_t duk_bi_reflect_object_set(duk_context *ctx) {
 	return 1;
 }
 #endif  /* DUK_USE_REFLECT_BUILTIN */
+#endif

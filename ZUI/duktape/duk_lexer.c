@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Lexer for source files, ToNumber() string conversions, RegExp expressions,
  *  and JSON.
@@ -2435,3 +2436,4 @@ DUK_INTERNAL void duk_lexer_parse_re_ranges(duk_lexer_ctx *lex_ctx, duk_re_range
 }
 
 #endif  /* DUK_USE_REGEXP_SUPPORT */
+#endif

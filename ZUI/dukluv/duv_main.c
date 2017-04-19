@@ -1,3 +1,4 @@
+#if (defined HAVE_DUV) && (HAVE_DUV == 1)
 #include "uv.h"
 #include <ZUI.h>
 #include "duv.h"
@@ -483,3 +484,4 @@ duk_ret_t duv_load(duk_context *ctx) {
     duk_call_method(ctx, 1);
     return 0;
 }
+#endif

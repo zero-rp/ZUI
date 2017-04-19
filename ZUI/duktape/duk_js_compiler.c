@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Ecmascript compiler.
  *
@@ -7871,3 +7872,4 @@ DUK_INTERNAL void duk_js_compile(duk_hthread *thr, const duk_uint8_t *src_buffer
 
 	/* [ ... template ] */
 }
+#endif

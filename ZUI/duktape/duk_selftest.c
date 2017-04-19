@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Self tests to ensure execution environment is sane.  Intended to catch
  *  compiler/platform problems which cannot be detected at compile time.
@@ -617,3 +618,4 @@ DUK_INTERNAL duk_uint_t duk_selftest_run_tests(duk_alloc_function alloc_func,
 }
 
 #endif  /* DUK_USE_SELF_TESTS */
+#endif

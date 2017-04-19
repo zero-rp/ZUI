@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Compilation and evaluation
  */
@@ -170,3 +171,4 @@ DUK_EXTERNAL duk_int_t duk_compile_raw(duk_context *ctx, const char *src_buffer,
 	/* [ ... closure ] */
 	return DUK_EXEC_SUCCESS;
 }
+#endif

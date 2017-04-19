@@ -1,3 +1,4 @@
+#if ((defined HAVE_UV) && (HAVE_UV == 1)) || ((defined HAVE_DUV) && (HAVE_DUV == 1))
 /* Copyright Joyent, Inc. and other Node contributors. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -559,3 +560,4 @@ int WSAAPI uv_msafd_poll(SOCKET socket, AFD_POLL_INFO* info_in,
     return SOCKET_ERROR;
   }
 }
+#endif

@@ -25,6 +25,7 @@
 #define Proc_Edit_OnPaintObject     208     //绘制对象
 #define Proc_Edit_Delete            209     //退格
 #define Proc_Edit_MovePosLineEnd    210     //移动读写位置到行尾
+#define Proc_Edit_DeleteAll         211     //删除全部
 
 /*编辑框对象类型*/
 enum ZEditObjectType
@@ -72,7 +73,7 @@ typedef struct _ZEdit
 {
     ZuiFont font;           //编辑框默认文本格式
 
-    ZuiUInt m_uState;		//控件状态
+    ZuiUInt m_uState;       //控件状态
     ZuiColor FrameColor;    //边框颜色
     ZuiColor FireColor;     //点燃颜色
     ZuiColor FocusColor;    //焦点颜色
@@ -83,16 +84,16 @@ typedef struct _ZEdit
     ZPoint write_pos;       //当前行写入位置 第几列第几个对象 列索引为光标前的的对象 由不同的对象记录具体的读写位置
     
 
-	ZPointR cur_pos;		//光标位置 记录具体坐标位置 此位置通过写入位置计算得来
-	ZuiBool cur_type;		//光标状态
-	ZuiInt	cur_height;		//光标高度
+    ZPointR cur_pos;		//光标位置 记录具体坐标位置 此位置通过写入位置计算得来
+    ZuiBool cur_type;		//光标状态
+    ZuiInt	cur_height;		//光标高度
 
 
-	ZuiControl m_pVerticalScrollBar;    //纵向滚动条
-	ZuiControl m_pHorizontalScrollBar;  //横向滚动条
+    ZuiControl m_pVerticalScrollBar;    //纵向滚动条
+    ZuiControl m_pHorizontalScrollBar;  //横向滚动条
     
     ZCtlProc old_call;
-	ZuiAny old_udata;
+    ZuiAny old_udata;
 }*ZuiEdit, ZEdit;
 ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 

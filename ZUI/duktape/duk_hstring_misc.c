@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Misc support functions
  */
@@ -136,3 +137,4 @@ DUK_INTERNAL DUK_HOT duk_size_t duk_hstring_get_charlen(duk_hstring *h) {
 	return duk__hstring_get_charlen_slowpath(h);
 }
 #endif  /* DUK_USE_HSTRING_CLEN */
+#endif

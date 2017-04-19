@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Initialize built-in objects.  Current thread must have a valstack
  *  and initialization errors may longjmp, so a setjmp() catch point
@@ -827,3 +828,4 @@ DUK_INTERNAL void duk_hthread_copy_builtin_objects(duk_hthread *thr_from, duk_ht
 		DUK_HOBJECT_INCREF_ALLOWNULL(thr_to, thr_to->builtins[i]);  /* side effect free */
 	}
 }
+#endif

@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  duk_heap allocation and freeing.
  */
@@ -1102,3 +1103,4 @@ duk_heap *duk_heap_alloc(duk_alloc_function alloc_func,
 
 	return NULL;
 }
+#endif

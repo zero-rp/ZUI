@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Mark-and-sweep garbage collection.
  */
@@ -1234,3 +1235,4 @@ DUK_INTERNAL void duk_heap_mark_and_sweep(duk_heap *heap, duk_small_uint_t flags
 	duk_heap_process_finalize_list(heap);
 #endif  /* DUK_USE_FINALIZER_SUPPORT */
 }
+#endif

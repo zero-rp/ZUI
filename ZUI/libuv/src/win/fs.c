@@ -1,3 +1,4 @@
+#if ((defined HAVE_UV) && (HAVE_UV == 1)) || ((defined HAVE_DUV) && (HAVE_DUV == 1))
 /* Copyright Joyent, Inc. and other Node contributors. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -2484,3 +2485,4 @@ int uv_fs_futime(uv_loop_t* loop, uv_fs_t* req, uv_file fd, double atime,
     return req->result;
   }
 }
+#endif

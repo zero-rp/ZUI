@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Pointer built-ins
  */
@@ -73,3 +74,4 @@ DUK_INTERNAL duk_ret_t duk_bi_pointer_prototype_tostring_shared(duk_context *ctx
  type_error:
 	DUK_DCERROR_TYPE_INVALID_ARGS((duk_hthread *) ctx);
 }
+#endif

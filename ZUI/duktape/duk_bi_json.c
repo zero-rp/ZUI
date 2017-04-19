@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  JSON built-ins.
  *
@@ -3257,3 +3258,4 @@ DUK_INTERNAL duk_ret_t duk_bi_json_object_stringify(duk_context *ctx) {
 #endif  /* DUK_USE_JSON_BUILTIN */
 
 #endif  /* DUK_USE_JSON_SUPPORT */
+#endif

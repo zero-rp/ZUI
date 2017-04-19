@@ -1,3 +1,4 @@
+#if (defined HAVE_DUV) && (HAVE_DUV == 1)
 #include "duv_refs.h"
 
 // Create a global array refs in the heap stash.
@@ -90,3 +91,4 @@ void duv_unref(duk_context *ctx, int ref) {
 
   duk_pop(ctx);
 }
+#endif

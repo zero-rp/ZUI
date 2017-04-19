@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Error and fatal handling.
  */
@@ -131,3 +132,4 @@ DUK_INTERNAL DUK_COLD void duk_default_fatal_handler(void *udata, const char *ms
 		/* Loop forever to ensure we don't return. */
 	}
 }
+#endif

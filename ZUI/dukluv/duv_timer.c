@@ -1,3 +1,4 @@
+#if (defined HAVE_DUV) && (HAVE_DUV == 1)
 #include "duv_timer.h"
 
 duk_ret_t duv_new_timer(duk_context *ctx) {
@@ -88,3 +89,4 @@ duk_ret_t duv_timer_get_repeat(duk_context *ctx) {
   duk_push_number(ctx, uv_timer_get_repeat(handle));
   return 1;
 }
+#endif

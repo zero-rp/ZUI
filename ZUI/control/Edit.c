@@ -166,7 +166,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
                 ZuiEditObject eo = line->m_array->data[it2];
                 if (eo->type == ZEOT_TXT) {
                     ZuiEditObjectText ot = (ZuiEditObjectText)eo;
-                    ZuiDrawString(gp, ot->font, ot->buf, ot->write_len, ot->out_pt);
+                    ZuiDrawStringPt(gp, ot->font, ARGB(255,255,0,0),ot->buf, ot->write_len, ot->out_pt);
                 }
             }
         }
@@ -272,6 +272,39 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
             return TRUE;
 
         }
+        return FALSE;
+    }
+    case Proc_Edit_DeleteAll: {
+        for (size_t i = 0; i < p->line_data->count; i++)
+        {
+            ZuiEditLine line = darray_getat(p->line_data, i);
+            for (size_t j = 0; j < line->m_array->count; j++)
+            {
+                ZuiEditObject eo = darray_getat(line->m_array, j);
+                if (eo->type == ZEOT_TXT) {
+                    //当前读写对象为文本对象
+                    ZuiEditObjectText ot = (ZuiEditObjectText)eo;
+                    ZuiFree(ot->buf);
+                    ZuiFree(ot->out_pt);
+                }
+            }
+            darray_destroy(line->m_array);
+        }
+        //清空数组
+        darray_empty(p->line_data);
+
+        //添加一行 至少保留一行
+        ZuiEditProc(Proc_Edit_AddLine, cp, p, NULL, NULL, NULL);
+
+        //重置变量
+        //默认光标
+        p->cur_pos.x = 1;
+        p->cur_height = 24;
+
+        //初始读写位置
+        p->write_pos.x = -1;
+        p->write_pos.y = 0;//第一行
+
         return FALSE;
     }
     case Proc_Edit_MovePos: {
@@ -457,8 +490,10 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 
             }
             ot->write_len++;//写入长度加一
-            ZuiControlNeedUpdate(cp);//重新布局
-            ZuiControlInvalidate(cp, TRUE);
+            if (!Param2) {
+                ZuiControlNeedUpdate(cp);//重新布局
+                ZuiControlInvalidate(cp, TRUE);
+            }
             return TRUE;
 
         }
@@ -466,13 +501,64 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
     }
     case Proc_Edit_AddTxt: {
         //添加一个字符串
+        ZuiText s = Param1;
+        while (*s)
+        {
+            ZuiControlCall(Proc_Edit_AddChar, cp, *s, NULL, NULL);//先清空全部
+            s++;
+        }
         return FALSE;
     }
     case Proc_SetText: {
-
+        ZuiControlCall(Proc_Edit_DeleteAll, cp, NULL, NULL, NULL);//先清空全部
+        ZuiControlCall(Proc_Edit_AddTxt, cp, Param1, NULL, NULL);//插入字符串
         return;
     }
+    case Proc_GetText: {
+        //获取输入行
+        ZuiEditLine line = darray_getat(p->line_data, p->write_pos.y);
+        if (line) {
+            ZuiEditObject eo = darray_getat(line->m_array, p->write_pos.x);
+            if (eo) {
+                if (eo->type == ZEOT_TXT) {
+                    //当前读写对象为文本对象
+                    ZuiEditObjectText ot = (ZuiEditObjectText)eo;
+                    return ot->buf;
+                }
+            }
+        }
+        return NULL;
+    }
     case Proc_SetAttribute: {
+        //if (_tcsicmp(pstrName, _T("readonly")) == 0) 
+        //    //只读
+        //    SetReadOnly(_tcsicmp(pstrValue, _T("true")) == 0);
+        //else if (_tcsicmp(pstrName, _T("numberonly")) == 0)
+        //    //只输入数字
+        //    SetNumberOnly(_tcsicmp(pstrValue, _T("true")) == 0);
+        //else if (_tcsicmp(pstrName, _T("password")) == 0) 
+        //    //密码模式
+        //    SetPasswordMode(_tcsicmp(pstrValue, _T("true")) == 0);
+        //else if (_tcsicmp(pstrName, _T("passwordchar")) == 0) 
+        //    //密码掩码
+        //    SetPasswordChar(*pstrValue);
+        //else if (_tcsicmp(pstrName, _T("maxchar")) == 0) 
+        //    //最大输入长度
+        //    SetMaxChar(_ttoi(pstrValue));
+        
+        //else if (_tcsicmp(pstrName, _T("normalimage")) == 0) SetNormalImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("hotimage")) == 0) SetHotImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("focusedimage")) == 0) SetFocusedImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("disabledimage")) == 0) SetDisabledImage(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("tipvalue")) == 0) SetTipValue(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("tipvaluecolor")) == 0) SetTipValueColor(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("nativetextcolor")) == 0) SetNativeEditTextColor(pstrValue);
+        //else if (_tcsicmp(pstrName, _T("nativebkcolor")) == 0) {
+        //    if (*pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
+        //    LPTSTR pstr = NULL;
+        //    DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
+        //    SetNativeEditBkColor(clrColor);
+        //}
         break;
     }
     case Proc_GetImePoint: {
@@ -497,7 +583,7 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
 
         p->line_data = darray_create();
 
-        //添加一行
+        //添加一行 至少保留一行
         ZuiEditProc(Proc_Edit_AddLine, cp, p, NULL, NULL, NULL);
 
         //默认光标

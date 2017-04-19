@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Error built-ins
  */
@@ -390,3 +391,4 @@ DUK_INTERNAL duk_ret_t duk_bi_error_prototype_filename_setter(duk_context *ctx) 
 DUK_INTERNAL duk_ret_t duk_bi_error_prototype_linenumber_setter(duk_context *ctx) {
 	return duk__error_setter_helper(ctx, DUK_STRIDX_LINE_NUMBER);
 }
+#endif

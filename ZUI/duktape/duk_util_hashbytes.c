@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Hash function duk_util_hashbytes().
  *
@@ -55,3 +56,4 @@ DUK_INTERNAL duk_uint32_t duk_util_hashbytes(const duk_uint8_t *data, duk_size_t
 	return h;
 }
 #endif  /* DUK_USE_STRHASH_DENSE */
+#endif

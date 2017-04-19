@@ -58,6 +58,7 @@ ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
     {
         return FALSE;
     }
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     /*初始化导出接口*/
     if (!ZuiInitZuvFunc())
     {
@@ -68,6 +69,7 @@ ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
     {
         return FALSE;
     }
+#endif
     /*初始化资源池*/
     if (!ZuiResDBInit()) {
         return FALSE;
@@ -86,8 +88,10 @@ ZEXPORT ZuiBool ZCALL ZuiUnInit() {
     ZuiControlUnRegister();
     /*反初始化模版管理器*/
     ZuiTemplateUnInit();
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     /*反初始化绑定器*/
     ZuiBuilderUnInit();
+#endif
     /*反初始化资源池*/
     ZuiResDBUnInit();
     /*反初始化全局变量*/
@@ -99,24 +103,7 @@ ZEXPORT ZuiBool ZCALL ZuiUnInit() {
     return TRUE;
 }
 ZEXPORT ZuiInt ZCALL ZuiMsgLoop() {
-    //MSG Msg;
-    //uv_loop_t *loop = uv_default_loop();
-    //while (1) {
-    //    int more = (0 != uv_run(loop, UV_RUN_NOWAIT));
-    //    if (PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE)) {
-    //        if (WM_QUIT == Msg.message) {
-    //            break;
-    //        }
-
-
-    //        TranslateMessage(&Msg);
-    //        DispatchMessageW(&Msg);
-    //    }
-    //    else {
-    //        Sleep(1);
-    //    }
-    //}
-    //return Msg.wParam;
+#if ((defined HAVE_UV) && (HAVE_UV == 1)) || ((defined HAVE_DUV) && (HAVE_DUV == 1))
     MSG Msg;
     uv_loop_t *loop = uv_default_loop();
     while (GetMessage(&Msg, NULL, 0, 0)) {
@@ -128,6 +115,17 @@ ZEXPORT ZuiInt ZCALL ZuiMsgLoop() {
         DispatchMessageW(&Msg);
     }
     return Msg.wParam;
+#else
+    MSG Msg;
+    while (GetMessage(&Msg, NULL, 0, 0)) {
+        if (WM_QUIT == Msg.message) {
+            break;
+        }
+        TranslateMessage(&Msg);
+        DispatchMessageW(&Msg);
+    }
+    return Msg.wParam;
+#endif
 }
 ZEXPORT ZuiVoid ZCALL ZuiMsgLoop_exit() {
     PostQuitMessage(0);

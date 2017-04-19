@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Calls.
  *
@@ -611,3 +612,4 @@ DUK_INTERNAL void duk_resolve_nonbound_function(duk_context *ctx) {
 		}
 	} while (--sanity > 0);
 }
+#endif

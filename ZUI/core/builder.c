@@ -1,7 +1,10 @@
 ﻿#include <ZUI.h>
 
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 duk_context *Global_ctx;
 static DArray *ctx_array = NULL;
+#endif
+
 ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
     mxml_node_t *node;
     ZuiText ClassName = NULL;
@@ -47,6 +50,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
                     ZuiResDBDelRes(res);
                 }
             }
+#if (defined HAVE_JS) && (HAVE_JS == 1)
             else if (wcscmp(ClassName, L"LoadScript") == 0) {
                 ZuiText src = NULL;
                 for (size_t i = 0; i < node->value.num_attrs; i++)
@@ -55,14 +59,9 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
                         src = node->value.attrs[i].value;
                     }
                 }
-                //ZuiRes res = ZuiResDBGetRes(src, ZREST_TXT);
-                //if (res)
-                //{
-                //    ZuiBuilderJsLoad(win->m_pManager->m_ctx, res->p, res->plen);
-                //    ZuiResDBDelRes(res);
-                //}
                 ZuiBuilderJsLoad(win->m_pManager->m_ctx, src);
             }
+#endif
             else if (!node->user_data) {//当前节点还未创建
                 Control = NewZuiControl(ClassName, NULL, NULL, NULL);
                 if (node->parent->user_data && wcsicmp(ClassName, L"window") != 0) {
@@ -107,7 +106,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len) {
     mxmlDelete(tree);
     return win;
 }
-
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 //----------------------------------------------------------------------------JNI
 wchar_t duk_temp[2048];
 const wchar_t *duk_get_string_w(duk_context *ctx, duk_idx_t idx) {
@@ -341,7 +340,7 @@ static duk_ret_t ZuiJsBind_Call_ZuiPopupMenu(duk_context *ctx) {
 static duk_ret_t ZuiJsBind_Call_MsgBox(duk_context *ctx) {
     if (duk_is_string(ctx, 0)) {
         ZuiContext c = ZuiBuilderContext(ctx);
-        ZuiMsgBox(0,duk_get_string_w(ctx, 0), duk_is_string(ctx, 1) ? duk_get_string_w(ctx, 1) : NULL);
+        ZuiMsgBox(c->mp->m_pRoot,duk_get_string_w(ctx, 0), duk_is_string(ctx, 1) ? duk_get_string_w(ctx, 1) : NULL);
     }
     return 0;
 }
@@ -423,3 +422,4 @@ ZuiVoid ZuiBuilderUnInit() {
     ZuiBuilderJsUn(Global_ctx);
     darray_destroy(ctx_array);
 }
+#endif

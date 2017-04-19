@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  String manipulation
  */
@@ -336,3 +337,4 @@ DUK_EXTERNAL duk_codepoint_t duk_char_code_at(duk_context *ctx, duk_idx_t idx, d
 	cp = duk_hstring_char_code_at_raw(thr, h, (duk_uint_t) char_offset, 0 /*surrogate_aware*/);
 	return (duk_codepoint_t) cp;
 }
+#endif

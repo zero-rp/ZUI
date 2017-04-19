@@ -1,3 +1,4 @@
+#if (defined HAVE_DUV) && (HAVE_DUV == 1)
 #include "duv_tcp.h"
 
 duk_ret_t duv_new_tcp(duk_context *ctx) {
@@ -168,3 +169,4 @@ duk_ret_t duv_tcp_connect(duk_context *ctx) {
   req->data = duv_setup_req(ctx, 3);
   return 1;
 }
+#endif

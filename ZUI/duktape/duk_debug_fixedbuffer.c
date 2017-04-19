@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Fixed buffer helper useful for debugging, requires no allocation
  *  which is critical for debugging.
@@ -67,3 +68,4 @@ DUK_INTERNAL duk_bool_t duk_fb_is_full(duk_fixedbuffer *fb) {
 }
 
 #endif  /* DUK_USE_DEBUG */
+#endif

@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Thread support.
  */
@@ -99,3 +100,4 @@ DUK_INTERNAL void duk_hthread_sync_and_null_currpc(duk_hthread *thr) {
 		thr->ptr_curr_pc = NULL;
 	}
 }
+#endif

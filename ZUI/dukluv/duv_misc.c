@@ -1,3 +1,4 @@
+#if (defined HAVE_DUV) && (HAVE_DUV == 1)
 #include "duv.h"
 #include <ZUI.h>
 duk_ret_t duv_guess_handle(duk_context *ctx) {
@@ -329,4 +330,4 @@ duk_ret_t duv_process_kill(duk_context *ctx) {
 
     //uv_process_kill()
 }
-
+#endif

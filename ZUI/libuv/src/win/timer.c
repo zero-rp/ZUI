@@ -1,3 +1,4 @@
+#if ((defined HAVE_UV) && (HAVE_UV == 1)) || ((defined HAVE_DUV) && (HAVE_DUV == 1))
 /* Copyright Joyent, Inc. and other Node contributors. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -193,3 +194,4 @@ void uv_process_timers(uv_loop_t* loop) {
     timer->timer_cb((uv_timer_t*) timer);
   }
 }
+#endif

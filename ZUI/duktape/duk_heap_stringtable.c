@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Heap string table handling, string interning.
  */
@@ -967,3 +968,4 @@ DUK_INTERNAL void duk_heap_strtable_free(duk_heap *heap) {
 
 	DUK_FREE(heap, strtable);
 }
+#endif

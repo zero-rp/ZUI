@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  ES2015 TypedArray and Node.js Buffer built-ins
  */
@@ -2976,3 +2977,4 @@ DUK_INTERNAL duk_ret_t duk_bi_typedarray_bytelength_getter(duk_context *ctx) {
 	return 1;
 }
 #endif  /* DUK_USE_BUFFEROBJECT_SUPPORT */
+#endif

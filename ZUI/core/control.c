@@ -223,6 +223,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     case Proc_OnSize: {
         if (p->m_aAnime)
             p->m_aAnime->OnSize(p, Param1, Param2);
+#if (defined HAVE_JS) && (HAVE_JS == 1)
         if (p->m_rOnsize) {
             duv_push_ref(p->m_pManager->m_ctx, p->m_rOnsize);
             ZuiBuilderJs_pushControl(p->m_pManager->m_ctx, p);
@@ -233,6 +234,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             }
             duk_pop(p->m_pManager->m_ctx);
         }
+#endif
         ZuiControlNotify(L"onsize", p, Param1, Param2, NULL);
         break;
     }
@@ -264,6 +266,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             return 0;
         }
         case ZEVENT_MOUSELEAVE: {
+#if (defined HAVE_JS) && (HAVE_JS == 1)
             if (p->m_rOnmouseleave) {
                 duv_push_ref(p->m_pManager->m_ctx, p->m_rOnmouseleave);
                 ZuiBuilderJs_pushControl(p->m_pManager->m_ctx, p);
@@ -272,10 +275,12 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 }
                 duk_pop(p->m_pManager->m_ctx);
             }
+#endif
             ZuiControlNotify(L"onmouseleave", p, NULL, NULL, NULL);
         }
                                 break;
         case ZEVENT_MOUSEENTER: {
+#if (defined HAVE_JS) && (HAVE_JS == 1)
             if (p->m_rOnmouseenter) {
                 duv_push_ref(p->m_pManager->m_ctx, p->m_rOnmouseenter);
                 ZuiBuilderJs_pushControl(p->m_pManager->m_ctx, p);
@@ -286,10 +291,12 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 }
                 duk_pop(p->m_pManager->m_ctx);
             }
+#endif
             ZuiControlNotify(L"onmouseenter", p, ((TEventUI *)Param1)->ptMouse.x, ((TEventUI *)Param1)->ptMouse.y, NULL);
         }
                                 break;
         case ZEVENT_LBUTTONDOWN: {
+#if (defined HAVE_JS) && (HAVE_JS == 1)
             if (p->m_rOnlbuttondown) {
                 duv_push_ref(p->m_pManager->m_ctx, p->m_rOnlbuttondown);
                 ZuiBuilderJs_pushControl(p->m_pManager->m_ctx, p);
@@ -300,10 +307,12 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 }
                 duk_pop(p->m_pManager->m_ctx);
             }
+#endif
             ZuiControlNotify(L"onlbuttondown", p, ((TEventUI *)Param1)->ptMouse.x, ((TEventUI *)Param1)->ptMouse.y, NULL);
         }
                                  break;
         case ZEVENT_LBUTTONUP: {
+#if (defined HAVE_JS) && (HAVE_JS == 1)
             if (p->m_rOnclick) {
                 duv_push_ref(p->m_pManager->m_ctx, p->m_rOnclick);
                 ZuiBuilderJs_pushControl(p->m_pManager->m_ctx, p);
@@ -314,10 +323,12 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 }
                 duk_pop(p->m_pManager->m_ctx);
             }
+#endif
             ZuiControlNotify(L"onclick", p, ((TEventUI *)Param1)->ptMouse.x, ((TEventUI *)Param1)->ptMouse.y, NULL);
             break;
         }
         case ZEVENT_CHAR: {
+#if (defined HAVE_JS) && (HAVE_JS == 1)
             if (p->m_rOnchar) {
                 duv_push_ref(p->m_pManager->m_ctx, p->m_rOnchar);
                 ZuiBuilderJs_pushControl(p->m_pManager->m_ctx, p);
@@ -327,6 +338,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 }
                 duk_pop(p->m_pManager->m_ctx);
             }
+#endif
             ZuiControlNotify(L"onchar", p, &((TEventUI *)Param1)->wParam, NULL, NULL);
         }
                           break;
@@ -582,6 +594,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             ZuiControlCall(Proc_Layout_Remove, p->m_pParent, p, TRUE, NULL);
         if (p->m_pManager != NULL)
             ZuiPaintManagerReapObjects(p->m_pManager, p);
+#if (defined HAVE_JS) && (HAVE_JS == 1)
         if (p->m_rOnclick)
             duv_unref(p->m_pManager->m_ctx, p->m_rOnclick);
         if (p->m_rOnmouseleave)
@@ -592,6 +605,9 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             duv_unref(p->m_pManager->m_ctx, p->m_rOnlbuttondown);
         if (p->m_rOnchar)
             duv_unref(p->m_pManager->m_ctx, p->m_rOnchar);
+        if(p->m_rOnsize)
+            duv_unref(p->m_pManager->m_ctx, p->m_rOnchar);
+#endif
 #if RUN_DEBUG
         ZuiFree(p->m_sClassName);
 #endif // RUN_DEBUG
@@ -668,6 +684,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     case Proc_GetAttribute: {
         break;
     }
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     case Proc_JsGet: {
         duk_context *ctx = (duk_context *)Param1;
         switch ((ZuiInt)Param2)
@@ -949,6 +966,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                       //    else if (wcscmp(Param1, L"float") == 0) {
 
                       //    }
+#endif
     case Proc_GetObject: {
         if (Param1 == Type_Null)
             return p;

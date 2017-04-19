@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  RegExp built-ins
  */
@@ -226,3 +227,4 @@ DUK_INTERNAL duk_ret_t duk_bi_regexp_prototype_shared_getter(duk_context *ctx) {
 }
 
 #endif  /* DUK_USE_REGEXP_SUPPORT */
+#endif

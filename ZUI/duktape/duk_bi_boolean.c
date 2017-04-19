@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Boolean built-ins
  */
@@ -70,3 +71,4 @@ DUK_INTERNAL duk_ret_t duk_bi_boolean_constructor(duk_context *ctx) {
 }
 
 #endif  /* DUK_USE_BOOLEAN_BUILTIN */
+#endif

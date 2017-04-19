@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Misc support functions
  */
@@ -50,3 +51,4 @@ DUK_INTERNAL void duk_hobject_set_prototype_updref(duk_hthread *thr, duk_hobject
 	DUK_HOBJECT_SET_PROTOTYPE(thr->heap, h, p);
 #endif
 }
+#endif

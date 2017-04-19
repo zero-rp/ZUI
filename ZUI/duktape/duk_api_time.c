@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Date/time.
  */
@@ -68,3 +69,4 @@ DUK_EXTERNAL duk_double_t duk_components_to_time(duk_context *ctx, duk_time_comp
 
 	return d;
 }
+#endif

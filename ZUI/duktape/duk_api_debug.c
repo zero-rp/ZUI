@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Debugging related API calls
  */
@@ -271,3 +272,4 @@ DUK_EXTERNAL void duk_debugger_pause(duk_context *ctx) {
 }
 
 #endif  /* DUK_USE_DEBUGGER_SUPPORT */
+#endif

@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Bitstream decoder.
  */
@@ -155,3 +156,4 @@ DUK_INTERNAL duk_small_uint_t duk_bd_decode_bitpacked_string(duk_bitdecoder_ctx 
 
 	return len;
 }
+#endif

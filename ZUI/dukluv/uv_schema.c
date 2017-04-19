@@ -1,3 +1,4 @@
+#if (defined HAVE_DUV) && (HAVE_DUV == 1)
 #include "uv_schema.h"
 
 duk_bool_t duv_is_fd(duk_context* ctx, duk_idx_t index) {
@@ -72,3 +73,4 @@ duk_bool_t duv_is_pipe(duk_context* ctx, duk_idx_t index) {
   return size == sizeof(*handle) &&
          handle->type == UV_NAMED_PIPE;
 }
+#endif

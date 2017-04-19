@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Thread builtins
  */
@@ -308,4 +309,5 @@ DUK_INTERNAL duk_ret_t duk_bi_thread_current(duk_context *ctx) {
 	duk_push_current_thread(ctx);
 	return 1;
 }
+#endif
 #endif

@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Replacements for missing platform functions.
  *
@@ -79,4 +80,5 @@ DUK_INTERNAL int duk_repl_isinf(double x) {
 	int c = DUK_FPCLASSIFY(x);
 	return (c == DUK_FP_INFINITE);
 }
+#endif
 #endif

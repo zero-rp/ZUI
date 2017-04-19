@@ -651,9 +651,6 @@
     <ClCompile Include="..\..\ZUI\libuv\src\uv-common.c">
       <Filter>源文件\libuv</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\libuv\src\version.c">
-      <Filter>源文件\libuv</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\libuv\src\win\async.c">
       <Filter>源文件\libuv\win</Filter>
     </ClCompile>

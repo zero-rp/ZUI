@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Regexp executor.
  *
@@ -1024,3 +1025,4 @@ DUK_INTERNAL void duk_regexp_match_force_global(duk_hthread *thr) {
 /* regexp support disabled */
 
 #endif  /* DUK_USE_REGEXP_SUPPORT */
+#endif

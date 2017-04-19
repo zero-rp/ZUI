@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  API calls related to general value stack manipulation: resizing the value
  *  stack, pushing and popping values, type checking and reading values,
@@ -5829,3 +5830,4 @@ DUK_INTERNAL void duk_push_symbol_descriptive_string(duk_context *ctx, duk_hstri
 	duk_push_string(ctx, ")");
 	duk_concat(ctx, 3);
 }
+#endif

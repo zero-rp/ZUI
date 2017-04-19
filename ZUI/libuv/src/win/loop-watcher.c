@@ -1,3 +1,4 @@
+#if ((defined HAVE_UV) && (HAVE_UV == 1)) || ((defined HAVE_DUV) && (HAVE_DUV == 1))
 /* Copyright Joyent, Inc. and other Node contributors. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -120,3 +121,4 @@ void uv_loop_watcher_endgame(uv_loop_t* loop, uv_handle_t* handle) {
 UV_LOOP_WATCHER_DEFINE(prepare, PREPARE)
 UV_LOOP_WATCHER_DEFINE(check, CHECK)
 UV_LOOP_WATCHER_DEFINE(idle, IDLE)
+#endif

@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Symbol built-in
  */
@@ -171,3 +172,4 @@ DUK_INTERNAL duk_ret_t duk_bi_symbol_toprimitive(duk_context *ctx) {
 }
 
 #endif  /* DUK_USE_SYMBOL_BUILTIN */
+#endif

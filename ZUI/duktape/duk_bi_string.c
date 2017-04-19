@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  String built-ins
  *
@@ -1560,3 +1561,4 @@ DUK_INTERNAL duk_ret_t duk_bi_string_prototype_includes(duk_context *ctx) {
 }
 #endif  /* DUK_USE_ES6 */
 #endif  /* DUK_USE_STRING_BUILTIN */
+#endif

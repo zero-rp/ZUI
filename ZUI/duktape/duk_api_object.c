@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Object handling: property access and other support functions.
  */
@@ -751,3 +752,4 @@ DUK_EXTERNAL void duk_set_finalizer(duk_context *ctx, duk_idx_t idx) {
 	DUK_ERROR_UNSUPPORTED((duk_hthread *) ctx);
 }
 #endif  /* DUK_USE_FINALIZER_SUPPORT */
+#endif

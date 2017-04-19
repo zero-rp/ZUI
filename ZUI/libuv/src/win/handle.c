@@ -1,3 +1,4 @@
+#if ((defined HAVE_UV) && (HAVE_UV == 1)) || ((defined HAVE_DUV) && (HAVE_DUV == 1))
 /* Copyright Joyent, Inc. and other Node contributors. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -144,3 +145,4 @@ void uv_close(uv_handle_t* handle, uv_close_cb cb) {
 int uv_is_closing(const uv_handle_t* handle) {
   return !!(handle->flags & (UV__HANDLE_CLOSING | UV_HANDLE_CLOSED));
 }
+#endif

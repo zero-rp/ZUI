@@ -1,3 +1,4 @@
+#if (defined HAVE_DUV) && (HAVE_DUV == 1)
 #include "uv.h"
 #include <ZUI.h>
 #include "duv_utils.h"
@@ -185,3 +186,4 @@ const char* duv_protocol_to_string(int family) {
 #endif
   return NULL;
 }
+#endif

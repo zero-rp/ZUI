@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Object enumeration support.
  *
@@ -771,3 +772,4 @@ DUK_INTERNAL duk_ret_t duk_hobject_get_enumerated_keys(duk_context *ctx, duk_sma
 
 	return 1;  /* return 1 to allow callers to tail call */
 }
+#endif

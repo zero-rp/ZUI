@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Inspection
  */
@@ -229,3 +230,4 @@ DUK_EXTERNAL void duk_inspect_callstack_entry(duk_context *ctx, duk_int_t level)
 	 * is only asserted for, not checked for.
 	 */
 }
+#endif

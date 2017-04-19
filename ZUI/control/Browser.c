@@ -134,6 +134,7 @@ void _staticOnInitGraphics(wkeWebView webView, void* param, const void* pixels, 
 void _staticOnTitleChanged(wkeWebView webWindow, void* param, void *title)
 {
     ZuiBrowser p = (ZuiBrowser)param;
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     if (p->titlechanged) {
         duv_push_ref(p->cp->m_pManager->m_ctx, p->titlechanged);
         ZuiBuilderJs_pushControl(p->cp->m_pManager->m_ctx, p->cp);
@@ -143,6 +144,7 @@ void _staticOnTitleChanged(wkeWebView webWindow, void* param, void *title)
         }
         duk_pop(p->cp->m_pManager->m_ctx);
     }
+#endif
     ZuiControlNotify(L"titlechanged", ((ZuiBrowser)param)->cp, wkeGetStringW(title), NULL, NULL);
 }
 // 回调：创建新的页面，比如说调用了 window.open 或者点击了 <a target="_blank" .../>
@@ -150,6 +152,7 @@ wkeWebView _staticOnCreateView(wkeWebView webWindow, void* param, const wkeNewVi
 {
     ZuiControl bro = NULL;
     ZuiBrowser p = (ZuiBrowser)param;
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     if (p->newwindow) {
         duv_push_ref(p->cp->m_pManager->m_ctx, p->newwindow);
         ZuiBuilderJs_pushControl(p->cp->m_pManager->m_ctx, p->cp);
@@ -163,6 +166,7 @@ wkeWebView _staticOnCreateView(wkeWebView webWindow, void* param, const wkeNewVi
     }
     if (bro)
         return ZuiControlCall(Proc_Browser_GetView, bro, NULL, NULL, NULL);//重定向到当前页面
+#endif
     return 0;
 }
 // 回调：url改变
@@ -170,6 +174,7 @@ wkeWebView _staticOnURLChanged(wkeWebView webView, void* param, void *url)
 {
     ((ZuiBrowser)param)->url = ZuiWcsdup(wkeGetStringW(url));
     ZuiBrowser p = (ZuiBrowser)param;
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     if (p->urlchanged) {
         duv_push_ref(p->cp->m_pManager->m_ctx, p->urlchanged);
         ZuiBuilderJs_pushControl(p->cp->m_pManager->m_ctx, p->cp);
@@ -179,13 +184,14 @@ wkeWebView _staticOnURLChanged(wkeWebView webView, void* param, void *url)
         }
         duk_pop(p->cp->m_pManager->m_ctx);
     }
-    
+#endif
     ZuiControlNotify(L"urlchanged", ((ZuiBrowser)param)->cp, ((ZuiBrowser)param)->url, NULL, NULL);
 }
 // 回调：转跳
 BOOL _staticOnNavigation(wkeWebView webView, void* param, int navigationType, void *url) {
     int ret = 0;
     ZuiBrowser p = (ZuiBrowser)param;
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     if (p->navigation) {
         duv_push_ref(p->cp->m_pManager->m_ctx, p->navigation);
         ZuiBuilderJs_pushControl(p->cp->m_pManager->m_ctx, p->cp);
@@ -198,12 +204,14 @@ BOOL _staticOnNavigation(wkeWebView webView, void* param, int navigationType, vo
     }
     if (ret)
         return ret;
+#endif
     return !ZuiControlNotify(L"navigation", ((ZuiBrowser)param)->cp, wkeGetStringW(url), NULL, NULL);
 }
 // 回调：打开连接
 BOOL _staticOnLoader(wkeWebView webView, void* param, void *url) {
     int ret = 0;
     ZuiBrowser p = (ZuiBrowser)param;
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     if (p->loader) {
         duv_push_ref(p->cp->m_pManager->m_ctx, p->loader);
         ZuiBuilderJs_pushControl(p->cp->m_pManager->m_ctx, p->cp);
@@ -216,6 +224,7 @@ BOOL _staticOnLoader(wkeWebView webView, void* param, void *url) {
     }
     if (ret)
         return ret;
+#endif
     return ZuiControlNotify(L"loader", ((ZuiBrowser)param)->cp, wkeGetStringW(url), NULL, NULL);
 }
 ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
@@ -408,6 +417,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         return NULL;
         break;
     }
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     case Proc_JsSet: {
         duk_context *ctx = (duk_context *)Param1;
         switch ((ZuiInt)Param2)
@@ -490,6 +500,7 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         ZuiBuilderControlInit(Param1, "url", Js_Id_Browser_url, TRUE);
         break;
     }
+#endif
     case Proc_GetImePoint: {
         wkeRect caret = wkeGetCaretRect(p->view);
         ZPoint pt;
@@ -642,7 +653,9 @@ ZEXPORT ZuiAny ZCALL ZuiBrowserProc(ZuiInt ProcId, ZuiControl cp, ZuiBrowser p, 
         ZuvModuleInit= (t_wkeGlobalExec)GetProcAddress(dll, "ZuvModuleInit");
         if (!ZuvModuleInit)
             goto LoadLibraryErro;
+#if (defined HAVE_JS) && (HAVE_JS == 1)
         ZuvModuleInit(ZuiGetZuvFunc());
+#endif
         wkeInitialize();
         return TRUE;
     LoadLibraryErro:

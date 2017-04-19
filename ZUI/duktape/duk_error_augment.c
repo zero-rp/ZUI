@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Augmenting errors at their creation site and their throw site.
  *
@@ -587,3 +588,4 @@ DUK_INTERNAL void duk_err_augment_error_throw(duk_hthread *thr) {
 #endif  /* DUK_USE_ERRTHROW */
 }
 #endif  /* DUK_USE_AUGMENT_ERROR_THROW */
+#endif

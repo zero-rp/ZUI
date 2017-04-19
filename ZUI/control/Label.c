@@ -19,6 +19,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
             ZuiDrawString(gp, Global_Font, cp->m_sText, wcslen(cp->m_sText), &pt, p->m_cTextColor, p->m_uTextStyle);
         return;
     }
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     case Proc_JsSet: {
         duk_context *ctx = (duk_context *)Param1;
         switch ((ZuiInt)Param2)
@@ -89,6 +90,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         ZuiBuilderControlInit(Param1, "endellipsis", Js_Id_Label_endellipsis, TRUE);
         break;
     }
+#endif
     case Proc_Label_SetFont: {
         if (p->m_rFont)
             ZuiResDBDelRes(p->m_rFont);

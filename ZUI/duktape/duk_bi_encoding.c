@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  WHATWG Encoding API built-ins
  *
@@ -529,3 +530,4 @@ DUK_INTERNAL duk_ret_t duk_textdecoder_decode_utf8_nodejs(duk_context *ctx) {
 
 	return duk__decode_helper(ctx, &dec_ctx);
 }
+#endif

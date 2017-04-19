@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Shared helpers for arithmetic operations
  */
@@ -135,3 +136,4 @@ DUK_INTERNAL double duk_js_arith_pow(double x, double y) {
  ret_nan:
 	return DUK_DOUBLE_NAN;
 }
+#endif

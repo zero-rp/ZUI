@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Buffer
  */
@@ -71,3 +72,4 @@ DUK_EXTERNAL void duk_config_buffer(duk_context *ctx, duk_idx_t idx, void *ptr, 
 	DUK_HBUFFER_EXTERNAL_SET_DATA_PTR(thr->heap, h, ptr);
 	DUK_HBUFFER_EXTERNAL_SET_SIZE(h, len);
 }
+#endif

@@ -1,3 +1,4 @@
+#if (defined HAVE_DUV) && (HAVE_DUV == 1)
 #include "duv.h"
 
 duk_ret_t duv_new_pipe(duk_context *ctx) {
@@ -136,3 +137,4 @@ duk_ret_t duv_pipe_pending_type(duk_context *ctx) {
   duk_push_string(ctx, type_name);
   return 1;
 }
+#endif

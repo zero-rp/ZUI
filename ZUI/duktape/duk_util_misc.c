@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Misc util stuff
  */
@@ -403,3 +404,4 @@ DUK_INTERNAL duk_double_t duk_double_fmax(duk_double_t x, duk_double_t y) {
 	 */
 	return (x > y ? x : y);
 }
+#endif

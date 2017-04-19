@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Do a longjmp call, calling the fatal error handler if no
  *  catchpoint exists.
@@ -104,3 +105,4 @@ DUK_INTERNAL void duk_err_longjmp(duk_hthread *thr) {
 
 	DUK_UNREACHABLE();
 }
+#endif

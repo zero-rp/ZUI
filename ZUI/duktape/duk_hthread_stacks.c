@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Manipulation of thread stacks (valstack, callstack, catchstack).
  *
@@ -579,3 +580,4 @@ DUK_INTERNAL void duk_hthread_catchstack_torture_realloc(duk_hthread *thr) {
 	}
 }
 #endif  /* DUK_USE_FINALIZER_TORTURE */
+#endif

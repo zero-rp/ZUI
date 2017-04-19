@@ -1077,7 +1077,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
         ZRect *rc = &cp->m_rcItem;
         ZRect r;
         MAKEZRECT(r, rc->left + 5, rc->top + 5, rc->right - rc->left - 10, rc->bottom - rc->top - 10);
-        ZuiDrawString(gp, Global_Font, cp->m_sText, wcslen(cp->m_sText), &r);
+        //ZuiDrawString(gp, Global_Font, cp->m_sText, wcslen(cp->m_sText), &r);
         return;
     }
     case Proc_OnPaintStatusImage: {

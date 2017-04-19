@@ -36,12 +36,13 @@
 /**游览器控件结构*/
 typedef struct _ZuiBrowser
 {
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     ZuiInt titlechanged;
     ZuiInt newwindow;
     ZuiInt urlchanged;
     ZuiInt navigation;
     ZuiInt loader;
-
+#endif
     ZuiGraphics dc;
     ZuiAny bits;    //之前的图像指针
     ZuiText url;///当前URL

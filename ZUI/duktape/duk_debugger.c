@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Duktape debugger
  */
@@ -2844,3 +2845,4 @@ DUK_INTERNAL void duk_debug_clear_step_state(duk_heap *heap) {
 /* No debugger support. */
 
 #endif  /* DUK_USE_DEBUGGER_SUPPORT */
+#endif

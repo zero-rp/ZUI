@@ -92,6 +92,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
                 }
             }
         }
+#if (defined HAVE_JS) && (HAVE_JS == 1)
         if (p->m_rOnselected) {
             duv_push_ref(cp->m_pManager->m_ctx, p->m_rOnselected);
             ZuiBuilderJs_pushControl(cp->m_pManager->m_ctx, p);
@@ -101,6 +102,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
             }
             duk_pop(cp->m_pManager->m_ctx);
         }
+#endif
         ZuiControlNotify(L"selectchanged", cp, Param1, NULL, NULL);
         ZuiControlInvalidate(cp, TRUE);
         break;
@@ -138,6 +140,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
         else if (_tcscmp(Param1, _T("selectedpushedimage")) == 0) ZuiControlCall(Proc_Option_SetResSelectedPushed, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         break;
     }
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     case Proc_JsGet: {
         duk_context *ctx = (duk_context *)Param1;
         switch ((ZuiInt)Param2)
@@ -188,6 +191,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
         ZuiBuilderControlInit(Param1, "onselected", Js_Id_Option_onselected, TRUE);
         break;
     }
+#endif
     case Proc_OnCreate: {
         p = (ZuiOption)ZuiMalloc(sizeof(ZOption));
         memset(p, 0, sizeof(ZOption));

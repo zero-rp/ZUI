@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Ecmascript specification algorithm and conversion helpers.
  *
@@ -1423,3 +1424,4 @@ DUK_INTERNAL duk_uarridx_t duk_js_to_arrayindex_hstring_fast(duk_hstring *h) {
 	return duk_js_to_arrayindex_hstring_fast_known(h);
 }
 #endif  /* DUK_USE_HSTRING_ARRIDX */
+#endif

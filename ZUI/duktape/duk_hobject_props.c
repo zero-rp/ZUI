@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  duk_hobject property access functionality.
  *
@@ -6082,3 +6083,4 @@ DUK_INTERNAL duk_bool_t duk_hobject_object_is_sealed_frozen_helper(duk_hthread *
  *  Not needed, implemented by macros DUK_HOBJECT_{HAS,CLEAR,SET}_EXTENSIBLE
  *  and the Object built-in bindings.
  */
+#endif

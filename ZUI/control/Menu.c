@@ -47,6 +47,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNodeMenu(mxml_node_t *tree, ZuiControl win
                     ZuiResDBDelRes(res);
                 }
             }
+#if (defined HAVE_JS) && (HAVE_JS == 1)
             else if (wcscmp(ClassName, L"LoadScript") == 0) {
                 ZuiText src = NULL;
                 for (size_t i = 0; i < node->value.num_attrs; i++)
@@ -55,14 +56,9 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNodeMenu(mxml_node_t *tree, ZuiControl win
                         src = node->value.attrs[i].value;
                     }
                 }
-                //ZuiRes res = ZuiResDBGetRes(src, ZREST_TXT);
-                //if (res)
-                //{
-                //    ZuiBuilderJsLoad(win->m_pManager->m_ctx, res->p, res->plen);
-                //    ZuiResDBDelRes(res);
-                //}
                 ZuiBuilderJsLoad(win->m_pManager->m_ctx, src);
             }
+#endif
             else if (!node->user_data) {//当前节点还未创建
                 Control = NewZuiControl(ClassName, NULL, NULL, NULL);
                 if (node->parent->user_data && wcsicmp(ClassName, L"Menu") != 0) {

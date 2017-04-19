@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Support functions for duk_heap.
  */
@@ -179,3 +180,4 @@ DUK_INTERNAL void duk_heap_switch_thread(duk_heap *heap, duk_hthread *new_thr) {
 	heap->curr_thread = new_thr;  /* may be NULL */
 }
 #endif  /* DUK_USE_INTERRUPT_COUNTER */
+#endif

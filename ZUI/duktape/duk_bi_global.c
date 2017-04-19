@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Global object built-ins
  */
@@ -723,3 +724,4 @@ DUK_INTERNAL duk_ret_t duk_bi_global_object_unescape(duk_context *ctx) {
 }
 #endif  /* DUK_USE_SECTION_B */
 #endif  /* DUK_USE_GLOBAL_BUILTIN */
+#endif

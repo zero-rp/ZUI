@@ -1,3 +1,4 @@
+#if ((defined HAVE_UV) && (HAVE_UV == 1)) || ((defined HAVE_DUV) && (HAVE_DUV == 1))
 /* Copyright the libuv project contributors. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -39,4 +40,5 @@ int snprintf(char* buf, size_t len, const char* fmt, ...) {
   return n;
 }
 
+#endif
 #endif

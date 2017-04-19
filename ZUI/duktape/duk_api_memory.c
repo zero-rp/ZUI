@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Memory calls.
  */
@@ -92,3 +93,4 @@ DUK_EXTERNAL void duk_gc(duk_context *ctx, duk_uint_t flags) {
 	ms_flags = (duk_small_uint_t) flags;
 	duk_heap_mark_and_sweep(heap, ms_flags);
 }
+#endif

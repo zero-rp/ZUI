@@ -54,6 +54,7 @@ void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Pa
         }
         return 0;
     }
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     case Proc_JsSet: {
         duk_context *ctx = (duk_context *)Param1;
         switch ((ZuiInt)Param2)
@@ -86,6 +87,7 @@ void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Pa
         ZuiBuilderControlInit(Param1, "selectitem", Js_Id_TabLayout_selectitem, TRUE);
         break;
     }
+#endif
     case Proc_Layout_Add: {
         ZuiBool ret = (ZuiBool)ZuiLayoutProc(Proc_Layout_Add, cp, p->old_udata, Param1, Param2, Param3);
         if (!ret)

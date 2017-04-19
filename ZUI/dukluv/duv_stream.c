@@ -1,3 +1,4 @@
+#if (defined HAVE_DUV) && (HAVE_DUV == 1)
 #include "duv.h"
 
 
@@ -237,3 +238,4 @@ duk_ret_t duv_stream_set_blocking(duk_context *ctx) {
     duv_check(ctx, uv_stream_set_blocking(handle, blocking));
     return 0;
 }
+#endif

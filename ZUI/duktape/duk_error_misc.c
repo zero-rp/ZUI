@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Error helpers
  */
@@ -175,3 +176,4 @@ DUK_INTERNAL void duk_err_setup_ljstate1(duk_hthread *thr, duk_small_uint_t lj_t
 
 	DUK_ASSERT_LJSTATE_SET(heap);
 }
+#endif

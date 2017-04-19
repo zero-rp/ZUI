@@ -243,6 +243,7 @@ typedef struct _ZControl
     _ZuiText m_chShortcut;          //快捷键
     void *m_sUserData;              //
 
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     //js_ref
     ZuiInt m_rOnclick;
     ZuiInt m_rOnmouseleave;
@@ -251,7 +252,7 @@ typedef struct _ZControl
     ZuiInt m_rOnchar;
     ZuiInt m_rOnsize;
     //js_refend
-
+#endif
     //控件默认样式-------------------
     ZuiInt m_tyle;                  //控件风格
     ZuiColor m_BkgColor;            //背景颜色

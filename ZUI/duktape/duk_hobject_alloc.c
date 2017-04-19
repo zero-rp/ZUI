@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Hobject allocation.
  *
@@ -237,3 +238,4 @@ DUK_INTERNAL duk_hobjenv *duk_hobjenv_alloc(duk_hthread *thr, duk_uint_t hobject
 
 	return res;
 }
+#endif

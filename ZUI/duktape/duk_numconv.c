@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Number-to-string and string-to-number conversions.
  *
@@ -2262,3 +2263,4 @@ DUK_INTERNAL void duk_numconv_parse(duk_context *ctx, duk_small_int_t radix, duk
 	DUK_ERROR_RANGE(thr, "exponent too large");
 	return;
 }
+#endif

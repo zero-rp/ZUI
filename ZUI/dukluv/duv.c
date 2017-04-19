@@ -1,3 +1,4 @@
+#if (defined HAVE_DUV) && (HAVE_DUV == 1)
 #include "duv.h"
 
 #include "duv_refs.h"
@@ -133,3 +134,5 @@ duk_ret_t dukopen_uv(duk_context *ctx) {
   duk_put_function_list(ctx, -1, duv_funcs);
   return 1;
 }
+
+#endif

@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Custom formatter for debug printing, allowing Duktape specific data
  *  structures (such as tagged values and heap objects) to be printed with
@@ -1030,3 +1031,4 @@ DUK_INTERNAL void duk_debug_format_funcptr(char *buf, duk_size_t buf_size, duk_u
 }
 
 #endif  /* DUK_USE_DEBUG */
+#endif

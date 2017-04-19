@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Heap creation and destruction
  */
@@ -207,3 +208,4 @@ DUK_EXTERNAL void duk_set_global_object(duk_context *ctx) {
 
 	/* [ ... ] */
 }
+#endif

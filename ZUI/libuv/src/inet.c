@@ -1,3 +1,4 @@
+#if ((defined HAVE_UV) && (HAVE_UV == 1)) || ((defined HAVE_DUV) && (HAVE_DUV == 1))
 /*
  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")
  * Copyright (c) 1996-1999 by Internet Software Consortium.
@@ -308,3 +309,4 @@ static int inet_pton6(const char *src, unsigned char *dst) {
   memcpy(dst, tmp, sizeof tmp);
   return 0;
 }
+#endif

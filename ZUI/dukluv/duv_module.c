@@ -1,3 +1,4 @@
+#if (defined HAVE_DUV) && (HAVE_DUV == 1)
 #include "duv_module.h"
 #include <duktape.h>
 #include <ZUI.h>
@@ -83,3 +84,4 @@ ZuiBool ZuiInitZuvFunc() {
 ZuvFuncs *ZuiGetZuvFunc() {
     return func;
 }
+#endif

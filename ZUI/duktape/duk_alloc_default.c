@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Default allocation functions.
  *
@@ -32,3 +33,4 @@ DUK_INTERNAL void duk_default_free_function(void *udata, void *ptr) {
 	DUK_ANSI_FREE(ptr);
 }
 #endif  /* DUK_USE_PROVIDE_DEFAULT_ALLOC_FUNCTIONS */
+#endif

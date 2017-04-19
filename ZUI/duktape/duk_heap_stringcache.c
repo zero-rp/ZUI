@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  String cache.
  *
@@ -307,3 +308,4 @@ DUK_INTERNAL duk_uint_fast32_t duk_heap_strcache_offset_char2byte(duk_hthread *t
 	DUK_ERROR_INTERNAL(thr);
 	return 0;
 }
+#endif

@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 #include "duk_internal.h"
 
 #if defined(DUK_USE_FASTINT)
@@ -140,3 +141,4 @@ DUK_INTERNAL DUK_ALWAYS_INLINE duk_double_t duk_tval_get_number_unpacked_fastint
 #endif  /* DUK_USE_FASTINT && DUK_USE_PACKED_TVAL */
 
 #endif  /* DUK_USE_FASTINT */
+#endif

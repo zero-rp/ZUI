@@ -1,3 +1,4 @@
+#if (defined HAVE_DUV) && (HAVE_DUV == 1)
 #include "duv_req.h"
 
 duk_ret_t duv_cancel(duk_context *ctx) {
@@ -12,3 +13,4 @@ duk_ret_t duv_cancel(duk_context *ctx) {
   duv_check(ctx, uv_cancel(req));
   return 0;
 }
+#endif

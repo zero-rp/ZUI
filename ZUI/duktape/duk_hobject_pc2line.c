@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Helpers for creating and querying pc2line debug data, which
  *  converts a bytecode program counter to a source line number.
@@ -247,3 +248,4 @@ DUK_INTERNAL duk_uint_fast32_t duk_hobject_pc2line_query(duk_context *ctx, duk_i
 }
 
 #endif  /* DUK_USE_PC2LINE */
+#endif

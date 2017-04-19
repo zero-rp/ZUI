@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  duk_hbuffer operations such as resizing and inserting/appending data to
  *  a dynamic buffer.
@@ -80,3 +81,4 @@ DUK_INTERNAL void duk_hbuffer_reset(duk_hthread *thr, duk_hbuffer_dynamic *buf) 
 
 	duk_hbuffer_resize(thr, buf, 0);
 }
+#endif

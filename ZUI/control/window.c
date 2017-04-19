@@ -6,6 +6,7 @@ DArray *m_window_array = NULL;
 ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     case Proc_JsInit: {
         ZuiBuilderControlInit(Param1, "SetWindowMin", Js_Id_Window_SetWindowMin, FALSE);
         ZuiBuilderControlInit(Param1, "SetWindowMax", Js_Id_Window_SetWindowMax, FALSE);
@@ -43,6 +44,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         }
         break;
     }
+#endif
     case Proc_SetBorderColor: {
         if (!cp->m_dwBorderColor) {
             //以前没有边框了,加上边距

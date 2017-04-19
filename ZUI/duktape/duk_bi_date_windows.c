@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Windows Date providers
  *
@@ -128,3 +129,4 @@ DUK_INTERNAL_DECL duk_int_t duk_bi_date_get_local_tzoffset_windows_no_dst(duk_do
 	return (duk_int_t) (((LONGLONG) tmp2.QuadPart - (LONGLONG) tmp1.QuadPart) / 10000000LL);  /* seconds */
 }
 #endif  /* DUK_USE_DATE_TZO_WINDOWS_NO_DST */
+#endif

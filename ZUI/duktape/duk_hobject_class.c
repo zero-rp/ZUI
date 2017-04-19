@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Hobject Ecmascript [[Class]].
  */
@@ -127,3 +128,4 @@ DUK_INTERNAL duk_uint8_t duk_class_number_to_stridx[32] = {
 	DUK_STRIDX_EMPTY_STRING,  /* UNUSED, intentionally empty */
 	DUK_STRIDX_EMPTY_STRING,  /* UNUSED, intentionally empty */
 };
+#endif

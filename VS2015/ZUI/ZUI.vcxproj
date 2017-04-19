@@ -97,7 +97,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;BUILDING_ZUI_SHARED;RUN_DEBUG=1;MEM_DEBUG=1;LOG_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;BUILDING_ZUI_SHARED;HAVE_JS=1;HAVE_HASH=1;RUN_DEBUG=1;MEM_DEBUG=1;LOG_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -152,7 +152,7 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0500;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_MSC_VER=1400;BUILDING_ZUI_SHARED;USING_VC6RT=1;RUN_DEBUG=0;MEM_DEBUG=0;LOG_DEBUG=0;DUV_HAVE_HASH=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0500;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_MSC_VER=1400;BUILDING_ZUI_SHARED;USING_VC6RT=1;RUN_DEBUG=0;MEM_DEBUG=0;LOG_DEBUG=0;HAVE_JS=0;HAVE_UV=0;HAVE_DUV=0;HAVE_DUV_HASH=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <ExceptionHandling>false</ExceptionHandling>
@@ -373,7 +373,6 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClCompile Include="..\..\ZUI\libuv\src\inet.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\threadpool.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\uv-common.c" />
-    <ClCompile Include="..\..\ZUI\libuv\src\version.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\win\async.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\win\core.c" />
     <ClCompile Include="..\..\ZUI\libuv\src\win\dl.c" />

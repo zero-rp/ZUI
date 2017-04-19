@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Finalizer handling.
  */
@@ -447,3 +448,4 @@ DUK_INTERNAL void duk_heap_run_finalizer(duk_heap *heap, duk_hobject *obj) {
 /* nothing */
 
 #endif  /* DUK_USE_FINALIZER_SUPPORT */
+#endif

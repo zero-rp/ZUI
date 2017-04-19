@@ -1,3 +1,4 @@
+#if (defined HAVE_DUV) && (HAVE_DUV == 1)
 #include "duv_handle.h"
 
 duk_ret_t duv_close(duk_context *ctx) {
@@ -14,3 +15,5 @@ duk_ret_t duv_close(duk_context *ctx) {
   duv_store_handler(ctx, handle->data, DUV_CLOSED, 1);
   return 0;
 }
+#endif
+

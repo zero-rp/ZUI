@@ -1,4 +1,4 @@
-#if (defined DUV_HAVE_HASH) && (DUV_HAVE_HASH == 1)
+#if ((defined HAVE_DUV_HASH) && (HAVE_DUV_HASH == 1)) && ((defined HAVE_DUV) && (HAVE_DUV == 1))
 /*	$OpenBSD: md5.c,v 1.9 2014/01/08 06:14:57 tedu Exp $	*/
 
 /*

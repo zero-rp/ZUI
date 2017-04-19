@@ -1,4 +1,4 @@
-#if (defined DUV_HAVE_HASH) && (DUV_HAVE_HASH == 1)
+#if ((defined HAVE_DUV_HASH) && (HAVE_DUV_HASH == 1)) && ((defined HAVE_DUV) && (HAVE_DUV == 1))
 /*	from OpenBSD: sha2.c,v 1.11 2005/08/08 08:05:35 espie Exp 	*/
 
 /*

@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  String hash computation (interning).
  *
@@ -114,3 +115,4 @@ DUK_INTERNAL duk_uint32_t duk_heap_hashstring(duk_heap *heap, const duk_uint8_t 
 	return hash;
 }
 #endif  /* DUK_USE_STRHASH_DENSE */
+#endif

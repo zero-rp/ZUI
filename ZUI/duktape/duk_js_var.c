@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Identifier access and function closure handling.
  *
@@ -1755,3 +1756,4 @@ duk_bool_t duk_js_declvar_activation(duk_hthread *thr,
 
 	return duk__declvar_helper(thr, env, name, val, prop_flags, is_func_decl);
 }
+#endif

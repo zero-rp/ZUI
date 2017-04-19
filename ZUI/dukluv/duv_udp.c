@@ -1,3 +1,4 @@
+#if (defined HAVE_DUV) && (HAVE_DUV == 1)
 #include "duv_udp.h"
 
 duk_ret_t duv_new_udp(duk_context *ctx) {
@@ -53,3 +54,4 @@ duk_ret_t duv_udp_bind(duk_context *ctx) {
   duv_check(ctx, uv_udp_bind(handle, (struct sockaddr*)&addr, flags));
   return 0;
 }
+#endif

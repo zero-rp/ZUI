@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Fast buffer writer with spare management.
  */
@@ -358,3 +359,4 @@ DUK_INTERNAL DUK_ALWAYS_INLINE void duk_raw_write_double_be(duk_uint8_t **p, duk
 	DUK_MEMCPY((void *) (*p + 4), (const void *) u.b, (size_t) 4);
 	*p += 8;
 }
+#endif

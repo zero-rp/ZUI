@@ -141,7 +141,9 @@ typedef struct _ZuiPaintManager
     ZuiBool m_bIsPainting;				///是否正在绘制
     ZuiBool m_bUsedVirtualWnd;
     //
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     duk_context *m_ctx;             ///JS引擎句柄
+#endif
     //
     DArray *m_aTimers;				///时钟句柄数组
     DArray *m_aPostPaintControls;	///在绘制完成后发送绘制请求的控件集合

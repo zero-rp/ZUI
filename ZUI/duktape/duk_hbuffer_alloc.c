@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  duk_hbuffer allocation and freeing.
  */
@@ -130,3 +131,4 @@ DUK_INTERNAL void *duk_hbuffer_get_dynalloc_ptr(duk_heap *heap, void *ud) {
 	DUK_UNREF(heap);
 	return (void *) DUK_HBUFFER_DYNAMIC_GET_DATA_PTR(heap, buf);
 }
+#endif

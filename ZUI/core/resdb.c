@@ -81,9 +81,11 @@ ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromBuf(ZuiAny data, ZuiInt len, ZuiText Pa
                 bufsize = ZuiAsciiToUnicode(&name, bufsize / sizeof(wchar_t), txtbuf, bufsize);
                 //添加到资源池
                 rb_insert(Zui_Hash(txtbuf), p, Global_ResDB->resdb);
+#if (defined HAVE_JS) && (HAVE_JS == 1)
                 //加载引导文件
                 wcscat(txtbuf, L":onload.js");
                 ZuiBuilderJsLoad(Global_ctx, txtbuf);
+#endif
                 ZuiFree(txtbuf);
             }else{
                 p->type = 0;

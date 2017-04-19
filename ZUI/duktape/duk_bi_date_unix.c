@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Unix-like Date providers
  *
@@ -307,3 +308,4 @@ DUK_INTERNAL duk_bool_t duk_bi_date_format_parts_strftime(duk_context *ctx, duk_
 	return 1;
 }
 #endif  /* DUK_USE_DATE_FMT_STRFTIME */
+#endif

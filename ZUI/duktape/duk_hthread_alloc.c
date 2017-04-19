@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  duk_hthread allocation and freeing.
  */
@@ -95,3 +96,4 @@ DUK_INTERNAL void *duk_hthread_get_catchstack_ptr(duk_heap *heap, void *ud) {
 	DUK_UNREF(heap);
 	return (void *) thr->catchstack;
 }
+#endif

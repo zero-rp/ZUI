@@ -1,3 +1,4 @@
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 /*
  *  Unicode support tables automatically generated during build.
  */
@@ -6138,4 +6139,5 @@ const duk_uint16_t duk_unicode_re_canon_lookup[65536] = {
 65518L,65519L,65520L,65521L,65522L,65523L,65524L,65525L,65526L,65527L,
 65528L,65529L,65530L,65531L,65532L,65533L,65534L,65535L,
 };
+#endif
 #endif
