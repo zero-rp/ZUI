@@ -530,6 +530,46 @@ ZEXPORT ZuiAny ZCALL ZuiEditProc(ZuiInt ProcId, ZuiControl cp, ZuiEdit p, ZuiAny
         return NULL;
     }
     case Proc_SetAttribute: {
+        if (wcscmp(Param1, L"font") == 0) ZuiControlCall(Proc_Label_SetFont, cp, ZuiResDBGetRes(Param2, ZREST_FONT), NULL, NULL);
+        if (wcscmp(Param1, L"align") == 0) {
+            //横向对齐方式
+            if (wcscmp(Param2, L"left") == 0) {
+                p->m_uTextStyle &= ~(ZDT_CENTER | ZDT_RIGHT);
+                p->m_uTextStyle |= ZDT_LEFT;
+            }
+            if (wcscmp(Param2, L"center") == 0) {
+                p->m_uTextStyle &= ~(ZDT_LEFT | ZDT_RIGHT);
+                p->m_uTextStyle |= ZDT_CENTER;
+            }
+            if (wcscmp(Param2, L"right") == 0) {
+                p->m_uTextStyle &= ~(ZDT_LEFT | ZDT_CENTER);
+                p->m_uTextStyle |= ZDT_RIGHT;
+            }
+        }
+        else if (wcscmp(Param1, L"valign") == 0) {
+            //纵向对齐方式
+            if (wcscmp(Param2, L"top") == 0) {
+                p->m_uTextStyle &= ~(ZDT_BOTTOM | ZDT_VCENTER | ZDT_WORDBREAK);
+                p->m_uTextStyle |= (ZDT_TOP | ZDT_SINGLELINE);
+            }
+            if (wcscmp(Param2, L"vcenter") == 0) {
+                p->m_uTextStyle &= ~(ZDT_TOP | ZDT_BOTTOM | ZDT_WORDBREAK);
+                p->m_uTextStyle |= (ZDT_VCENTER | ZDT_SINGLELINE);
+            }
+            if (wcscmp(Param2, L"bottom") == 0) {
+                p->m_uTextStyle &= ~(ZDT_TOP | ZDT_VCENTER | ZDT_WORDBREAK);
+                p->m_uTextStyle |= (ZDT_BOTTOM | ZDT_SINGLELINE);
+            }
+        }
+        else if (wcscmp(Param1, L"textcolor") == 0) {
+            //字体颜色
+            LPTSTR pstr = NULL;
+            DWORD clrColor;
+            while (*(wchar_t *)Param2 > L'\0' && *(wchar_t *)Param2 <= L' ') (wchar_t *)Param2 = CharNext((wchar_t *)Param2);
+            if (*(wchar_t *)Param2 == L'#') (wchar_t *)Param2 = CharNext((wchar_t *)Param2);
+            clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);
+            ZuiControlCall(Proc_Label_SetTextColor, cp, clrColor, NULL, NULL);
+        }
         //if (_tcsicmp(pstrName, _T("readonly")) == 0) 
         //    //只读
         //    SetReadOnly(_tcsicmp(pstrValue, _T("true")) == 0);

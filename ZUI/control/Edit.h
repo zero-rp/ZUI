@@ -27,6 +27,10 @@
 #define Proc_Edit_MovePosLineEnd    210     //移动读写位置到行尾
 #define Proc_Edit_DeleteAll         211     //删除全部
 
+#define Proc_Edit_SetFont          151     //设置字体
+#define Proc_Edit_SetTextColor     152     //设置文本颜色
+#define Proc_Edit_SetTextPadding   153     //字体边距
+
 /*编辑框对象类型*/
 enum ZEditObjectType
 {
@@ -73,11 +77,13 @@ typedef struct _ZEdit
 {
     ZuiFont font;           //编辑框默认文本格式
 
-    ZuiUInt m_uState;       //控件状态
-    ZuiColor FrameColor;    //边框颜色
-    ZuiColor FireColor;     //点燃颜色
-    ZuiColor FocusColor;    //焦点颜色
-    
+    ZuiUInt     m_uState;       //控件状态
+    ZuiColor    FrameColor;     //边框颜色
+    ZuiColor    FireColor;      //点燃颜色
+    ZuiColor    FocusColor;     //焦点颜色
+    ZuiRes      m_rFont;        //字体
+    ZuiUInt     m_uTextStyle;   //字体控制
+    ZuiColor    m_cTextColor;   //字体颜色
     
     ZuiInt line_num;		//列数量
     DArray *line_data;		//列数据

@@ -28,7 +28,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
@@ -97,7 +97,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;RUN_DEBUG=1;MEM_DEBUG=1;LOG_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;RUN_DEBUG=1;MEM_DEBUG=1;LOG_DEBUG=1;HAVE_JS=1;HAVE_UV=1;HAVE_DUV=1;HAVE_DUV_HASH=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <MinimalRebuild>true</MinimalRebuild>
@@ -147,7 +147,7 @@ echo res| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName)\re
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0500;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_MSC_VER=1400;USING_VC6RT=1;RUN_DEBUG=0;MEM_DEBUG=0;LOG_DEBUG=0;DUV_HAVE_HASH=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0500;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_MSC_VER=1400;USING_VC6RT=1;RUN_DEBUG=0;MEM_DEBUG=0;LOG_DEBUG=0;HAVE_JS=1;HAVE_UV=1;HAVE_DUV=1;HAVE_DUV_HASH=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\ZUI;..\..\ZUI\duktape;..\..\ZUI\libuv\include;..\..\ZUI\platform\graph\agg\include</AdditionalIncludeDirectories>
       <StringPooling>true</StringPooling>

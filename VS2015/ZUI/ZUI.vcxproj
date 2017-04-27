@@ -28,7 +28,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -73,6 +73,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\bin\VS2015\$(Platform)\$(Configuration)</OutDir>
     <IntDir>$(SolutionDir)..\build\VS2015\$(Platform)\$(Configuration)\$(ProjectName)</IntDir>
+    <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -97,7 +98,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;BUILDING_ZUI_SHARED;HAVE_JS=1;HAVE_HASH=1;RUN_DEBUG=1;MEM_DEBUG=1;LOG_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;BUILDING_ZUI_SHARED;HAVE_JS=1;HAVE_HASH=1;RUN_DEBUG=1;MEM_DEBUG=1;LOG_DEBUG=1;HAVE_UV=1;HAVE_DUV=1;HAVE_DUV_HASH=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -234,6 +235,7 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClCompile Include="..\..\ZUI\control\ProgressBar.c" />
     <ClCompile Include="..\..\ZUI\control\Register.c" />
     <ClCompile Include="..\..\ZUI\control\ScrollBar.c" />
+    <ClCompile Include="..\..\ZUI\control\SingleEdit.c" />
     <ClCompile Include="..\..\ZUI\control\SplitterBar.c" />
     <ClCompile Include="..\..\ZUI\control\TreeView.c" />
     <ClCompile Include="..\..\ZUI\control\Virtual.c" />
@@ -602,6 +604,7 @@ echo default| $(SolutionDir)..\Tool\zip.exe -r -z $(SolutionDir)..\$(ProjectName
     <ClInclude Include="..\..\ZUI\control\ProgressBar.h" />
     <ClInclude Include="..\..\ZUI\control\Register.h" />
     <ClInclude Include="..\..\ZUI\control\ScrollBar.h" />
+    <ClInclude Include="..\..\ZUI\control\SingleEdit.h" />
     <ClInclude Include="..\..\ZUI\control\SplitterBar.h" />
     <ClInclude Include="..\..\ZUI\control\TreeView.h" />
     <ClInclude Include="..\..\ZUI\control\Virtual.h" />

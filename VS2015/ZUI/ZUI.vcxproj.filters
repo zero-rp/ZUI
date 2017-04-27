@@ -822,6 +822,9 @@
     <ClCompile Include="..\..\ZUI\duktape\duk_heap_finalize.c">
       <Filter>源文件\duktape</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\SingleEdit.c">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="control\html\lout\container.hh">
@@ -1690,6 +1693,9 @@
     </ClInclude>
     <ClInclude Include="..\..\ZUI\dukluv\duv_module_core.h">
       <Filter>头文件\dukluv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\control\SingleEdit.h">
+      <Filter>头文件\control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

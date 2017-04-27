@@ -203,6 +203,7 @@ extern "C"
 #include "control/Menu.h"
 #include "control/MenuBar.h"
 
+#include "control/DrawPanel.h"  //画板控件
 #include "control/ScrollBar.h"
 #include "control/Label.h"
 #include "control/Button.h"
@@ -212,6 +213,7 @@ extern "C"
 #include "control/Browser.h"
 #endif
 #include "control/Edit.h"
+#include "control/SingleEdit.h"
 #include "control/Option.h"
 #include "control/CheckBox.h"
 #include "control/List.h"
