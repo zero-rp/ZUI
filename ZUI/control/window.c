@@ -1,5 +1,12 @@
-﻿#include <ZUI.h>
-
+﻿#include "Window.h"
+#include <core/tree.h>
+#include <core/carray.h>
+#include <core/control.h>
+#include <layout/Layout.h>
+#include <layout/VerticalLayout.h>
+#if (defined HAVE_JS) && (HAVE_JS == 1)
+#include <duktape.h>
+#endif
 static rb_root *m_window = NULL;
 DArray *m_window_array = NULL;
 
@@ -78,13 +85,13 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         return ZuiOsSetWindowRestor(p->m_osWindow);
     }
     case Proc_Window_SetMinInfo: {
-        cp->m_pManager->m_szMinWindow.cx = Param1;
-        cp->m_pManager->m_szMinWindow.cy = Param2;
+        cp->m_pOs->m_szMinWindow.cx = Param1;
+        cp->m_pOs->m_szMinWindow.cy = Param2;
         break;
     }
     case Proc_Window_SetMaxInfo: {
-        cp->m_pManager->m_szMaxWindow.cx = Param1;
-        cp->m_pManager->m_szMaxWindow.cy = Param2;
+        cp->m_pOs->m_szMaxWindow.cx = Param1;
+        cp->m_pOs->m_szMaxWindow.cy = Param2;
         break;
     }
     case Proc_Window_SetSize: {
@@ -122,19 +129,19 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         }
         //else if (wcscmp(Param1, L"opacity") == 0) ZuiPaintManagerSetLayeredOpacity(p->m_pm, _wtoi(Param2));
         else if (wcscmp(Param1, L"mininfo") == 0) {
-            LPTSTR pstr = NULL;
+            ZuiText pstr = NULL;
             int cx = wcstol(Param2, &pstr, 10);  ASSERT(pstr);
             int cy = wcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
             ZuiControlCall(Proc_Window_SetMinInfo, cp, cx, cy, NULL);
         }
         else if (wcscmp(Param1, L"maxinfo") == 0) {
-            LPTSTR pstr = NULL;
+            ZuiText pstr = NULL;
             int cx = wcstol(Param2, &pstr, 10);  ASSERT(pstr);
             int cy = wcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
             ZuiControlCall(Proc_Window_SetMaxInfo, cp, cx, cy, NULL);
         }
         else if (wcscmp(Param1, L"size") == 0) {
-            LPTSTR pstr = NULL;
+            ZuiText pstr = NULL;
             int cx = wcstol(Param2, &pstr, 10);  ASSERT(pstr);
             int cy = wcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
             ZuiControlCall(Proc_Window_SetSize, cp, cx, cy, NULL);
@@ -175,7 +182,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         return Type_Window;
     }
     case Proc_OnCreate: {
-        p = (ZuiWindow)ZuiMalloc(sizeof(ZWindow));
+        p = (ZuiWindow)malloc(sizeof(ZWindow));
         if (p)
         {
             memset(p, 0, sizeof(ZWindow));
@@ -201,8 +208,8 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
 
         ZuiOsDestroyWindow(p->m_osWindow);
-        ZuiFree(p);
-        return;
+        free(p);
+        return 0;
     }
     case Proc_CoreInit: {
         m_window = rb_new();

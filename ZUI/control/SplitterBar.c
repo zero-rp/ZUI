@@ -1,5 +1,5 @@
-﻿#include <ZUI.h>
-
+﻿#include "SplitterBar.h"
+#include <core/control.h>
 ZEXPORT ZuiAny ZCALL ZuiSplitterBarProc(ZuiInt ProcId, ZuiControl cp, ZuiSplitterBar p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3){
     switch (ProcId)
     {
@@ -101,7 +101,7 @@ ZEXPORT ZuiAny ZCALL ZuiSplitterBarProc(ZuiInt ProcId, ZuiControl cp, ZuiSplitte
         break;
     }
     case Proc_OnCreate: {
-        p = (ZuiSplitterBar)ZuiMalloc(sizeof(ZSplitterBar));
+        p = (ZuiSplitterBar)malloc(sizeof(ZSplitterBar));
         memset(p, 0, sizeof(ZSplitterBar));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         p->old_call = cp->call;
@@ -109,10 +109,10 @@ ZEXPORT ZuiAny ZCALL ZuiSplitterBarProc(ZuiInt ProcId, ZuiControl cp, ZuiSplitte
     }
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
+        old_call(ProcId, cp, 0, Param1, Param2, Param3);
+        free(p);
 
-        ZuiFree(p);
-
-        return old_call(ProcId, cp, 0, Param1, Param2, Param3);
+        return 0;
     }
     case Proc_GetObject:
         if (Param1 == Type_SplitterBar)

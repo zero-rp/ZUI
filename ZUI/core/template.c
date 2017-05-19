@@ -1,4 +1,6 @@
-﻿#include <ZUI.h>
+﻿#include "tree.h"
+#include "control.h"
+#include "template.h"
 
 rb_root *Global_TemplateClass;
 ZuiBool ZuiTemplateInit()

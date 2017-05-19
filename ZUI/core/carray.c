@@ -5,12 +5,12 @@
 DArray *darray_create()
 {
     int i = 0;
-    DArray *darray = (DArray *)ZuiMalloc(sizeof(DArray));
+    DArray *darray = (DArray *)malloc(sizeof(DArray));
     if (darray != NULL)
     {
         darray->count = 0;
         darray->size = 0;
-        darray->data = (void **)ZuiMalloc(sizeof(void *) * DEFAULT_A_SIZE);
+        darray->data = (void **)malloc(sizeof(void *) * DEFAULT_A_SIZE);
 
         if (darray->data != NULL)
         {
@@ -72,7 +72,7 @@ static BOOL darray_expand(DArray *darray, int needone)
     {
         newallocsize = darray->count + 1;
     }
-    void **data = (void **)ZuiRealloc(darray->data, sizeof(void *) * newallocsize);
+    void **data = (void **)realloc(darray->data, sizeof(void *) * newallocsize);
     if (data != NULL)
     {
         darray->data = data;
@@ -87,7 +87,7 @@ BOOL darray_shrink(DArray *darray)
     if ((darray->count >> 1) < darray->size && (darray->size > DEFAULT_A_SIZE))
     {
         int newallocsize = darray->count + darray->count >> 1;
-        void **data = (void **)ZuiRealloc(darray->data, sizeof(void *) * newallocsize);
+        void **data = (void **)realloc(darray->data, sizeof(void *) * newallocsize);
         if (data != NULL)
         {
             darray->data = data;
@@ -173,7 +173,8 @@ int darray_len(DArray * darray)
     return darray->count;
 }
 int darray_find(DArray * darray, void * data) {
-    for (size_t i = 0; i < darray->count; i++)
+    size_t i;
+    for (i = 0; i < darray->count; i++)
     {
         if (darray->data[i] == data)
             return i;
@@ -198,10 +199,10 @@ BOOL darray_destroy(DArray *darray)
         return TRUE;
     }
 
-    ZuiFree(darray->data);
+    free(darray->data);
     darray->data = NULL;
 
-    ZuiFree(darray);
+    free(darray);
     darray = NULL;
     return TRUE;
 }

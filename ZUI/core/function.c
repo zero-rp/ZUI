@@ -1,6 +1,14 @@
-﻿#include <uv.h>
-#include <ZUI.h>
-#include "dukluv\duv_module_core.h"
+﻿#include <ZUI.h>
+#include <stdlib.h>
+#include <platform/platform.h>
+#include <control/Register.h>
+#include "control.h"
+#include "function.h"
+#include "resdb.h"
+
+ZuiText Global_DefaultFontName;     //系统默认字体名称
+ZuiFont Global_Font;                //默认字体
+
 void Rect_Join(ZRect *rc, ZRect *rc1)
 {
     if (rc1->left < rc->left) rc->left = rc1->left;
@@ -9,7 +17,7 @@ void Rect_Join(ZRect *rc, ZRect *rc1)
     if (rc1->bottom > rc->bottom) rc->bottom = rc1->bottom;
 }
 
-void * ZCALL Zui_Hash(wchar_t* str) {
+void * Zui_Hash(wchar_t* str) {
     size_t hash = 0;
     wchar_t ch;
     for (long i = 0; ch = (size_t)*str++; i++)
@@ -25,11 +33,15 @@ void * ZCALL Zui_Hash(wchar_t* str) {
     }
     return hash;
 }
-
+ZuiText ZuiCharNext(ZuiText str) {
+    return str++;
+}
 ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
+#if (defined PLATFORM_OS_WIN)    
     if (config && config->m_hInstance) {
         m_hInstance = config->m_hInstance;
     }
+#endif
 #if RUN_DEBUG
     if (config && config->debug) {
         //启动调试器
@@ -45,14 +57,12 @@ ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
         return FALSE;
     }
     /*初始化全局变量*/
-    if (!ZuiGlobalInit()) {
-        return FALSE;
-    }
-    /*初始化绘制管理器*/
-    if (!ZuiPaintManagerInitialize()) {
-        return FALSE;
-    }
+    {
 
+
+
+
+    }
     /*初始化模版管理器*/
     if (!ZuiTemplateInit())
     {
@@ -82,8 +92,6 @@ ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
     return TRUE;
 }
 ZEXPORT ZuiBool ZCALL ZuiUnInit() {
-    /*反初始化绘制管理器*/
-    ZuiPaintManagerUnInitialize();
     /*反注册全局控件*/
     ZuiControlUnRegister();
     /*反初始化模版管理器*/
@@ -95,7 +103,11 @@ ZEXPORT ZuiBool ZCALL ZuiUnInit() {
     /*反初始化资源池*/
     ZuiResDBUnInit();
     /*反初始化全局变量*/
-    ZuiGlobalUnInit();
+    {
+
+
+
+    }
     /*反初始化系统层*/
     ZuiOsUnInitialize();
     /*反初始化图形层*/
@@ -103,46 +115,24 @@ ZEXPORT ZuiBool ZCALL ZuiUnInit() {
     return TRUE;
 }
 ZEXPORT ZuiInt ZCALL ZuiMsgLoop() {
-#if ((defined HAVE_UV) && (HAVE_UV == 1)) || ((defined HAVE_DUV) && (HAVE_DUV == 1))
-    MSG Msg;
-    uv_loop_t *loop = uv_default_loop();
-    while (GetMessage(&Msg, NULL, 0, 0)) {
-        if (WM_QUIT == Msg.message) {
-            break;
-        }
-        uv_run(loop, UV_RUN_NOWAIT);
-        TranslateMessage(&Msg);
-        DispatchMessageW(&Msg);
-    }
-    return Msg.wParam;
-#else
-    MSG Msg;
-    while (GetMessage(&Msg, NULL, 0, 0)) {
-        if (WM_QUIT == Msg.message) {
-            break;
-        }
-        TranslateMessage(&Msg);
-        DispatchMessageW(&Msg);
-    }
-    return Msg.wParam;
-#endif
+    ZuiOsMsgLoop();
 }
 ZEXPORT ZuiVoid ZCALL ZuiMsgLoop_exit() {
-    PostQuitMessage(0);
+    ZuiOsMsgLoopExit();
 }
 ZuiControl MsgBox_pRoot;
 ZuiAny ZCALL MsgBox_Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     if (wcscmp(msg, L"onclick") == 0)
     {
         if (wcscmp(p->m_sName, L"WindowCtl_clos") == 0) {
-            FreeZuiControl(p->m_pManager->m_pRoot, TRUE);
-            PostMessage(0, WM_APP + 10, 0, 0);
+            FreeZuiControl(p->m_pOs->m_pRoot, TRUE);
+            //PostMessage(0, WM_APP + 10, 0, 0);
         }
     }
     return 0;
 }
 
-ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp,ZuiText text,ZuiText title) {
+ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
     ZuiControl p;
     MsgBox_pRoot = NewZuiControl(L"MessageBox", NULL, NULL, NULL);
     //取消最小化按钮
@@ -165,39 +155,196 @@ ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp,ZuiText text,ZuiText title) {
     ZuiControlCall(Proc_SetText, p, text, NULL, NULL);
     p = ZuiControlFindName(MsgBox_pRoot, L"title");
     ZuiControlCall(Proc_SetText, p, title, NULL, NULL);
-    //禁用掉父窗口
-    EnableWindow(rp->m_pManager->m_hWndPaint, FALSE);
-    MSG Msg;
-    while (1)
-    {
-        GetMessage(&Msg, NULL, 0, 0);
-        if (Msg.message == WM_APP + 10)
-            break;
-        TranslateMessage(&Msg);
-        DispatchMessage(&Msg);
-    }
-    //重新开启父窗口
-    EnableWindow(rp->m_pManager->m_hWndPaint, TRUE);
+    /*
+        //禁用掉父窗口
+        EnableWindow(rp->m_pOs->m_hWnd, FALSE);
+        MSG Msg;
+        while (1)
+        {
+            GetMessage(&Msg, NULL, 0, 0);
+            if (Msg.message == WM_APP + 10)
+                break;
+            TranslateMessage(&Msg);
+            DispatchMessage(&Msg);
+        }
+        //重新开启父窗口
+        EnableWindow(rp->m_pOs->m_hWnd, TRUE);
+    */
     return;
 }
-ZEXPORT ZuiBool ZCALL ZuiIsPointInRect(ZuiRect Rect, ZuiPoint pt) {
+ZuiBool ZuiIsPointInRect(ZuiRect Rect, ZuiPoint pt) {
+    int xl, xr, yt, yb;
 
-    return PtInRect(Rect, *(POINT *)pt);
-    /*
-    if (pt->x <= Rect->Left) {
-        return FALSE;
+    if (Rect->left < Rect->right)
+    {
+        xl = Rect->left;
+        xr = Rect->right;
     }
-    if (pt->x >= Rect->Width + Rect->Left) {
-        return FALSE;
-    }
-
-    if (pt->y <= Rect->Top) {
-        return FALSE;
-    }
-    if (pt->y >= Rect->Height + Rect->Top) {
-        return FALSE;
+    else
+    {
+        xl = Rect->right;
+        xr = Rect->left;
     }
 
-    return TRUE;
-    */
+    if (Rect->top < Rect->bottom)
+    {
+        yt = Rect->bottom;
+        yb = Rect->top;
+    }
+    else
+    {
+        yt = Rect->top;
+        yb = Rect->bottom;
+    }
+
+    return ((pt->x >= xl && pt->x <= xr) && (pt->y >= yb && pt->y <= yt));
 }
+
+
+
+
+ZuiBool ZuiStingIsUtf8(ZuiAny str, ZuiInt length)
+{
+    int i;
+    //UFT8可用1-6个字节编码,ASCII用一个字节
+    int nBytes = 0;
+    unsigned char chr;
+    //如果全部都是ASCII, 说明不是UTF-8
+    ZuiBool bAllAscii = TRUE;
+    for (i = 0; i < length; i++)
+    {
+        chr = *((char *)str + i);
+        // 判断是否ASCII编码,如果不是,说明有可能是UTF-8,ASCII用7位编码,但用一个字节存,最高位标记为0,o0xxxxxxx
+        if ((chr & 0x80) != 0)
+        {
+            bAllAscii = FALSE;
+        }
+        //如果不是ASCII码,应该是多字节符,计算字节数
+        if (nBytes == 0)
+        {
+            if (chr >= 0x80)
+            {
+                if (chr >= 0xFC && chr <= 0xFD)
+                {
+                    nBytes = 6;
+                }
+                else if (chr >= 0xF8)
+                {
+                    nBytes = 5;
+                }
+                else if (chr >= 0xF0)
+                {
+                    nBytes = 4;
+                }
+                else if (chr >= 0xE0)
+                {
+                    nBytes = 3;
+                }
+                else if (chr >= 0xC0)
+                {
+                    nBytes = 2;
+                }
+                else
+                {
+                    return FALSE;
+                }
+                nBytes--;
+            }
+        }
+        //多字节符的非首字节,应为 10xxxxxx
+        else
+        {
+            if ((chr & 0xC0) != 0x80)
+            {
+                return FALSE;
+            }
+            nBytes--;
+        }
+    }
+    //违返规则
+    if (nBytes > 0)
+    {
+        return FALSE;
+    }
+    //如果全部都是ASCII, 也是字符串
+    if (bAllAscii)
+    {
+        return TRUE;
+    }
+    return TRUE;
+}
+
+ZuiVoid ZuiStingSplitA(char* src, char* pSeparator, char **dest, ZuiInt *num)
+{
+    char* pStart, *pEnd;
+    unsigned int sep_len;
+    int count = 0;
+    if (src == NULL || strlen(src) == 0) return;
+    sep_len = strlen(pSeparator);
+    pStart = src;
+    while (1)
+    {
+        pEnd = strstr(pStart, pSeparator);
+        if (pEnd != NULL)
+        {
+            memset(pEnd, '\0', sep_len);
+            *dest++ = pStart;
+            pEnd = pEnd + sep_len;
+            pStart = pEnd;
+            ++count;
+        }
+        else
+        {
+            *dest = pStart;
+            ++count;
+            break;
+        }
+    }
+    *num = count;
+}
+
+ZuiVoid ZuiStingSplit(ZuiText src, ZuiText pSeparator, ZuiText *dest, ZuiInt *num)
+{
+    ZuiText pStart, pEnd;
+    unsigned int sep_len;
+    int count = 0;
+    if (src == NULL || wcslen(src) == 0) return;
+    sep_len = wcslen(pSeparator);
+    pStart = src;
+    while (1)
+    {
+        pEnd = wcsstr(pStart, pSeparator);
+        if (pEnd != NULL)
+        {
+            memset(pEnd, '\0', sep_len * sizeof(_ZuiText));
+            *dest++ = pStart;
+            pEnd = pEnd + sep_len;
+            pStart = pEnd;
+            ++count;
+        }
+        else
+        {
+            *dest = pStart;
+            ++count;
+            break;
+        }
+    }
+    *num = count;
+}
+
+ZuiInt ZuiUtf8ToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen)
+{
+    return ZuiOsUtf8ToUnicode(str, slen, out, olen);
+}
+
+ZuiInt ZuiAsciiToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen)
+{
+    return ZuiOsAsciiToUnicode(str, slen, out, olen);
+}
+
+ZuiInt ZuiUnicodeToAscii(ZuiText str, ZuiInt slen, ZuiAny out, ZuiInt olen)
+{
+    return ZuiOsUnicodeToAscii(str, slen, out, olen);
+}
+
+

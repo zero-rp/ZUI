@@ -1,15 +1,14 @@
-﻿#include <ZUI.h>
-#if (defined PLATFORM_GRAPH_AGG) && (PLATFORM_GRAPH_AGG == 1)
-
+﻿#include "agg.h"
+#include "graph.h"
 #if defined(__cplusplus)
-#include "agg\include\agg_color_rgba.h"
-
+#include "include\agg_color_rgba.h"
+#pragma comment(lib, "Gdiplus.lib")
 //图像解码器
 
 #include <vector>
 
 
-#include "agg\agg2d.h"
+#include "agg2d.h"
 
 typedef struct
 {
@@ -37,7 +36,7 @@ extern "C" {
     //int __stdcall CLSIDFromString(ZuiText *, char *);
     int __stdcall GdipDisposeImage(void *image);
     int __stdcall GdipDrawImageRectRectI(void *graphics, void *image, int dstx, int dsty, int dstwidth, int dstheight, int srcx, int srcy, int srcwidth, int srcheight, int srcUnit, void* imageAttributes, void *callback, void * callbackData);
-    //int __stdcall CreateStreamOnHGlobal(HGLOBAL hGlobal, BOOL fDeleteOnRelease, void **ppstm);
+    int __stdcall CreateStreamOnHGlobal(HGLOBAL hGlobal, BOOL fDeleteOnRelease, void **ppstm);
 #ifdef __cplusplus
 }
 #endif
@@ -115,7 +114,7 @@ extern "C"
             Graphics->graphics->graphics->noLine();//不描边
             for (int i = 0; i < StrLens; i++)
             {
-                Graphics->graphics->graphics->text(*Font->font->font, Pt[i].x, Pt[i].y, String[i]);
+                //Graphics->graphics->graphics->text(*Font->font->font, Pt[i].x, Pt[i].y, String[i]);
             }
         }
     }
@@ -124,15 +123,15 @@ extern "C"
             //指定文字颜色
             Graphics->graphics->graphics->fillColor(ARGBTORGBA8(Color));
             Graphics->graphics->graphics->noLine();//不描边
-            Graphics->graphics->graphics->text(*Font->font->font, Rect->left, Rect->top, Rect->right, Rect->bottom, String, StrLen, TextStyle);
+            //Graphics->graphics->graphics->text(*Font->font->font, Rect->left, Rect->top, Rect->right, Rect->bottom, String, StrLen, TextStyle);
         }
     }
     /*测量文本大小*/
     ZEXPORT ZuiVoid ZCALL ZuiMeasureTextSize(ZuiFont Font, _ZuiText String, ZuiSizeR Size)
     {
         if (String && Font) {
-            Size->cx = Font->font->font->textWidth(String);
-            Size->cy = Font->font->font->fontHeight();
+            //Size->cx = Font->font->font->textWidth(String);
+            //Size->cy = Font->font->font->fontHeight();
         }
     }
     /*画图像缩放*/
@@ -197,12 +196,12 @@ extern "C"
     /*创建字体*/
     ZEXPORT ZuiFont ZCALL ZuiCreateFont(ZuiText FontName, ZuiReal FontSize, ZuiBool Bold, ZuiBool Italic) {
         int i = 0;
-        ZuiFont Font = (ZuiFont)ZuiMalloc(sizeof(ZuiFont));
+        ZuiFont Font = (ZuiFont)malloc(sizeof(ZuiFont));
         if (!Font) { return NULL; }
         memset(Font, 0, sizeof(ZuiFont));
         Font->font = new ZuiAggFont;
-        Font->font->font = new Agg2D::Font(FontName, FontSize, Bold, Italic, Agg2D::VectorFontCache);
-        Font->font->font->flipText(true);
+        //Font->font->font = new Agg2D::Font(FontName, FontSize, Bold, Italic, Agg2D::VectorFontCache);
+        //Font->font->font->flipText(true);
         return Font;
     }
     /*销毁字体*/
@@ -210,12 +209,12 @@ extern "C"
         if (StringFormat) {
             delete StringFormat->font->font;
             delete StringFormat->font;
-            ZuiFree(StringFormat);
+            free(StringFormat);
         }
     }
     /*创建图形*/
     ZEXPORT ZuiGraphics ZCALL ZuiCreateGraphicsInMemory(ZuiInt Width, ZuiInt Height) {
-        ZuiGraphics Graphics = (ZuiGraphics)ZuiMalloc(sizeof(ZGraphics));
+        ZuiGraphics Graphics = (ZuiGraphics)malloc(sizeof(ZGraphics));
         if (!Graphics) { return NULL; }
         memset(Graphics, 0, sizeof(ZGraphics));
         Graphics->Width = Width;
@@ -250,7 +249,7 @@ extern "C"
     }
     /*创建一个可复用的图形*/
     ZEXPORT ZuiGraphics ZCALL ZuiCreateGraphics() {
-        ZuiGraphics Graphics = (ZuiGraphics)ZuiMalloc(sizeof(ZGraphics));
+        ZuiGraphics Graphics = (ZuiGraphics)malloc(sizeof(ZGraphics));
         if (!Graphics) { return NULL; }
         memset(Graphics, 0, sizeof(ZGraphics));
         Graphics->graphics = new ZuiAggGraphics();
@@ -289,7 +288,7 @@ extern "C"
                 DeleteObject(Graphics->HBitmap);
                 Graphics->HBitmap = NULL;
             }
-            ZuiFree(Graphics);
+            free(Graphics);
         }
     }
     //设置剪裁区
@@ -323,14 +322,14 @@ extern "C"
 
     /*加载图像自内存*/
     ZEXPORT ZuiImage ZCALL ZuiLoadImageFromBinary(ZuiAny buf, ZuiInt len) {
-        ZuiImage Image = (ZuiImage)ZuiMalloc(sizeof(ZImage));
+        ZuiImage Image = (ZuiImage)malloc(sizeof(ZImage));
         if (!Image) { return NULL; }
         memset(Image, 0, sizeof(ZImage));
         Image->image = new ZuiAggImage();
         if (!Image->image) { return NULL; }
         HGLOBAL hMem = GlobalAlloc(GMEM_ZEROINIT | GMEM_MOVEABLE, len);
         void *str;
-        CreateStreamOnHGlobal(hMem, 0, (LPSTREAM *)&str);
+        CreateStreamOnHGlobal(hMem, 0, &str);
         void * mem = GlobalLock(hMem);
         memcpy(mem, buf, len);
         GlobalUnlock(hMem);
@@ -355,7 +354,7 @@ extern "C"
             DeleteDC(Image->image->hdc);
             GdipDisposeImage(Image->image->image);
             delete Image->image;
-            ZuiFree(Image);
+            free(Image);
             return NULL;
         }
         SelectObject(Image->image->hdc, (HGDIOBJ)Image->image->HBitmap);
@@ -379,12 +378,10 @@ extern "C"
             GdipDisposeImage(Image->image->image);
             delete Image->image->img;
             delete Image->image;
-            ZuiFree(Image);
+            free(Image);
         }
     }
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

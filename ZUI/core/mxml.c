@@ -1,19 +1,21 @@
-﻿#include <ZUI.h>
-
-#define strdup		ZuiWcsdup
+﻿#include "mxml.h"
+#include <stdlib.h>
+#include <wchar.h>
+#include <string.h>
+#define strdup _wcsdup
 #define mxml_bad_char(ch) ((ch) < L' ' && (ch) != L'\n' && (ch) != L'\r' && (ch) != L'\t')
 
 /*判断字符是否为空白字符*/
-static int	mxml_isspace(int ch)
+static int mxml_isspace(int ch)
 {
     return (ch == L' ' || ch == L'\t' || ch == L'\r' || ch == L'\n');
 }
 
 //--------ATTR操作
-static int mxml_set_attr(mxml_node_t *node, const wchar_t  *name, wchar_t *value)
+static int mxml_set_attr(mxml_node_t *node, const wchar_t *name, wchar_t *value)
 {
-    int		i;			/* Looping var */
-    mxml_attr_t	*attr;			/* New attribute */
+    int i; /* Looping var */
+    mxml_attr_t *attr; /* New attribute */
 
     for (i = node->value.num_attrs, attr = node->value.attrs;
         i > 0;
@@ -25,7 +27,7 @@ static int mxml_set_attr(mxml_node_t *node, const wchar_t  *name, wchar_t *value
             */
 
             if (attr->value)
-                ZuiFree(attr->value);
+                free(attr->value);
 
             attr->value = value;
 
@@ -33,9 +35,9 @@ static int mxml_set_attr(mxml_node_t *node, const wchar_t  *name, wchar_t *value
         }
 
     if (node->value.num_attrs == 0)
-        attr = (mxml_attr_t *)ZuiMalloc(sizeof(mxml_attr_t));
+        attr = (mxml_attr_t *)malloc(sizeof(mxml_attr_t));
     else
-        attr = (mxml_attr_t *)ZuiRealloc(node->value.attrs,
+        attr = (mxml_attr_t *)realloc(node->value.attrs,
         (node->value.num_attrs + 1) * sizeof(mxml_attr_t));
 
     if (!attr)
@@ -58,10 +60,10 @@ static int mxml_set_attr(mxml_node_t *node, const wchar_t  *name, wchar_t *value
     return (0);
 }
 
-const char *mxmlElementGetAttr(mxml_node_t *node, const wchar_t  *name)
+wchar_t* mxmlElementGetAttr(mxml_node_t *node, const wchar_t *name)
 {
-    int		i;			/* Looping var */
-    mxml_attr_t	*attr;			/* Cirrent attribute */
+    int i; /* Looping var */
+    mxml_attr_t *attr; /* Cirrent attribute */
 
 
     if (!node || !name)
@@ -80,9 +82,9 @@ const char *mxmlElementGetAttr(mxml_node_t *node, const wchar_t  *name)
     return (NULL);
 }
 
-void mxmlElementSetAttr(mxml_node_t *node, const wchar_t  *name, const wchar_t  *value)
+void mxmlElementSetAttr(mxml_node_t *node, const wchar_t *name, const wchar_t *value)
 {
-    wchar_t	*valuec;			/* Copy of value */
+    wchar_t *valuec; /* Copy of value */
 
     if (!node || !name)
         return;
@@ -93,7 +95,7 @@ void mxmlElementSetAttr(mxml_node_t *node, const wchar_t  *name, const wchar_t  
         valuec = NULL;
 
     if (mxml_set_attr(node, name, valuec))
-        ZuiFree(valuec);
+        free(valuec);
 }
 //-------节点操作
 void mxmlRemove(mxml_node_t *node)
@@ -212,9 +214,9 @@ void mxmlAdd(mxml_node_t *parent, int where, mxml_node_t *child, mxml_node_t *no
 
 static mxml_node_t *mxml_new(mxml_node_t *parent)
 {
-    mxml_node_t	*node;			/* New node */
+    mxml_node_t *node; /* New node */
 
-    if ((node = (mxml_node_t *)memset(ZuiMalloc(sizeof(mxml_node_t)),0, sizeof(mxml_node_t))) == NULL)
+    if ((node = (mxml_node_t *)memset(malloc(sizeof(mxml_node_t)), 0, sizeof(mxml_node_t))) == NULL)
     {
         return (NULL);
     }
@@ -227,7 +229,7 @@ static mxml_node_t *mxml_new(mxml_node_t *parent)
 
 void mxmlDelete(mxml_node_t *node)
 {
-    int	i;				/* Looping var */
+    int i; /* Looping var */
 
     if (!node)
         return;
@@ -239,22 +241,22 @@ void mxmlDelete(mxml_node_t *node)
         mxmlDelete(node->child);
 
     if (node->value.name)
-        ZuiFree(node->value.name);
+        free(node->value.name);
 
     if (node->value.num_attrs)
     {
         for (i = 0; i < node->value.num_attrs; i++)
         {
             if (node->value.attrs[i].name)
-                ZuiFree(node->value.attrs[i].name);
+                free(node->value.attrs[i].name);
             if (node->value.attrs[i].value)
-                ZuiFree(node->value.attrs[i].value);
+                free(node->value.attrs[i].value);
         }
 
-        ZuiFree(node->value.attrs);
+        free(node->value.attrs);
     }
     //释放节点内存
-    ZuiFree(node);
+    free(node);
 }
 mxml_node_t *mxmlClone(mxml_node_t *node, mxml_node_t *parent) {
     mxml_node_t *new_node = mxml_new(parent);
@@ -263,7 +265,7 @@ mxml_node_t *mxmlClone(mxml_node_t *node, mxml_node_t *parent) {
     new_node->value.name = strdup(node->value.name);
     new_node->value.num_attrs = node->value.num_attrs;
     if (node->value.num_attrs)
-        new_node->value.attrs = (mxml_attr_t *)ZuiMalloc(node->value.num_attrs * sizeof(mxml_attr_t));
+        new_node->value.attrs = (mxml_attr_t *)malloc(node->value.num_attrs * sizeof(mxml_attr_t));
     for (size_t i = 0; i < node->value.num_attrs; i++)
     {
         new_node->value.attrs[i].name = strdup(node->value.attrs[i].name);
@@ -276,9 +278,9 @@ mxml_node_t *mxmlClone(mxml_node_t *node, mxml_node_t *parent) {
             mxmlClone(node->next, parent);
     return new_node;
 }
-mxml_node_t *mxmlNewElement(mxml_node_t *parent, const wchar_t  *name)
+mxml_node_t *mxmlNewElement(mxml_node_t *parent, const wchar_t *name)
 {
-    mxml_node_t	*node;			/* New node */
+    mxml_node_t *node; /* New node */
 
     if (!name)
         return (NULL);
@@ -304,12 +306,12 @@ int mxmlRelease(mxml_node_t *node)
         return (-1);
 }
 //--------XML树解析
-typedef int(*mxml_getc)(void *p);
+typedef wchar_t(*mxml_getc)(mxml_buf_t *p);
 //取字符
 static wchar_t mxml_string_getc(mxml_buf_t *p)
 {
-    wchar_t		ch = 0;			/* Character */
-    const wchar_t	**s;			/* Pointer to string pointer */
+    wchar_t ch = 0; /* Character */
+    const wchar_t **s; /* Pointer to string pointer */
     s = (const wchar_t **)p;
     if (p->pos < p->len)
     {
@@ -333,25 +335,25 @@ static wchar_t mxml_string_getc(mxml_buf_t *p)
     return WEOF;
 }
 
-static int mxml_add_char(wchar_t ch, wchar_t **bufptr, wchar_t **buffer, int  *bufsize)
+static int mxml_add_char(wchar_t ch, wchar_t **bufptr, wchar_t **buffer, int *bufsize)
 {
-    wchar_t	*newbuffer;			/* New buffer value */
+    wchar_t *newbuffer; /* New buffer value */
 
 
     if (*bufptr >= (*buffer + *bufsize))
     {
         /*
-         * Increase the size of the buffer...
-         */
+        * Increase the size of the buffer...
+        */
 
         if (*bufsize < 1024)
             (*bufsize) *= 2;
         else
             (*bufsize) += 1024;
 
-        if ((newbuffer = (wchar_t *)ZuiRealloc(*buffer, (*bufsize) * sizeof(wchar_t))) == NULL)
+        if ((newbuffer = (wchar_t *)realloc(*buffer, (*bufsize) * sizeof(wchar_t))) == NULL)
         {
-            ZuiFree(*buffer);
+            free(*buffer);
             return (-1);
         }
 
@@ -365,274 +367,274 @@ static int mxml_add_char(wchar_t ch, wchar_t **bufptr, wchar_t **buffer, int  *b
 //查找转义符
 static int mxmlEntityGetValue(const wchar_t *name)
 {
-    int	diff,				/* Difference between names */
-        current,			/* Current entity in search */
-        first,				/* First entity in search */
-        last;				/* Last entity in search */
+    int diff, /* Difference between names */
+        current, /* Current entity in search */
+        first, /* First entity in search */
+        last; /* Last entity in search */
 
     static const struct
     {
-        const wchar_t	*name;			/* Entity name */
-        int		val;			/* Character value */
-    }	entities[] =
+        const wchar_t *name; /* Entity name */
+        int val; /* Character value */
+    } entities[] =
     {
-        { L"AElig", 198 },
-        { L"Aacute", 193 },
-        { L"Acirc", 194 },
-        { L"Agrave", 192 },
-        { L"Alpha", 913 },
-        { L"Aring", 197 },
-        { L"Atilde", 195 },
-        { L"Auml", 196 },
-        { L"Beta", 914 },
-        { L"Ccedil", 199 },
-        { L"Chi", 935 },
-        { L"Dagger", 8225 },
-        { L"Delta", 916 },
-        { L"Dstrok", 208 },
-        { L"ETH", 208 },
-        { L"Eacute", 201 },
-        { L"Ecirc", 202 },
-        { L"Egrave", 200 },
-        { L"Epsilon", 917 },
-        { L"Eta", 919 },
-        { L"Euml", 203 },
-        { L"Gamma", 915 },
-        { L"Iacute", 205 },
-        { L"Icirc", 206 },
-        { L"Igrave", 204 },
-        { L"Iota", 921 },
-        { L"Iuml", 207 },
-        { L"Kappa", 922 },
-        { L"Lambda", 923 },
-        { L"Mu", 924 },
-        { L"Ntilde", 209 },
-        { L"Nu", 925 },
-        { L"OElig", 338 },
-        { L"Oacute", 211 },
-        { L"Ocirc", 212 },
-        { L"Ograve", 210 },
-        { L"Omega", 937 },
-        { L"Omicron", 927 },
-        { L"Oslash", 216 },
-        { L"Otilde", 213 },
-        { L"Ouml", 214 },
-        { L"Phi", 934 },
-        { L"Pi", 928 },
-        { L"Prime", 8243 },
-        { L"Psi", 936 },
-        { L"Rho", 929 },
-        { L"Scaron", 352 },
-        { L"Sigma", 931 },
-        { L"THORN", 222 },
-        { L"Tau", 932 },
-        { L"Theta", 920 },
-        { L"Uacute", 218 },
-        { L"Ucirc", 219 },
-        { L"Ugrave", 217 },
-        { L"Upsilon", 933 },
-        { L"Uuml", 220 },
-        { L"Xi", 926 },
-        { L"Yacute", 221 },
-        { L"Yuml", 376 },
-        { L"Zeta", 918 },
-        { L"aacute", 225 },
-        { L"acirc", 226 },
-        { L"acute", 180 },
-        { L"aelig", 230 },
-        { L"agrave", 224 },
-        { L"alefsym", 8501 },
-        { L"alpha", 945 },
-        { L"amp", '&' },
-        { L"and", 8743 },
-        { L"ang", 8736 },
-        { L"apos", '\'' },
-        { L"aring", 229 },
-        { L"asymp", 8776 },
-        { L"atilde", 227 },
-        { L"auml", 228 },
-        { L"bdquo", 8222 },
-        { L"beta", 946 },
-        { L"brkbar", 166 },
-        { L"brvbar", 166 },
-        { L"bull", 8226 },
-        { L"cap", 8745 },
-        { L"ccedil", 231 },
-        { L"cedil", 184 },
-        { L"cent", 162 },
-        { L"chi", 967 },
-        { L"circ", 710 },
-        { L"clubs", 9827 },
-        { L"cong", 8773 },
-        { L"copy", 169 },
-        { L"crarr", 8629 },
-        { L"cup", 8746 },
-        { L"curren", 164 },
-        { L"dArr", 8659 },
-        { L"dagger", 8224 },
-        { L"darr", 8595 },
-        { L"deg", 176 },
-        { L"delta", 948 },
-        { L"diams", 9830 },
-        { L"die", 168 },
-        { L"divide", 247 },
-        { L"eacute", 233 },
-        { L"ecirc", 234 },
-        { L"egrave", 232 },
-        { L"empty", 8709 },
-        { L"emsp", 8195 },
-        { L"ensp", 8194 },
-        { L"epsilon", 949 },
-        { L"equiv", 8801 },
-        { L"eta", 951 },
-        { L"eth", 240 },
-        { L"euml", 235 },
-        { L"euro", 8364 },
-        { L"exist", 8707 },
-        { L"fnof", 402 },
-        { L"forall", 8704 },
-        { L"frac12", 189 },
-        { L"frac14", 188 },
-        { L"frac34", 190 },
-        { L"frasl", 8260 },
-        { L"gamma", 947 },
-        { L"ge", 8805 },
-        { L"gt", '>' },
-        { L"hArr", 8660 },
-        { L"harr", 8596 },
-        { L"hearts", 9829 },
-        { L"hellip", 8230 },
-        { L"hibar", 175 },
-        { L"iacute", 237 },
-        { L"icirc", 238 },
-        { L"iexcl", 161 },
-        { L"igrave", 236 },
-        { L"image", 8465 },
-        { L"infin", 8734 },
-        { L"int", 8747 },
-        { L"iota", 953 },
-        { L"iquest", 191 },
-        { L"isin", 8712 },
-        { L"iuml", 239 },
-        { L"kappa", 954 },
-        { L"lArr", 8656 },
-        { L"lambda", 955 },
-        { L"lang", 9001 },
-        { L"laquo", 171 },
-        { L"larr", 8592 },
-        { L"lceil", 8968 },
-        { L"ldquo", 8220 },
-        { L"le", 8804 },
-        { L"lfloor", 8970 },
-        { L"lowast", 8727 },
-        { L"loz", 9674 },
-        { L"lrm", 8206 },
-        { L"lsaquo", 8249 },
-        { L"lsquo", 8216 },
-        { L"lt", '<' },
-        { L"macr", 175 },
-        { L"mdash", 8212 },
-        { L"micro", 181 },
-        { L"middot", 183 },
-        { L"minus", 8722 },
-        { L"mu", 956 },
-        { L"nabla", 8711 },
-        { L"nbsp", 160 },
-        { L"ndash", 8211 },
-        { L"ne", 8800 },
-        { L"ni", 8715 },
-        { L"not", 172 },
-        { L"notin", 8713 },
-        { L"nsub", 8836 },
-        { L"ntilde", 241 },
-        { L"nu", 957 },
-        { L"oacute", 243 },
-        { L"ocirc", 244 },
-        { L"oelig", 339 },
-        { L"ograve", 242 },
-        { L"oline", 8254 },
-        { L"omega", 969 },
-        { L"omicron", 959 },
-        { L"oplus", 8853 },
-        { L"or", 8744 },
-        { L"ordf", 170 },
-        { L"ordm", 186 },
-        { L"oslash", 248 },
-        { L"otilde", 245 },
-        { L"otimes", 8855 },
-        { L"ouml", 246 },
-        { L"para", 182 },
-        { L"part", 8706 },
-        { L"permil", 8240 },
-        { L"perp", 8869 },
-        { L"phi", 966 },
-        { L"pi", 960 },
-        { L"piv", 982 },
-        { L"plusmn", 177 },
-        { L"pound", 163 },
-        { L"prime", 8242 },
-        { L"prod", 8719 },
-        { L"prop", 8733 },
-        { L"psi", 968 },
-        { L"quot", '\"' },
-        { L"rArr", 8658 },
-        { L"radic", 8730 },
-        { L"rang", 9002 },
-        { L"raquo", 187 },
-        { L"rarr", 8594 },
-        { L"rceil", 8969 },
-        { L"rdquo", 8221 },
-        { L"real", 8476 },
-        { L"reg", 174 },
-        { L"rfloor", 8971 },
-        { L"rho", 961 },
-        { L"rlm", 8207 },
-        { L"rsaquo", 8250 },
-        { L"rsquo", 8217 },
-        { L"sbquo", 8218 },
-        { L"scaron", 353 },
-        { L"sdot", 8901 },
-        { L"sect", 167 },
-        { L"shy", 173 },
-        { L"sigma", 963 },
-        { L"sigmaf", 962 },
-        { L"sim", 8764 },
-        { L"spades", 9824 },
-        { L"sub", 8834 },
-        { L"sube", 8838 },
-        { L"sum", 8721 },
-        { L"sup", 8835 },
-        { L"sup1", 185 },
-        { L"sup2", 178 },
-        { L"sup3", 179 },
-        { L"supe", 8839 },
-        { L"szlig", 223 },
-        { L"tau", 964 },
-        { L"there4", 8756 },
-        { L"theta", 952 },
-        { L"thetasym", 977 },
-        { L"thinsp", 8201 },
-        { L"thorn", 254 },
-        { L"tilde", 732 },
-        { L"times", 215 },
-        { L"trade", 8482 },
-        { L"uArr", 8657 },
-        { L"uacute", 250 },
-        { L"uarr", 8593 },
-        { L"ucirc", 251 },
-        { L"ugrave", 249 },
-        { L"uml", 168 },
-        { L"upsih", 978 },
-        { L"upsilon", 965 },
-        { L"uuml", 252 },
-        { L"weierp", 8472 },
-        { L"xi", 958 },
-        { L"yacute", 253 },
-        { L"yen", 165 },
-        { L"yuml", 255 },
-        { L"zeta", 950 },
-        { L"zwj", 8205 },
-        { L"zwnj", 8204 }
+    { L"AElig", 198 },
+    { L"Aacute", 193 },
+    { L"Acirc", 194 },
+    { L"Agrave", 192 },
+    { L"Alpha", 913 },
+    { L"Aring", 197 },
+    { L"Atilde", 195 },
+    { L"Auml", 196 },
+    { L"Beta", 914 },
+    { L"Ccedil", 199 },
+    { L"Chi", 935 },
+    { L"Dagger", 8225 },
+    { L"Delta", 916 },
+    { L"Dstrok", 208 },
+    { L"ETH", 208 },
+    { L"Eacute", 201 },
+    { L"Ecirc", 202 },
+    { L"Egrave", 200 },
+    { L"Epsilon", 917 },
+    { L"Eta", 919 },
+    { L"Euml", 203 },
+    { L"Gamma", 915 },
+    { L"Iacute", 205 },
+    { L"Icirc", 206 },
+    { L"Igrave", 204 },
+    { L"Iota", 921 },
+    { L"Iuml", 207 },
+    { L"Kappa", 922 },
+    { L"Lambda", 923 },
+    { L"Mu", 924 },
+    { L"Ntilde", 209 },
+    { L"Nu", 925 },
+    { L"OElig", 338 },
+    { L"Oacute", 211 },
+    { L"Ocirc", 212 },
+    { L"Ograve", 210 },
+    { L"Omega", 937 },
+    { L"Omicron", 927 },
+    { L"Oslash", 216 },
+    { L"Otilde", 213 },
+    { L"Ouml", 214 },
+    { L"Phi", 934 },
+    { L"Pi", 928 },
+    { L"Prime", 8243 },
+    { L"Psi", 936 },
+    { L"Rho", 929 },
+    { L"Scaron", 352 },
+    { L"Sigma", 931 },
+    { L"THORN", 222 },
+    { L"Tau", 932 },
+    { L"Theta", 920 },
+    { L"Uacute", 218 },
+    { L"Ucirc", 219 },
+    { L"Ugrave", 217 },
+    { L"Upsilon", 933 },
+    { L"Uuml", 220 },
+    { L"Xi", 926 },
+    { L"Yacute", 221 },
+    { L"Yuml", 376 },
+    { L"Zeta", 918 },
+    { L"aacute", 225 },
+    { L"acirc", 226 },
+    { L"acute", 180 },
+    { L"aelig", 230 },
+    { L"agrave", 224 },
+    { L"alefsym", 8501 },
+    { L"alpha", 945 },
+    { L"amp", '&' },
+    { L"and", 8743 },
+    { L"ang", 8736 },
+    { L"apos", '\'' },
+    { L"aring", 229 },
+    { L"asymp", 8776 },
+    { L"atilde", 227 },
+    { L"auml", 228 },
+    { L"bdquo", 8222 },
+    { L"beta", 946 },
+    { L"brkbar", 166 },
+    { L"brvbar", 166 },
+    { L"bull", 8226 },
+    { L"cap", 8745 },
+    { L"ccedil", 231 },
+    { L"cedil", 184 },
+    { L"cent", 162 },
+    { L"chi", 967 },
+    { L"circ", 710 },
+    { L"clubs", 9827 },
+    { L"cong", 8773 },
+    { L"copy", 169 },
+    { L"crarr", 8629 },
+    { L"cup", 8746 },
+    { L"curren", 164 },
+    { L"dArr", 8659 },
+    { L"dagger", 8224 },
+    { L"darr", 8595 },
+    { L"deg", 176 },
+    { L"delta", 948 },
+    { L"diams", 9830 },
+    { L"die", 168 },
+    { L"divide", 247 },
+    { L"eacute", 233 },
+    { L"ecirc", 234 },
+    { L"egrave", 232 },
+    { L"empty", 8709 },
+    { L"emsp", 8195 },
+    { L"ensp", 8194 },
+    { L"epsilon", 949 },
+    { L"equiv", 8801 },
+    { L"eta", 951 },
+    { L"eth", 240 },
+    { L"euml", 235 },
+    { L"euro", 8364 },
+    { L"exist", 8707 },
+    { L"fnof", 402 },
+    { L"forall", 8704 },
+    { L"frac12", 189 },
+    { L"frac14", 188 },
+    { L"frac34", 190 },
+    { L"frasl", 8260 },
+    { L"gamma", 947 },
+    { L"ge", 8805 },
+    { L"gt", '>' },
+    { L"hArr", 8660 },
+    { L"harr", 8596 },
+    { L"hearts", 9829 },
+    { L"hellip", 8230 },
+    { L"hibar", 175 },
+    { L"iacute", 237 },
+    { L"icirc", 238 },
+    { L"iexcl", 161 },
+    { L"igrave", 236 },
+    { L"image", 8465 },
+    { L"infin", 8734 },
+    { L"int", 8747 },
+    { L"iota", 953 },
+    { L"iquest", 191 },
+    { L"isin", 8712 },
+    { L"iuml", 239 },
+    { L"kappa", 954 },
+    { L"lArr", 8656 },
+    { L"lambda", 955 },
+    { L"lang", 9001 },
+    { L"laquo", 171 },
+    { L"larr", 8592 },
+    { L"lceil", 8968 },
+    { L"ldquo", 8220 },
+    { L"le", 8804 },
+    { L"lfloor", 8970 },
+    { L"lowast", 8727 },
+    { L"loz", 9674 },
+    { L"lrm", 8206 },
+    { L"lsaquo", 8249 },
+    { L"lsquo", 8216 },
+    { L"lt", '<' },
+    { L"macr", 175 },
+    { L"mdash", 8212 },
+    { L"micro", 181 },
+    { L"middot", 183 },
+    { L"minus", 8722 },
+    { L"mu", 956 },
+    { L"nabla", 8711 },
+    { L"nbsp", 160 },
+    { L"ndash", 8211 },
+    { L"ne", 8800 },
+    { L"ni", 8715 },
+    { L"not", 172 },
+    { L"notin", 8713 },
+    { L"nsub", 8836 },
+    { L"ntilde", 241 },
+    { L"nu", 957 },
+    { L"oacute", 243 },
+    { L"ocirc", 244 },
+    { L"oelig", 339 },
+    { L"ograve", 242 },
+    { L"oline", 8254 },
+    { L"omega", 969 },
+    { L"omicron", 959 },
+    { L"oplus", 8853 },
+    { L"or", 8744 },
+    { L"ordf", 170 },
+    { L"ordm", 186 },
+    { L"oslash", 248 },
+    { L"otilde", 245 },
+    { L"otimes", 8855 },
+    { L"ouml", 246 },
+    { L"para", 182 },
+    { L"part", 8706 },
+    { L"permil", 8240 },
+    { L"perp", 8869 },
+    { L"phi", 966 },
+    { L"pi", 960 },
+    { L"piv", 982 },
+    { L"plusmn", 177 },
+    { L"pound", 163 },
+    { L"prime", 8242 },
+    { L"prod", 8719 },
+    { L"prop", 8733 },
+    { L"psi", 968 },
+    { L"quot", '\"' },
+    { L"rArr", 8658 },
+    { L"radic", 8730 },
+    { L"rang", 9002 },
+    { L"raquo", 187 },
+    { L"rarr", 8594 },
+    { L"rceil", 8969 },
+    { L"rdquo", 8221 },
+    { L"real", 8476 },
+    { L"reg", 174 },
+    { L"rfloor", 8971 },
+    { L"rho", 961 },
+    { L"rlm", 8207 },
+    { L"rsaquo", 8250 },
+    { L"rsquo", 8217 },
+    { L"sbquo", 8218 },
+    { L"scaron", 353 },
+    { L"sdot", 8901 },
+    { L"sect", 167 },
+    { L"shy", 173 },
+    { L"sigma", 963 },
+    { L"sigmaf", 962 },
+    { L"sim", 8764 },
+    { L"spades", 9824 },
+    { L"sub", 8834 },
+    { L"sube", 8838 },
+    { L"sum", 8721 },
+    { L"sup", 8835 },
+    { L"sup1", 185 },
+    { L"sup2", 178 },
+    { L"sup3", 179 },
+    { L"supe", 8839 },
+    { L"szlig", 223 },
+    { L"tau", 964 },
+    { L"there4", 8756 },
+    { L"theta", 952 },
+    { L"thetasym", 977 },
+    { L"thinsp", 8201 },
+    { L"thorn", 254 },
+    { L"tilde", 732 },
+    { L"times", 215 },
+    { L"trade", 8482 },
+    { L"uArr", 8657 },
+    { L"uacute", 250 },
+    { L"uarr", 8593 },
+    { L"ucirc", 251 },
+    { L"ugrave", 249 },
+    { L"uml", 168 },
+    { L"upsih", 978 },
+    { L"upsilon", 965 },
+    { L"uuml", 252 },
+    { L"weierp", 8472 },
+    { L"xi", 958 },
+    { L"yacute", 253 },
+    { L"yen", 165 },
+    { L"yuml", 255 },
+    { L"zeta", 950 },
+    { L"zwj", 8205 },
+    { L"zwnj", 8204 }
     };
 
 
@@ -670,9 +672,9 @@ static int mxmlEntityGetValue(const wchar_t *name)
 //处理转义符号
 static int mxml_get_entity(mxml_node_t *parent, void *p, mxml_getc mxml_string_getc)
 {
-    int		ch;					/* Current character */
-    wchar_t	entity[64],			/* Entity string */
-        *entptr;			/* Pointer into entity */
+    int ch; /* Current character */
+    wchar_t entity[64], /* Entity string */
+        *entptr; /* Pointer into entity */
 
     entptr = entity;
 
@@ -713,29 +715,29 @@ static int mxml_get_entity(mxml_node_t *parent, void *p, mxml_getc mxml_string_g
 
 static int mxml_parse_element(mxml_node_t *node, void *p, mxml_getc mxml_string_getc)
 {
-    wchar_t	ch,				/* Current character in file */
-        quote;				/* Quoting character */
-    wchar_t	*name,				/* Attribute name */
-        *value,				/* Attribute value */
-        *ptr;				/* Pointer into name/value */
-    int	namesize,			/* Size of name string */
-        valsize;			/* Size of value string */
+    wchar_t ch, /* Current character in file */
+        quote; /* Quoting character */
+    wchar_t *name, /* Attribute name */
+        *value, /* Attribute value */
+        *ptr; /* Pointer into name/value */
+    int namesize, /* Size of name string */
+        valsize; /* Size of value string */
 
 
-    /*
-    * Initialize the name and value buffers...
-    */
+        /*
+        * Initialize the name and value buffers...
+        */
 
-    if ((name = (wchar_t *)ZuiMalloc(64 * sizeof(wchar_t))) == NULL)
+    if ((name = (wchar_t *)malloc(64 * sizeof(wchar_t))) == NULL)
     {
         return (WEOF);
     }
 
     namesize = 64;
 
-    if ((value = (wchar_t *)ZuiMalloc(64 * sizeof(wchar_t))) == NULL)
+    if ((value = (wchar_t *)malloc(64 * sizeof(wchar_t))) == NULL)
     {
-        ZuiFree(name);
+        free(name);
         return (WEOF);
     }
 
@@ -941,40 +943,40 @@ static int mxml_parse_element(mxml_node_t *node, void *p, mxml_getc mxml_string_
     * Free the name and value buffers and return...
     */
 
-    ZuiFree(name);
-    ZuiFree(value);
+    free(name);
+    free(value);
 
     return (ch);
 
 error:
 
-    ZuiFree(name);
-    ZuiFree(value);
+    free(name);
+    free(value);
 
     return (WEOF);
 }
 //加载XML字符串 返回XML树
-mxml_node_t *mxmlLoadString(mxml_node_t *top, const char *s, int len)
+mxml_node_t *mxmlLoadString(mxml_node_t *top, ZuiAny s, ZuiInt len)
 {
-    mxml_node_t	*node,		/* Current node */
-        *first,			/* First node added */
-        *parent;		/* Current parent node */
-    wchar_t	ch;				/* Non-zero if whitespace seen */
-    wchar_t	*buffer,		/* String buffer */
-        *bufptr;		/* Pointer into buffer */
-    int		bufsize = 0;		/* Size of buffer */
+    mxml_node_t *node, /* Current node */
+        *first, /* First node added */
+        *parent; /* Current parent node */
+    wchar_t ch; /* Non-zero if whitespace seen */
+    wchar_t *buffer, /* String buffer */
+        *bufptr; /* Pointer into buffer */
+    int bufsize = 0; /* Size of buffer */
     wchar_t *txtbuf = 0;
     if (ZuiStingIsUtf8(s, len))
     {
         bufsize = ZuiUtf8ToUnicode(s, -1, 0, 0) * sizeof(wchar_t);
-        txtbuf = ZuiMalloc(bufsize + 2);
+        txtbuf = malloc(bufsize + 2);
         bufsize = ZuiUtf8ToUnicode(s, len, txtbuf, bufsize);
         txtbuf[bufsize] = 0;
     }
     else
     {
         bufsize = ZuiAsciiToUnicode(s, -1, 0, 0) * sizeof(wchar_t);
-        txtbuf = ZuiMalloc(bufsize + 2);
+        txtbuf = malloc(bufsize + 2);
         bufsize = ZuiAsciiToUnicode(s, len, txtbuf, bufsize);
         txtbuf[bufsize] = 0;
     }
@@ -982,8 +984,8 @@ mxml_node_t *mxmlLoadString(mxml_node_t *top, const char *s, int len)
     buf.buf = txtbuf;
     buf.len = bufsize;
     buf.pos = 0;
-    mxml_buf_t	*p = &buf;
-    if ((buffer = (wchar_t *)ZuiMalloc(64 * sizeof(wchar_t))) == NULL)
+    mxml_buf_t *p = &buf;
+    if ((buffer = (wchar_t *)malloc(64 * sizeof(wchar_t))) == NULL)
         return (NULL);
     bufsize = 64 * sizeof(wchar_t);
     bufptr = buffer;
@@ -1067,7 +1069,7 @@ mxml_node_t *mxmlLoadString(mxml_node_t *top, const char *s, int len)
             {
                 while ((ch = mxml_string_getc(p)) != WEOF)
                 {
-                    if (ch == L'>' && !strncmp(bufptr - 2, L"]]", 2))
+                    if (ch == L'>' && !wcsncmp(bufptr - 2, L"]]", 2))
                         break;
                     else if (mxml_add_char(ch, &bufptr, &buffer, &bufsize))
                         goto error;
@@ -1248,9 +1250,9 @@ mxml_node_t *mxmlLoadString(mxml_node_t *top, const char *s, int len)
         }
     }
 
-    ZuiFree(buffer);
+    free(buffer);
     if (txtbuf)
-        ZuiFree(txtbuf);
+        free(txtbuf);
     if (parent)
     {
         node = parent;
@@ -1271,13 +1273,13 @@ mxml_node_t *mxmlLoadString(mxml_node_t *top, const char *s, int len)
 error:
 
     mxmlDelete(first);
-    ZuiFree(buffer);
+    free(buffer);
     return (NULL);
 }
 //-------节点查找
-mxml_node_t *mxmlFindElement(mxml_node_t *node, mxml_node_t *top, const char *name, const char *attr, const char *value, int descend)
+mxml_node_t *mxmlFindElement(mxml_node_t *node, mxml_node_t *top, const wchar_t *name, const wchar_t *attr, const wchar_t *value, int descend)
 {
-    const char	*temp;			/* Current attribute value */
+    wchar_t* temp; /* Current attribute value */
 
 
     /*
@@ -1311,11 +1313,11 @@ mxml_node_t *mxmlFindElement(mxml_node_t *node, mxml_node_t *top, const char *na
             */
 
             if (!attr)
-                return (node);			/* No attribute search, return it... */
+                return (node); /* No attribute search, return it... */
 
-            /*
-            * Check for the attribute...
-            */
+                /*
+                * Check for the attribute...
+                */
 
             if ((temp = mxmlElementGetAttr(node, attr)) != NULL)
             {
@@ -1324,7 +1326,7 @@ mxml_node_t *mxmlFindElement(mxml_node_t *node, mxml_node_t *top, const char *na
                 */
 
                 if (!value || !wcscmp(value, temp))
-                    return (node);		/* Yes, return it... */
+                    return (node); /* Yes, return it... */
             }
         }
 
@@ -1341,12 +1343,12 @@ mxml_node_t *mxmlFindElement(mxml_node_t *node, mxml_node_t *top, const char *na
     return (NULL);
 }
 
-mxml_node_t *mxmlFindPath(mxml_node_t *top, const char  *path)
+mxml_node_t *mxmlFindPath(mxml_node_t *top, const wchar_t *path)
 {
-    mxml_node_t	*node;			/* Current node */
-    char		element[256];		/* Current element name */
-    const char	*pathsep;		/* Separator in path */
-    int		descend;		/* mxmlFindElement option */
+    mxml_node_t *node; /* Current node */
+    wchar_t element[256]; /* Current element name */
+    const wchar_t *pathsep; /* Separator in path */
+    int descend; /* mxmlFindElement option */
 
 
     /*
@@ -1367,7 +1369,7 @@ mxml_node_t *mxmlFindPath(mxml_node_t *top, const char  *path)
         * Handle wildcards...
         */
 
-        if (!strncmp(path, "*/", 2))
+        if (!wcsncmp(path, L"*/", 2))
         {
             path += 2;
             descend = MXML_DESCEND;
@@ -1379,13 +1381,13 @@ mxml_node_t *mxmlFindPath(mxml_node_t *top, const char  *path)
         * Get the next element in the path...
         */
 
-        if ((pathsep = strchr(path, '/')) == NULL)
-            pathsep = path + strlen(path);
+        if ((pathsep = wcschr(path, L'/')) == NULL)
+            pathsep = path + wcslen(path);
 
         if (pathsep == path || (pathsep - path) >= sizeof(element))
             return (NULL);
 
-        memcpy(element, path, pathsep - path);
+        memcpy(element, path, (pathsep - path)*sizeof(wchar_t));
         element[pathsep - path] = '\0';
 
         if (*pathsep)

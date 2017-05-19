@@ -3,69 +3,112 @@
 
 #include <ZUI.h>
 
-/**
-* 此函数用作初始化Os.
-* @param Returns 成功返回true.
-*/
-ZuiBool ZuiOsInitialize();
-/**
-* 此函数用作反初始化Os.
-* @param Returns 成功返回true.
-*/
-ZuiBool ZuiOsUnInitialize();
+//事件类型定义
+enum EVENTTYPE_UI
+{
+    ZEVENT__FIRST = 1,
+    ZEVENT__KEYBEGIN,
+    ZEVENT_KEYDOWN,
+    ZEVENT_KEYUP,
+    ZEVENT_CHAR,
+    ZEVENT_SYSKEY,
+    ZEVENT__KEYEND,
+    ZEVENT__MOUSEBEGIN,
+    ZEVENT_MOUSEMOVE,//鼠标移动
+    ZEVENT_MOUSELEAVE,//鼠标离开
+    ZEVENT_MOUSEENTER,//鼠标进入
+    ZEVENT_MOUSEHOVER,
+    ZEVENT_LBUTTONDOWN,
+    ZEVENT_LBUTTONUP,
+    ZEVENT_RBUTTONDOWN,
+    ZEVENT_LDBLCLICK,
+    ZEVENT_CONTEXTMENU,
+    ZEVENT_SCROLLWHEEL,
+    ZEVENT__MOUSEEND,
+    ZEVENT_KILLFOCUS,
+    ZEVENT_SETFOCUS,
+    ZEVENT_WINDOWSIZE,
+    ZEVENT_SETCURSOR,
+    ZEVENT_TIMER,
+    ZEVENT_NOTIFY,
+    ZEVENT_COMMAND,
+    ZEVENT__LAST
+};
 
-/**
-* 此函数用作创建ZuiOsWindow对象.
-* @param Rect 窗口矩形
-* @param Title 窗口标题
-* @param ShowInTaskbar 是否在任务栏显示
-* @param PosMiddle 是否居中
-* @param Window 框架层ZuiWindow指针
-* @param Returns 成功返回ZuiOsWindow对象,不成功返回NULL.
-*/
+//事件结构,由os层发出
+typedef struct tagTEventUI
+{
+    enum EVENTTYPE_UI Type; //事件类型
+    ZuiControl pSender;     //事件对应的控件
+    ZuiInt dwTimestamp;     //时间戳
+    ZPoint ptMouse;         //鼠标位置
+    _ZuiText chKey;     //
+    ZuiInt wKeyState;   //
+    ZuiUInt wParam;     //
+    ZuiUInt lParam;     //
+} TEventUI;
+
+
+//此函数用作初始化Os.
+ZuiBool ZuiOsInitialize();
+//此函数用作反初始化Os.
+ZuiBool ZuiOsUnInitialize();
+//此函数用作创建ZuiOsWindow对象.
 ZuiOsWindow ZuiOsCreateWindow(ZuiControl root,ZuiBool show);
-/**
-* 此函数用作销毁由ZuiOsCreateWindow创建的对象.
-* @param OsWindow ZuiOsWindow对象
-* @此函数没有返回值.
-*/
+// 此函数用作销毁由ZuiOsCreateWindow创建的对象.
 ZuiVoid ZuiOsDestroyWindow(ZuiOsWindow OsWindow);
-/**
-* 此函数用作设置窗口标题.
-* @param OsWindow ZuiOsWindow对象
-* @param Title 标题
-* @此函数没有返回值.
-*/
+//此函数用作设置窗口标题.
 ZuiBool ZuiOsSetWindowTitle(ZuiOsWindow OsWindow, ZuiText Title);
-/**
-* 此函数用做最小化窗口
-* @param OsWindow ZuiOsWindow对象
-* @此函数没有返回值.
-*/
+//此函数用做最小化窗口
 ZuiBool ZuiOsSetWindowMin(ZuiOsWindow OsWindow);
-/**
-* 此函数用做最大化窗口
-* @param OsWindow ZuiOsWindow对象
-* @此函数没有返回值.
-*/
+//此函数用做最大化窗口
 ZuiBool ZuiOsSetWindowMax(ZuiOsWindow OsWindow);
-/**
-* 此函数用做向下还原窗口
-* @param OsWindow ZuiOsWindow对象
-* @此函数没有返回值.
-*/
+// 此函数用做向下还原窗口
 ZuiBool ZuiOsSetWindowRestor(ZuiOsWindow OsWindow);
 ZuiBool ZuiOsSetWindowSize(ZuiOsWindow OsWindow, ZuiUInt w, ZuiUInt h);
 ZuiBool ZuiOsSetWindowNoBox(ZuiOsWindow OsWindow, ZuiBool b);
 ZuiBool ZuiOsSetWindowComBo(ZuiOsWindow OsWindow, ZuiBool b);
 ZuiBool ZuiOsSetWindowTool(ZuiOsWindow OsWindow, ZuiBool b);
-/**
-* 此函数用作设置窗口可视状态.
-* @param OsWindow ZuiOsWindow对象
-* @param Visible 可视状态
-* @此函数没有返回值.
-*/
+
+//此函数用作设置窗口可视状态.
 ZuiVoid ZuiOsSetWindowVisible(ZuiOsWindow OsWindow, ZuiBool Visible);
 ZuiVoid ZuiOsWindowPopup(ZuiOsWindow OsWindow, ZuiPoint pt);
 ZuiVoid ZuiOsSetWindowCenter(ZuiOsWindow OsWindow);
+
+//设置光标
+ZuiVoid ZuiOsSetCursor(ZuiUInt type);
+//俘获输入
+ZuiVoid ZuiOsSetCapture(ZuiOsWindow OsWindow);
+//释放俘获
+ZuiVoid ZuiOsReleaseCapture(ZuiOsWindow OsWindow);
+//指定区域失效
+ZuiVoid ZuiOsInvalidate(ZuiOsWindow p);
+//指定区域失效
+ZuiVoid ZuiOsInvalidateRect(ZuiOsWindow p, ZRect *rcItem);
+
+//创建时钟
+ZuiBool ZuiOsSetTimer(ZuiControl pControl, ZuiUInt nTimerID, ZuiUInt uElapse);
+//销毁时钟
+ZuiBool ZuiOsKillTimer_Id(ZuiControl pControl, ZuiUInt nTimerID);
+//销毁时钟
+ZuiVoid ZuiOsKillTimer(ZuiControl pControl);
+//销毁全部时钟
+ZuiVoid ZuiOsRemoveAllTimers(ZuiOsWindow p);
+//设置焦点控件
+ZuiVoid ZuiOsSetFocus(ZuiOsWindow p, ZuiControl pControl, ZuiBool bFocusWnd);
+//移除控件在系统层的对象
+ZuiVoid ZuiOsReapObjects(ZuiOsWindow p, ZuiControl pControl);
+//延迟销毁控件
+ZuiVoid ZuiOsAddDelayedCleanup(ZuiOsWindow p, ZuiControl pControl);
+//系统消息循环
+ZuiInt ZuiOsMsgLoop();
+//退出系统消息循环
+ZuiVoid ZuiOsMsgLoopExit();
+
+ZuiInt ZuiOsUtf8ToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen);
+ZuiInt ZuiOsAsciiToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen);
+ZuiInt ZuiOsUnicodeToAscii(ZuiText str, ZuiInt slen, ZuiAny out, ZuiInt olen);
+
+ZuiVoid ZuiOsClientToScreen(ZuiControl p, ZuiPoint pt);
+ZuiVoid ZuiOsScreenToClient(ZuiControl p, ZuiPoint pt);
 #endif //__ZUI_PLATFORM_OS_H__

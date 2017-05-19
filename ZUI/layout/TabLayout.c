@@ -1,4 +1,7 @@
-﻿#include <ZUI.h>
+﻿#include "TabLayout.h"
+#include "Layout.h"
+#include <core/control.h>
+#include <stdlib.h>
 
 void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Param1, void* Param2, void* Param3) {
     switch (ProcId)
@@ -30,23 +33,23 @@ void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Pa
             rc.right -= rcPadding->right;
             rc.bottom -= rcPadding->bottom;
 
-            SIZE szAvailable = { rc.right - rc.left, rc.bottom - rc.top };
+            ZSize szAvailable = { rc.right - rc.left, rc.bottom - rc.top };
 
-            SIZE sz;
-            SIZE * psz = (SIZE *)ZuiControlCall(Proc_EstimateSize, pControl, (void *)&szAvailable, 0, 0);
+            ZSize sz;
+            ZSize * psz = (ZSize *)ZuiControlCall(Proc_EstimateSize, pControl, (void *)&szAvailable, 0, 0);
             sz.cx = psz->cx;
             sz.cy = psz->cy;
             if (sz.cx == 0) {
                 sz.cx = MAX(0, szAvailable.cx);
             }
-            if (sz.cx < (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0)) sz.cx = (LONG)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0);
-            if (sz.cx > (LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0)) sz.cx = (LONG)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0);
+            if (sz.cx < (ZuiInt)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0)) sz.cx = (ZuiInt)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0);
+            if (sz.cx > (ZuiInt)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0)) sz.cx = (ZuiInt)ZuiControlCall(Proc_GetMaxWidth, pControl, 0, 0, 0);
 
             if (sz.cy == 0) {
                 sz.cy = MAX(0, szAvailable.cy);
             }
-            if (sz.cy < (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0)) sz.cy = (LONG)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0);
-            if (sz.cy > (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0)) sz.cy = (LONG)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0);
+            if (sz.cy < (ZuiInt)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0)) sz.cy = (ZuiInt)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0);
+            if (sz.cy > (ZuiInt)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0)) sz.cy = (ZuiInt)ZuiControlCall(Proc_GetMaxHeight, pControl, 0, 0, 0);
             {
                 ZRect rcCtrl = { rc.left, rc.top, rc.left + sz.cx, rc.top + sz.cy };
                 ZuiControlCall(Proc_SetPos, pControl, &rcCtrl, FALSE, 0);
@@ -178,7 +181,7 @@ void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Pa
         return (ZuiAny)TRUE;
     }
     case Proc_OnCreate: {
-        p = (ZuiTabLayout)ZuiMalloc(sizeof(ZTabLayout));
+        p = (ZuiTabLayout)malloc(sizeof(ZTabLayout));
         memset(p, 0, sizeof(ZTabLayout));
         //创建继承的控件 保存数据指针
         p->old_udata = ZuiLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
@@ -190,7 +193,7 @@ void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Pa
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
 
-        ZuiFree(p);
+        free(p);
 
         return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
     }

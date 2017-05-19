@@ -14,13 +14,7 @@
 #ifndef _mxml_h_
 #define _mxml_h_
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <errno.h>
-
-#define strdup		_wcsdup
+#include <ZUI.h>
 
 #  define MXML_DESCEND		1	/* Descend when finding/walking */
 #  define MXML_NO_DESCEND	0	/* Don't descend when finding/walking */
@@ -63,11 +57,11 @@ typedef struct mxml_buf			/**** XML 节点 ****/
 
 mxml_node_t *mxmlLoadString(mxml_node_t *top, ZuiAny s, ZuiInt len);
 void mxmlAdd(mxml_node_t *parent, int where, mxml_node_t *child, mxml_node_t *node);
-mxml_node_t *mxmlFindElement(mxml_node_t *node, mxml_node_t *top, const char *name, const char *attr, const char *value, int descend);
-mxml_node_t *mxmlFindPath(mxml_node_t *top, const char  *path);
+mxml_node_t *mxmlFindElement(mxml_node_t *node, mxml_node_t *top, const wchar_t *name, const wchar_t *attr, const wchar_t *value, int descend);
+mxml_node_t *mxmlFindPath(mxml_node_t *top, const wchar_t *path);
 mxml_node_t *mxmlWalkNext(mxml_node_t *node, mxml_node_t *top, int descend);
 mxml_node_t *mxmlWalkPrev(mxml_node_t *node, mxml_node_t *top, int descend);
 mxml_node_t *mxmlClone(mxml_node_t *node, mxml_node_t *parent);
-void		mxmlDelete(mxml_node_t *node);
+void        mxmlDelete(mxml_node_t *node);
 
 #endif /* !_mxml_h_ */

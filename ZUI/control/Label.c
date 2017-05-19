@@ -1,5 +1,12 @@
-﻿#include <ZUI.h>
-
+﻿#include "Label.h"
+#include <core/control.h>
+#include <core/resdb.h>
+#include <core/function.h>
+#include <platform/platform.h>
+#include <stdlib.h>
+#if (defined HAVE_JS) && (HAVE_JS == 1)
+#include <duktape.h>
+#endif
 ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
@@ -138,17 +145,17 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         }
         else if (wcscmp(Param1, L"textcolor") == 0) {
             //字体颜色
-            LPTSTR pstr = NULL;
-            DWORD clrColor;
-            while (*(wchar_t *)Param2 > L'\0' && *(wchar_t *)Param2 <= L' ') (wchar_t *)Param2 = CharNext((wchar_t *)Param2);
-            if (*(wchar_t *)Param2 == L'#') (wchar_t *)Param2 = CharNext((wchar_t *)Param2);
+            ZuiText pstr = NULL;
+            ZuiColor clrColor;
+            while (*(wchar_t *)Param2 > L'\0' && *(wchar_t *)Param2 <= L' ') Param2 = ZuiCharNext((wchar_t *)Param2);
+            if (*(wchar_t *)Param2 == L'#') Param2 = ZuiCharNext((wchar_t *)Param2);
             clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);
             ZuiControlCall(Proc_Label_SetTextColor, cp, clrColor, NULL, NULL);
         }
         else if (wcscmp(Param1, L"textpadding") == 0) {
             //字体边距
             ZRect rcPadding = { 0 };
-            LPTSTR pstr = NULL;
+            ZuiText pstr = NULL;
             rcPadding.left = _tcstol(Param2, &pstr, 10);  ASSERT(pstr);
             rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
             rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
@@ -177,7 +184,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         return;
     }
     case Proc_OnCreate: {
-        p = (ZuiLabel)ZuiMalloc(sizeof(ZLabel));
+        p = (ZuiLabel)malloc(sizeof(ZLabel));
         memset(p, 0, sizeof(ZLabel));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         p->old_call = cp->call;
@@ -189,9 +196,11 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
 
-        ZuiFree(p);
+        old_call(ProcId, cp, 0, Param1, Param2, Param3);
+        
+        free(p);
 
-        return old_call(ProcId, cp, 0, Param1, Param2, Param3);
+        return 0;
     }
     case Proc_GetObject:
         if (Param1 == Type_Label)

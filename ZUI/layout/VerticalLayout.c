@@ -1,4 +1,7 @@
-﻿#include <ZUI.h>
+﻿#include "VerticalLayout.h"
+#include "Layout.h"
+#include <core/control.h>
+#include <stdlib.h>
 
 void* ZCALL ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayout p, void* Param1, void* Param2, void* Param3) {
     switch (ProcId)
@@ -127,7 +130,7 @@ void* ZCALL ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayout p
             if (sz.cx > szControlAvailable.cx) sz.cx = szControlAvailable.cx;
             if (sz.cx < (ZuiInt)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0)) sz.cx = (ZuiInt)ZuiControlCall(Proc_GetMinWidth, pControl, 0, 0, 0);
 
-            ZuiUInt iChildAlign = ZuiControlCall(Proc_Layout_GetChildAlign, cp, NULL, NULL, NULL);
+            ZuiUInt iChildAlign = (ZuiUInt)ZuiControlCall(Proc_Layout_GetChildAlign, cp, NULL, NULL, NULL);
             if (iChildAlign == DT_CENTER) {
                 int iPosX = (rc.right + rc.left) / 2;
                 if (op->m_pHorizontalScrollBar && op->m_pHorizontalScrollBar->m_bVisible) {
@@ -166,7 +169,7 @@ void* ZCALL ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayout p
         return 0;
     }
     case Proc_OnCreate: {
-        p = (ZuiVerticalLayout)ZuiMalloc(sizeof(ZVerticalLayout));
+        p = (ZuiVerticalLayout)malloc(sizeof(ZVerticalLayout));
         memset(p, 0, sizeof(ZVerticalLayout));
         //创建继承的控件 保存数据指针
         p->old_udata = ZuiLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
@@ -179,8 +182,8 @@ void* ZCALL ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayout p
         ZuiAny old_udata = p->old_udata;
         old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
         
-        ZuiFree(p);
-        return;
+        free(p);
+        return 0;
     }
     case Proc_GetType:
         return (ZuiAny)Type_VerticalLayout;

@@ -1,4 +1,7 @@
-﻿#include <ZUI.h>
+﻿#include "TreeView.h"
+#include <core/control.h>
+#include <core/resdb.h>
+#include "Register.h"
 ZuiAny ZCALL ZuiTreeViewNotifyProc(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     if (wcscmp(L"selectchanged", msg) == 0) {
         ////选择
@@ -171,7 +174,7 @@ ZEXPORT ZuiAny ZCALL ZuiTreeViewProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeView p
         return FALSE;
     }
     case Proc_OnCreate: {
-        p = (ZuiTreeView)ZuiMalloc(sizeof(ZTreeView));
+        p = (ZuiTreeView)malloc(sizeof(ZTreeView));
         memset(p, 0, sizeof(ZTreeView));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         //创建继承的控件 保存数据指针
@@ -187,10 +190,10 @@ ZEXPORT ZuiAny ZCALL ZuiTreeViewProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeView p
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
+        old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        free(p);
 
-        ZuiFree(p);
-
-        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        return 0;
     }
     case Proc_GetObject:
         if (Param1 == Type_TreeView)
@@ -345,7 +348,7 @@ ZEXPORT ZuiAny ZCALL ZuiTreeNodeProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeNode p
         break;
     }
     case Proc_OnCreate: {
-        p = (ZuiTreeNode)ZuiMalloc(sizeof(ZTreeNode));
+        p = (ZuiTreeNode)malloc(sizeof(ZTreeNode));
         memset(p, 0, sizeof(ZTreeNode));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         //创建继承的控件 保存数据指针
@@ -404,10 +407,10 @@ ZEXPORT ZuiAny ZCALL ZuiTreeNodeProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeNode p
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
+        old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        free(p);
 
-        ZuiFree(p);
-
-        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        return 0;
     }
     case Proc_GetObject:
         if (Param1 == Type_TreeNode)

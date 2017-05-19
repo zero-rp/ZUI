@@ -1,5 +1,7 @@
-﻿#include <ZUI.h>
-
+﻿#include "List.h"
+#include <core/control.h>
+#include <core/resdb.h>
+#include <layout/Layout.h>
 
 ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
@@ -192,7 +194,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         darray_append(p->m_aSelItems, Param1);
         //EnsureVisible(iIndex);//定位滚动条
         //if (p->bTakeFocus) pControl->SetFocus();//设置焦点
-        if (cp->m_pManager != NULL && iLastSel != p->m_iCurSel) {
+        if (cp->m_pOs != NULL && iLastSel != p->m_iCurSel) {
             //事件通知
             
             //m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMSELECT, iIndex);
@@ -272,7 +274,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
     case Proc_List_GetItemAt:
         return ZuiControlCall(ProcId, p->m_pList, Param1, Param2, Param3);
     case Proc_OnCreate: {
-        p = (ZuiList)ZuiMalloc(sizeof(ZList));
+        p = (ZuiList)malloc(sizeof(ZList));
         memset(p, 0, sizeof(ZList));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         //创建继承的控件 保存数据指针
@@ -298,9 +300,10 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
-        ZuiFree(p);
+        old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        free(p);
 
-        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        return 0;
     }
     case Proc_GetObject: {
         if (Param1 == Type_List)
@@ -552,7 +555,7 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
         break;
     }
     case Proc_OnCreate: {
-        p = (ZuiListBody)ZuiMalloc(sizeof(ZListBody));
+        p = (ZuiListBody)malloc(sizeof(ZListBody));
         memset(p, 0, sizeof(ZListBody));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         //创建继承的控件 保存数据指针
@@ -566,10 +569,10 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
+        old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        free(p);
 
-        ZuiFree(p);
-
-        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        return 0;
     }
     case Proc_GetObject: {
         if (Param1 == Type_ListBody)
@@ -711,7 +714,7 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
                 //重置动画
                 if (Param1 && cp->m_aAnime)
                     cp->m_aAnime->steup = NULL;
-                if (cp->m_pManager != NULL) ZuiPaintManagerInvalidateRect(cp->m_pManager, &invalidateRc);
+                if (cp->m_pOs != NULL) ZuiOsInvalidateRect(cp->m_pOs, &invalidateRc);
             }
             else {
                 ZuiLayoutProc(Proc_Invalidate, cp, p->old_udata, Param1, NULL, NULL);
@@ -864,7 +867,7 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
         return TRUE;
     }
     case Proc_OnCreate: {
-        p = (ZuiListHeaderItem)ZuiMalloc(sizeof(ZListHeaderItem));
+        p = (ZuiListHeaderItem)malloc(sizeof(ZListHeaderItem));
         memset(p, 0, sizeof(ZListHeaderItem));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         //创建继承的控件 保存数据指针
@@ -877,10 +880,10 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
+        old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        free(p);
 
-        ZuiFree(p);
-
-        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        return 0;
     }
     case Proc_GetObject: {
         if (Param1 == Type_ListElement)
@@ -905,7 +908,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderProc(ZuiInt ProcId, ZuiControl cp, ZuiListHead
         ZuiLayout op = ZuiControlCall(Proc_GetObject, cp, Type_Layout, NULL, NULL);
         p->cXY.cy = cp->m_cxyFixed.cy;
         p->cXY.cx = 0;
-        if (p->cXY.cy == 0 && cp->m_pManager != NULL) {
+        if (p->cXY.cy == 0 && cp->m_pOs != NULL) {
             for (int it = 0; it < op->m_items->count; it++) {
                 SIZE * psz = (SIZE *)ZuiControlCall(Proc_EstimateSize, op->m_items->data[it], Param1, 0, 0);
                 p->cXY.cy = MAX(p->cXY.cy, psz->cy);
@@ -923,7 +926,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderProc(ZuiInt ProcId, ZuiControl cp, ZuiListHead
         return &p->cXY;
     }
     case Proc_OnCreate: {
-        p = (ZuiListHeader)ZuiMalloc(sizeof(ZListHeader));
+        p = (ZuiListHeader)malloc(sizeof(ZListHeader));
         memset(p, 0, sizeof(ZListHeader));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         //创建继承的控件 保存数据指针
@@ -936,10 +939,10 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderProc(ZuiInt ProcId, ZuiControl cp, ZuiListHead
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
+        old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        free(p);
 
-        ZuiFree(p);
-
-        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        return 0;
     }
     case Proc_GetObject: {
         if (Param1 == Type_ListHeader)
@@ -1159,7 +1162,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
         break;
     }
     case Proc_OnCreate: {
-        p = (ZuiListHeaderItem)ZuiMalloc(sizeof(ZListHeaderItem));
+        p = (ZuiListHeaderItem)malloc(sizeof(ZListHeaderItem));
         memset(p, 0, sizeof(ZListHeaderItem));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         //创建继承的控件 保存数据指针
@@ -1181,10 +1184,10 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
+        old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        free(p);
 
-        ZuiFree(p);
-
-        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        return 0;
     }
     case Proc_GetObject: {
         if (Param1 == Type_ListHeaderItem)

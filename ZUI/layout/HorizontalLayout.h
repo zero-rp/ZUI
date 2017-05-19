@@ -1,19 +1,6 @@
-﻿/**
-* @file     HorizontalLayout.h
-* @brief    横向布局容器.
-* @author   [Zero](22249030)
-* @version  1.0
-* @date     $date
-* @par History:
-*
-* [2016-10-25] <Zero> v1.0
-*
-* + v1.0版发布.
-*
-*/
-#ifndef __HORIZONTALLAYOUT_H__
+﻿#ifndef __HORIZONTALLAYOUT_H__
 #define __HORIZONTALLAYOUT_H__
-#define Type_HorizontalLayout       0xf20a2d07
+#include <ZUI.h>
 /**横向布局结构*/
 typedef struct _ZuiHorizontalLayout
 {

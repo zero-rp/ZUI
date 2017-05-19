@@ -1,31 +1,6 @@
-﻿/**
-* @file     Button.h
-* @brief    按钮控件实现.
-* @author   [Zero](22249030)
-* @version  1.0
-* @date     $date
-* @par History:
-*
-* [2016-10-25] <Zero> v1.0
-*
-* + v1.0版发布.
-*
-*/
-#ifndef __BUTTON_H__
+﻿#ifndef __BUTTON_H__
 #define __BUTTON_H__
-#define Type_Button                 0x5e7331d7
-
-#define Proc_Button_SetResNormal    201    //
-#define Proc_Button_SetResHot       202    //高亮状态
-#define Proc_Button_SetResPushed    203    //按下状态
-#define Proc_Button_SetResFocused   204    //焦点图片
-#define Proc_Button_SetResDisabled  205    //非激活状态
-
-#define Proc_Button_SetColorNormal    206    //
-#define Proc_Button_SetColorHot       207    //高亮状态
-#define Proc_Button_SetColorPushed    208    //按下状态
-#define Proc_Button_SetColorFocused   209    //焦点图片
-#define Proc_Button_SetColorDisabled  210    //非激活状态
+#include <ZUI.h>
 
 //------Js
 

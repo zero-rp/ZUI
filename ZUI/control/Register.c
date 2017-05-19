@@ -1,10 +1,26 @@
-﻿#include <ZUI.h>
+﻿#include "Register.h"
+#include <core/tree.h>
+#include <layout/Layout.h>
+#include <layout/VerticalLayout.h>
+#include <layout/HorizontalLayout.h>
+#include <layout/TabLayout.h>
+#include <layout/TileLayout.h>
 
-rb_root *Global_ControlClass;
-BOOL ZuiCoreInit(void *data) {
+#include <control/Window.h>
+#include <control/ScrollBar.h>
+#include <control/Label.h>
+#include <control/Button.h>
+#include <control/Option.h>
+#include <control/CheckBox.h>
+#include <control/ProgressBar.h>
+#include <control/SplitterBar.h>
+#include <control/List.h>
+#include <control/TreeView.h>
+extern rb_root *Global_ControlClass;
+static ZuiBool ZuiCoreInit(void *data) {
     return ((ZCtlProc)data)(Proc_CoreInit, NULL, NULL, NULL, NULL, NULL);
 }
-BOOL ZuiControlRegister()
+ZuiBool ZuiControlRegister()
 {
     Global_ControlClass = rb_new();
     /*核心组件 不可卸载*/
@@ -13,9 +29,9 @@ BOOL ZuiControlRegister()
     ZuiControlRegisterAdd(L"horizontallayout", (ZCtlProc)&ZuiHorizontalLayoutProc);
     ZuiControlRegisterAdd(L"tablayout", (ZCtlProc)&ZuiTabLayoutProc);
     ZuiControlRegisterAdd(L"tilelayout", (ZCtlProc)&ZuiTileLayoutProc);
-    ZuiControlRegisterAdd(L"virtual", (ZCtlProc)&ZuiVirtualProc);
-    ZuiControlRegisterAdd(L"menubar", (ZCtlProc)&ZuiMenuBarProc);
-    ZuiControlRegisterAdd(L"menu", (ZCtlProc)&ZuiMenuProc);
+    //ZuiControlRegisterAdd(L"virtual", (ZCtlProc)&ZuiVirtualProc);
+    //ZuiControlRegisterAdd(L"menubar", (ZCtlProc)&ZuiMenuBarProc);
+    //ZuiControlRegisterAdd(L"menu", (ZCtlProc)&ZuiMenuProc);
 
 
     ZuiControlRegisterAdd(L"window", (ZCtlProc)&ZuiWindowProc);
@@ -25,18 +41,17 @@ BOOL ZuiControlRegister()
     ZuiControlRegisterAdd(L"label", (ZCtlProc)&ZuiLabelProc);
     ZuiControlRegisterAdd(L"ProgressBar", (ZCtlProc)&ZuiProgressBarProc);
     ZuiControlRegisterAdd(L"button", (ZCtlProc)&ZuiButtonProc);
-    ZuiControlRegisterAdd(L"browser", (ZCtlProc)&ZuiBrowserProc);
-    ZuiControlRegisterAdd(L"edit", (ZCtlProc)&ZuiEditProc);
+    //ZuiControlRegisterAdd(L"browser", (ZCtlProc)&ZuiBrowserProc);
+    //ZuiControlRegisterAdd(L"edit", (ZCtlProc)&ZuiEditProc);
+    //ZuiControlRegisterAdd(L"singleedit", (ZCtlProc)&ZuiSingleEditProc);
     ZuiControlRegisterAdd(L"option", (ZCtlProc)&ZuiOptionProc);
     ZuiControlRegisterAdd(L"checkbox", (ZCtlProc)&ZuiCheckBoxProc);
     ZuiControlRegisterAdd(L"list", (ZCtlProc)&ZuiListProc);
     ZuiControlRegisterAdd(L"treeview", (ZCtlProc)&ZuiTreeViewProc);
     
-    /*初始化全部控件*/
-    //rb_foreach(Global_ControlClass, ZuiCoreInit);
     return TRUE;
 }
-void ZuiControlUnRegisterCallBack(void *data) {
+static ZuiVoid ZuiControlUnRegisterCallBack(void *data) {
     ((ZCtlProc)data)(Proc_CoreUnInit, NULL, NULL, NULL, NULL, NULL);
 }
 ZuiVoid ZuiControlUnRegister() {
@@ -44,7 +59,7 @@ ZuiVoid ZuiControlUnRegister() {
     rb_foreach(Global_ControlClass, ZuiControlUnRegisterCallBack);
     rb_free(Global_ControlClass);
 }
-ZEXPORT ZuiBool ZCALL ZuiControlRegisterAdd(ZuiText name, ZCtlProc Proc)
+ZuiBool ZuiControlRegisterAdd(ZuiText name, ZCtlProc Proc)
 {
     if (ZuiCoreInit(Proc))
     {
@@ -52,7 +67,7 @@ ZEXPORT ZuiBool ZCALL ZuiControlRegisterAdd(ZuiText name, ZCtlProc Proc)
     }
     return FALSE;
 }
-ZEXPORT ZuiBool ZCALL ZuiControlRegisterDel(ZuiText name)
+ZuiBool ZuiControlRegisterDel(ZuiText name)
 {
     rb_delete((key_t)Zui_Hash(name), Global_ControlClass);
     return 0;

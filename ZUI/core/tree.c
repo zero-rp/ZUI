@@ -454,7 +454,7 @@ void rb_replace_node(rb_node *victim, rb_node *new, rb_root *root)
 }
 
 rb_root *rb_new() {
-    rb_root* new = (rb_root *)ZuiMalloc(sizeof(rb_root));
+    rb_root* new = (rb_root *)malloc(sizeof(rb_root));
     if (new) {
         memset(new, 0, sizeof(rb_root));
         return new;
@@ -465,7 +465,7 @@ rb_root *rb_new() {
 BOOL rb_insert(key_t key, data_t data, rb_root *root) {
     rb_node **new = &(root->rb_node);
     rb_node  *parent = 0;
-    rb_node  *rbt = (rb_node *)ZuiMalloc(sizeof(rb_node));
+    rb_node  *rbt = (rb_node *)malloc(sizeof(rb_node));
     memset(rbt, 0, sizeof(rb_node));
     rbt->data = data;
     rbt->key = key;
@@ -516,14 +516,14 @@ void rb_delete(key_t key, rb_root*root) {
     if (!find)
         return;
     rb_erase(find, root);
-    ZuiFree(find);
+    free(find);
     return;
 }
 
 void rb_free(rb_root*root) {
     if (root->rb_node)
         rb_delete(root, root->rb_node);
-    ZuiFree(root);
+    free(root);
 }
 
 void rb_foreach_c(rb_node *node, TreeVisitFunc visitfunc) {

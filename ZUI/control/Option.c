@@ -1,5 +1,10 @@
-﻿#include <ZUI.h>
-
+﻿#include "Option.h"
+#include <core/control.h>
+#include <core/resdb.h>
+#include "Button.h"
+#if (defined HAVE_JS) && (HAVE_JS == 1)
+#include <duktape.h>
+#endif
 ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
@@ -94,13 +99,13 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
         }
 #if (defined HAVE_JS) && (HAVE_JS == 1)
         if (p->m_rOnselected) {
-            duv_push_ref(cp->m_pManager->m_ctx, p->m_rOnselected);
-            ZuiBuilderJs_pushControl(cp->m_pManager->m_ctx, p);
-            duk_push_boolean(cp->m_pManager->m_ctx, Param1);
-            if (duk_pcall_method(cp->m_pManager->m_ctx, 2)) {
-                LOG_DUK(cp->m_pManager->m_ctx);
+            duv_push_ref(cp->m_pOs->m_ctx, p->m_rOnselected);
+            ZuiBuilderJs_pushControl(cp->m_pOs->m_ctx, p);
+            duk_push_boolean(cp->m_pOs->m_ctx, Param1);
+            if (duk_pcall_method(cp->m_pOs->m_ctx, 2)) {
+                LOG_DUK(cp->m_pOs->m_ctx);
             }
-            duk_pop(cp->m_pManager->m_ctx);
+            duk_pop(cp->m_pOs->m_ctx);
         }
 #endif
         ZuiControlNotify(L"selectchanged", cp, Param1, NULL, NULL);
@@ -193,7 +198,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
     }
 #endif
     case Proc_OnCreate: {
-        p = (ZuiOption)ZuiMalloc(sizeof(ZOption));
+        p = (ZuiOption)malloc(sizeof(ZOption));
         memset(p, 0, sizeof(ZOption));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         //创建继承的控件 保存数据指针
@@ -207,10 +212,10 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
+        old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        free(p);
 
-        ZuiFree(p);
-
-        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        return 0;
     }
     case Proc_GetObject:
         if (Param1 == Type_Option)

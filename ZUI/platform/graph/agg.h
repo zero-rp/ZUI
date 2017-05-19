@@ -2,9 +2,10 @@
 #define __ZUI_PLATFORM_GRAPH_AGG_H__
 
 #include <ZUI.h>
-
-#if (defined PLATFORM_GRAPH_AGG) && (PLATFORM_GRAPH_AGG == 1)
-
+#ifdef PLATFORM_OS_WIN
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
 /**图像*/
 typedef struct _ZImage {
     struct ZuiAggImage *image;	///图形句柄
@@ -18,7 +19,7 @@ typedef struct _ZGraphics {
     ZuiInt Width;
     ZuiInt Height;
     struct ZuiAggGraphics *graphics;	///图形句柄
-#ifdef WIN32
+#ifdef PLATFORM_OS_WIN
     HDC hdc;		///内存场景
     HBITMAP HBitmap;///位图句柄
 #endif
@@ -33,5 +34,4 @@ typedef struct _ZFont {
     struct ZuiAggFont *font;
 }*ZuiFont, ZFont;
 
-#endif //PLATFORM_GRAPH_AGG
 #endif //__ZUI_PLATFORM_GRAPH_AGG_H__

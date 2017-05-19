@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="control">
+      <UniqueIdentifier>{f6038699-3853-4709-85ef-76ac7636d439}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{50ef1c87-8dc4-45e3-ae0d-3a5ae8e91246}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{e13b8f73-d805-464e-a917-c85890d373a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform">
+      <UniqueIdentifier>{9fe6c761-283a-4beb-88f9-2bbc74fb9ffb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\os">
+      <UniqueIdentifier>{46b4cd84-b85c-4ddc-8063-61001d85df30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\graph">
+      <UniqueIdentifier>{017280e3-16a4-44a4-88cd-855fc07e4153}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\ZUI\zuidebug.c" />
+    <ClCompile Include="..\..\ZUI\platform\os\win.c">
+      <Filter>platform\os</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\core\carray.c">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\core\tree.c">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\graph\agg.cpp">
+      <Filter>platform\graph</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\core\control.c">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\core\animation.c">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\core\mxml.c">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\core\template.c">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\core\resdb.c">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\core\function.c">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\layout\HorizontalLayout.c">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\layout\Layout.c">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\layout\TabLayout.c">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\layout\TileLayout.c">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\layout\VerticalLayout.c">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\ScrollBar.c">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\Register.c">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\Button.c">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\Label.c">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\os\android.c">
+      <Filter>platform\os</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\os\linux.c">
+      <Filter>platform\os</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\CheckBox.c">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\DrawPanel.c">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\List.c">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\Option.c">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\ProgressBar.c">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\SplitterBar.c">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\TreeView.c">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\control\Window.c">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\core\builder.c">
+      <Filter>core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\ZUI\ZUI.h" />
+    <ClInclude Include="..\..\ZUI\config.h" />
+    <ClInclude Include="..\..\ZUI\platform\platform.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\os\os.h">
+      <Filter>platform\os</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\os\win.h">
+      <Filter>platform\os</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\carray.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\tree.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\agg.h">
+      <Filter>platform\graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\format.h">
+      <Filter>platform\graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\graph.h">
+      <Filter>platform\graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\control.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\animation.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\mxml.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\template.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\resdb.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\function.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\layout\HorizontalLayout.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\layout\Layout.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\layout\TabLayout.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\layout\TileLayout.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\layout\VerticalLayout.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\control\ScrollBar.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\control\Register.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\control\Window.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\control\Button.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\control\Label.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\os\android.h">
+      <Filter>platform\os</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\os\linux.h">
+      <Filter>platform\os</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\control\CheckBox.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\control\DrawPanel.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\control\List.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\control\Option.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\control\ProgressBar.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\control\SplitterBar.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\control\TreeView.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\builder.h">
+      <Filter>core</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

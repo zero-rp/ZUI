@@ -1,55 +1,7 @@
-﻿/**
-* @file     Layout.h
-* @brief    布局容器类.
-* @author   [Zero](22249030)
-* @version  1.0
-* @date     $date
-* @par History:
-*
-* [2016-10-25] <Zero> v1.0
-*
-* + v1.0版发布.
-*
-*/
-#ifndef __LAYOUT_H__
+﻿#ifndef __LAYOUT_H__
 #define __LAYOUT_H__
-#define Type_Layout                     0xbebc5b1a
-
-#define Proc_Layout_Add                 101 ///添加控件
-#define Proc_Layout_AddAt               102 ///插入控件
-#define Proc_Layout_Remove              103 ///移除指定控件, 参数1为真由调用方销毁成员
-#define Proc_Layout_RemoveAt            104 ///移除指定位置控件
-#define Proc_Layout_RemoveAll           105 ///移除全部控件
-#define Proc_Layout_GetCount            106 ///取容器控件数量
-#define Proc_Layout_GetItemIndex        107 ///取指定控件索引
-#define Proc_Layout_SetItemIndex        108 ///设置控件所在位置
-#define Proc_Layout_GetItemAt           109 ///索引取控件
-#define Proc_Layout_SetFloatPos         110 ///设置浮动控件位置
-#define Proc_Layout_SetInset            112 ///设置内边距
-//--------滚动条
-#define Proc_Layout_GetScrollPos        113
-#define Proc_Layout_GetScrollRange      114
-#define Proc_Layout_SetScrollPos        115
-#define Proc_Layout_SetScrollStepSize   116
-#define Proc_Layout_GetScrollStepSize   117
-#define Proc_Layout_LineUp              118
-#define Proc_Layout_LineDown            119
-#define Proc_Layout_PageUp              120
-#define Proc_Layout_PageDown            121
-#define Proc_Layout_HomeUp              122
-#define Proc_Layout_EndDown             123
-#define Proc_Layout_LineLeft            124
-#define Proc_Layout_LineRight           125
-#define Proc_Layout_PageLeft            126
-#define Proc_Layout_PageRight           127
-#define Proc_Layout_HomeLeft            128
-#define Proc_Layout_EndRight            129
-#define Proc_Layout_EnableScrollBar     130
-#define Proc_Layout_GetVerticalScrollBar    131
-#define Proc_Layout_GetHorizontalScrollBar  132
-#define Proc_Layout_ProcessScrollBar    133 //调整滚动条位置
-#define Proc_Layout_GetChildAlign       134
-#define Proc_Layout_GetChildVAlign      135
+#include <ZUI.h>
+#include <core/carray.h>
 //------Js
 
 #define Js_Id_Layout_Add                100
@@ -60,40 +12,6 @@
 
 #define Js_Id_Layout_count              105
 #define Js_Id_Layout_inset              106
-
-//------宏封装
-#define ZuiLayoutAdd(Control, ...) ZProc(Control, Layout_Add, __VA_ARGS__);
-#define ZuiLayoutAddAt(Control, ...) ZProc(Control, Layout_AddAt, __VA_ARGS__);
-#define ZuiLayoutRemove(Control, ...) ZProc(Control, Layout_Remove, __VA_ARGS__);
-#define ZuiLayoutRemoveAt(Control, ...) ZProc(Control, Layout_RemoveAt, __VA_ARGS__);
-#define ZuiLayoutRemoveAll(Control, ...) ZProc(Control, Layout_RemoveAll, __VA_ARGS__);
-#define ZuiLayoutGetCount(Control, ...) ZProc(Control, Layout_GetCount, __VA_ARGS__);
-#define ZuiLayoutGetItemIndex(Control, ...) ZProc(Control, Layout_GetItemIndex, __VA_ARGS__);
-#define ZuiLayoutSetItemIndex(Control, ...) ZProc(Control, Layout_SetItemIndex, __VA_ARGS__);
-#define ZuiLayoutGetItemAt(Control, ...) ZProc(Control, Layout_GetItemAt, __VA_ARGS__);
-#define ZuiLayoutSetFloatPos(Control, ...) ZProc(Control, Layout_SetFloatPos, __VA_ARGS__);
-#define ZuiLayoutSetInset(Control, ...) ZProc(Control, Layout_SetInset, __VA_ARGS__);
-#define ZuiLayoutGetScrollPos(Control, ...) ZProc(Control, Layout_GetScrollPos, __VA_ARGS__);
-#define ZuiLayoutGetScrollRange(Control, ...) ZProc(Control, Layout_GetScrollRange, __VA_ARGS__);
-#define ZuiLayoutSetScrollPos(Control, ...) ZProc(Control, Layout_SetScrollPos, __VA_ARGS__);
-#define ZuiLayoutSetScrollStepSize(Control, ...) ZProc(Control, Layout_SetScrollStepSize, __VA_ARGS__);
-#define ZuiLayoutGetScrollStepSize(Control, ...) ZProc(Control, Layout_GetScrollStepSize, __VA_ARGS__);
-#define ZuiLayoutLineUp(Control, ...) ZProc(Control, Layout_LineUp, __VA_ARGS__);
-#define ZuiLayoutLineDown(Control, ...) ZProc(Control, Layout_LineDown, __VA_ARGS__);
-#define ZuiLayoutPageUp(Control, ...) ZProc(Control, Layout_PageUp, __VA_ARGS__);
-#define ZuiLayoutPageDown(Control, ...) ZProc(Control, Layout_PageDown, __VA_ARGS__);
-#define ZuiLayoutHomeUp(Control, ...) ZProc(Control, Layout_HomeUp, __VA_ARGS__);
-#define ZuiLayoutEndDown(Control, ...) ZProc(Control, Layout_EndDown, __VA_ARGS__);
-#define ZuiLayoutLineLeft(Control, ...) ZProc(Control, Layout_LineLeft, __VA_ARGS__);
-#define ZuiLayoutLineRight(Control, ...) ZProc(Control, Layout_LineRight, __VA_ARGS__);
-#define ZuiLayoutPageLeft(Control, ...) ZProc(Control, Layout_PageLeft, __VA_ARGS__);
-#define ZuiLayoutPageRight(Control, ...) ZProc(Control, Layout_PageRight, __VA_ARGS__);
-#define ZuiLayoutHomeLeft(Control, ...) ZProc(Control, Layout_HomeLeft, __VA_ARGS__);
-#define ZuiLayoutEndRight(Control, ...) ZProc(Control, Layout_EndRight, __VA_ARGS__);
-#define ZuiLayoutEnableScrollBar(Control, ...) ZProc(Control, Layout_EnableScrollBar, __VA_ARGS__);
-#define ZuiLayoutGetVerticalScrollBar(Control, ...) ZProc(Control, Layout_GetVerticalScrollBar, __VA_ARGS__);
-#define ZuiLayoutGetHorizontalScrollBar(Control, ...) ZProc(Control, Layout_GetHorizontalScrollBar, __VA_ARGS__);
-#define ZuiLayoutProcessScrollBar(Control, ...) ZProc(Control, Layout_ProcessScrollBar, __VA_ARGS__);
 
 
 /**容器基类结构*/

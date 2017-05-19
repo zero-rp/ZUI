@@ -1,38 +1,12 @@
-﻿/**
-* @file     Option.h
-* @brief    选择框控件实现.
-* @author   [Zero](22249030)
-* @version  1.0
-* @date     $date
-* @par History:
-*
-* [2016-10-25] <Zero> v1.0
-*
-* + v1.0版发布.
-*
-*/
-#ifndef __OPTION_H__
+﻿#ifndef __OPTION_H__
 #define __OPTION_H__
-#define Type_Option                         0x8f0a0522
-#define Proc_Option_SetSelected             1031    //
-#define Proc_Option_GetSelected             1032    //
-#define Proc_Option_SetResSelected          1033    //选中的普通状态
-#define Proc_Option_SetResSelectedHot       1034    //选中的点燃状态
-#define Proc_Option_SetResSelectedPushed    1035    //选中的按下状态
-#define Proc_Option_SetGroup                1036
+#include <ZUI.h>
 
 //------JSID
 #define Js_Id_Option_selected               100
 #define Js_Id_Option_group                  101
 #define Js_Id_Option_onselected             102
 
-//------宏封装
-#define ZuiOptionSetSelected(Control, ...) ZProc(Control, Option_SetSelected, __VA_ARGS__);
-#define ZuiOptionGetSelected(Control, ...) ZProc(Control, Option_GetSelected, __VA_ARGS__);
-#define ZuiOptionSetResSelected(Control, ...) ZProc(Control, Option_SetResSelected, __VA_ARGS__);
-#define ZuiOptionSetResSelectedHot(Control, ...) ZProc(Control, Option_SetResSelectedHot, __VA_ARGS__);
-#define ZuiOptionSetResSelectedPushed(Control, ...) ZProc(Control, Option_SetResSelectedPushed, __VA_ARGS__);
-#define ZuiOptionSetGroup(Control, ...) ZProc(Control, Option_SetGroup, __VA_ARGS__);
 
 /**按钮控件结构*/
 typedef struct _ZOption

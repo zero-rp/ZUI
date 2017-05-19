@@ -1,11 +1,13 @@
-﻿#include <ZUI.h>
-
+﻿#include "builder.h"
+#include <core/control.h>
+#include <core/carray.h>
+#include <core/resdb.h>
 #if (defined HAVE_JS) && (HAVE_JS == 1)
 duk_context *Global_ctx;
 static DArray *ctx_array = NULL;
 #endif
 
-ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
+static  ZuiControl ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
     mxml_node_t *node;
     ZuiText ClassName = NULL;
     ZuiBool Visible = FALSE, Enabled = TRUE;
@@ -25,6 +27,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
                 else
                     continue;
             }
+            /*
             if (wcscmp(ClassName, L"Menu") == 0) {//菜单类
                 ZuiAddMenu(node, NULL);
                 node = node->next;
@@ -35,6 +38,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
                 else
                     continue;
             }
+            */
             if (wcscmp(ClassName, L"Include") == 0) {//包含文件
                 ZuiText src = NULL;
                 for (size_t i = 0; i < node->value.num_attrs; i++)
@@ -59,7 +63,7 @@ ZEXPORT ZuiControl ZCALL ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
                         src = node->value.attrs[i].value;
                     }
                 }
-                ZuiBuilderJsLoad(win->m_pManager->m_ctx, src);
+                ZuiBuilderJsLoad(win->m_pOs->m_ctx, src);
             }
 #endif
             else if (!node->user_data) {//当前节点还未创建
@@ -121,10 +125,10 @@ const wchar_t *duk_to_string_w(duk_context *ctx, duk_idx_t idx) {
 }
 void duk_push_string_w(duk_context *ctx, wchar_t *str) {
     int len = WideCharToMultiByte(CP_UTF8, 0, str, -1, 0, 0, NULL, NULL);
-    char*buf = ZuiMalloc(len + 1);
+    char*buf = malloc(len + 1);
     buf[WideCharToMultiByte(CP_UTF8, 0, str, -1, buf, len, NULL, NULL)] = 0;
     duk_push_string(ctx, buf);
-    ZuiFree(buf);
+    free(buf);
 }
 
 static duk_ret_t ZuiJsBind_Call_exit(duk_context *ctx) {
@@ -170,9 +174,9 @@ static duk_ret_t ZuiBuilderJs_Control_Setter(duk_context *ctx) {
 static duk_ret_t ZuiJsBind_Call_GetByName(duk_context *ctx) {
     if (duk_is_string(ctx, 0)) {
         ZuiContext c = ZuiBuilderContext(ctx);
-        if (c && c->mp && c->mp->m_pRoot)
+        if (c && c->m_pOs && c->m_pOs->m_pRoot)
         {
-            ZuiControl cp = ZuiControlFindName(c->mp->m_pRoot, duk_get_string_w(ctx, 0));
+            ZuiControl cp = ZuiControlFindName(c->m_pOs->m_pRoot, duk_get_string_w(ctx, 0));
             if (!cp)
                 LOG_ERROR("GetByName失败: Name:%ls\r\n", duk_get_string_w(ctx, 0));
             if (cp)
@@ -340,7 +344,7 @@ static duk_ret_t ZuiJsBind_Call_ZuiPopupMenu(duk_context *ctx) {
 static duk_ret_t ZuiJsBind_Call_MsgBox(duk_context *ctx) {
     if (duk_is_string(ctx, 0)) {
         ZuiContext c = ZuiBuilderContext(ctx);
-        ZuiMsgBox(c->mp->m_pRoot,duk_get_string_w(ctx, 0), duk_is_string(ctx, 1) ? duk_get_string_w(ctx, 1) : NULL);
+        ZuiMsgBox(c->m_pOs->m_pRoot,duk_get_string_w(ctx, 0), duk_is_string(ctx, 1) ? duk_get_string_w(ctx, 1) : NULL);
     }
     return 0;
 }
@@ -357,9 +361,9 @@ ZuiContext ZuiBuilderContext(duk_context *ctx) {
     duk_get_memory_functions(ctx, &funcs);
     return funcs.udata;
 }
-duk_context *ZuiBuilderJs(ZuiPaintManager p) {
-    ZuiContext c = (ZuiContext)ZuiMalloc(sizeof(ZContext));
-    c->mp = p;
+duk_context *ZuiBuilderJs(ZuiOsWindow p) {
+    ZuiContext c = (ZuiContext)malloc(sizeof(ZContext));
+    c->m_pOs = p;
     duk_context *ctx = duk_create_heap(NULL, NULL, NULL, c, duv_fatal);
     duk_push_c_lightfunc(ctx, ZuiJsBind_Call_exit, 1 /*nargs*/, 0, 0);
     duk_put_global_string(ctx, "exit");
@@ -394,7 +398,7 @@ ZuiBool ZuiBuilderJsUn(duk_context *ctx) {
     ZuiContext c = ZuiBuilderContext(ctx);
     darray_delete(ctx_array, darray_find(ctx_array, ctx));
     duk_destroy_heap(ctx);
-    ZuiFree(c);
+    free(c);
 }
 duk_ret_t duv_load(duk_context *ctx);
 ZEXPORT ZuiBool ZCALL ZuiBuilderJsLoad(duk_context *ctx, ZuiText src) {
@@ -412,14 +416,19 @@ VOID WINAPI ZuiGcTimerProc(HWND h, UINT u, UINT_PTR p, DWORD d) {
         duk_gc(ctx_array->data[i], 0);
     }
 }
+#endif
 ZuiBool ZuiBuilderInit() {
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     ctx_array = darray_create();
     Global_ctx = ZuiBuilderJs(NULL);
     SetTimer(0, 0, 1000 * JS_GCTIMER, ZuiGcTimerProc);
+#endif
     return TRUE;
 }
 ZuiVoid ZuiBuilderUnInit() {
+#if (defined HAVE_JS) && (HAVE_JS == 1)
     ZuiBuilderJsUn(Global_ctx);
     darray_destroy(ctx_array);
-}
 #endif
+}
+

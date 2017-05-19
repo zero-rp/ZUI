@@ -1,4 +1,8 @@
-﻿#include <ZUI.h>
+﻿#include "ScrollBar.h"
+#include <core/control.h>
+#include <core/resdb.h>
+#include <platform/platform.h>
+#include <stdlib.h>
 //默认数据
 //横向
 ZuiRes m_sButton1NormalImage;
@@ -59,7 +63,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
 
             p->m_nLastScrollOffset = 0;
             p->m_nScrollRepeatDelay = 0;
-            ZuiPaintManagerSetTimer(cp, DEFAULT_TIMERID, 50U);
+            ZuiOsSetTimer(cp, DEFAULT_TIMERID, 50U);
             if (ZuiIsPointInRect(&p->m_rcButton1, &event->ptMouse)) {
                 p->m_uButton1State |= ZSTATE_PUSHED;
                 if (!p->m_bHorizontal) {
@@ -132,7 +136,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         {
             p->m_nScrollRepeatDelay = 0;
             p->m_nLastScrollOffset = 0;
-            ZuiPaintManagerKillTimer_Id(cp, DEFAULT_TIMERID);
+            ZuiOsKillTimer_Id(cp, DEFAULT_TIMERID);
 
             if ((p->m_uThumbState & ZSTATE_CAPTURED) != 0) {
                 p->m_uThumbState &= ~(ZSTATE_CAPTURED | ZSTATE_PUSHED);
@@ -212,7 +216,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
             if ((p->m_uThumbState & ZSTATE_CAPTURED) != 0) {
                 if (!p->m_bHorizontal) {
                     if (p->m_pOwner != NULL) {
-                        SIZE sz = { ((SIZE *)ZuiControlCall(Proc_Layout_GetScrollPos, p->m_pOwner, NULL, NULL, NULL))->cx, p->m_nLastScrollPos + p->m_nLastScrollOffset };
+                        ZSize sz = { ((ZSize *)ZuiControlCall(Proc_Layout_GetScrollPos, p->m_pOwner, NULL, NULL, NULL))->cx, p->m_nLastScrollPos + p->m_nLastScrollOffset };
                         ZuiControlCall(Proc_Layout_SetScrollPos, p->m_pOwner, &sz, NULL, NULL);
                     }
                     else
@@ -220,7 +224,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 }
                 else {
                     if (p->m_pOwner != NULL) {
-                        SIZE sz = { p->m_nLastScrollPos + p->m_nLastScrollOffset, ((SIZE *)ZuiControlCall(Proc_Layout_GetScrollPos, p->m_pOwner, NULL, NULL, NULL))->cy };
+                        ZSize sz = { p->m_nLastScrollPos + p->m_nLastScrollOffset, ((ZSize *)ZuiControlCall(Proc_Layout_GetScrollPos, p->m_pOwner, NULL, NULL, NULL))->cy };
                         ZuiControlCall(Proc_Layout_SetScrollPos, p->m_pOwner, &sz, NULL, NULL);
                     }
                     else
@@ -400,7 +404,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
             }
             //绘制按钮1边框
-            //DWORD dwBorderColor = 0xFF85E4FF;
+            //ZuiColor dwBorderColor = 0xFF85E4FF;
             //int nBorderSize = 2;
             //CRenderEngine::DrawRect(hDC, m_rcButton1, nBorderSize, dwBorderColor);
         }
@@ -452,7 +456,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
             }
             //绘制按钮1边框
-            //DWORD dwBorderColor = 0xFF85E4FF;
+            //ZuiColor dwBorderColor = 0xFF85E4FF;
             //int nBorderSize = 2;
             //CRenderEngine::DrawRect(hDC, m_rcButton1, nBorderSize, dwBorderColor);
         }
@@ -753,7 +757,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         break;
     }
     case Proc_OnCreate: {
-        p = (ZuiScrollBar)ZuiMalloc(sizeof(ZScrollBar));
+        p = (ZuiScrollBar)malloc(sizeof(ZScrollBar));
         memset(p, 0, sizeof(ZScrollBar));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         p->old_call = cp->call;
@@ -766,11 +770,10 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         return p;
     }
     case Proc_OnDestroy: {
-        ZCtlProc old_call = p->old_call;
+        p->old_call(ProcId, cp, 0, Param1, Param2, Param3);
 
-        ZuiFree(p);
-
-        return old_call(ProcId, cp, 0, Param1, Param2, Param3);
+        free(p);
+        return 0;
     }
     case Proc_GetObject:
         if (Param1 == Type_ScrollBar)

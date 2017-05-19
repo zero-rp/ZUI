@@ -1,0 +1,5 @@
+project(libuv)
+include_directories(./include)
+aux_source_directory(./src src)
+add_library(libuv STATIC ${src})
+set_target_properties(libuv PROPERTIES output_name "libuv")

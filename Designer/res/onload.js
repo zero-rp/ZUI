@@ -1,1 +1,0 @@
-﻿LayoutLoad("res:Designer.xml");

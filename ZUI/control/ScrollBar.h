@@ -1,20 +1,6 @@
 ﻿#ifndef __UISCROLLBAR_H__
 #define __UISCROLLBAR_H__
-#define Type_ScrollBar                  0xd2473c6e
-#define Proc_ScrollBar_SetHorizontal    1000 //设置为横向滚动条
-#define Proc_ScrollBar_SetScrollPos     1001 //设置位置
-#define Proc_ScrollBar_GetScrollPos     1002 //获取位置
-#define Proc_ScrollBar_GetScrollRange   1003
-#define Proc_ScrollBar_SetOwner         1004
-#define Proc_ScrollBar_SetScrollRange   1005
-
-//------宏封装
-#define ZuiScrollBarSetHorizontal(Control, ...) ZProc(Control, ScrollBar_SetHorizontal, __VA_ARGS__);
-#define ZuiScrollBarSetScrollPos(Control, ...) ZProc(Control, ScrollBar_SetScrollPos, __VA_ARGS__);
-#define ZuiScrollBarGetScrollPos(Control, ...) ZProc(Control, ScrollBar_GetScrollPos, __VA_ARGS__);
-#define ZuiScrollBarGetScrollRange(Control, ...) ZProc(Control, ScrollBar_GetScrollRange, __VA_ARGS__);
-#define ZuiScrollBarSetOwner(Control, ...) ZProc(Control, ScrollBar_SetOwner, __VA_ARGS__);
-#define ZuiScrollBarSetScrollRange(Control, ...) ZProc(Control, ScrollBar_SetScrollRange, __VA_ARGS__);
+#include <ZUI.h>
 
 
 #define DEFAULT_SCROLLBAR_SIZE 16 //默认滚动条大小
@@ -25,7 +11,7 @@ typedef struct _ZScrollBar
     int m_nRange;
     int m_nScrollPos;
     int m_nLineSize;
-    ZuiControl* m_pOwner;
+    ZuiControl m_pOwner;
     ZPoint ptLastMouse;
     int m_nLastScrollPos;
     int m_nLastScrollOffset;

@@ -1,19 +1,21 @@
-﻿#include <ZUI.h>
+﻿#include "animation.h"
+#include "control.h"
+#include <platform/platform.h>
 ZuiAny ZCALL OnPaint(ZuiControl p, ZuiAny Param1, ZuiAny Param2) {
     if (!p->m_aAnime->steup) {
         //动画开始
-        ZuiPaintManagerKillTimer_Id(p, 1);
+        ZuiOsKillTimer_Id(p, 1);
         p->m_aAnime->steup += 1;
         ZRect rc = { 0,0,p->m_rcItem.right - p->m_rcItem.left, p->m_rcItem.bottom - p->m_rcItem.top };
         ZuiControlCall(Proc_OnPaint, p, p->m_aAnime->m_hDcOffscreen, &rc, NULL);
-        ZuiPaintManagerSetTimer(p, 1, 50);
+        ZuiOsSetTimer(p, 1, 50);
         
     }
     else
     {
         ZRect *rc = &p->m_rcItem;
         if (p->m_aAnime->steup * 10 > 255) {
-            ZuiPaintManagerKillTimer_Id(p, 1);
+            ZuiOsKillTimer_Id(p, 1);
             //ZuiAlphaBlend(Param1, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, p->m_aAnime->m_hDcOffscreen, 0, 0, 255);
             return 0;
         }
@@ -35,7 +37,7 @@ ZuiVoid ZCALL OnEvent(ZuiControl p, TEventUI *event) {
 }
 
 ZuiAnimation ZuiAnimationNew(ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
-    ZuiAnimation p = (ZuiAnimation)ZuiMalloc(sizeof(ZAnimation));
+    ZuiAnimation p = (ZuiAnimation)malloc(sizeof(ZAnimation));
     p->steup = 0;
     p->OnPaint = OnPaint;
     p->OnSize = OnSize;
@@ -46,6 +48,6 @@ ZuiAnimation ZuiAnimationNew(ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 ZuiAnimation ZuiAnimationFree(ZuiAnimation p) {
     if (!p)
         return;
-    ZuiPaintManagerKillTimer_Id(p, 1);
-    ZuiFree(p);
+    ZuiOsKillTimer_Id(p, 1);
+    free(p);
 }

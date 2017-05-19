@@ -1,11 +1,12 @@
-﻿#include <ZUI.h>
-
+﻿#include "ProgressBar.h"
+#include <core/control.h>
+#include <core/resdb.h>
 ZEXPORT ZuiAny ZCALL ZuiProgressBarProc(ZuiInt ProcId, ZuiControl cp, ZuiProgressBar p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
 
     case Proc_OnCreate: {
-        p = (ZuiProgressBar)ZuiMalloc(sizeof(ZProgressBar));
+        p = (ZuiProgressBar)malloc(sizeof(ZProgressBar));
         memset(p, 0, sizeof(ZProgressBar));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         p->old_call = cp->call;
@@ -15,10 +16,10 @@ ZEXPORT ZuiAny ZCALL ZuiProgressBarProc(ZuiInt ProcId, ZuiControl cp, ZuiProgres
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
 
+        old_call(ProcId, cp, 0, Param1, Param2, Param3);
+        free(p);
 
-        ZuiFree(p);
-
-        return old_call(ProcId, cp, 0, Param1, Param2, Param3);
+        return 0;
     }
     case Proc_GetObject:
         if (Param1 == Type_ProgressBar)

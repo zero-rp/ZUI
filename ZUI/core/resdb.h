@@ -1,19 +1,7 @@
-﻿/**
-* @file		resdb.h
-* @brief	资源包实现.
-* @author	[Zero](22249030)
-* @version	1.0
-* @date		$date
-* @par History:
-*
-* [2016-10-25] <Zero> v1.0
-*
-* + v1.0版发布.
-*
-*/
-#ifndef __ZUI_CORE_RESDB_H__
+﻿#ifndef __ZUI_CORE_RESDB_H__
 #define __ZUI_CORE_RESDB_H__
-
+#include <ZUI.h>
+#include "tree.h"
 /*
 资源池设计方案
 
@@ -22,57 +10,52 @@
 /*资源类型*/
 enum ZREST
 {
-	ZREST_IMG = 1,
-	ZREST_TXT,
-	ZREST_STREAM,
-    ZREST_FONT,             //字体
-	ZREST_ZIP               ///此类型比较特殊,如果压缩包包含备注信息则作为资源包打开,由ResDB管理,反之则作为普通资源由Res管理
+    ZREST_IMG = 1,
+    ZREST_TXT,
+    ZREST_STREAM,
+    ZREST_FONT, //字体
+    ZREST_ZIP ///此类型比较特殊,如果压缩包包含备注信息则作为资源包打开,由ResDB管理,反之则作为普通资源由Res管理
 };
 /*资源包类型*/
 enum ZRESDBT
 {
-	ZRESDBT_ZIP_FILE = 1,	///压缩文件,来自文件
-	ZRESDBT_ZIP_STREAM,		///压缩文件,来着字节流
-	ZRESDBT_FILE,			///文件
-	ZRESDBT_STREAM,			///字节流
-	ZRESDBT_URL,			///网络资源
-	ZRESDBT_PE,				///应用资源
-    ZRESDBT_FONT            ///字体也属于一类资源,由字体管理器管理
+    ZRESDBT_ZIP_FILE = 1, ///压缩文件,来自文件
+    ZRESDBT_ZIP_STREAM, ///压缩文件,来着字节流
+    ZRESDBT_FILE, ///文件
+    ZRESDBT_STREAM, ///字节流
+    ZRESDBT_URL, ///网络资源
+    ZRESDBT_PE, ///应用资源
+    ZRESDBT_FONT ///字体也属于一类资源,由字体管理器管理
 };
 /**资源包结构*/
 typedef struct _ZResDB
 {
-#ifdef PLATFORM_OS_WIN
-	HINSTANCE Instance; //pe句柄
+#if (defined PLATFORM_OS_WIN)
+    HINSTANCE Instance; //pe句柄
 #endif // PLATFORM_OS_WIN
-	void* uf;		//压缩包句柄
-	ZuiText pass;	//压缩包密码
-	ZuiInt type;	//资源包类型
+    void* uf; //压缩包句柄
+    ZuiText pass; //压缩包密码
+    ZuiInt type; //资源包类型
 } *ZuiResDB, ZResDB;
 /**单个资源*/
 typedef struct _ZRes
 {
-	ZuiAny p;		//资源指针
-	ZuiInt plen;	//资源长度
+    ZuiAny p; //资源指针
+    ZuiInt plen; //资源长度
 
-	ZuiInt hash;
-	ZuiInt ref;		//引用计数器
-	ZuiInt type;	//资源类型
+    ZuiInt hash;
+    ZuiInt ref; //引用计数器
+    ZuiInt type; //资源类型
 } *ZuiRes, ZRes;
 /**资源池*/
 typedef struct _ZResDBPool
 {
-	rb_root *resdb;	//所有已经加载过的资源包
-	rb_root	*res;	//所有已经加载过的资源
+    rb_root *resdb; //所有已经加载过的资源包
+    rb_root *res; //所有已经加载过的资源
 } *ZuiResDBPool, ZResDBPool;
 ZuiBool ZuiResDBInit();
 ZuiVoid ZuiResDBUnInit();
-/** 此函数用作从字节流中加载一个Zip型的资源包.
-* @param data 流指针
-* @param len 流长度
-* @param Pass 包密码
-* @return 资源包结构.
-*/
+// 此函数用作从字节流中加载一个Zip型的资源包.
 ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromBuf(ZuiAny data, ZuiInt len, ZuiText Pass);
 /** 此函数用作从文件加载一个Zip型的资源包.
 * @param Path 文件路径

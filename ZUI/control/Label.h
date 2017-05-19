@@ -1,22 +1,6 @@
-﻿/**
-* @file     Label.h
-* @brief    标签控件实现.
-* @author   [Zero](22249030)
-* @version  1.0
-* @date     $date
-* @par History:
-*
-* [2016-10-25] <Zero> v1.0
-*
-* + v1.0版发布.
-*
-*/
-#ifndef __LABEL_H__
+﻿#ifndef __LABEL_H__
 #define __LABEL_H__
-#define Type_Label                  0xe538ac26
-#define Proc_Label_SetFont          151     //设置字体
-#define Proc_Label_SetTextColor     152     //设置文本颜色
-#define Proc_Label_SetTextPadding   153     //字体边距
+#include <ZUI.h>
 
 //------JSID
 #define Js_Id_Label_font              50

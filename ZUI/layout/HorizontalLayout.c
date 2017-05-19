@@ -1,5 +1,7 @@
-﻿#include <ZUI.h>
-
+﻿#include "HorizontalLayout.h"
+#include "Layout.h"
+#include <core/control.h>
+#include <stdlib.h>
 
 void* ZCALL ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalLayout p, void* Param1, void* Param2, void* Param3) {
     switch (ProcId)
@@ -138,22 +140,22 @@ void* ZCALL ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalLayo
             if (sz.cy < (ZuiInt)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0)) sz.cy = (ZuiInt)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0);
 
             ZuiUInt iChildAlign = ZuiControlCall(Proc_Layout_GetChildVAlign, cp, NULL, NULL, NULL);
-            if (iChildAlign == DT_VCENTER) {
+            if (iChildAlign == ZDT_VCENTER) {
                 int iPosY = (rc.bottom + rc.top) / 2;
                 if (op->m_pVerticalScrollBar && op->m_pVerticalScrollBar->m_bVisible) {
                     iPosY += (ZuiInt)ZuiControlCall(Proc_ScrollBar_GetScrollRange, op->m_pVerticalScrollBar, NULL, NULL, NULL) / 2;
                     iPosY -= (ZuiInt)ZuiControlCall(Proc_ScrollBar_GetScrollPos, op->m_pVerticalScrollBar, 0, NULL, NULL);
                 }
-                RECT rcCtrl = { iPosX + rcPadding.left, iPosY - sz.cy / 2, iPosX + sz.cx + rcPadding.left, iPosY + sz.cy - sz.cy / 2 };
+                ZRect rcCtrl = { iPosX + rcPadding.left, iPosY - sz.cy / 2, iPosX + sz.cx + rcPadding.left, iPosY + sz.cy - sz.cy / 2 };
                 ZuiControlCall(Proc_SetPos, pControl, &rcCtrl, FALSE, 0);
             }
-            else if (iChildAlign == DT_BOTTOM) {
+            else if (iChildAlign == ZDT_BOTTOM) {
                 int iPosY = rc.bottom;
                 if (op->m_pVerticalScrollBar && op->m_pVerticalScrollBar->m_bVisible) {
                     iPosY += (ZuiInt)ZuiControlCall(Proc_ScrollBar_GetScrollRange, op->m_pVerticalScrollBar, NULL, NULL, NULL);
                     iPosY -= (ZuiInt)ZuiControlCall(Proc_ScrollBar_GetScrollPos, op->m_pVerticalScrollBar, 0, NULL, NULL);
                 }
-                RECT rcCtrl = { iPosX + rcPadding.left, iPosY - rcPadding.bottom - sz.cy, iPosX + sz.cx + rcPadding.left, iPosY - rcPadding.bottom };
+                ZRect rcCtrl = { iPosX + rcPadding.left, iPosY - rcPadding.bottom - sz.cy, iPosX + sz.cx + rcPadding.left, iPosY - rcPadding.bottom };
                 ZuiControlCall(Proc_SetPos, pControl, &rcCtrl, FALSE, 0);
             }
             else {
@@ -161,7 +163,7 @@ void* ZCALL ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalLayo
                 if (op->m_pVerticalScrollBar && op->m_pVerticalScrollBar->m_bVisible) {
                     iPosY -= (ZuiInt)ZuiControlCall(Proc_ScrollBar_GetScrollPos, op->m_pVerticalScrollBar, 0, NULL, NULL);
                 }
-                RECT rcCtrl = { iPosX + rcPadding.left, iPosY + rcPadding.top, iPosX + sz.cx + rcPadding.left, iPosY + sz.cy + rcPadding.top };
+                ZRect rcCtrl = { iPosX + rcPadding.left, iPosY + rcPadding.top, iPosX + sz.cx + rcPadding.left, iPosY + sz.cy + rcPadding.top };
                 ZuiControlCall(Proc_SetPos, pControl, &rcCtrl, FALSE, 0);
             }
 
@@ -176,7 +178,7 @@ void* ZCALL ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalLayo
         return 0;
     }
     case Proc_OnCreate: {
-        p = (ZuiHorizontalLayout)ZuiMalloc(sizeof(ZHorizontalLayout));
+        p = (ZuiHorizontalLayout)malloc(sizeof(ZHorizontalLayout));
         memset(p, 0, sizeof(ZHorizontalLayout));
         //创建继承的控件 保存数据指针
         p->old_udata = ZuiLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
@@ -190,9 +192,9 @@ void* ZCALL ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalLayo
 
         old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
 
-        ZuiFree(p);
+        free(p);
 
-        return;
+        return 0;
     }
     case Proc_GetObject:
         if (Param1 == Type_HorizontalLayout)

@@ -1,5 +1,12 @@
-﻿#include <ZUI.h>
-
+﻿#include "Button.h"
+#include "Label.h"
+#include <core/control.h>
+#include <core/resdb.h>
+#include <platform/platform.h>
+#include <stdlib.h>
+#if (defined HAVE_JS) && (HAVE_JS == 1)
+#include <duktape.h>
+#endif
 ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
@@ -83,7 +90,6 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
     case Proc_OnPaintStatusImage: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = (ZRect *)&cp->m_rcItem;
-        HPEN hPen = 0;
         ZuiImage img;
         if (p->type == 0) {
             if (p->m_ResNormal) {
@@ -185,7 +191,7 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         break;
     }
     case Proc_OnCreate: {
-        p = (ZuiButton)ZuiMalloc(sizeof(ZButton));
+        p = (ZuiButton)malloc(sizeof(ZButton));
         memset(p, 0, sizeof(ZButton));
 
         //保存原来的回调地址,创建成功后回调地址指向当前函数
@@ -214,9 +220,11 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         if (p->m_ResDisabled)
             ZuiResDBDelRes(p->m_ResDisabled);
 
-        ZuiFree(p);
+        old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
 
-        return old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        free(p);
+
+        return 0;
     }
     case Proc_GetObject:
         if (Param1 == Type_Button)
