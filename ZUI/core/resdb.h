@@ -7,15 +7,6 @@
 
 
 */
-/*资源类型*/
-enum ZREST
-{
-    ZREST_IMG = 1,
-    ZREST_TXT,
-    ZREST_STREAM,
-    ZREST_FONT, //字体
-    ZREST_ZIP ///此类型比较特殊,如果压缩包包含备注信息则作为资源包打开,由ResDB管理,反之则作为普通资源由Res管理
-};
 /*资源包类型*/
 enum ZRESDBT
 {
@@ -55,39 +46,6 @@ typedef struct _ZResDBPool
 } *ZuiResDBPool, ZResDBPool;
 ZuiBool ZuiResDBInit();
 ZuiVoid ZuiResDBUnInit();
-// 此函数用作从字节流中加载一个Zip型的资源包.
-ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromBuf(ZuiAny data, ZuiInt len, ZuiText Pass);
-/** 此函数用作从文件加载一个Zip型的资源包.
-* @param Path 文件路径
-* @param Pass 包密码
-* @return 资源包结构.
-*/
-ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromFile(ZuiText Path, ZuiText Pass);
-/** 此函数用作绘制文本.
-* @param Graphics ZuiGraphics对象
-* @param StringFormat 文本格式
-* @param String 文本
-* @param Rect 矩形区域
-* @return 此函数没有返回值.
-*/
-ZEXPORT ZuiVoid ZCALL ZuiResDBDestroy(ZuiResDB db);
-/** 此函数用作获取资源.
-* @param Path 资源字符串
-* @param type 资源类型
-* @return 此函数没有返回值.
-*/
-ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type);//获取一个资源
-/** 此函数用作绘制文本.
-* @param Graphics ZuiGraphics对象
-* @param StringFormat 文本格式
-* @param String 文本
-* @param Rect 矩形区域
-* @return 此函数没有返回值.
-*/
-ZEXPORT ZuiVoid ZCALL ZuiResDBDelRes(ZuiRes res);//释放一个资源
-//ZEXPORT ZuiRes ZCALL ZuiResDBNewTempRes(ZuiAny buf, ZuiInt buflen, ZuiInt type);
-#ifdef PLATFORM_OS_WIN
-ZEXPORT ZuiBool ZCALL ZuiResDBAddPE(ZuiText name, HINSTANCE hInstance);
-#endif // PLATFORM_OS_WIN
+
 #endif //__ZUI_CORE_RESDB_H__
 

@@ -483,6 +483,14 @@ ZEXPORT ZuiVoid ZCALL ZuiResDBDelRes(ZuiRes res) {
         }
     }
 }
+
+ZEXPORT ZuiAny ZCALL ZuiResGetData(ZuiRes res, ZuiInt *plen) {
+    if (res && plen) {
+        *plen = res->plen;
+        return res->p;
+    }
+    return NULL;
+}
 //ZEXPORT ZuiRes ZCALL ZuiResDBNewTempRes(ZuiAny b, ZuiInt buflen, ZuiInt type) {
 //    //创建对应的资源类型
 //    ZuiRes res = ZuiMalloc(sizeof(ZRes));

@@ -428,7 +428,7 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
         if (Param1 == NULL) return FALSE;
 
         if (cp->m_pOs != NULL)
-            ZuiControlCall(Proc_SetOs, (ZuiControl)Param1, cp->m_pOs, cp->m_pParent, (void*)TRUE);
+            ZuiControlCall(Proc_SetOs, (ZuiControl)Param1, cp->m_pOs, cp, (void*)TRUE);
         if (cp->m_bVisible)
             ZuiControlNeedUpdate(cp);
 

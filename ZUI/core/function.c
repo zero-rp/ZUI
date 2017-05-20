@@ -34,9 +34,11 @@ void * Zui_Hash(wchar_t* str) {
     return hash;
 }
 ZuiText ZuiCharNext(ZuiText str) {
-    return str++;
+    return str + 1;
 }
 ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
+    if (!config->default_res)
+        return FALSE;
 #if (defined PLATFORM_OS_WIN)    
     if (config && config->m_hInstance) {
         m_hInstance = config->m_hInstance;
@@ -84,6 +86,8 @@ ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
     if (!ZuiResDBInit()) {
         return FALSE;
     }
+    /*加载默认资源*/
+    ZuiResDBGetRes(config->default_res, ZREST_ZIP);
     /*注册全局控件*/
     if (!ZuiControlRegister())
     {

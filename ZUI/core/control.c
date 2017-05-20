@@ -617,8 +617,10 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         else if (wcscmp(Param1, L"bkcolor") == 0) {
             ZuiText pstr = NULL;
             ZuiColor clrColor;
-            while (*(wchar_t *)Param2 > L'\0' && *(wchar_t *)Param2 <= L' ') Param2 = ZuiCharNext((wchar_t *)Param2);
-            if (*(wchar_t *)Param2 == L'#') Param2 = ZuiCharNext((wchar_t *)Param2);
+            while (*(wchar_t *)Param2 > L'\0' && *(wchar_t *)Param2 <= L' ')
+                Param2 = ZuiCharNext((wchar_t *)Param2);
+            if (*(wchar_t *)Param2 == L'#') 
+                Param2 = ZuiCharNext((wchar_t *)Param2);
             clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);
             ZuiControlCall(Proc_SetBkColor, p, clrColor, NULL, NULL);
         }

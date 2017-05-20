@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="gbk"?>
+<Window nobox="true" bordercolor="#FF2d2c7a" bkcolor="#FF17E97B" text="Demo" size="800,535" mininfo="500,375" center="true" name="window_main">
+		<VerticalLayout drag="true" height="25">
+			<HorizontalLayout name="head" drag="true"><!--标题栏-->
+				<HorizontalLayout name="Title" inset="0,0,28,0" drag="true">
+					<Label name="title" text="Hello" drag="true"/>
+				</HorizontalLayout>
+				<WindowCtl name="ctl"/>
+			</HorizontalLayout>	
+		</VerticalLayout>
+		<NULL height="1" bkcolor="#FFB2BCCB"/>
+
+</Window>

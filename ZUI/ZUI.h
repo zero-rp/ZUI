@@ -118,6 +118,8 @@ typedef struct _ZSizeR
 //--------------------------------------------------------------------结构定义
 //内部结构
 typedef struct _ZControl *ZuiControl, ZControl;
+//资源包
+typedef struct _ZResDB *ZuiResDB, ZResDB;
 //单个资源
 typedef struct _ZRes *ZuiRes, ZRes;
 //图形
@@ -133,6 +135,7 @@ typedef struct _ZuiInitConfig
     ZuiAny m_hInstance;  //库所在的模块句柄,动态库默认自动为当前模块,静态链接须设置此参数
 #endif
     ZuiBool debug;          //启动调试器
+    ZuiText default_res;    //默认资源文件,必备,资源字符串
 } *ZuiInitConfig, ZInitConfig;
 
 //--------------------------------------------------------------------回调定义
@@ -152,6 +155,16 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define ZFLAG_TABSTOP       0x00000001
 #define ZFLAG_SETCURSOR     0x00000002
 #define ZFLAG_WANTRETURN    0x00000004
+//--------------------------------------------------------------------ResDB类
+/*资源类型*/
+enum ZREST
+{
+    ZREST_IMG = 1,
+    ZREST_TXT,
+    ZREST_STREAM,
+    ZREST_FONT, //字体
+    ZREST_ZIP ///此类型比较特殊,如果压缩包包含备注信息则作为资源包打开,由ResDB管理,反之则作为普通资源由Res管理
+};
 //--------------------------------------------------------------------Debug类
 #define ZLOG_TYPE_ERROR     0
 #define ZLOG_TYPE_DEBUG     1
@@ -532,7 +545,18 @@ extern "C"
     //载入布局窗口
     ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len);
 
+    ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromBuf(ZuiAny data, ZuiInt len, ZuiText Pass);
+    ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromFile(ZuiText Path, ZuiText Pass);
 
+    ZEXPORT ZuiVoid ZCALL ZuiResDBDestroy(ZuiResDB db);
+    ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type);//获取一个资源
+    ZEXPORT ZuiVoid ZCALL ZuiResDBDelRes(ZuiRes res);//释放一个资源
+    
+    ZEXPORT ZuiAny ZCALL ZuiResGetData(ZuiRes res,ZuiInt *plen);//获取资源中的数据
+
+#ifdef PLATFORM_OS_WIN
+    ZEXPORT ZuiBool ZCALL ZuiResDBAddPE(ZuiText name, ZuiAny hInstance);
+#endif // PLATFORM_OS_WIN
 
 
 #if defined(__cplusplus)
