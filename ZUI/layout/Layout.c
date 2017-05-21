@@ -1,5 +1,7 @@
 ﻿#include "Layout.h"
 #include <core/control.h>
+#include <core/function.h>
+#include <core/builder.h>
 #include <stdlib.h>
 
 void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, void* Param2, void* Param3) {

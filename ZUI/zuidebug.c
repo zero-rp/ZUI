@@ -2,7 +2,7 @@
 #include <windows.h>
 #include <ZUI.h>
 
-#if !(defined NDEBUG)
+#if (defined NDEBUG)
 int _stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, ZuiText lpCmdLine, int nCmdShow) {
     ZInitConfig config;
     config.m_hInstance = hInstance;

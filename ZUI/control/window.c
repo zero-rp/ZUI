@@ -2,6 +2,8 @@
 #include <core/tree.h>
 #include <core/carray.h>
 #include <core/control.h>
+#include <core/builder.h>
+#include <core/function.h>
 #include <layout/Layout.h>
 #include <layout/VerticalLayout.h>
 #if (defined HAVE_JS) && (HAVE_JS == 1)

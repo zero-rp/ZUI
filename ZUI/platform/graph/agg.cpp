@@ -71,7 +71,7 @@ extern "C"
         GdiplusStartupInput gdiplusStartupInput;
         memset(&gdiplusStartupInput, 0, sizeof(GdiplusStartupInput));
         gdiplusStartupInput.GdiplusVersion = 1;
-        GdiplusStartup(&pGdiToken, &gdiplusStartupInput, NULL);//初始化GDI+
+        GdiplusStartup((int *)&pGdiToken, &gdiplusStartupInput, NULL);//初始化GDI+
         return TRUE;
     }
     /*反初始化图形接口*/
@@ -334,8 +334,8 @@ extern "C"
         memcpy(mem, buf, len);
         GlobalUnlock(hMem);
         GdipLoadImageFromStream(str, &Image->image->image);
-        GdipGetImageHeight(Image->image->image, &Image->Height);
-        GdipGetImageWidth(Image->image->image, &Image->Width);
+        GdipGetImageHeight(Image->image->image, (int *)&Image->Height);
+        GdipGetImageWidth(Image->image->image, (int *)&Image->Width);
 
         //得到数据
         HDC tempdc = GetDC(0);

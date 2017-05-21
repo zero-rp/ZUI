@@ -1,4 +1,5 @@
 ﻿#include "mxml.h"
+#include "function.h"
 #include <stdlib.h>
 #include <wchar.h>
 #include <string.h>

@@ -5,7 +5,8 @@
 #include "control.h"
 #include "function.h"
 #include "resdb.h"
-
+#include "template.h"
+#include "builder.h"
 ZuiText Global_DefaultFontName;     //系统默认字体名称
 ZuiFont Global_Font;                //默认字体
 

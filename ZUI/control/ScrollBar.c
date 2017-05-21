@@ -1,6 +1,7 @@
 ﻿#include "ScrollBar.h"
 #include <core/control.h>
 #include <core/resdb.h>
+#include <core/function.h>
 #include <platform/platform.h>
 #include <stdlib.h>
 //默认数据

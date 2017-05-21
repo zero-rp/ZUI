@@ -1,6 +1,6 @@
 #include "carray.h"
 
-#include "memory.h"
+#include <malloc.h>
 
 DArray *darray_create()
 {

@@ -2,6 +2,7 @@
 #include "Label.h"
 #include <core/control.h>
 #include <core/resdb.h>
+#include <core/builder.h>
 #include <platform/platform.h>
 #include <stdlib.h>
 #if (defined HAVE_JS) && (HAVE_JS == 1)

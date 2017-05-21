@@ -53,8 +53,8 @@
 typedef wchar_t*        ZuiText, _ZuiText, ZText;   //内核默认Unicode存储字符
 typedef float           ZuiReal;
 #ifdef _WIN64
-typedef int64_t         ZuiInt;
-typedef uint64_t        ZuiUInt;
+typedef long long       ZuiInt;
+typedef unsigned long long ZuiUInt;
 #else
 typedef int             ZuiInt;
 typedef unsigned int    ZuiUInt;

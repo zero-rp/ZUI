@@ -3,6 +3,8 @@
 #include "duv_misc.h"
 #include <core/resdb.h>
 #include <core/carray.h>
+#include <wchar.h>
+const wchar_t *duk_get_string_w(duk_context *ctx, duk_idx_t idx);
 // ¼ÓÔØ×ÊÔ´
 static duk_ret_t duv_loadfile(duk_context *ctx) {
   const wchar_t* path = duk_get_string_w(ctx, 0);

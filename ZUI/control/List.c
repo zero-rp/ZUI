@@ -2,7 +2,9 @@
 #include <core/control.h>
 #include <core/resdb.h>
 #include <layout/Layout.h>
-
+#include <layout/VerticalLayout.h>
+#include <layout/HorizontalLayout.h>
+#include <control/Register.h>
 ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {

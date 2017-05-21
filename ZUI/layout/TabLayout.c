@@ -1,6 +1,7 @@
 ﻿#include "TabLayout.h"
 #include "Layout.h"
 #include <core/control.h>
+#include <core/builder.h>
 #include <stdlib.h>
 
 void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Param1, void* Param2, void* Param3) {

@@ -1,5 +1,6 @@
 ﻿#include <core/control.h>
 #include <core/builder.h>
+#include <core/function.h>
 #include "win.h"
 #if (defined PLATFORM_OS_WIN)
 #pragma comment(lib, "Imm32.lib")
@@ -916,7 +917,7 @@ ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show) {
     return NULL;
 }
 ZuiVoid ZuiOsDestroyWindow(ZuiOsWindow OsWindow) {
-    SetWindowLong(OsWindow->m_hWnd, GWL_WNDPROC, DefWindowProc);
+    SetWindowLong(OsWindow->m_hWnd, GWLP_WNDPROC, DefWindowProc);
     DestroyWindow(OsWindow->m_hWnd);
     free(OsWindow);
 }

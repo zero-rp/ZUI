@@ -1,5 +1,6 @@
 ﻿#include "Register.h"
 #include <core/tree.h>
+#include <core/function.h>
 #include <layout/Layout.h>
 #include <layout/VerticalLayout.h>
 #include <layout/HorizontalLayout.h>

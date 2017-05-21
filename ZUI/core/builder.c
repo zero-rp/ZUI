@@ -2,6 +2,7 @@
 #include <core/control.h>
 #include <core/carray.h>
 #include <core/resdb.h>
+#include <core/template.h>
 #if (defined HAVE_JS) && (HAVE_JS == 1)
 duk_context *Global_ctx;
 static DArray *ctx_array = NULL;

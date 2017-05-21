@@ -2,6 +2,8 @@
 #include "tree.h"
 #include "function.h"
 #include "resdb.h"
+#include "template.h"
+#include "builder.h"
 #include <platform/platform.h>
 rb_root *Global_ControlClass;
 extern rb_root *Global_TemplateClass;
