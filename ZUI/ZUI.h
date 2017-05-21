@@ -2,7 +2,7 @@
 #define __ZUI_H__
 
 #include <stddef.h>
-
+#include <stdint.h>
 //config
 #include "config.h"
 
@@ -56,13 +56,13 @@ typedef float           ZuiReal;
 typedef long long       ZuiInt;
 typedef unsigned long long ZuiUInt;
 #else
-typedef int             ZuiInt;
-typedef unsigned int    ZuiUInt;
+typedef int32_t             ZuiInt;
+typedef uint32_t            ZuiUInt;
 #endif
 typedef int             ZuiBool;
 typedef void            ZuiVoid;
 typedef void*           ZuiAny;
-typedef int             ZuiColor;
+typedef uint32_t        ZuiColor;
 typedef unsigned        ZuiByte;
 /**矩形*/
 typedef struct _ZRect
@@ -521,6 +521,15 @@ enum ZREST
 #define Proc_TreeNode_GetFolderButton       1015
 #define Proc_TreeNode_GetCheckBox           1016
 #endif // 1
+//--------------------------------------------------------------------内部函数
+
+//
+typedef struct _ZuiFuncs {
+    uint16_t size;      //结构大小
+    uint16_t version;   //结构版本
+                        
+
+}ZuiFuncs;
 //--------------------------------------------------------------------导出函数
 #if defined(__cplusplus)
 extern "C"

@@ -112,6 +112,7 @@
     <ClCompile Include="..\..\ZUI\core\builder.c">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ZUI\vc6.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ZUI\ZUI.h" />
