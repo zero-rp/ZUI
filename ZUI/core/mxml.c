@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <wchar.h>
 #include <string.h>
-#define strdup _wcsdup
+#define strdup wcsdup
 #define mxml_bad_char(ch) ((ch) < L' ' && (ch) != L'\n' && (ch) != L'\r' && (ch) != L'\t')
 
 /*判断字符是否为空白字符*/
@@ -27,16 +27,17 @@ static int mxml_set_attr(mxml_node_t *node, const wchar_t *name, wchar_t *value)
             * Free the old value as needed...
             */
 
-            if (attr->value)
+            if (attr->value) {
                 free(attr->value);
-
+                attr->value = NULL;
+            }
             attr->value = value;
 
             return (0);
         }
 
     if (node->value.num_attrs == 0)
-        attr = (mxml_attr_t *)malloc(sizeof(mxml_attr_t));
+        attr = (mxml_attr_t *)memset(malloc(sizeof(mxml_attr_t)), 0, sizeof(mxml_attr_t));
     else
         attr = (mxml_attr_t *)realloc(node->value.attrs,
         (node->value.num_attrs + 1) * sizeof(mxml_attr_t));
@@ -241,21 +242,27 @@ void mxmlDelete(mxml_node_t *node)
     while (node->child)
         mxmlDelete(node->child);
 
-    if (node->value.name)
-        free(node->value.name);
-
     if (node->value.num_attrs)
     {
         for (i = 0; i < node->value.num_attrs; i++)
         {
-            if (node->value.attrs[i].name)
-                free(node->value.attrs[i].name);
-            if (node->value.attrs[i].value)
-                free(node->value.attrs[i].value);
+            if (node->value.attrs[i].name) {
+                //free(node->value.attrs[i].name);
+            }
+            if (node->value.attrs[i].value) {
+                //free(node->value.attrs[i].value);
+            }
         }
 
-        free(node->value.attrs);
+        //free(node->value.attrs);
+        node->value.attrs = NULL;
     }
+
+    if (node->value.name) {
+        free(node->value.name);
+        node->value.name = NULL;
+    }
+    
     //释放节点内存
     free(node);
 }
@@ -266,7 +273,7 @@ mxml_node_t *mxmlClone(mxml_node_t *node, mxml_node_t *parent) {
     new_node->value.name = strdup(node->value.name);
     new_node->value.num_attrs = node->value.num_attrs;
     if (node->value.num_attrs)
-        new_node->value.attrs = (mxml_attr_t *)malloc(node->value.num_attrs * sizeof(mxml_attr_t));
+        new_node->value.attrs = (mxml_attr_t *)memset(malloc(node->value.num_attrs * sizeof(mxml_attr_t)), 0, node->value.num_attrs * sizeof(mxml_attr_t));
     for (size_t i = 0; i < node->value.num_attrs; i++)
     {
         new_node->value.attrs[i].name = strdup(node->value.attrs[i].name);
@@ -355,6 +362,7 @@ static int mxml_add_char(wchar_t ch, wchar_t **bufptr, wchar_t **buffer, int *bu
         if ((newbuffer = (wchar_t *)realloc(*buffer, (*bufsize) * sizeof(wchar_t))) == NULL)
         {
             free(*buffer);
+            *buffer = NULL;
             return (-1);
         }
 
@@ -1252,8 +1260,11 @@ mxml_node_t *mxmlLoadString(mxml_node_t *top, ZuiAny s, ZuiInt len)
     }
 
     free(buffer);
-    if (txtbuf)
+    buffer = NULL;
+    if (txtbuf) {
         free(txtbuf);
+        txtbuf = NULL;
+    }
     if (parent)
     {
         node = parent;

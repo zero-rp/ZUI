@@ -24,7 +24,7 @@
 //----------------------------------------------------------------------------
 
 #include "agg2d.h"
-//#include "../format.h"
+#include <platform/graph/format.h>
 
 
 Agg2D::~Agg2D()
@@ -945,14 +945,14 @@ void Agg2D::text(Font& font, double x, double y, double x1, double y1, const wch
     double start_x = x;
     double start_y = y + asc;
 
-    //if ((style & ZDT_VCENTER) != 0) {
+    if ((style & ZDT_VCENTER) != 0) {
         //纵向居中,
         start_y = (int)(y + (y1 - y + asc) / 2)-1;
-    //}
-    //if ((style & ZDT_CENTER) != 0) {
+    }
+    if ((style & ZDT_CENTER) != 0) {
         //横向居中,
         start_x = (int)(x + (x1 - x) / 2 - font.textSize(str, len, style).x / 2);
-    //}
+    }
 
     agg::trans_affine  mtx;
     agg::conv_transform<FontCacheManager::path_adaptor_type> tr(font.m_fontCacheManager.path_adaptor(), mtx);

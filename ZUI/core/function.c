@@ -40,7 +40,7 @@ ZuiText ZuiCharNext(ZuiText str) {
 ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
     if (!config->default_res)
         return FALSE;
-#if (defined PLATFORM_OS_WIN)    
+#if (defined PLATFORM_OS_WIN)
     if (config && config->m_hInstance) {
         m_hInstance = config->m_hInstance;
     }
@@ -61,10 +61,12 @@ ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
     }
     /*初始化全局变量*/
     {
-
-
-
-
+#if (defined PLATFORM_OS_WIN)
+        LOGFONT lf;
+        SystemParametersInfo(SPI_GETICONTITLELOGFONT, sizeof(LOGFONT), &lf, 0);
+        Global_DefaultFontName = wcsdup(lf.lfFaceName);
+        Global_Font = ZuiCreateFont(Global_DefaultFontName, 12, FALSE, FALSE);
+#endif
     }
     /*初始化模版管理器*/
     if (!ZuiTemplateInit())

@@ -114,7 +114,7 @@ extern "C"
             Graphics->graphics->graphics->noLine();//不描边
             for (int i = 0; i < StrLens; i++)
             {
-                //Graphics->graphics->graphics->text(*Font->font->font, Pt[i].x, Pt[i].y, String[i]);
+                Graphics->graphics->graphics->text(*Font->font->font, Pt[i].x, Pt[i].y, String[i]);
             }
         }
     }
@@ -123,15 +123,15 @@ extern "C"
             //指定文字颜色
             Graphics->graphics->graphics->fillColor(ARGBTORGBA8(Color));
             Graphics->graphics->graphics->noLine();//不描边
-            //Graphics->graphics->graphics->text(*Font->font->font, Rect->left, Rect->top, Rect->right, Rect->bottom, String, StrLen, TextStyle);
+            Graphics->graphics->graphics->text(*Font->font->font, Rect->left, Rect->top, Rect->right, Rect->bottom, String, StrLen, TextStyle);
         }
     }
     /*测量文本大小*/
     ZEXPORT ZuiVoid ZCALL ZuiMeasureTextSize(ZuiFont Font, _ZuiText String, ZuiSizeR Size)
     {
         if (String && Font) {
-            //Size->cx = Font->font->font->textWidth(String);
-            //Size->cy = Font->font->font->fontHeight();
+            Size->cx = Font->font->font->textWidth(String);
+            Size->cy = Font->font->font->fontHeight();
         }
     }
     /*画图像缩放*/
@@ -200,8 +200,8 @@ extern "C"
         if (!Font) { return NULL; }
         memset(Font, 0, sizeof(ZuiFont));
         Font->font = new ZuiAggFont;
-        //Font->font->font = new Agg2D::Font(FontName, FontSize, Bold, Italic, Agg2D::VectorFontCache);
-        //Font->font->font->flipText(true);
+        Font->font->font = new Agg2D::Font(FontName, FontSize, Bold, Italic, Agg2D::VectorFontCache);
+        Font->font->font->flipText(true);
         return Font;
     }
     /*销毁字体*/
