@@ -123,7 +123,7 @@ extern "C"
             //指定文字颜色
             Graphics->graphics->graphics->fillColor(ARGBTORGBA8(Color));
             Graphics->graphics->graphics->noLine();//不描边
-            Graphics->graphics->graphics->text(*Font->font->font, Rect->left, Rect->top, Rect->right, Rect->bottom, String, StrLen, TextStyle);
+            Graphics->graphics->graphics->text(*(Font->font->font), Rect->left, Rect->top, Rect->right, Rect->bottom, String, StrLen, TextStyle);
         }
     }
     /*测量文本大小*/
@@ -198,7 +198,7 @@ extern "C"
         int i = 0;
         ZuiFont Font = (ZuiFont)malloc(sizeof(ZuiFont));
         if (!Font) { return NULL; }
-        memset(Font, 0, sizeof(ZuiFont));
+        memset(Font, 0, sizeof(ZFont));
         Font->font = new ZuiAggFont;
         Font->font->font = new Agg2D::Font(FontName, FontSize, Bold, Italic, Agg2D::VectorFontCache);
         Font->font->font->flipText(true);

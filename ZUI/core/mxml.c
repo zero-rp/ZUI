@@ -238,23 +238,19 @@ void mxmlDelete(mxml_node_t *node)
 
     mxmlRemove(node);
 
-    //删除子节点
-    while (node->child)
-        mxmlDelete(node->child);
-
     if (node->value.num_attrs)
     {
         for (i = 0; i < node->value.num_attrs; i++)
         {
             if (node->value.attrs[i].name) {
-                //free(node->value.attrs[i].name);
+                free(node->value.attrs[i].name);
             }
             if (node->value.attrs[i].value) {
-                //free(node->value.attrs[i].value);
+                free(node->value.attrs[i].value);
             }
         }
 
-        //free(node->value.attrs);
+        free(node->value.attrs);
         node->value.attrs = NULL;
     }
 
@@ -262,7 +258,11 @@ void mxmlDelete(mxml_node_t *node)
         free(node->value.name);
         node->value.name = NULL;
     }
-    
+
+    //删除子节点
+    while (node->child)
+        mxmlDelete(node->child);
+
     //释放节点内存
     free(node);
 }
@@ -737,14 +737,14 @@ static int mxml_parse_element(mxml_node_t *node, void *p, mxml_getc mxml_string_
         * Initialize the name and value buffers...
         */
 
-    if ((name = (wchar_t *)malloc(64 * sizeof(wchar_t))) == NULL)
+    if ((name = (wchar_t *)memset(malloc(64 * sizeof(wchar_t)), 0, 64 * sizeof(wchar_t))) == NULL)
     {
         return (WEOF);
     }
 
     namesize = 64;
 
-    if ((value = (wchar_t *)malloc(64 * sizeof(wchar_t))) == NULL)
+    if ((value = (wchar_t *)memset(malloc(64 * sizeof(wchar_t)), 0, 64 * sizeof(wchar_t))) == NULL)
     {
         free(name);
         return (WEOF);
