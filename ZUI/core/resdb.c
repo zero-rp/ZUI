@@ -552,7 +552,7 @@ ZEXPORT ZuiAny ZCALL ZuiResGetData(ZuiRes res, ZuiInt *plen) {
 //    return res;
 //}
 #if (defined PLATFORM_OS_WIN)
-ZEXPORT ZuiBool ZCALL ZuiResDBAddPE(ZuiText name,HINSTANCE hInstance) {
+ZEXPORT ZuiBool ZCALL ZuiResDBAddPE(ZuiText name, ZuiAny hInstance) {
     ZuiResDB p = (ZuiResDB)malloc(sizeof(ZResDB));
     memset(p, 0, sizeof(ZResDB));
     p->type = ZRESDBT_PE;

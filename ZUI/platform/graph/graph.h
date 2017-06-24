@@ -62,7 +62,7 @@ extern "C"
     //创建字体
     ZEXPORT ZuiFont ZCALL ZuiCreateFont(ZuiText FontName, ZuiReal FontSize, ZuiBool Bold, ZuiBool Italic);
     //销毁字体
-    ZEXPORT ZuiVoid ZCALL ZuiDestroyStringFormat(ZuiFont StringFormat);
+    ZEXPORT ZuiVoid ZCALL ZuiDestroyFont(ZuiFont StringFormat);
     //创建图形
     ZEXPORT ZuiGraphics ZCALL ZuiCreateGraphicsInMemory(ZuiInt Width, ZuiInt Height);
     ZEXPORT ZuiGraphics ZCALL ZuiCreateGraphics();

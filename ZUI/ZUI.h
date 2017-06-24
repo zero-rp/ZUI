@@ -522,14 +522,20 @@ enum ZREST
 #define Proc_TreeNode_GetCheckBox           1016
 #endif // 1
 //--------------------------------------------------------------------内部函数
-
-//
+//zui引擎
 typedef struct _ZuiFuncs {
+    uint16_t size;      //结构大小
+    uint16_t version;   //结构版本
+
+
+}ZuiFuncs;
+//js引擎
+typedef struct _ZuvFuncs {
     uint16_t size;      //结构大小
     uint16_t version;   //结构版本
                         
 
-}ZuiFuncs;
+}ZuvFuncs;
 //--------------------------------------------------------------------导出函数
 #if defined(__cplusplus)
 extern "C"
@@ -544,24 +550,25 @@ extern "C"
     //退出Zui消息循环.
     ZEXPORT ZuiVoid ZCALL ZuiMsgLoop_exit();
 
-    //创建控件
-    ZEXPORT ZuiControl ZCALL NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
-    //销毁控件
-    ZEXPORT ZuiVoid ZCALL FreeZuiControl(ZuiControl p, ZuiBool Delayed);
-    //调用控件处理函数
-    ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+    
+    ZEXPORT ZuiControl ZCALL NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);//创建控件
+    ZEXPORT ZuiVoid ZCALL FreeZuiControl(ZuiControl p, ZuiBool Delayed);//销毁控件
+    ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);//调用控件处理函数
 
     //载入布局窗口
     ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len);
 
+    //资源包
     ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromBuf(ZuiAny data, ZuiInt len, ZuiText Pass);
     ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromFile(ZuiText Path, ZuiText Pass);
-
     ZEXPORT ZuiVoid ZCALL ZuiResDBDestroy(ZuiResDB db);
+    //资源
     ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type);//获取一个资源
     ZEXPORT ZuiVoid ZCALL ZuiResDBDelRes(ZuiRes res);//释放一个资源
-    
     ZEXPORT ZuiAny ZCALL ZuiResGetData(ZuiRes res,ZuiInt *plen);//获取资源中的数据
+
+    
+
 
 #ifdef PLATFORM_OS_WIN
     ZEXPORT ZuiBool ZCALL ZuiResDBAddPE(ZuiText name, ZuiAny hInstance);

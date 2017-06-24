@@ -205,7 +205,7 @@ extern "C"
         return Font;
     }
     /*销毁字体*/
-    ZEXPORT ZuiVoid ZCALL ZuiDestroyStringFormat(ZuiFont StringFormat) {
+    ZEXPORT ZuiVoid ZCALL ZuiDestroyFont(ZuiFont StringFormat) {
         if (StringFormat) {
             delete StringFormat->font->font;
             delete StringFormat->font;

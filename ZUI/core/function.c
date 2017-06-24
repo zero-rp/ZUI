@@ -111,9 +111,16 @@ ZEXPORT ZuiBool ZCALL ZuiUnInit() {
     ZuiResDBUnInit();
     /*反初始化全局变量*/
     {
-
-
-
+#if (defined PLATFORM_OS_WIN)
+        if (Global_DefaultFontName) {
+            free(Global_DefaultFontName);
+            Global_DefaultFontName = NULL;
+        }
+        if (Global_Font) {
+            ZuiDestroyFont(Global_Font);
+            Global_Font = NULL;
+        }
+#endif
     }
     /*反初始化系统层*/
     ZuiOsUnInitialize();
