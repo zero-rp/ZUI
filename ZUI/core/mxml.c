@@ -977,14 +977,14 @@ mxml_node_t *mxmlLoadString(mxml_node_t *top, ZuiAny s, ZuiInt len)
     wchar_t *txtbuf = 0;
     if (ZuiStingIsUtf8(s, len))
     {
-        bufsize = ZuiUtf8ToUnicode(s, -1, 0, 0) * sizeof(wchar_t);
+        bufsize = ZuiUtf8ToUnicode(s, len, 0, 0) * sizeof(wchar_t);
         txtbuf = malloc(bufsize + 2);
         bufsize = ZuiUtf8ToUnicode(s, len, txtbuf, bufsize);
         txtbuf[bufsize] = 0;
     }
     else
     {
-        bufsize = ZuiAsciiToUnicode(s, -1, 0, 0) * sizeof(wchar_t);
+        bufsize = ZuiAsciiToUnicode(s, len, 0, 0) * sizeof(wchar_t);
         txtbuf = malloc(bufsize + 2);
         bufsize = ZuiAsciiToUnicode(s, len, txtbuf, bufsize);
         txtbuf[bufsize] = 0;

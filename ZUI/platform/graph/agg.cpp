@@ -196,7 +196,7 @@ extern "C"
     /*创建字体*/
     ZEXPORT ZuiFont ZCALL ZuiCreateFont(ZuiText FontName, ZuiReal FontSize, ZuiBool Bold, ZuiBool Italic) {
         int i = 0;
-        ZuiFont Font = (ZuiFont)malloc(sizeof(ZuiFont));
+        ZuiFont Font = (ZuiFont)malloc(sizeof(ZFont));
         if (!Font) { return NULL; }
         memset(Font, 0, sizeof(ZFont));
         Font->font = new ZuiAggFont;
