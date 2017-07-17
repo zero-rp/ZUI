@@ -380,6 +380,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     }
     case WM_SIZE:   //大小被改变
     {
+        GetWindowRect(hWnd, &p->m_rect);
         if (p->m_pFocus != NULL) {
             TEventUI event = { 0 };
             event.Type = ZEVENT_WINDOWSIZE;
@@ -827,6 +828,54 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         }
 
         ImmSetCompositionWindow(p->m_hIMC, &COMPOSITIONFORM);
+    }
+    case WM_NCHITTEST:
+    {
+        if (!p->m_nobox)
+            break;
+        int x = GET_X_LPARAM(lParam);
+        int	y = GET_Y_LPARAM(lParam);
+        if (x <= p->m_rect.left + 3 && y <= p->m_rect.top + 3) {
+            return HTTOPLEFT;
+        }
+        else if (x <= p->m_rect.left + 3 && y >= p->m_rect.bottom - 3)
+        {
+            return HTBOTTOMLEFT;
+        }
+        else if (x >= p->m_rect.right - 3 && y <= p->m_rect.top + 3)
+        {
+            return HTTOPRIGHT;
+        }
+        else if (x >= p->m_rect.right - 3 && y >= p->m_rect.bottom - 3)
+        {
+            return HTBOTTOMRIGHT;
+        }
+        else if (x <= p->m_rect.left + 2)
+        {
+            return HTLEFT;
+        }
+        else if (y <= p->m_rect.top + 2)
+        {
+            return HTTOP;
+        }
+        else if (x >= p->m_rect.right - 2)
+        {
+            return HTRIGHT;
+        }
+        else if (y >= p->m_rect.bottom - 2)
+        {
+            return HTBOTTOM;
+        }
+        else
+        {
+            return HTCLIENT;
+        }
+        return HTCLIENT;
+        break;
+    }
+    case WM_MOVE:
+    {
+        GetWindowRect(hWnd, &p->m_rect);
     }
     default:
         return DefWindowProc(hWnd, uMsg, wParam, lParam);
