@@ -15,6 +15,7 @@ typedef BOOL(__stdcall *PFUNCUPDATELAYEREDWINDOW)(HWND, HDC, POINT*, SIZE*, HDC,
 #define LAYEREDUPDATE_TIMERID   0x2000
 static HPEN m_hUpdateRectPen = NULL;
 HINSTANCE m_hInstance = NULL;           //模块句柄
+static DWORD m_hMainThreadId = NULL;    //主线程ID
 static PFUNCUPDATELAYEREDWINDOW g_fUpdateLayeredWindow = NULL;	//UpdateLayeredWindow函数指针
 
 //定时器结构
@@ -906,6 +907,11 @@ ZuiBool ZuiOsInitialize() {
 #include <uv.h>
     Global_loop = uv_default_loop();
 #endif
+    m_hMainThreadId = GetCurrentThreadId();
+#if ((defined HAVE_UV) && (HAVE_UV == 1)) || ((defined HAVE_DUV) && (HAVE_DUV == 1))
+    //用来驱动libuv
+    SetTimer(NULL, 0, 1, NULL);
+#endif
     return TRUE;
 }
 ZuiBool ZuiOsUnInitialize() {
@@ -1250,6 +1256,16 @@ ZuiInt ZuiOsMsgLoop() {
         if (WM_QUIT == Msg.message) {
             break;
         }
+        else if (WM_APP + 2 == Msg.message) {
+            //任务投递
+            ZuiTask task = Msg.wParam;
+            if (task) {
+                if (task->run)
+                    task->run(task);
+
+
+            }
+        }
         uv_run(Global_loop, UV_RUN_NOWAIT);
         TranslateMessage(&Msg);
         DispatchMessageW(&Msg);
@@ -1269,6 +1285,9 @@ ZuiInt ZuiOsMsgLoop() {
 }
 ZuiVoid ZuiOsMsgLoopExit() {
     PostQuitMessage(0);
+}
+ZuiVoid ZuiOsPostTask(ZuiTask task) {
+    PostThreadMessage(m_hMainThreadId, WM_APP + 2, task, NULL);
 }
 
 ZuiInt ZuiOsUtf8ToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen)

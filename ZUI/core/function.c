@@ -44,6 +44,10 @@ ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
     if (config && config->m_hInstance) {
         m_hInstance = config->m_hInstance;
     }
+    else
+    {
+        m_hInstance = GetModuleHandle(NULL);
+    }
 #endif
 #if RUN_DEBUG
     if (config && config->debug) {
@@ -134,6 +138,10 @@ ZEXPORT ZuiInt ZCALL ZuiMsgLoop() {
 ZEXPORT ZuiVoid ZCALL ZuiMsgLoop_exit() {
     ZuiOsMsgLoopExit();
 }
+ZEXPORT ZuiVoid ZCALL ZuiPostTask(ZuiTask task) {
+    ZuiOsPostTask(task);
+}
+
 ZuiControl MsgBox_pRoot;
 ZuiAny ZCALL MsgBox_Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     if (wcscmp(msg, L"onclick") == 0)

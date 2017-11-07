@@ -104,7 +104,8 @@ ZuiVoid ZuiOsAddDelayedCleanup(ZuiOsWindow p, ZuiControl pControl);
 ZuiInt ZuiOsMsgLoop();
 //退出系统消息循环
 ZuiVoid ZuiOsMsgLoopExit();
-
+//投递一个任务到UI线程
+ZuiVoid ZuiOsPostTask(ZuiTask task);
 ZuiInt ZuiOsUtf8ToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen);
 ZuiInt ZuiOsAsciiToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen);
 ZuiInt ZuiOsUnicodeToAscii(ZuiText str, ZuiInt slen, ZuiAny out, ZuiInt olen);

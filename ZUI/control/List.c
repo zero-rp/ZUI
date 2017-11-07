@@ -1,6 +1,7 @@
 ﻿#include "List.h"
 #include <core/control.h>
 #include <core/resdb.h>
+#include <core/function.h>
 #include <layout/Layout.h>
 #include <layout/VerticalLayout.h>
 #include <layout/HorizontalLayout.h>
@@ -38,6 +39,8 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
     }
     case Proc_SetAttribute: {
         if (wcscmp(Param1, _T("header")) == 0) ZuiControlCall(Proc_SetVisible, p, wcscmp(Param2, L"hidden") == 0 ? FALSE : TRUE, NULL, NULL);
+
+
         break;
     }
     case Proc_List_SetScrollPos: {
@@ -1080,9 +1083,12 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
             return;
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = &cp->m_rcItem;
-        ZRect r;
-        MAKEZRECT(r, rc->left + 5, rc->top + 5, rc->right - rc->left - 10, rc->bottom - rc->top - 10);
-        //ZuiDrawString(gp, Global_Font, cp->m_sText, wcslen(cp->m_sText), &r);
+        ZRectR pt;
+        pt.left = rc->left;
+        pt.top = rc->top;
+        pt.right = rc->right;
+        pt.bottom = rc->bottom;
+        ZuiDrawString(gp, p->m_rFont ? p->m_rFont->p : Global_Font, cp->m_sText, wcslen(cp->m_sText), &pt, p->m_cTextColor, p->m_uTextStyle);
         return;
     }
     case Proc_OnPaintStatusImage: {
@@ -1181,6 +1187,9 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
         p->m_diPushed = ZuiResDBGetRes(L"default:default/list_header_pushed.png", ZREST_IMG);  //按下图片
         //p->m_diFocused= ZuiResDBGetRes(L"default:default/list_header_bg.png", ZREST_IMG); //焦点图片
         p->m_diSep = ZuiResDBGetRes(L"default:default/list_header_sep.png", ZREST_IMG);
+
+        p->m_uTextStyle = ZDT_VCENTER | ZDT_SINGLELINE;
+        p->m_cTextColor = ARGB(255, 0, 0, 0);
         return p;
     }
     case Proc_OnDestroy: {

@@ -7,15 +7,19 @@ typedef struct _ZListHeaderItem
 {
     ZPoint ptLastMouse;
     ZuiBool m_bDragable;
-    ZuiUInt m_uButtonState;    //按钮状态
-    ZuiInt m_iSepWidth;        //分隔符区域
+    ZuiUInt m_uButtonState;     //按钮状态
+    ZuiInt m_iSepWidth;         //分隔符区域
 
 
-    ZuiRes m_diNormal;  //通常图片
-    ZuiRes m_diHot;        //点燃图片
-    ZuiRes m_diPushed;  //按下图片
-    ZuiRes m_diFocused; //焦点图片
+    ZuiRes m_diNormal;          //通常图片
+    ZuiRes m_diHot;             //点燃图片
+    ZuiRes m_diPushed;          //按下图片
+    ZuiRes m_diFocused;         //焦点图片
     ZuiRes m_diSep;
+
+    ZuiRes      m_rFont;         //字体
+    ZuiUInt     m_uTextStyle;    //字体控制
+    ZuiColor    m_cTextColor;   //字体颜色
 
     ZRect Thumb;
     ZuiAny old_udata;

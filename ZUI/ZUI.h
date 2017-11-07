@@ -137,6 +137,12 @@ typedef struct _ZuiInitConfig
     ZuiBool debug;          //启动调试器
     ZuiText default_res;    //默认资源文件,必备,资源字符串
 } *ZuiInitConfig, ZInitConfig;
+//Task结构
+typedef struct _ZuiTask
+{
+    ZuiAny(ZCALL *run)(struct _ZuiTask*);
+    void *data;
+} *ZuiTask, ZTask;
 
 //--------------------------------------------------------------------回调定义
 typedef ZuiControl(ZCALL* FINDCONTROLPROC)(ZuiControl, ZuiAny);
@@ -549,7 +555,8 @@ extern "C"
     ZEXPORT ZuiInt ZCALL ZuiMsgLoop();
     //退出Zui消息循环.
     ZEXPORT ZuiVoid ZCALL ZuiMsgLoop_exit();
-
+    //投递一个任务到Zui线程
+    ZEXPORT ZuiVoid ZCALL ZuiPostTask(ZuiTask task);
     
     ZEXPORT ZuiControl ZCALL NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);//创建控件
     ZEXPORT ZuiVoid ZCALL FreeZuiControl(ZuiControl p, ZuiBool Delayed);//销毁控件
@@ -563,6 +570,7 @@ extern "C"
     ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromFile(ZuiText Path, ZuiText Pass);
     ZEXPORT ZuiVoid ZCALL ZuiResDBDestroy(ZuiResDB db);
     //资源
+    ZEXPORT ZuiRes ZCALL ZuiResDBNewTempRes(ZuiAny b, ZuiInt buflen, ZuiInt type);
     ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type);//获取一个资源
     ZEXPORT ZuiVoid ZCALL ZuiResDBDelRes(ZuiRes res);//释放一个资源
     ZEXPORT ZuiAny ZCALL ZuiResGetData(ZuiRes res,ZuiInt *plen);//获取资源中的数据

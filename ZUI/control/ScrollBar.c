@@ -344,8 +344,8 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
     }
     case Proc_OnPaintBkColor: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        ZRect *rc = (ZRect *)&p->m_rcThumb;
-        ZuiDrawFillRect(gp, ARGB(200, 0, 3, 255), rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+        ZRect *rc = (ZRect *)&cp->m_rcItem;
+        ZuiDrawFillRect(gp, ARGB(255, 255, 255, 255), rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
 
     }
     case Proc_OnPaintStatusImage: {
