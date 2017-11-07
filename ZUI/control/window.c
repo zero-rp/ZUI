@@ -9,7 +9,21 @@
 #if (defined HAVE_JS) && (HAVE_JS == 1)
 #include <duktape.h>
 #endif
-static rb_root *m_window = NULL;
+
+typedef struct _ZWindows
+{
+    RB_ENTRY(_ZWindows) entry;
+    uint32_t key;
+    ZuiControl p;
+}*ZuiWindows, ZWindows;
+RB_HEAD(_ZWindows_Tree, _ZWindows);
+static int ZWindows_Compare(struct _ZWindows *e1, struct _ZWindows *e2)
+{
+    return (e1->key < e2->key ? -1 : e1->key > e2->key);
+}
+RB_GENERATE_STATIC(_ZWindows_Tree, _ZWindows, entry, ZWindows_Compare);
+
+static struct _ZWindows_Tree *m_window = NULL;
 DArray *m_window_array = NULL;
 
 ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
@@ -149,9 +163,29 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
             ZuiControlCall(Proc_Window_SetSize, cp, cx, cy, NULL);
         }
         else if (wcscmp(Param1, L"name") == 0) {
-            if (cp->m_sName)
-                rb_delete(Zui_Hash(cp->m_sName), m_window);//删除以前的名字
-            rb_insert(Zui_Hash(Param2), cp, m_window);//保存现在的名字
+            if (cp->m_sName && wcscmp(cp->m_sName, Param2) != 0) {
+                //删除以前的名字
+                ZWindows theNode = { 0 };
+                ZWindows *c;
+                theNode.key = Zui_Hash(cp->m_sName);
+                c = RB_FIND(_ZWindows_Tree, m_window, &theNode);
+                if (c) {
+                    RB_REMOVE(_ZWindows_Tree, m_window, c);
+                    free(c);
+                }
+                free(cp->m_sName);
+                cp->m_sName = NULL;
+            }
+            else
+            {
+                //保存现在的名字
+                ZWindows *n = (ZWindows *)malloc(sizeof(ZWindows));
+                memset(n, 0, sizeof(ZWindows));
+                n->key = Zui_Hash(Param2);
+                n->p = cp;
+                RB_INSERT(_ZWindows_Tree, m_window, n);
+                cp->m_sName = wcsdup(Param2);
+            }
         }
         else if (wcscmp(Param1, L"center") == 0) {
             if (wcscmp(Param2, L"true") == 0) {
@@ -195,8 +229,8 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 
             //创建宿主窗口
             p->m_osWindow = ZuiOsCreateWindow(cp, Param1);
-            
-            
+
+
             darray_append(m_window_array, cp);
             return p;
         }
@@ -214,13 +248,20 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         return 0;
     }
     case Proc_CoreInit: {
-        m_window = rb_new();
+        m_window = (struct _ZWindows_Tree*)malloc(sizeof(struct _ZWindows_Tree));
+        memset(m_window, 0, sizeof(struct _ZWindows_Tree));
         m_window_array = darray_create();
         return TRUE;
     }
     case Proc_CoreUnInit: {
         //这里销毁掉所有窗口
-        rb_free(m_window);
+        struct _ZWindows * c = NULL;
+        struct _ZWindows * cc = NULL;
+        RB_FOREACH_SAFE(c, _ZWindows_Tree, m_window, cc) {
+            RB_REMOVE(_ZWindows_Tree, m_window, c);
+            free(c);
+        }
+        free(m_window);
         for (size_t i = 0; i < m_window_array->count; i++)
         {
             FreeZuiControl(m_window_array->data[i], FALSE);
@@ -235,13 +276,15 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 }
 
 ZEXPORT ZuiControl ZCALL ZuiWindowFindName(ZuiText Name) {
-    rb_node*node;
     if (!Name)
         return NULL;
-    node = rb_search(Zui_Hash(Name), m_window);
+    ZWindows theNode = { 0 };
+    ZWindows *node;
+    theNode.key = Zui_Hash(Name);
+    node = RB_FIND(_ZWindows_Tree, m_window, &theNode);
     if (!node)
         return NULL;
-    return (ZuiControl)(node->data);
+    return node->p;
 }
 
 

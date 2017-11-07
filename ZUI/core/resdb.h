@@ -21,6 +21,8 @@ enum ZRESDBT
 /**资源包结构*/
 typedef struct _ZResDB
 {
+    RB_ENTRY(_ZResDB) entry;
+    uint32_t key;
 #if (defined PLATFORM_OS_WIN)
     HINSTANCE Instance; //pe句柄
 #endif // PLATFORM_OS_WIN
@@ -28,21 +30,27 @@ typedef struct _ZResDB
     ZuiText pass; //压缩包密码
     ZuiInt type; //资源包类型
 } *ZuiResDB, ZResDB;
+RB_HEAD(_ZResDB_Tree, _ZResDB);
+RB_PROTOTYPE(_ZResDB_Tree, _ZResDB);
 /**单个资源*/
 typedef struct _ZRes
 {
+    RB_ENTRY(_ZRes) entry;
+    uint32_t hash;
+
     ZuiAny p; //资源指针
     ZuiInt plen; //资源长度
 
-    ZuiInt hash;
     ZuiInt ref; //引用计数器
     ZuiInt type; //资源类型
 } *ZuiRes, ZRes;
+RB_HEAD(_ZRes_Tree, _ZRes);
+RB_PROTOTYPE(_ZRes_Tree, _ZRes);
 /**资源池*/
 typedef struct _ZResDBPool
 {
-    rb_root *resdb; //所有已经加载过的资源包
-    rb_root *res; //所有已经加载过的资源
+    struct _ZResDB_Tree resdb; //所有已经加载过的资源包
+    struct _ZRes_Tree res; //所有已经加载过的资源
 } *ZuiResDBPool, ZResDBPool;
 ZuiBool ZuiResDBInit();
 ZuiVoid ZuiResDBUnInit();

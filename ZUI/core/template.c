@@ -1,5 +1,4 @@
 ﻿#include <ZUI.h>
-#include "tree.h"
 #include "control.h"
 #include "template.h"
 
@@ -11,18 +10,30 @@
 #include <control/Window.h>
 #include <core/function.h>
 
-rb_root *Global_TemplateClass;
+static int ZTemplate_Compare(struct _ZTemplate *e1, struct _ZTemplate *e2)
+{
+    return (e1->key < e2->key ? -1 : e1->key > e2->key);
+}
+RB_GENERATE(_ZTemplate_Tree, _ZTemplate, entry, ZTemplate_Compare);
+
+
+struct _ZTemplate_Tree *Global_TemplateClass = NULL;
 ZuiBool ZuiTemplateInit()
 {
-    Global_TemplateClass = rb_new();
+    Global_TemplateClass = (struct _ZTemplate_Tree *)malloc(sizeof(struct _ZTemplate_Tree));
+    memset(Global_TemplateClass, 0, sizeof(struct _ZTemplate_Tree));
     return TRUE;
 }
-ZuiVoid ZuiTemplateUnInitCallBack(void *data) {
-    mxmlDelete((mxml_node_t*)data);
-}
 ZuiVoid ZuiTemplateUnInit() {
-    rb_foreach(Global_TemplateClass, ZuiTemplateUnInitCallBack);
-    rb_free(Global_TemplateClass);
+    struct _ZTemplate * c = NULL;
+    struct _ZTemplate * cc = NULL;
+    RB_FOREACH_SAFE(c, _ZTemplate_Tree, Global_TemplateClass, cc) {
+        mxmlDelete((mxml_node_t*)cc->node);
+        RB_REMOVE(_ZTemplate_Tree, Global_TemplateClass, c);
+        free(c);
+    }
+    free(Global_TemplateClass);
+    Global_TemplateClass = NULL;
 }
 ZuiVoid ZuiAddTemplate(mxml_node_t *node)
 {
@@ -41,7 +52,11 @@ ZuiVoid ZuiAddTemplate(mxml_node_t *node)
         if (new_node)
         {
             wcslwr(classname);
-            rb_insert((key_t)Zui_Hash(classname), new_node, Global_TemplateClass);
+            struct _ZTemplate *n = malloc(sizeof(struct _ZTemplate));
+            memset(n, 0, sizeof(struct _ZTemplate));
+            n->key = Zui_Hash(classname);
+            n->node = new_node;
+            RB_INSERT(_ZTemplate_Tree, Global_TemplateClass, n);
         }
     }
 }

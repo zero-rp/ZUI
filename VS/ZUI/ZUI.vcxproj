@@ -139,9 +139,11 @@
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>$(OutDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>AGG.lib;duktape.lib;libuv.lib;dukluv.lib;zlib.lib;imm32.lib;ws2_32.lib;IPHLPAPI.lib;Psapi.lib;Userenv.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -271,7 +273,6 @@
     <ClCompile Include="..\..\ZUI\core\mxml.c" />
     <ClCompile Include="..\..\ZUI\core\resdb.c" />
     <ClCompile Include="..\..\ZUI\core\template.c" />
-    <ClCompile Include="..\..\ZUI\core\tree.c" />
     <ClCompile Include="..\..\ZUI\layout\HorizontalLayout.c" />
     <ClCompile Include="..\..\ZUI\layout\Layout.c" />
     <ClCompile Include="..\..\ZUI\layout\TabLayout.c" />

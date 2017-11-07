@@ -4,9 +4,8 @@
 #include "resdb.h"
 #include "template.h"
 #include "builder.h"
+#include <control/Register.h>
 #include <platform/platform.h>
-rb_root *Global_ControlClass;
-extern rb_root *Global_TemplateClass;
 //创建控件
 ZEXPORT ZuiControl ZCALL NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     ZuiControl p = (ZuiControl)malloc(sizeof(ZControl));
@@ -50,16 +49,23 @@ ZEXPORT ZuiControl ZCALL NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny 
         memset(name, 0, 256 * sizeof(wchar_t));
         memcpy(name, classname, l * sizeof(wchar_t));
         wcslwr(name);
-        rb_node * node = rb_search((key_t)Zui_Hash(name), Global_ControlClass);
+
+        ZClass theNode = { 0 };
+        ZClass *node;
+        theNode.key = Zui_Hash(name);
+        node = RB_FIND(_ZClass_Tree, Global_ControlClass, &theNode);
         if (node) {
-            p->m_sUserData = ((ZCtlProc)node->data)(Proc_OnCreate, p, 0, Param1, Param2, Param3);
-            p->call = ((ZCtlProc)node->data);
+            p->m_sUserData = node->cb(Proc_OnCreate, p, 0, Param1, Param2, Param3);
+            p->call = node->cb;
             return p;
         }
         //在模版内查找
-        node = rb_search((key_t)Zui_Hash(name), Global_TemplateClass);
-        if (node) {
-            ZuiLoadTemplate(node->data, p, Param1, Param2, Param3);
+        ZTemplate theTemp = { 0 };
+        ZTemplate *temp;
+        theNode.key = Zui_Hash(name);
+        temp = RB_FIND(_ZTemplate_Tree, Global_TemplateClass, &theTemp);
+        if (temp) {
+            ZuiLoadTemplate(temp->node, p, Param1, Param2, Param3);
         }
         return p;
     }

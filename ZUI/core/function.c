@@ -18,10 +18,10 @@ void Rect_Join(ZRect *rc, ZRect *rc1)
     if (rc1->bottom > rc->bottom) rc->bottom = rc1->bottom;
 }
 
-void * Zui_Hash(wchar_t* str) {
-    size_t hash = 0;
+uint32_t Zui_Hash(wchar_t* str) {
+    uint32_t hash = 0;
     wchar_t ch;
-    for (long i = 0; ch = (size_t)*str++; i++)
+    for (uint32_t i = 0; ch = (uint32_t)*str++; i++)
     {
         if ((i & 1) == 0)
         {
@@ -96,7 +96,7 @@ ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
     /*加载默认资源*/
     ZuiResDBGetRes(config->default_res, ZREST_ZIP);
     /*注册全局控件*/
-    if (!ZuiControlRegister())
+    if (!ZuiClassInit())
     {
         return FALSE;
     }
@@ -104,7 +104,7 @@ ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
 }
 ZEXPORT ZuiBool ZCALL ZuiUnInit() {
     /*反注册全局控件*/
-    ZuiControlUnRegister();
+    ZuiClassUnInit();
     /*反初始化模版管理器*/
     ZuiTemplateUnInit();
 #if (defined HAVE_JS) && (HAVE_JS == 1)

@@ -28,9 +28,6 @@
     <ClCompile Include="..\..\ZUI\core\carray.c">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\core\tree.c">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ZUI\platform\graph\agg.cpp">
       <Filter>platform\graph</Filter>
     </ClCompile>

@@ -1,5 +1,4 @@
 ﻿#include "Register.h"
-#include <core/tree.h>
 #include <core/function.h>
 #include <layout/Layout.h>
 #include <layout/VerticalLayout.h>
@@ -17,13 +16,22 @@
 #include <control/SplitterBar.h>
 #include <control/List.h>
 #include <control/TreeView.h>
-extern rb_root *Global_ControlClass;
+
+static int ZClass_Compare(struct _ZClass *e1, struct _ZClass *e2)
+{
+    return (e1->key < e2->key ? -1 : e1->key > e2->key);
+}
+RB_GENERATE(_ZClass_Tree, _ZClass, entry, ZClass_Compare);
+
+struct _ZClass_Tree *Global_ControlClass = NULL;
+
 static ZuiBool ZuiCoreInit(void *data) {
     return ((ZCtlProc)data)(Proc_CoreInit, NULL, NULL, NULL, NULL, NULL);
 }
-ZuiBool ZuiControlRegister()
+ZuiBool ZuiClassInit()
 {
-    Global_ControlClass = rb_new();
+    Global_ControlClass = (struct _ZClass_Tree *)malloc(sizeof(struct _ZClass_Tree));
+    memset(Global_ControlClass, 0, sizeof(struct _ZClass_Tree));
     /*核心组件 不可卸载*/
     ZuiControlRegisterAdd(L"layout", (ZCtlProc)&ZuiLayoutProc);
     ZuiControlRegisterAdd(L"verticallayout", (ZCtlProc)&ZuiVerticalLayoutProc);
@@ -52,24 +60,38 @@ ZuiBool ZuiControlRegister()
     
     return TRUE;
 }
-static ZuiVoid ZuiControlUnRegisterCallBack(void *data) {
-    ((ZCtlProc)data)(Proc_CoreUnInit, NULL, NULL, NULL, NULL, NULL);
-}
-ZuiVoid ZuiControlUnRegister() {
-    //通知全部控件释放数据
-    rb_foreach(Global_ControlClass, ZuiControlUnRegisterCallBack);
-    rb_free(Global_ControlClass);
+ZuiVoid ZuiClassUnInit() {
+    struct _ZClass * c = NULL;
+    struct _ZClass * cc = NULL;
+    RB_FOREACH_SAFE(c, _ZClass_Tree, Global_ControlClass, cc) {
+        c->cb(Proc_CoreUnInit, NULL, NULL, NULL, NULL, NULL);
+        RB_REMOVE(_ZClass_Tree, Global_ControlClass, c);
+        free(c);
+    }
+    free(Global_ControlClass);
 }
 ZuiBool ZuiControlRegisterAdd(ZuiText name, ZCtlProc Proc)
 {
     if (ZuiCoreInit(Proc))
     {
-        return rb_insert((key_t)Zui_Hash(name), Proc, Global_ControlClass);
+        struct _ZClass *n = (struct _ZClass *)malloc(sizeof(struct _ZClass));
+        memset(n, 0, sizeof(struct _ZClass));
+        n->key = Zui_Hash(name);
+        n->cb = Proc;
+        RB_INSERT(_ZClass_Tree, Global_ControlClass, n);
+        return TRUE;
     }
     return FALSE;
 }
 ZuiBool ZuiControlRegisterDel(ZuiText name)
 {
-    rb_delete((key_t)Zui_Hash(name), Global_ControlClass);
+    ZClass theNode = { 0 };
+    ZClass *c;
+    theNode.key = Zui_Hash(name);
+    c = RB_FIND(_ZClass_Tree, Global_ControlClass, &theNode);
+    if (c) {
+        RB_REMOVE(_ZClass_Tree, Global_ControlClass, c);
+        free(c);
+    }
     return 0;
 }

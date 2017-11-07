@@ -10,7 +10,7 @@ extern  ZuiFont Global_Font;                //默认字体
 void Rect_Join(ZRect *rc, ZRect *rc1);
 ZuiBool ZuiIsPointInRect(ZuiRect Rect, ZuiPoint pt);
 /*字符串HASH函数*/
-void * Zui_Hash(wchar_t* str);
+uint32_t Zui_Hash(wchar_t* str);
 
 ZuiText ZuiCharNext(ZuiText str);
 
