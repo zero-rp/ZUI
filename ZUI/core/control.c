@@ -62,7 +62,7 @@ ZEXPORT ZuiControl ZCALL NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny 
         //在模版内查找
         ZTemplate theTemp = { 0 };
         ZTemplate *temp;
-        theNode.key = Zui_Hash(name);
+        theTemp.key = Zui_Hash(name);
         temp = RB_FIND(_ZTemplate_Tree, Global_TemplateClass, &theTemp);
         if (temp) {
             ZuiLoadTemplate(temp->node, p, Param1, Param2, Param3);
