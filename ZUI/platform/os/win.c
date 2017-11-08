@@ -15,7 +15,7 @@ typedef BOOL(__stdcall *PFUNCUPDATELAYEREDWINDOW)(HWND, HDC, POINT*, SIZE*, HDC,
 #define LAYEREDUPDATE_TIMERID   0x2000
 static HPEN m_hUpdateRectPen = NULL;
 HINSTANCE m_hInstance = NULL;           //模块句柄
-static DWORD m_hMainThreadId = NULL;    //主线程ID
+static DWORD m_hMainThreadId = 0;    //主线程ID
 static PFUNCUPDATELAYEREDWINDOW g_fUpdateLayeredWindow = NULL;	//UpdateLayeredWindow函数指针
 
 //定时器结构
@@ -105,11 +105,11 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             ZuiControl cp = p->m_aDelayedCleanup->data[0];
             darray_delete(p->m_aDelayedCleanup, darray_find(p->m_aDelayedCleanup, cp));
             if (darray_len(p->m_aDelayedCleanup) == 0) {
-                FreeZuiControl(cp, NULL);
+                FreeZuiControl(cp, FALSE);
                 break;
             }
             else
-                FreeZuiControl(cp, NULL);
+                FreeZuiControl(cp, FALSE);
         };
         return 0;
     }
@@ -169,7 +169,10 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 
         ZRect rcClient = { 0 };
         GetClientRect(p->m_hWnd, &rcClient);
-
+        if (rcClient.right - rcClient.left==0 ||rcClient.bottom - rcClient.top==0)
+        {
+            return 0;
+        }
         ZRect rcPaint = { 0 };
         if (p->m_bLayered) {
             p->m_bOffscreenPaint = TRUE;
@@ -376,7 +379,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         if (p->m_szMinWindow.cy > 0) lpMMI->ptMinTrackSize.y = p->m_szMinWindow.cy;
         if (p->m_szMaxWindow.cx > 0) lpMMI->ptMaxTrackSize.x = p->m_szMaxWindow.cx;
         if (p->m_szMaxWindow.cy > 0) lpMMI->ptMaxTrackSize.y = p->m_szMaxWindow.cy;
-        lpMMI->ptMaxSize.y = GetSystemMetrics(SM_CYFULLSCREEN) + GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYDLGFRAME);
+        lpMMI->ptMaxSize.y = GetSystemMetrics(SM_CYFULLSCREEN) + GetSystemMetrics(SM_CYCAPTION);// +GetSystemMetrics(SM_CYDLGFRAME);
         break;
     }
     case WM_SIZE:   //大小被改变
@@ -927,7 +930,7 @@ ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show) {
         memset(OsWindow, 0, sizeof(ZOsWindow));
 
         OsWindow->m_hWnd = CreateWindowEx(0, L"ZUI", L"",
-            WS_POPUP | WS_CLIPCHILDREN,
+            WS_POPUP | WS_CLIPCHILDREN | WS_MAXIMIZE,
             CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
             NULL, NULL, GetModuleHandleA(NULL),
             OsWindow);
