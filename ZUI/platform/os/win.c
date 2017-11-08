@@ -27,7 +27,7 @@ typedef struct tagTIMERINFO
     ZuiInt uWinTimer;
     ZuiBool bKilled;
 } TIMERINFO;
-
+#ifdef BUILDING_ZUI_SHARED
 //动态库入口函数
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 {
@@ -44,6 +44,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
     }
     return TRUE;
 }
+#endif
 //查找桌面句柄
 static BOOL __stdcall enumUserWindowsCB(HWND hwnd, LPARAM lParam)
 {
@@ -167,17 +168,20 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             return 0;
         }
 
-        ZRect rcClient = { 0 };
+        RECT rcClient = { 0 };
         GetClientRect(p->m_hWnd, &rcClient);
         if (rcClient.right - rcClient.left==0 ||rcClient.bottom - rcClient.top==0)
         {
             return 0;
         }
-        ZRect rcPaint = { 0 };
+        RECT rcPaint = { 0 };
         if (p->m_bLayered) {
             p->m_bOffscreenPaint = TRUE;
-            rcPaint = p->m_rcLayeredUpdate;
-            if (IsRectEmpty(&p->m_rcLayeredUpdate)) {
+            rcPaint.bottom = p->m_rcLayeredUpdate.bottom;
+            rcPaint.left = p->m_rcLayeredUpdate.left;
+            rcPaint.right = p->m_rcLayeredUpdate.right;
+            rcPaint.top = p->m_rcLayeredUpdate.top;
+            if (IsRectEmpty((LPRECT)&p->m_rcLayeredUpdate)) {
                 PAINTSTRUCT ps = { 0 };
                 BeginPaint(p->m_hWnd, &ps);
                 EndPaint(p->m_hWnd, &ps);
@@ -196,7 +200,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             p->m_bUpdateNeeded = FALSE;
             if (!IsRectEmpty(&rcClient)) {
                 if (p->m_pRoot->m_bUpdateNeeded) {
-                    ZRect rcRoot = rcClient;
+                    RECT rcRoot = rcClient;
                     if (p->m_hDcOffscreen != NULL)
                         ZuiDestroyGraphics(p->m_hDcOffscreen);
                     p->m_hDcOffscreen = NULL;
@@ -235,7 +239,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             }
         }
         else if (p->m_bLayered && p->m_bLayeredChanged) {
-            ZRect rcRoot = rcClient;
+            RECT rcRoot = rcClient;
             rcRoot.left += p->m_rcLayeredInset.left;
             rcRoot.top += p->m_rcLayeredInset.top;
             rcRoot.right -= p->m_rcLayeredInset.right;
@@ -293,11 +297,11 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             }
             //RestoreDC(p->m_hDcOffscreen->hdc, iSaveDC);
             if (p->m_bLayered) {
-                ZRect rcWnd = { 0 };
+                RECT rcWnd = { 0 };
                 GetWindowRect(p->m_hWnd, &rcWnd);
                 DWORD dwWidth = rcClient.right - rcClient.left;
                 DWORD dwHeight = rcClient.bottom - rcClient.top;
-                ZRect rcLayeredClient = rcClient;
+                RECT rcLayeredClient = rcClient;
                 rcLayeredClient.left += p->m_rcLayeredInset.left;
                 rcLayeredClient.top += p->m_rcLayeredInset.top;
                 rcLayeredClient.right -= p->m_rcLayeredInset.right;
@@ -347,7 +351,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     case WM_PRINTCLIENT:
     {
         if (p->m_pRoot == NULL) break;
-        ZRect rcClient;
+        RECT rcClient;
         GetClientRect(p->m_hWnd, &rcClient);
         HDC hDC = (HDC)wParam;
         int save = SaveDC(hDC);
@@ -358,7 +362,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         if ((lParam & PRF_CHILDREN) != 0) {
             HWND hWndChild = GetWindow(p->m_hWnd, GW_CHILD);
             while (hWndChild != NULL) {
-                ZRect rcPos = { 0 };
+                RECT rcPos = { 0 };
                 GetWindowRect(hWndChild, &rcPos);
                 MapWindowPoints(HWND_DESKTOP, p->m_hWnd, (LPPOINT)(&rcPos), 2);
                 SetWindowOrgEx(hDC, -rcPos.left, -rcPos.top, NULL);
@@ -384,7 +388,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     }
     case WM_SIZE:   //大小被改变
     {
-        GetWindowRect(hWnd, &p->m_rect);
+        GetWindowRect(hWnd, (LPRECT)&p->m_rect);
         if (p->m_pFocus != NULL) {
             TEventUI event = { 0 };
             event.Type = ZEVENT_WINDOWSIZE;
@@ -405,7 +409,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     case WM_TIMER:  //时钟事件
     {
         if (LOWORD(wParam) == LAYEREDUPDATE_TIMERID) {
-            if (p->m_bLayered && !IsRectEmpty(&p->m_rcLayeredUpdate)) {
+            if (p->m_bLayered && !IsRectEmpty((LPRECT)&p->m_rcLayeredUpdate)) {
                 LRESULT lRes = 0;
                 if (!IsIconic(p->m_hWnd))
                     __WndProc(p->m_hWnd, WM_PAINT, 0, 0L);
@@ -479,10 +483,10 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         if (p->m_hwndTooltip != NULL) SendMessage(p->m_hwndTooltip, TTM_TRACKACTIVATE, FALSE, (LPARAM)&p->m_ToolTip);
         if (p->m_bMouseTracking) {
             ZPoint pt = { 0 };
-            ZRect rcWnd = { 0 };
-            GetCursorPos(&pt);
+            RECT rcWnd = { 0 };
+            GetCursorPos((LPPOINT)&pt);
             GetWindowRect(p->m_hWnd, &rcWnd);
-            if (!IsIconic(p->m_hWnd) && GetActiveWindow() == p->m_hWnd && ZuiIsPointInRect(&rcWnd, &pt)) {
+            if (!IsIconic(p->m_hWnd) && GetActiveWindow() == p->m_hWnd && ZuiIsPointInRect((ZuiRect)&rcWnd, &pt)) {
                 if (SendMessage(p->m_hWnd, WM_NCHITTEST, 0, MAKELPARAM(pt.x, pt.y)) == HTCLIENT) {
                     ScreenToClient(p->m_hWnd, &pt);
                     SendMessage(p->m_hWnd, WM_MOUSEMOVE, 0, MAKELPARAM(pt.x, pt.y));

@@ -919,7 +919,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         duk_context *ctx = (duk_context *)Param1;
         switch ((ZuiInt)Param2)
         {
-        case Js_Id_clos: {
+        case Js_Id_close: {
             ZuiOsAddDelayedCleanup(p->m_pOs, p);
             return 0;
         }
@@ -929,7 +929,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         break;
     }
     case Proc_JsInit: {
-        ZuiBuilderControlInit(Param1, "clos", Js_Id_clos, FALSE);
+        ZuiBuilderControlInit(Param1, "clos", Js_Id_close, FALSE);
 
         ZuiBuilderControlInit(Param1, "root", Js_Id_root, TRUE);
         ZuiBuilderControlInit(Param1, "parent", Js_Id_parent, TRUE);

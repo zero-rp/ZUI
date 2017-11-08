@@ -28,7 +28,7 @@ ZuiVoid ZuiTemplateUnInit() {
     struct _ZTemplate * c = NULL;
     struct _ZTemplate * cc = NULL;
     RB_FOREACH_SAFE(c, _ZTemplate_Tree, Global_TemplateClass, cc) {
-        mxmlDelete((mxml_node_t*)cc->node);
+        mxmlDelete((mxml_node_t*)c->node);
         RB_REMOVE(_ZTemplate_Tree, Global_TemplateClass, c);
         free(c);
     }

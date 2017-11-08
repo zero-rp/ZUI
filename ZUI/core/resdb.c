@@ -78,8 +78,6 @@ ZuiVoid ZuiResDBUnInit() {
     struct _ZRes * _cc = NULL;
     RB_FOREACH_SAFE(_c, _ZRes_Tree, &Global_ResDB->res, _cc) {
         ZuiResDBDelRes(_c);
-        RB_REMOVE(_ZRes_Tree, &Global_ResDB->res, _c);
-        free(_c);
     }
     free(Global_ResDB);
 }

@@ -19,7 +19,7 @@
 #define ZSTATE_CAPTURED     0x00000040
 
 //------JSID
-#define Js_Id_clos              1
+#define Js_Id_close             1
 
 #define Js_Id_root              2
 #define Js_Id_parent            3
