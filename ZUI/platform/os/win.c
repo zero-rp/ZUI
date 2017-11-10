@@ -839,7 +839,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     }
     case WM_NCHITTEST:
     {
-        if (!p->m_nobox)
+        if (!p->m_nobox || IsZoomed(hWnd)) //最大化禁止调整尺寸。
             break;
         int x = GET_X_LPARAM(lParam);
         int	y = GET_Y_LPARAM(lParam);
@@ -981,6 +981,7 @@ ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show) {
 ZuiVoid ZuiOsDestroyWindow(ZuiOsWindow OsWindow) {
     SetWindowLong(OsWindow->m_hWnd, GWLP_WNDPROC, DefWindowProc);
     DestroyWindow(OsWindow->m_hWnd);
+    if (OsWindow->m_hDcOffscreen) ZuiDestroyGraphics(OsWindow->m_hDcOffscreen);
     free(OsWindow);
 }
 ZuiBool ZuiOsSetWindowTitle(ZuiOsWindow OsWindow, ZuiText Title) {
