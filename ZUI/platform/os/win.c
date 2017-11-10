@@ -568,7 +568,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             pControl = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_HITTEST | ZFIND_TOP_FIRST));
         if (pControl == NULL) break;
         if (pControl->m_pOs != p) break;
-        if (pControl->m_drag && !IsZoomed(hWnd)) { //最大化是禁止拖动。
+        if (pControl->m_drag) {
             TEventUI event = { 0 };
             event.Type = ZEVENT_KILLFOCUS;
             event.pSender = pControl;
