@@ -974,6 +974,7 @@ ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show) {
 ZuiVoid ZuiOsDestroyWindow(ZuiOsWindow OsWindow) {
     SetWindowLong(OsWindow->m_hWnd, GWLP_WNDPROC, DefWindowProc);
     DestroyWindow(OsWindow->m_hWnd);
+    if (OsWindow->m_hDcOffscreen) ZuiDestroyGraphics(OsWindow->m_hDcOffscreen);
     free(OsWindow);
 }
 ZuiBool ZuiOsSetWindowTitle(ZuiOsWindow OsWindow, ZuiText Title) {
