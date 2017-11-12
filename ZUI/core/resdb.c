@@ -496,6 +496,9 @@ ZEXPORT ZuiVoid ZCALL ZuiResDBDelRes(ZuiRes res) {
             else if (res->type == ZREST_ZIP) {
                 ZuiResDBDestroy(res->p);
             }
+			else if (res->type == ZREST_FONT) {
+				ZuiDestroyFont(res->p);
+			}
             free(res);
         }
     }

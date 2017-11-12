@@ -198,7 +198,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         ZCtlProc old_call = p->old_call;
 
         old_call(ProcId, cp, 0, Param1, Param2, Param3);
-        
+		if (p->m_rFont) ZuiResDBDelRes(p->m_rFont);
         free(p);
 
         return 0;
