@@ -117,7 +117,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         // 设置初始化当前控件
         if (ZuiControlCall(Proc_GetObject, Param1, Type_ListElement, NULL, NULL)) {
             ZuiControlCall(Proc_ListElement_SetOwner, Param1, cp, NULL, NULL);
-            ZuiControlCall(Proc_ListElement_SetIndex, Param1, ZuiControlCall(Proc_List_GetCount, p->m_pHeader, NULL, NULL, NULL), NULL, NULL);
+            ZuiControlCall(Proc_ListElement_SetIndex, Param1, ZuiControlCall(Proc_List_GetCount, p->m_pList, NULL, NULL, NULL), NULL, NULL);
         }
 
         //for (int i = iIndex + 1; i < m_pList->GetCount(); ++i) {
@@ -1059,6 +1059,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
                 SetCursor(LoadCursor(NULL, MAKEINTRESOURCE(IDC_SIZEWE)));
                 return;
             }
+			SetCursor(LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
         }
         if (event->Type == ZEVENT_MOUSEENTER)
         {
