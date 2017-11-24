@@ -310,12 +310,12 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
+        old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
 		if (p->m_pHeader) {
 			FreeZuiControl(p->m_pHeader, FALSE);
 		}
-		old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
-
         free(p);
+
         return 0;
     }
     case Proc_GetObject: {
