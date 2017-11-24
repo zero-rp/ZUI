@@ -763,7 +763,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         p->old_call = cp->call;
 
-        p->m_nRange = 100;
+        p->m_nRange = 0;
         p->m_nLineSize = 8;
         p->m_bShowButton1 = TRUE;
         p->m_bShowButton2 = TRUE;

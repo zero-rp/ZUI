@@ -27,7 +27,7 @@ DArray *darray_create()
 }
 BOOL darray_append(DArray *darray, void * data)
 {
-    if (darray == NULL || data == NULL)
+    if (darray == NULL)
     {
         return FALSE;
     }
