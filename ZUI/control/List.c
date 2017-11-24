@@ -310,7 +310,6 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
         old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
-		FreeZuiControl(p->m_pHeader, FALSE);
         free(p);
 
         return 0;
