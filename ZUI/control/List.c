@@ -6,6 +6,7 @@
 #include <layout/VerticalLayout.h>
 #include <layout/HorizontalLayout.h>
 #include <control/Register.h>
+#include <control/Label.h>
 ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
@@ -35,7 +36,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
             //}
         }
         //ZuiControlCall(Proc_SetPos, p->m_pList, ZuiControlCall(Proc_GetPos, p->m_pList, NULL, NULL, NULL), Param2, NULL);
-        return;
+        return 0;
     }
     case Proc_SetAttribute: {
         if (wcscmp(Param1, _T("header")) == 0) ZuiControlCall(Proc_SetVisible, p, wcscmp(Param2, L"hidden") == 0 ? FALSE : TRUE, NULL, NULL);
@@ -97,7 +98,8 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) == Type_ListHeader) {
             if (p->m_pHeader != Param1 && ZuiControlCall(Proc_Layout_GetCount, p->m_pHeader, NULL, NULL, NULL) == 0) {
                 //删除原来的头元素
-                ZuiVerticalLayoutProc(Proc_Layout_Remove, cp, p->old_udata, p->m_pHeader, NULL, NULL, NULL);
+                ZuiVerticalLayoutProc(Proc_Layout_Remove, cp, p->old_udata, p->m_pHeader, TRUE, NULL);
+				FreeZuiControl(p->m_pHeader, NULL);
                 p->m_pHeader = Param1;
 				if (cp->m_pOs != NULL)
 					ZuiControlCall(Proc_SetOs, (ZuiControl)p->m_pHeader, cp->m_pOs, cp, (void*)TRUE);
@@ -309,9 +311,12 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
-        old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
-        free(p);
+		old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
 
+		if (p->m_pHeader) {
+			ZuiControlCall(ProcId,p->m_pHeader,TRUE,Param2,Param3);
+		}
+        free(p);
         return 0;
     }
     case Proc_GetObject: {
@@ -793,7 +798,10 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
                 ZRect rt = *(ZRect *)ZuiControlCall(Proc_GetPos, pListItem, NULL, NULL, NULL);
                 rt.left = rcHeaderItem->left;
                 rt.right = rcHeaderItem->right;
-                
+				ZuiListHeaderItem lhi= ZuiControlCall(Proc_GetObject, pHeaderItem, Type_ListHeaderItem, NULL, NULL);
+                ZuiLabel lop = ZuiControlCall(Proc_GetObject, pListItem, Type_Label, NULL, NULL);
+				lop->m_uTextStyle = lhi->m_uTextStyle;
+				lop->m_cTextColor = lhi->m_cTextColor;
                 //rt.right--;
                 //rt.bottom--;
                 
@@ -1246,6 +1254,45 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
         else if (wcscmp(Param1, _T("pushedimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetPushedImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         else if (wcscmp(Param1, _T("focusedimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetFocusedImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         else if (wcscmp(Param1, _T("sepimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetSepImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+		else if (wcscmp(Param1, L"align") == 0) {
+			//横向对齐方式
+			if (wcscmp(Param2, L"left") == 0) {
+				p->m_uTextStyle &= ~(ZDT_CENTER | ZDT_RIGHT);
+				p->m_uTextStyle |= ZDT_LEFT;
+			}
+			if (wcscmp(Param2, L"center") == 0) {
+				p->m_uTextStyle &= ~(ZDT_LEFT | ZDT_RIGHT);
+				p->m_uTextStyle |= ZDT_CENTER;
+			}
+			if (wcscmp(Param2, L"right") == 0) {
+				p->m_uTextStyle &= ~(ZDT_LEFT | ZDT_CENTER);
+				p->m_uTextStyle |= ZDT_RIGHT;
+			}
+		}
+		else if (wcscmp(Param1, L"valign") == 0) {
+			//纵向对齐方式
+			if (wcscmp(Param2, L"top") == 0) {
+				p->m_uTextStyle &= ~(ZDT_BOTTOM | ZDT_VCENTER | ZDT_WORDBREAK);
+				p->m_uTextStyle |= (ZDT_TOP | ZDT_SINGLELINE);
+			}
+			if (wcscmp(Param2, L"vcenter") == 0) {
+				p->m_uTextStyle &= ~(ZDT_TOP | ZDT_BOTTOM | ZDT_WORDBREAK);
+				p->m_uTextStyle |= (ZDT_VCENTER | ZDT_SINGLELINE);
+			}
+			if (wcscmp(Param2, L"bottom") == 0) {
+				p->m_uTextStyle &= ~(ZDT_TOP | ZDT_VCENTER | ZDT_WORDBREAK);
+				p->m_uTextStyle |= (ZDT_BOTTOM | ZDT_SINGLELINE);
+			}
+		}
+		else if (wcscmp(Param1, L"textcolor") == 0) {
+			//字体颜色
+			ZuiText pstr = NULL;
+			ZuiColor clrColor;
+			while (*(wchar_t *)Param2 > L'\0' && *(wchar_t *)Param2 <= L' ') Param2 = ZuiCharNext((wchar_t *)Param2);
+			if (*(wchar_t *)Param2 == L'#') Param2 = ZuiCharNext((wchar_t *)Param2);
+			clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);
+			p->m_cTextColor = clrColor;
+		}
         break;
     }
     case Proc_ListHeaderItem_SetDragable: {
