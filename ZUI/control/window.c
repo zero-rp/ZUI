@@ -244,8 +244,10 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
 
         ZuiOsDestroyWindow(p->m_osWindow);
-	darray_delete(m_window_array,darray_find(m_window_array,cp));
+		darray_delete(m_window_array,darray_find(m_window_array,cp));
         free(p);
+		if (m_window_array->count == 0)
+			ZuiMsgLoop_exit();
         return 0;
     }
     case Proc_CoreInit: {

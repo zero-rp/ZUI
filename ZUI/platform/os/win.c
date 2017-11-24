@@ -146,11 +146,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
                 if (hwndParent != NULL) SetFocus(hwndParent);
             }
         }
-        if (p->m_hwndTooltip != NULL) //by jiangdong 修改当父窗体以成员变量形式在窗口类中存在时候,当点击父窗体关闭按钮的时候,提示框内容还停留在页面中，没有销毁。
-        {
-            DestroyWindow(p->m_hwndTooltip);
-            p->m_hwndTooltip = NULL;
-        }
+		FreeZuiControl(p->m_pRoot, FALSE);
         break;
     }
     case WM_ERASEBKGND:
@@ -934,7 +930,7 @@ ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show) {
         memset(OsWindow, 0, sizeof(ZOsWindow));
 
         OsWindow->m_hWnd = CreateWindowEx(0, L"ZUI", L"",
-            WS_POPUP | WS_CLIPCHILDREN | WS_MAXIMIZE,
+            WS_POPUP | WS_CLIPCHILDREN,
             CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
             NULL, NULL, GetModuleHandleA(NULL),
             OsWindow);
@@ -979,6 +975,11 @@ ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show) {
     return NULL;
 }
 ZuiVoid ZuiOsDestroyWindow(ZuiOsWindow OsWindow) {
+	if (OsWindow->m_hwndTooltip != NULL) //by jiangdong 修改当父窗体以成员变量形式在窗口类中存在时候,当点击父窗体关闭按钮的时候,提示框内容还停留在页面中，没有销毁。
+	{
+		DestroyWindow(OsWindow->m_hwndTooltip);
+		OsWindow->m_hwndTooltip = NULL;
+	}
     SetWindowLong(OsWindow->m_hWnd, GWLP_WNDPROC, DefWindowProc);
     DestroyWindow(OsWindow->m_hWnd);
 	if (OsWindow->m_hDcOffscreen) ZuiDestroyGraphics(OsWindow->m_hDcOffscreen);
