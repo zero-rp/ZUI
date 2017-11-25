@@ -637,6 +637,28 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
 ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListElement p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
+	case Proc_Layout_Add:
+	case Proc_Layout_AddAt: {
+		ZuiLayoutProc(ProcId, cp, p->old_udata, Param1, Param2, Param3);
+		if (p->m_pOwner == NULL) return FALSE;
+		ZuiControl pHeader = ZuiControlCall(Proc_List_GetHeader, p->m_pOwner, cp, NULL, NULL);
+		if (pHeader == NULL || !pHeader->m_bVisible)
+			return FALSE;
+		ZuiLayout op = ZuiControlCall(Proc_GetObject, cp, Type_Layout, NULL, NULL);
+		int i = darray_find(op->m_items, Param1);
+
+		if (i >= 0) {
+			ZuiControl pHeaderItem = ZuiControlCall(Proc_Layout_GetItemAt, pHeader, i, NULL, NULL);
+			if (pHeaderItem == NULL) break;
+
+			ZuiListHeaderItem lhi = ZuiControlCall(Proc_GetObject, pHeaderItem, Type_ListHeaderItem, NULL, NULL);
+			ZuiLabel lop = ZuiControlCall(Proc_GetObject, op->m_items->data[i], Type_Label, NULL, NULL);
+			lop->m_uTextStyle = lhi->m_uTextStyle;
+			lop->m_cTextColor = lhi->m_cTextColor;
+
+		}
+		return TRUE;
+	}
     case Proc_OnEvent: {
         TEventUI *event = (TEventUI *)Param1;
         if (!cp->m_bMouseEnabled && event->Type > ZEVENT__MOUSEBEGIN && event->Type < ZEVENT__MOUSEEND) {
@@ -798,10 +820,7 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
                 ZRect rt = *(ZRect *)ZuiControlCall(Proc_GetPos, pListItem, NULL, NULL, NULL);
                 rt.left = rcHeaderItem->left;
                 rt.right = rcHeaderItem->right;
-				ZuiListHeaderItem lhi= ZuiControlCall(Proc_GetObject, pHeaderItem, Type_ListHeaderItem, NULL, NULL);
-                ZuiLabel lop = ZuiControlCall(Proc_GetObject, pListItem, Type_Label, NULL, NULL);
-				lop->m_uTextStyle = lhi->m_uTextStyle;
-				lop->m_cTextColor = lhi->m_cTextColor;
+
                 //rt.right--;
                 //rt.bottom--;
                 
