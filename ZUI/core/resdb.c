@@ -72,7 +72,7 @@ ZuiVoid ZuiResDBUnInit() {
     RB_FOREACH_SAFE(c, _ZResDB_Tree, &Global_ResDB->resdb, cc) {
         ZuiResDBDestroy(c);
         RB_REMOVE(_ZResDB_Tree, &Global_ResDB->resdb, c);
-        free(c);
+        //free(c);
     }
     struct _ZRes * _c = NULL;
     struct _ZRes * _cc = NULL;
@@ -488,7 +488,7 @@ ZEXPORT ZuiVoid ZCALL ZuiResDBDelRes(ZuiRes res) {
             //计数为0,释放资源
             RB_REMOVE(_ZRes_Tree, &Global_ResDB->res, res);//从map中移除
             if (res->type == ZREST_IMG) {
-                ZuiDestroyImage(res->p);
+                //ZuiDestroyImage(res->p);
             }
             else if (res->type == ZREST_TXT || res->type == ZREST_STREAM) {
                 free(res->p);
@@ -496,6 +496,9 @@ ZEXPORT ZuiVoid ZCALL ZuiResDBDelRes(ZuiRes res) {
             else if (res->type == ZREST_ZIP) {
                 ZuiResDBDestroy(res->p);
             }
+			else if (res->type == ZREST_FONT) {
+				ZuiDestroyFont(res->p);
+			}
             free(res);
         }
     }
