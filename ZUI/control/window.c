@@ -163,21 +163,24 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
             ZuiControlCall(Proc_Window_SetSize, cp, cx, cy, NULL);
         }
         else if (wcscmp(Param1, L"name") == 0) {
-            if (cp->m_sName && wcscmp(cp->m_sName, Param2) != 0) {
-                //删除以前的名字
-                ZWindows theNode = { 0 };
-                ZWindows *c;
-                theNode.key = Zui_Hash(cp->m_sName);
-                c = RB_FIND(_ZWindows_Tree, m_window, &theNode);
-                if (c) {
-                    RB_REMOVE(_ZWindows_Tree, m_window, c);
-                    free(c);
-                }
-                free(cp->m_sName);
-                cp->m_sName = NULL;
+            if (cp->m_sName) {
+				if (wcscmp(cp->m_sName, Param2) != 0) {
+					//删除以前的名字
+					ZWindows theNode = { 0 };
+					ZWindows *c;
+					theNode.key = Zui_Hash(cp->m_sName);
+					c = RB_FIND(_ZWindows_Tree, m_window, &theNode);
+					if (c) {
+						RB_REMOVE(_ZWindows_Tree, m_window, c);
+						free(c);
+					}
+					free(cp->m_sName);
+					cp->m_sName = NULL;
+				}
+				else {
+					return 0;
+				}
             }
-            else
-            {
                 //保存现在的名字
                 ZWindows *n = (ZWindows *)malloc(sizeof(ZWindows));
                 memset(n, 0, sizeof(ZWindows));
@@ -185,7 +188,6 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
                 n->p = cp;
                 RB_INSERT(_ZWindows_Tree, m_window, n);
                 cp->m_sName = wcsdup(Param2);
-            }
         }
         else if (wcscmp(Param1, L"center") == 0) {
             if (wcscmp(Param2, L"true") == 0) {
@@ -241,6 +243,16 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         ZuiAny old_udata = p->old_udata;
 
 
+		if (cp->m_sName) {
+			ZWindows theNode = { 0 };
+			ZWindows *c;
+			theNode.key = Zui_Hash(cp->m_sName);
+			c = RB_FIND(_ZWindows_Tree, m_window, &theNode);
+			if (c) {
+				RB_REMOVE(_ZWindows_Tree, m_window, c);
+				free(c);
+			}
+		}
         old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
 
         ZuiOsDestroyWindow(p->m_osWindow);
