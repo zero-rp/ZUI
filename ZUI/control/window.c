@@ -278,7 +278,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         free(m_window);
         for (size_t i = 0; i < m_window_array->count; i++)
         {
-            FreeZuiControl(m_window_array->data[i], FALSE);
+            FreeZuiControl(m_window_array->data[i], TRUE);
         }
         darray_destroy(m_window_array);
         return NULL;
