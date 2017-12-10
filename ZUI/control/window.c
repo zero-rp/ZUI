@@ -68,25 +68,50 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         break;
     }
 #endif
+	case Proc_SetBorderWidth: {
+		p->old_call(ProcId, cp, p->old_udata, Param1, Param2, Param3);
+		if(cp->m_BorderWidth){
+			ZuiInt i = cp->m_BorderWidth;
+			if (cp->m_dwBorderColor)
+				i--;
+			//以前没有边框了,加上边距
+			((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.left += i;
+			((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.bottom += i;
+			((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.right += i;
+			((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.top += i;
+		}
+		return 0;
+	}
     case Proc_SetBorderColor: {
         if (!cp->m_dwBorderColor) {
+			if (!cp->m_BorderWidth) {
+				((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.left += 1;
+				((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.bottom += 1;
+				((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.right += 1;
+				((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.top += 1;
+			}
+        }
+        break;
+    }
+    case Proc_Layout_SetInset: {
+		p->old_call(ProcId, cp, p->old_udata, Param1, Param2, Param3);
+		ZuiInt i = cp->m_BorderWidth;
+        if (cp->m_dwBorderColor) {
+			i--;
             //以前没有边框了,加上边距
             ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.left += 1;
             ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.bottom += 1;
             ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.right += 1;
             ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.top += 1;
         }
-        break;
-    }
-    case Proc_Layout_SetInset: {
-        if (!cp->m_dwBorderColor) {
-            //以前没有边框了,加上边距
-            ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.left = 1;
-            ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.bottom = 1;
-            ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.right = 1;
-            ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.top = 1;
-        }
-        break;
+		if (i>0) {
+			//以前没有边框了,加上边距
+			((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.left += i;
+			((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.bottom += i;
+			((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.right += i;
+			((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.top += i;
+		}
+        return 0;
     }
     case Proc_SetText: {
         return ZuiOsSetWindowTitle(p->m_osWindow, Param1);

@@ -374,6 +374,19 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         ZuiControlNeedParentUpdate(p);
         break;
     }
+	case Proc_GetBorderWidth: {
+		return (void *)p->m_BorderWidth;
+		break;
+	}
+	case Proc_SetBorderWidth: {
+		if (p->m_BorderWidth == (ZuiInt)Param1)
+			return 0;
+		if ((ZuiInt)Param1 < 0)
+			return 0;
+		p->m_BorderWidth = (ZuiInt)Param1;
+		ZuiControlNeedParentUpdate(p);
+		break;
+	}
     case Proc_GetMaxWidth: {
         return (void *)p->m_cxyMax.cx;
         break;
@@ -574,8 +587,12 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     case Proc_OnPaintBorder: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = &p->m_rcItem;
-        if (p->m_dwBorderColor)
-            ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 1);
+		if (p->m_dwBorderColor) {
+			if(p->m_BorderWidth)
+				ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, p->m_BorderWidth);
+			else
+				ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 1);
+		}
         break;
     }
     case Proc_OnDestroy: {
@@ -617,6 +634,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         if (wcscmp(Param1, L"text") == 0) ZuiControlCall(Proc_SetText, p, Param2, NULL, NULL);
         else if (wcscmp(Param1, L"tooltip") == 0) ZuiControlCall(Proc_SetTooltip, p, Param2, NULL, NULL);
         else if (wcscmp(Param1, L"width") == 0) ZuiControlCall(Proc_SetFixedWidth, p, _wtoi(Param2), NULL, NULL);
+		else if (wcscmp(Param1, L"borderwidth") == 0) ZuiControlCall(Proc_SetBorderWidth, p, _wtoi(Param2), NULL, NULL);
         else if (wcscmp(Param1, L"height") == 0) ZuiControlCall(Proc_SetFixedHeight, p, _wtoi(Param2), NULL, NULL);
         else if (wcscmp(Param1, L"minwidth") == 0) ZuiControlCall(Proc_SetMinWidth, p, _wtoi(Param2), NULL, NULL);
         else if (wcscmp(Param1, L"minheight") == 0) ZuiControlCall(Proc_SetMinHeight, p, _wtoi(Param2), NULL, NULL);

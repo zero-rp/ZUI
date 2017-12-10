@@ -302,6 +302,8 @@ enum ZREST
 #define Proc_SetBorderColor     69  //设置边框颜色
 
 #define Proc_SetAnimationType   70  //设置动画类型
+#define	Proc_SetBorderWidth		71
+#define	Proc_GetBorderWidth		72
 
 
 #define ZuiControlSetDrag(p,b)  ZuiControlCall(Proc_SetDrag,(p),(b),NULL,NULL)
