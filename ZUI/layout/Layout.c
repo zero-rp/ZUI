@@ -537,8 +537,49 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
 
         break;
     }
+	case Proc_SetBorderWidth: {
+		p->old_call(ProcId, cp, 0, Param1, Param2, Param3);
+		if (cp->m_BorderWidth) {
+			ZuiInt i = cp->m_BorderWidth;
+			if (cp->m_dwBorderColor)
+				i--;
+			//以前没有边框了,加上边距
+			p->m_rcInset.left += i;
+			p->m_rcInset.bottom += i;
+			p->m_rcInset.right += i;
+			p->m_rcInset.top += i;
+		}
+		return 0;
+	}
+	case Proc_SetBorderColor: {
+		if (!cp->m_dwBorderColor) {
+			if (!cp->m_BorderWidth) {
+				p->m_rcInset.left += 1;
+				p->m_rcInset.bottom += 1;
+				p->m_rcInset.right += 1;
+				p->m_rcInset.top += 1;
+			}
+		}
+		break;
+	}
     case Proc_Layout_SetInset: {
         memcpy(&p->m_rcInset, Param1, sizeof(ZRect));
+		ZuiInt i = cp->m_BorderWidth;
+		if (cp->m_dwBorderColor) {
+			i--;
+			//以前没有边框了,加上边距
+			p->m_rcInset.left += 1;
+			p->m_rcInset.bottom += 1;
+			p->m_rcInset.right += 1;
+			p->m_rcInset.top += 1;
+		}
+		if (i>0) {
+			//以前没有边框了,加上边距
+			p->m_rcInset.left += i;
+			p->m_rcInset.bottom += i;
+			p->m_rcInset.right += i;
+			p->m_rcInset.top += i;
+		}
         ZuiControlNeedParentUpdate(cp);
         break;
     }
