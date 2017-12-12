@@ -3,7 +3,7 @@
 #include <core/control.h>
 #include <stdlib.h>
 
-void* ZCALL ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayout p, void* Param1, void* Param2, void* Param3) {
+void* ZCALL ZuiVerticalLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiVerticalLayout p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
     case Proc_SetPos: {
@@ -89,7 +89,7 @@ void* ZCALL ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayout p
             ZuiControl pControl = (ZuiControl)(op->m_items->data[it2]);
             if (!pControl->m_bVisible) continue;
             if (pControl->m_bFloat) {
-                ZuiControlCall(Proc_Layout_SetFloatPos, cp, (void *)it2, 0, 0);
+                ZuiControlCall(Proc_Layout_SetFloatPos, cp, (ZuiAny)it2, 0, 0);
                 continue;
             }
 

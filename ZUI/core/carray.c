@@ -86,7 +86,7 @@ BOOL darray_shrink(DArray *darray)
 {
     if ((darray->count >> 1) < darray->size && (darray->size > DEFAULT_A_SIZE))
     {
-        int newallocsize = darray->count + darray->count >> 1;
+        int newallocsize = darray->count + (darray->count >> 1);
         void **data = (void **)realloc(darray->data, sizeof(void *) * newallocsize);
         if (data != NULL)
         {
@@ -173,7 +173,7 @@ int darray_len(DArray * darray)
     return darray->count;
 }
 int darray_find(DArray * darray, void * data) {
-    size_t i;
+    int i;
     for (i = 0; i < darray->count; i++)
     {
         if (darray->data[i] == data)

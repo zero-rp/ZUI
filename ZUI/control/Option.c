@@ -13,7 +13,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
         switch (event->Type)
         {
         case ZEVENT_LBUTTONUP: {
-            ZuiControlCall(Proc_Option_SetSelected, cp, !ZuiControlCall(Proc_Option_GetSelected, cp, NULL, NULL, NULL), NULL, NULL);
+            ZuiControlCall(Proc_Option_SetSelected, cp, (ZuiAny)(!ZuiControlCall(Proc_Option_GetSelected, cp, NULL, NULL, NULL)), NULL, NULL);
             break;
         }
         default:
@@ -67,7 +67,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
                 for (size_t i = 0; i < (size_t)ZuiControlCall(Proc_Layout_GetCount, cp->m_pParent, NULL, NULL, NULL); i++)
                 {
                     ZuiControl pControl;
-                    if ((pControl = ZuiControlCall(Proc_Layout_GetItemAt, cp->m_pParent, i, NULL, NULL)) != cp)
+                    if ((pControl = ZuiControlCall(Proc_Layout_GetItemAt, cp->m_pParent, (ZuiAny)i, NULL, NULL)) != cp)
                     {
                         if (pControl != cp) {
                             ZuiControlCall(Proc_Option_SetSelected, pControl, FALSE, NULL, NULL);
@@ -83,7 +83,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
                 for (size_t i = 0; i < (size_t)ZuiControlCall(Proc_Layout_GetCount, cp->m_pParent, NULL, NULL, NULL); i++)
                 {
                     ZuiControl pControl;
-                    if ((pControl = ZuiControlCall(Proc_Layout_GetItemAt, cp->m_pParent, i, NULL, NULL)) != cp)
+                    if ((pControl = ZuiControlCall(Proc_Layout_GetItemAt, cp->m_pParent, (ZuiAny)i, NULL, NULL)) != cp)
                     {
                         if (pControl != cp) {
                             select += ZuiControlCall(Proc_Option_GetSelected, pControl, NULL, NULL, NULL) ? 1 : 0;
@@ -93,7 +93,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
                 }
                 if (!select) {
                     p->m_bSelected = !p->m_bSelected;
-                    return;
+                    return 0;
                 }
             }
         }

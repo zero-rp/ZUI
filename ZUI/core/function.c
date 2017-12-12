@@ -133,7 +133,7 @@ ZEXPORT ZuiBool ZCALL ZuiUnInit() {
     return TRUE;
 }
 ZEXPORT ZuiInt ZCALL ZuiMsgLoop() {
-    ZuiOsMsgLoop();
+    return ZuiOsMsgLoop();
 }
 ZEXPORT ZuiVoid ZCALL ZuiMsgLoop_exit() {
     ZuiOsMsgLoopExit();
@@ -192,7 +192,7 @@ ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
         //重新开启父窗口
         EnableWindow(rp->m_pOs->m_hWnd, TRUE);
     */
-    return;
+    return TRUE;
 }
 ZuiBool ZuiIsPointInRect(ZuiRect Rect, ZuiPoint pt) {
     int xl, xr, yt, yb;
@@ -299,7 +299,7 @@ ZuiBool ZuiStingIsUtf8(ZuiAny str, ZuiInt length)
 ZuiVoid ZuiStingSplitA(char* src, char* pSeparator, char **dest, ZuiInt *num)
 {
     char* pStart, *pEnd;
-    unsigned int sep_len;
+    size_t sep_len;
     int count = 0;
     if (src == NULL || strlen(src) == 0) return;
     sep_len = strlen(pSeparator);
@@ -328,7 +328,7 @@ ZuiVoid ZuiStingSplitA(char* src, char* pSeparator, char **dest, ZuiInt *num)
 ZuiVoid ZuiStingSplit(ZuiText src, ZuiText pSeparator, ZuiText *dest, ZuiInt *num)
 {
     ZuiText pStart, pEnd;
-    unsigned int sep_len;
+    size_t sep_len;
     int count = 0;
     if (src == NULL || wcslen(src) == 0) return;
     sep_len = wcslen(pSeparator);

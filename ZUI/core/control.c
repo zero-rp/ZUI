@@ -43,7 +43,7 @@ ZEXPORT ZuiControl ZCALL NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny 
         //没有重载的
         /*查找类名*/
         wchar_t name[256];
-        int l = wcslen(classname);
+        int l = (int)wcslen(classname);
         if (l > 255)
             return p;
         memset(name, 0, 256 * sizeof(wchar_t));
@@ -87,7 +87,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     {
     case Proc_Invalidate: {
         ZRect invalidateRc = p->m_rcItem;
-        if (!p->m_bVisible) return;
+        if (!p->m_bVisible) return 0;
         {
             ZuiControl pParent = p;
             ZRect rcTemp;
@@ -98,7 +98,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 rcParent = (ZRect *)ZuiControlCall(Proc_GetPos, pParent, NULL, NULL, NULL);
                 if (!IntersectRect(&invalidateRc, &rcTemp, rcParent))
                 {
-                    return;
+                    return 0;
                 }
             }
             //重置动画
@@ -987,15 +987,15 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                       //    }
 #endif
     case Proc_GetObject: {
-        if (Param1 == Type_Null)
+        if (Param1 == (ZuiAny)Type_Null)
             return p;
         break;
     }
     case Proc_GetType: {
-        return Type_Null;
+        return (ZuiAny)Type_Null;
     }
     case Proc_CoreInit: {
-        return TRUE;
+        return (ZuiAny)TRUE;
     }
     case Proc_GetControlFlags: {
         return 0;
@@ -1047,7 +1047,7 @@ ZEXPORT ZuiControl ZCALL ZuiControlFindName(ZuiControl p, ZuiText Name) {
 
 ZEXPORT ZuiVoid ZCALL ZuiControlInvalidate(ZuiControl p, ZuiBool ResetAnimation)
 {
-    ZuiControlCall(Proc_Invalidate, p, ResetAnimation, NULL, NULL);
+    ZuiControlCall(Proc_Invalidate, p, (ZuiAny)ResetAnimation, NULL, NULL);
 }
 
 ZEXPORT ZuiVoid ZCALL ZuiControlNeedUpdate(ZuiControl p)

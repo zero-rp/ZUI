@@ -100,7 +100,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 
     // 事件的自定义处理
     switch (uMsg) {
-    case WM_APP + 1:
+ /*   case WM_APP + 1:
     {
         while (darray_len(p->m_aDelayedCleanup)) {
             ZuiControl cp = p->m_aDelayedCleanup->data[0];
@@ -113,7 +113,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
                 FreeZuiControl(cp, FALSE);
         };
         return 0;
-    }
+    } */
     case WM_CLOSE:  //关闭窗口
     {
         // Make sure all matching "closing" events are sent
@@ -1000,8 +1000,8 @@ ZuiBool ZuiOsSetWindowRestor(ZuiOsWindow OsWindow) {
     return ShowWindow(OsWindow->m_hWnd, SW_RESTORE);
 }
 ZuiBool ZuiOsSetWindowSize(ZuiOsWindow OsWindow, ZuiUInt w, ZuiUInt h) {
-    ZuiControlCall(Proc_SetFixedWidth, OsWindow->m_pRoot, w, NULL, NULL);
-    ZuiControlCall(Proc_SetFixedHeight, OsWindow->m_pRoot, h, NULL, NULL);
+    ZuiControlCall(Proc_SetFixedWidth, OsWindow->m_pRoot, (ZuiAny)w, NULL, NULL);
+    ZuiControlCall(Proc_SetFixedHeight, OsWindow->m_pRoot, (ZuiAny)h, NULL, NULL);
     return SetWindowPos(OsWindow->m_hWnd, NULL, 0, 0, w, h, SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
 }
 ZuiBool ZuiOsSetWindowNoBox(ZuiOsWindow OsWindow, ZuiBool b) {
@@ -1252,10 +1252,10 @@ ZuiVoid ZuiOsReapObjects(ZuiOsWindow p, ZuiControl pControl) {
 
 ZuiVoid ZuiOsAddDelayedCleanup(ZuiOsWindow p, ZuiControl pControl)
 {
-    ZuiControlCall(Proc_Layout_Remove, pControl->m_pParent, pControl, TRUE, NULL);
-    ZuiControlCall(Proc_SetOs, pControl, p, NULL, (void*)FALSE);
-    darray_append(p->m_aDelayedCleanup, pControl);
-    PostMessage(p->m_hWnd, WM_APP + 1, 0, 0L);
+    //ZuiControlCall(Proc_Layout_Remove, pControl->m_pParent, pControl, TRUE, NULL);
+    //ZuiControlCall(Proc_SetOs, pControl, p, NULL, (void*)FALSE);
+    //darray_append(p->m_aDelayedCleanup, pControl);
+    PostMessage(p->m_hWnd, WM_CLOSE, 0, 0L);
 }
 
 ZuiInt ZuiOsMsgLoop() {
@@ -1296,7 +1296,7 @@ ZuiVoid ZuiOsMsgLoopExit() {
     PostQuitMessage(0);
 }
 ZuiVoid ZuiOsPostTask(ZuiTask task) {
-    PostThreadMessage(m_hMainThreadId, WM_APP + 2, task, NULL);
+    PostThreadMessage(m_hMainThreadId, WM_APP + 2, (WPARAM)task, 0);
 }
 
 ZuiInt ZuiOsUtf8ToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen)

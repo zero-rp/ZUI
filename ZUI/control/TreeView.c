@@ -24,9 +24,9 @@ ZuiAny ZCALL ZuiTreeViewNotifyProc(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
         //    SetItemExpand(!pFolder->GetCheck(), pItem);
         //    return TRUE;
         //}
-        return TRUE;
+        return (ZuiAny)TRUE;
     }
-
+	return 0;
 }
 ZEXPORT ZuiAny ZCALL ZuiTreeViewProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeView p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
@@ -42,22 +42,22 @@ ZEXPORT ZuiAny ZCALL ZuiTreeViewProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeView p
         ZuiControlRegNotify(ZuiControlCall(Proc_TreeNode_GetFolderButton, Param1, NULL, NULL, NULL), ZuiTreeViewNotifyProc);
         ZuiControlRegNotify(ZuiControlCall(Proc_TreeNode_GetCheckBox, Param1, NULL, NULL, NULL), ZuiTreeViewNotifyProc);
 
-        ZuiControlCall(Proc_TreeNode_SetVisibleFolderBtn, Param1, p->m_bVisibleFolderBtn, NULL, NULL);
-        ZuiControlCall(Proc_TreeNode_SetVisibleCheckBtn, Param1, p->m_bVisibleCheckBtn, NULL, NULL);
+        ZuiControlCall(Proc_TreeNode_SetVisibleFolderBtn, Param1, (ZuiAny)p->m_bVisibleFolderBtn, NULL, NULL);
+        ZuiControlCall(Proc_TreeNode_SetVisibleCheckBtn, Param1, (ZuiAny)p->m_bVisibleCheckBtn, NULL, NULL);
         if (p->m_uItemMinWidth > 0)
-            ZuiControlCall(Proc_SetMinWidth, Param1, p->m_uItemMinWidth, NULL, NULL);
+            ZuiControlCall(Proc_SetMinWidth, Param1, (ZuiAny)p->m_uItemMinWidth, NULL, NULL);
 
         ZuiListProc(Proc_List_Add, cp, p->old_udata, Param1, NULL, NULL);
 
         ZuiControlCall(Proc_TreeNode_SetTreeView, Param1, cp, NULL, NULL);
-        return TRUE;
+        return (ZuiAny)TRUE;
     }
     case Proc_TreeView_AddAt: {
         if (!Param1)
-            return -1;
+            return (ZuiAny)-1;
 
         if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) != Type_TreeNode)
-            return -1;
+            return (ZuiAny)-1;
 
         //ZuiControl* pParent = ZuiControlCall(Proc_List_GetItemAt, cp, Param2, NULL, NULL);
         //if (!pParent)
@@ -69,11 +69,11 @@ ZEXPORT ZuiAny ZCALL ZuiTreeViewProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeView p
         ZuiControlRegNotify(ZuiControlCall(Proc_TreeNode_GetCheckBox, Param1, NULL, NULL, NULL), ZuiTreeViewNotifyProc);
         
 
-        ZuiControlCall(Proc_TreeNode_SetVisibleFolderBtn, Param1, p->m_bVisibleFolderBtn, NULL, NULL);
-        ZuiControlCall(Proc_TreeNode_SetVisibleCheckBtn, Param1, p->m_bVisibleCheckBtn, NULL, NULL);
+        ZuiControlCall(Proc_TreeNode_SetVisibleFolderBtn, Param1, (ZuiAny)p->m_bVisibleFolderBtn, NULL, NULL);
+        ZuiControlCall(Proc_TreeNode_SetVisibleCheckBtn, Param1, (ZuiAny)p->m_bVisibleCheckBtn, NULL, NULL);
 
         if (p->m_uItemMinWidth > 0)
-            ZuiControlCall(Proc_SetMinWidth, Param1, p->m_uItemMinWidth, NULL, NULL);
+            ZuiControlCall(Proc_SetMinWidth, Param1, (ZuiAny)p->m_uItemMinWidth, NULL, NULL);
 
 
         ZuiListProc(Proc_List_AddAt, cp, p->old_udata, Param1, Param2, NULL);
@@ -83,15 +83,15 @@ ZEXPORT ZuiAny ZCALL ZuiTreeViewProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeView p
             int nCount = ZuiControlCall(Proc_TreeNode_GetCountChild, Param1, NULL, NULL, NULL);
             for (int nIndex = 0; nIndex < nCount; nIndex++)
             {
-                ZuiControl pNode = ZuiControlCall(Proc_TreeNode_GetChildNode, Param1, nIndex, NULL, NULL);
+                ZuiControl pNode = ZuiControlCall(Proc_TreeNode_GetChildNode, Param1, (ZuiAny)nIndex, NULL, NULL);
                 if (pNode)
-                    return ZuiControlCall(Proc_TreeView_AddAt, cp, pNode, (ZuiInt)Param2 + 1, NULL);
+                    return ZuiControlCall(Proc_TreeView_AddAt, cp, pNode, (ZuiAny)((ZuiInt)Param2 + 1), NULL);
             }
         }
         else
-            return (ZuiInt)Param2 + 1;
+            return (ZuiAny)((ZuiInt)Param2 + 1);
 
-        return -1;
+        return (ZuiAny)-1;
     }
     case Proc_TreeView_Remove: {
         //if (pControl->GetCountChild() > 0)
@@ -106,13 +106,13 @@ ZEXPORT ZuiAny ZCALL ZuiTreeViewProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeView p
         //    }
         //}
         //CListUI::Remove(pControl);
-        return TRUE;
+        return (ZuiAny)TRUE;
     }
     case Proc_TreeView_RemoveAt: {
         //ZuiControl* pItem = (CTreeNodeUI*)GetItemAt(iIndex);
         //if (pItem->GetCountChild())
         //    Remove(pItem);
-        return TRUE;
+        return (ZuiAny)TRUE;
     }
     case Proc_TreeView_RemoveAll: {
         return ZuiListProc(Proc_List_RemoveAll, cp, p->old_udata, NULL, NULL, NULL);
@@ -143,7 +143,7 @@ ZEXPORT ZuiAny ZCALL ZuiTreeViewProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeView p
         //        nIndex++;
         //    }
         //}
-        return;
+        return 0;
     }
     case Proc_TreeView_SetItemCheckBox: {
         //if (Param1) {
@@ -197,7 +197,7 @@ ZEXPORT ZuiAny ZCALL ZuiTreeViewProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeView p
         return 0;
     }
     case Proc_GetObject:
-        if (Param1 == Type_TreeView)
+        if (Param1 == (ZuiAny)Type_TreeView)
             return (ZuiAny)p;
         break;
     case Proc_GetType:
@@ -243,23 +243,23 @@ ZEXPORT ZuiAny ZCALL ZuiTreeNodeProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeNode p
             ZuiControl pNode = darray_getat(p->mTreeNodes, p->mTreeNodes->count-1);
 
             if (!pNode || !ZuiControlCall(Proc_TreeNode_GetLastNode, cp, NULL, NULL, NULL))
-                nRet = ZuiControlCall(Proc_TreeView_AddAt, p->pTreeView, Param1, (ZuiInt)ZuiControlCall(Proc_TreeNode_GetTreeIndex, cp, NULL, NULL, NULL) + 1, NULL) >= 0;
+                nRet = ZuiControlCall(Proc_TreeView_AddAt, p->pTreeView, Param1, (ZuiAny)((ZuiInt)ZuiControlCall(Proc_TreeNode_GetTreeIndex, cp, NULL, NULL, NULL) + 1), NULL) >= 0;
             else
-                nRet = ZuiControlCall(Proc_TreeView_AddAt, p->pTreeView, Param1, (ZuiInt)ZuiControlCall(Proc_TreeNode_GetTreeIndex, ZuiControlCall(Proc_TreeNode_GetLastNode, pNode, NULL, NULL, NULL), NULL, NULL, NULL) + 1, NULL) >= 0;
+                nRet = ZuiControlCall(Proc_TreeView_AddAt, p->pTreeView, Param1, (ZuiAny)((ZuiInt)ZuiControlCall(Proc_TreeNode_GetTreeIndex, ZuiControlCall(Proc_TreeNode_GetLastNode, pNode, NULL, NULL, NULL), NULL, NULL, NULL) + 1), NULL) >= 0;
         }
 
         if (nRet)
             darray_append(p->mTreeNodes, Param1);
 
-        return nRet;
+        return (ZuiAny)nRet;
     }
     case Proc_TreeNode_GetChildNode: {
-        return darray_getat(p->mTreeNodes, Param1);
+        return (ZuiAny)darray_getat(p->mTreeNodes, (int)Param1);
     }
     case Proc_TreeNode_CalLocation: {
         if (!Param1)
-            return;
-        ZuiControlCall(Proc_SetVisible, ZuiControlCall(Proc_TreeNode_GetDottedLine, Param1, NULL, NULL, NULL), TRUE, NULL, NULL);
+            return 0;
+        ZuiControlCall(Proc_SetVisible, ZuiControlCall(Proc_TreeNode_GetDottedLine, Param1, NULL, NULL, NULL), (ZuiAny)TRUE, NULL, NULL);
         ZuiControlCall(Proc_SetFixedWidth,
             ZuiControlCall(Proc_TreeNode_GetDottedLine, Param1, NULL, NULL, NULL),
             (ZuiInt)ZuiControlCall(Proc_GetFixedWidth, p->pDottedLine, NULL, NULL, NULL) + 16, NULL, NULL);
@@ -290,31 +290,31 @@ ZEXPORT ZuiAny ZCALL ZuiTreeNodeProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeNode p
     }
     case Proc_TreeNode_GetTreeIndex: {
         if (!p->pTreeView)
-            return -1;
+            return (ZuiAny)-1;
 
         for (int nIndex = 0; nIndex < ZuiControlCall(Proc_List_GetCount, p->pTreeView, NULL, NULL, NULL); nIndex++) {
             if (cp == ZuiControlCall(Proc_List_GetItemAt, p->pTreeView, nIndex, NULL, NULL))
-                return nIndex;
+                return (ZuiAny)nIndex;
         }
 
-        return -1;
+        return (ZuiAny)-1;
     }
     case Proc_TreeNode_GetDottedLine: {
         return p->pDottedLine;
     }
     case Proc_TreeNode_SetParentNode: {
         p->pParentTreeNode = Param1;
-        return;
+        return 0;
     }
     case Proc_TreeNode_GetItemButton: {
         return p->pItemButton;
     }
     case Proc_TreeNode_SetTreeView: {
         p->pTreeView = Param1;
-        return;
+        return 0;
     }
     case Proc_TreeNode_IsHasChild: {
-        return p->mTreeNodes->count != 0;
+        return (ZuiAny)p->mTreeNodes->count != 0;
     }
     case Proc_TreeNode_SetVisibleFolderBtn: {
         return ZuiControlCall(Proc_SetVisible, p->pFolderButton, Param1, NULL, NULL);
@@ -329,7 +329,7 @@ ZEXPORT ZuiAny ZCALL ZuiTreeNodeProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeNode p
         return ZuiControlCall(Proc_GetVisible, p->pCheckBox, NULL, NULL, NULL);
     }
     case Proc_TreeNode_GetCountChild: {
-        return p->mTreeNodes->count;
+        return (ZuiAny)p->mTreeNodes->count;
     }
     case Proc_TreeNode_GetFolderButton: {
         return p->pFolderButton;
@@ -383,11 +383,11 @@ ZEXPORT ZuiAny ZCALL ZuiTreeNodeProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeNode p
         ZuiControlCall(Proc_Option_SetResSelectedHot, p->pCheckBox, ZuiResDBGetRes(L"default:default/checked.png", ZREST_IMG), NULL, NULL);
         ZuiControlCall(Proc_Option_SetResSelectedPushed, p->pCheckBox, ZuiResDBGetRes(L"default:default/checked.png", ZREST_IMG), NULL, NULL);
 
-        ZuiControlCall(Proc_SetFixedHeight, cp, 18, NULL, NULL);
-        ZuiControlCall(Proc_SetFixedWidth, cp, 250, NULL, NULL);
+        ZuiControlCall(Proc_SetFixedHeight, cp, (ZuiAny)18, NULL, NULL);
+        ZuiControlCall(Proc_SetFixedWidth, cp, (ZuiAny)250, NULL, NULL);
 
         ZuiControlCall(Proc_SetFixedWidth, p->pFolderButton, ZuiControlCall(Proc_GetFixedHeight, cp, NULL, NULL, NULL), NULL, NULL);
-        ZuiControlCall(Proc_SetFixedWidth, p->pDottedLine, 2, NULL, NULL);
+        ZuiControlCall(Proc_SetFixedWidth, p->pDottedLine, (ZuiAny)2, NULL, NULL);
         ZuiControlCall(Proc_SetFixedWidth, p->pCheckBox, ZuiControlCall(Proc_GetFixedHeight, cp, NULL, NULL, NULL), NULL, NULL);
         //p->pItemButton->SetAttribute(_T("align"), _T("left"));
 
@@ -414,7 +414,7 @@ ZEXPORT ZuiAny ZCALL ZuiTreeNodeProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeNode p
         return 0;
     }
     case Proc_GetObject:
-        if (Param1 == Type_TreeNode)
+        if (Param1 == (ZuiAny)Type_TreeNode)
             return (ZuiAny)p;
         break;
     case Proc_GetType:

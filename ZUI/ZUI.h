@@ -447,7 +447,7 @@ enum ZREST
 #if 1
 #define Type_List                           0x86c6c0f9
 #define Type_ListBody                       0x66e9ee9e
-#define Type_ListElement                    0x0
+#define Type_ListElement                    0x0362584a
 #define Type_ListHeader                     0x39323603
 #define Type_ListHeaderItem                 0x25996255
 
@@ -563,6 +563,7 @@ extern "C"
     ZEXPORT ZuiControl ZCALL NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);//创建控件
     ZEXPORT ZuiVoid ZCALL FreeZuiControl(ZuiControl p, ZuiBool Delayed);//销毁控件
     ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);//调用控件处理函数
+	ZEXPORT ZuiControl ZCALL ZuiControlFindName(ZuiControl p, ZuiText Name);
 
     //载入布局窗口
     ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len);

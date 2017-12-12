@@ -274,7 +274,7 @@ mxml_node_t *mxmlClone(mxml_node_t *node, mxml_node_t *parent) {
     new_node->value.num_attrs = node->value.num_attrs;
     if (node->value.num_attrs)
         new_node->value.attrs = (mxml_attr_t *)memset(malloc(node->value.num_attrs * sizeof(mxml_attr_t)), 0, node->value.num_attrs * sizeof(mxml_attr_t));
-    for (size_t i = 0; i < node->value.num_attrs; i++)
+    for (ZuiInt i = 0; i < node->value.num_attrs; i++)
     {
         new_node->value.attrs[i].name = strdup(node->value.attrs[i].name);
         new_node->value.attrs[i].value = strdup(node->value.attrs[i].value);
@@ -973,7 +973,7 @@ mxml_node_t *mxmlLoadString(mxml_node_t *top, ZuiAny s, ZuiInt len)
     wchar_t ch; /* Non-zero if whitespace seen */
     wchar_t *buffer, /* String buffer */
         *bufptr; /* Pointer into buffer */
-    int bufsize = 0; /* Size of buffer */
+    size_t bufsize = 0; /* Size of buffer */
     wchar_t *txtbuf = 0;
     if (ZuiStingIsUtf8(s, len))
     {

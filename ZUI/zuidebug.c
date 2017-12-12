@@ -10,7 +10,7 @@ int _stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, ZuiText lpCmd
     ZuiInit(&config);
 
     ZuiRes res = ZuiResDBGetRes(L"file:test.xml", ZREST_STREAM);
-    int len = 0;
+    ZuiInt len = 0;
     ZuiAny xml = ZuiResGetData(res, &len);
     ZuiControl c = ZuiControlFindName(ZuiLayoutLoad(xml, len), L"list");
     ZuiResDBDelRes(res);

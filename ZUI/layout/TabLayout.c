@@ -22,7 +22,7 @@ void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Pa
             ZuiControl pControl = (ZuiControl)(op->m_items->data[it]);
             if (!pControl->m_bVisible) continue;
             if (pControl->m_bFloat) {
-                ZuiControlCall(Proc_Layout_SetFloatPos, cp, (void *)it, 0, 0);
+                ZuiControlCall(Proc_Layout_SetFloatPos, cp, (ZuiAny)it, 0, 0);
                 continue;
             }
 
@@ -117,7 +117,7 @@ void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Pa
         {
             p->m_iCurSel = (ZuiInt)ZuiLayoutProc(Proc_Layout_GetItemIndex, cp, p->old_udata, Param1, Param2, Param3);
         }
-        else if (p->m_iCurSel != -1 && (int)Param2 <= p->m_iCurSel)
+        else if (p->m_iCurSel != -1 && (ZuiInt)Param2 <= p->m_iCurSel)
         {
             p->m_iCurSel += 1;
         }

@@ -39,7 +39,7 @@ void* ZCALL ZuiTileLayoutProc(int ProcId, ZuiControl cp, ZuiTileLayout p, void* 
             ZuiControl pControl = (ZuiControl)(op->m_items->data[it1]);
             if (!pControl->m_bVisible) continue;
             if (pControl->m_bFloat) {
-                ZuiControlCall(Proc_Layout_SetFloatPos, cp, (void *)it1, 0, 0);
+                ZuiControlCall(Proc_Layout_SetFloatPos, cp, (ZuiAny)it1, 0, 0);
                 continue;
             }
 

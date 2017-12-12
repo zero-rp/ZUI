@@ -119,7 +119,7 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
                 ZuiDrawFillRect(gp, p->m_ColorPushed, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
             }
         }
-        return;
+        return 0;
     }
     case Proc_Button_SetResNormal: {
         if (p->m_ResNormal)
@@ -228,7 +228,7 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         return 0;
     }
     case Proc_GetObject:
-        if (Param1 == Type_Button)
+        if (Param1 == (ZuiAny)Type_Button)
             return (ZuiAny)p;
         break;
     case Proc_GetType:

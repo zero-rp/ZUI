@@ -16,9 +16,9 @@
     #define PLATFORM_OS_ANDROID
 #endif
 
-#define HAVE_JS 1
-#define HAVE_UV 1
-#define HAVE_DUV 1
+#define HAVE_JS 0
+#define HAVE_UV 0
+#define HAVE_DUV 0
 
 #if (defined HAVE_JS) && (HAVE_JS == 1)
 #undef HAVE_UV

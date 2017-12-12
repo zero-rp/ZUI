@@ -47,20 +47,20 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 ZuiControlCall(Proc_OnEvent, p->m_pOwner, Param1, NULL, NULL);
             else
                 ZuiDefaultControlProc(Proc_OnEvent, cp, 0, Param1, NULL, NULL);
-            return;
+            return 0;
         }
 
         if (event->Type == ZEVENT_SETFOCUS)
         {
-            return;
+            return 0;
         }
         if (event->Type == ZEVENT_KILLFOCUS)
         {
-            return;
+            return 0;
         }
         if (event->Type == ZEVENT_LBUTTONDOWN || event->Type == ZEVENT_LDBLCLICK)
         {
-            if (!cp->m_bEnabled) return;
+            if (!cp->m_bEnabled) return 0;
 
             p->m_nLastScrollOffset = 0;
             p->m_nScrollRepeatDelay = 0;
@@ -71,13 +71,13 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                     if (p->m_pOwner != NULL)
                         ZuiControlCall(Proc_Layout_LineUp, p->m_pOwner, NULL, NULL, NULL);
                     else
-                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, p->m_nScrollPos - p->m_nLineSize, NULL, NULL);
+                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nScrollPos - p->m_nLineSize), NULL, NULL);
                 }
                 else {
                     if (p->m_pOwner != NULL)
                         ZuiControlCall(Proc_Layout_LineLeft, p->m_pOwner, NULL, NULL, NULL);
                     else
-                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, p->m_nScrollPos - p->m_nLineSize, NULL, NULL);
+                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nScrollPos - p->m_nLineSize), NULL, NULL);
                 }
             }
             else if (ZuiIsPointInRect(&p->m_rcButton2, &event->ptMouse)) {
@@ -86,13 +86,13 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                     if (p->m_pOwner != NULL)
                         ZuiControlCall(Proc_Layout_LineDown, p->m_pOwner, NULL, NULL, NULL);
                     else
-                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, p->m_nScrollPos + p->m_nLineSize, NULL, NULL);
+                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nScrollPos + p->m_nLineSize), NULL, NULL);
                 }
                 else {
                     if (p->m_pOwner != NULL)
                         ZuiControlCall(Proc_Layout_LineRight, p->m_pOwner, NULL, NULL, NULL);
                     else
-                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, p->m_nScrollPos + p->m_nLineSize, NULL, NULL);
+                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nScrollPos + p->m_nLineSize), NULL, NULL);
                 }
             }
             else if (ZuiIsPointInRect(&p->m_rcThumb, &event->ptMouse)) {
@@ -106,13 +106,13 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                         if (p->m_pOwner != NULL)
                             ZuiControlCall(Proc_Layout_PageUp, p->m_pOwner, NULL, NULL, NULL);
                         else
-                            ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, p->m_nScrollPos + cp->m_rcItem.top - cp->m_rcItem.bottom, NULL, NULL);
+                            ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nScrollPos + cp->m_rcItem.top - cp->m_rcItem.bottom), NULL, NULL);
                     }
                     else if (event->ptMouse.y > p->m_rcThumb.bottom) {
                         if (p->m_pOwner != NULL)
                             ZuiControlCall(Proc_Layout_PageDown, p->m_pOwner, NULL, NULL, NULL);
                         else
-                            ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, p->m_nScrollPos - cp->m_rcItem.top + cp->m_rcItem.bottom, NULL, NULL);
+                            ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nScrollPos - cp->m_rcItem.top + cp->m_rcItem.bottom), NULL, NULL);
                     }
                 }
                 else {
@@ -120,18 +120,18 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                         if (p->m_pOwner != NULL)
                             ZuiControlCall(Proc_Layout_PageLeft, p->m_pOwner, NULL, NULL, NULL);
                         else
-                            ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, p->m_nScrollPos + cp->m_rcItem.left - cp->m_rcItem.right, NULL, NULL);
+                            ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nScrollPos + cp->m_rcItem.left - cp->m_rcItem.right), NULL, NULL);
                     }
                     else if (event->ptMouse.x > p->m_rcThumb.right) {
                         if (p->m_pOwner != NULL)
                             ZuiControlCall(Proc_Layout_PageRight, p->m_pOwner, NULL, NULL, NULL);
                         else
-                            ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, p->m_nScrollPos - cp->m_rcItem.left + cp->m_rcItem.right, NULL, NULL);
+                            ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nScrollPos - cp->m_rcItem.left + cp->m_rcItem.right), NULL, NULL);
                     }
                 }
             }
             //if (m_pManager != NULL && p->m_pOwner == NULL) m_pManager->SendNotify(this, DUI_MSGTYPE_SCROLL);
-            return;
+            return 0;
         }
         if (event->Type == ZEVENT_LBUTTONUP)
         {
@@ -151,7 +151,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 p->m_uButton2State &= ~ZSTATE_PUSHED;
                 ZuiControlInvalidate(cp, TRUE);
             }
-            return;
+            return 0;
         }
         if (event->Type == ZEVENT_MOUSEMOVE)
         {
@@ -205,11 +205,11 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                     ZuiControlInvalidate(cp, TRUE);
                 }
             }
-            return;
+            return 0;
         }
         if (event->Type == ZEVENT_CONTEXTMENU)
         {
-            return;
+            return 0;
         }
         if (event->Type == ZEVENT_TIMER && event->wParam == DEFAULT_TIMERID)
         {
@@ -221,7 +221,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                         ZuiControlCall(Proc_Layout_SetScrollPos, p->m_pOwner, &sz, NULL, NULL);
                     }
                     else
-                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, p->m_nLastScrollPos + p->m_nLastScrollOffset, NULL, NULL);
+                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nLastScrollPos + p->m_nLastScrollOffset), NULL, NULL);
                 }
                 else {
                     if (p->m_pOwner != NULL) {
@@ -229,57 +229,57 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                         ZuiControlCall(Proc_Layout_SetScrollPos, p->m_pOwner, &sz, NULL, NULL);
                     }
                     else
-                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, p->m_nLastScrollPos + p->m_nLastScrollOffset, NULL, NULL);
+                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nLastScrollPos + p->m_nLastScrollOffset), NULL, NULL);
                 }
                 ZuiControlInvalidate(cp, TRUE);
             }
             else if ((p->m_uButton1State & ZSTATE_PUSHED) != 0) {
-                if (p->m_nScrollRepeatDelay <= 5) return;
+                if (p->m_nScrollRepeatDelay <= 5) return 0;
                 if (!p->m_bHorizontal) {
                     if (p->m_pOwner != NULL)
                         ZuiControlCall(Proc_Layout_LineUp, p->m_pOwner, NULL, NULL, NULL);
                     else
-                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, p->m_nScrollPos - p->m_nLineSize, NULL, NULL);
+                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nScrollPos - p->m_nLineSize), NULL, NULL);
                 }
                 else {
                     if (p->m_pOwner != NULL)
                         ZuiControlCall(Proc_Layout_LineLeft, p->m_pOwner, NULL, NULL, NULL);
                     else
-                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, p->m_nScrollPos - p->m_nLineSize, NULL, NULL);
+                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nScrollPos - p->m_nLineSize), NULL, NULL);
                 }
             }
             else if ((p->m_uButton2State & ZSTATE_PUSHED) != 0) {
-                if (p->m_nScrollRepeatDelay <= 5) return;
+                if (p->m_nScrollRepeatDelay <= 5) return 0;
                 if (!p->m_bHorizontal) {
                     if (p->m_pOwner != NULL)
                         ZuiControlCall(Proc_Layout_LineDown, p->m_pOwner, NULL, NULL, NULL);
                     else
-                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, p->m_nScrollPos + p->m_nLineSize, NULL, NULL);
+                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nScrollPos + p->m_nLineSize), NULL, NULL);
                 }
                 else {
                     if (p->m_pOwner != NULL)
                         ZuiControlCall(Proc_Layout_LineRight, p->m_pOwner, NULL, NULL, NULL);
                     else
-                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, p->m_nScrollPos + p->m_nLineSize, NULL, NULL);
+                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nScrollPos + p->m_nLineSize), NULL, NULL);
                 }
             }
             else {
                 ZPoint pt = { 0 };
-                if (p->m_nScrollRepeatDelay <= 5) return;
-                GetCursorPos(&pt);
+                if (p->m_nScrollRepeatDelay <= 5) return 0;
+                GetCursorPos((LPPOINT)&pt);
                 ZuiScreenToClient(cp, &pt);
                 if (!p->m_bHorizontal) {
                     if (pt.y < p->m_rcThumb.top) {
                         if (p->m_pOwner != NULL)
                             ZuiControlCall(Proc_Layout_PageUp, p->m_pOwner, NULL, NULL, NULL);
                         else
-                            ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, p->m_nScrollPos + cp->m_rcItem.top - cp->m_rcItem.bottom, NULL, NULL);
+                            ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nScrollPos + cp->m_rcItem.top - cp->m_rcItem.bottom), NULL, NULL);
                     }
                     else if (pt.y > p->m_rcThumb.bottom) {
                         if (p->m_pOwner != NULL)
                             ZuiControlCall(Proc_Layout_PageDown, p->m_pOwner, NULL, NULL, NULL);
                         else
-                            ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, p->m_nScrollPos - cp->m_rcItem.top + cp->m_rcItem.bottom, NULL, NULL);
+                            ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nScrollPos - cp->m_rcItem.top + cp->m_rcItem.bottom), NULL, NULL);
                     }
                 }
                 else {
@@ -287,18 +287,18 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                         if (p->m_pOwner != NULL)
                             ZuiControlCall(Proc_Layout_PageLeft, p->m_pOwner, NULL, NULL, NULL);
                         else
-                            ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, p->m_nScrollPos + cp->m_rcItem.left - cp->m_rcItem.right, NULL, NULL);
+                            ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nScrollPos + cp->m_rcItem.left - cp->m_rcItem.right), NULL, NULL);
                     }
                     else if (pt.x > p->m_rcThumb.right) {
                         if (p->m_pOwner != NULL)
                             ZuiControlCall(Proc_Layout_PageRight, p->m_pOwner, NULL, NULL, NULL);
                         else
-                            ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, p->m_nScrollPos - cp->m_rcItem.left + cp->m_rcItem.right, NULL, NULL);
+                            ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nScrollPos - cp->m_rcItem.left + cp->m_rcItem.right), NULL, NULL);
                     }
                 }
             }
             //if (m_pManager != NULL && p->m_pOwner == NULL) m_pManager->SendNotify(this, DUI_MSGTYPE_SCROLL);
-            return;
+            return 0;
         }
         if (event->Type == ZEVENT_MOUSEENTER)
         {
@@ -314,7 +314,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 }
                 ZuiControlInvalidate(cp, TRUE);
             }
-            return;
+            return 0;
         }
         if (event->Type == ZEVENT_MOUSELEAVE)
         {
@@ -324,7 +324,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 p->m_uThumbState &= ~ZSTATE_HOT;
                 ZuiControlInvalidate(cp, TRUE);
             }
-            return;
+            return 0;
         }
 
         if (p->m_pOwner != NULL)
@@ -462,7 +462,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
             //CRenderEngine::DrawRect(hDC, m_rcButton1, nBorderSize, dwBorderColor);
         }
 
-        if (p->m_rcThumb.left == 0 && p->m_rcThumb.top == 0 && p->m_rcThumb.right == 0 && p->m_rcThumb.bottom == 0) return;
+        if (p->m_rcThumb.left == 0 && p->m_rcThumb.top == 0 && p->m_rcThumb.right == 0 && p->m_rcThumb.bottom == 0) return 0;
         if (!cp->m_bEnabled) p->m_uThumbState |= ZSTATE_DISABLED;
         else p->m_uThumbState &= ~ZSTATE_DISABLED;
 
@@ -663,7 +663,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         break;
     }
     case Proc_ScrollBar_SetHorizontal: {
-        if (p->m_bHorizontal == Param1) return;
+        if (p->m_bHorizontal == Param1) return 0;
 
         p->m_bHorizontal = Param1;
         if (p->m_bHorizontal) {
@@ -686,7 +686,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         break;
     }
     case Proc_ScrollBar_SetScrollPos: {
-        if (p->m_nScrollPos == Param1) return;
+        if (p->m_nScrollPos == Param1) return 0;
 
         p->m_nScrollPos = Param1;
         if (p->m_nScrollPos < 0) p->m_nScrollPos = 0;
@@ -705,7 +705,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         break;
     }
     case Proc_ScrollBar_SetScrollRange: {
-        if (p->m_nRange == Param1) return;
+        if (p->m_nRange == Param1) return 0;
 
         p->m_nRange = Param1;
         if (p->m_nRange < 0) p->m_nRange = 0;

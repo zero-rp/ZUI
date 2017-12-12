@@ -13,7 +13,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
     {
     case Proc_OnPaintText: {
         if (!cp->m_sText)
-            return;
+            return 0;
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = &cp->m_rcItem;
         ZRectR pt;
@@ -25,7 +25,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
             ZuiDrawString(gp, p->m_rFont->p, cp->m_sText, wcslen(cp->m_sText), &pt, p->m_cTextColor, p->m_uTextStyle);
         else
             ZuiDrawString(gp, Global_Font, cp->m_sText, wcslen(cp->m_sText), &pt, p->m_cTextColor, p->m_uTextStyle);
-        return;
+        return 0;
     }
 #if (defined HAVE_JS) && (HAVE_JS == 1)
     case Proc_JsSet: {
@@ -103,14 +103,14 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         if (p->m_rFont)
             ZuiResDBDelRes(p->m_rFont);
         p->m_rFont = Param1;
-        return;
+        return 0;
     }
     case Proc_Label_SetTextColor: {
         p->m_cTextColor = Param1;
-        return;
+        return 0;
     }
     case Proc_Label_SetTextPadding: {
-        return;
+        return 0;
     }
     case Proc_SetAttribute: {
         if (wcscmp(Param1, L"font") == 0) ZuiControlCall(Proc_Label_SetFont, cp, ZuiResDBGetRes(Param2, ZREST_FONT), NULL, NULL);
@@ -151,7 +151,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
             while (*(wchar_t *)Param2 > L'\0' && *(wchar_t *)Param2 <= L' ') Param2 = ZuiCharNext((wchar_t *)Param2);
             if (*(wchar_t *)Param2 == L'#') Param2 = ZuiCharNext((wchar_t *)Param2);
             clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);
-            ZuiControlCall(Proc_Label_SetTextColor, cp, clrColor, NULL, NULL);
+            ZuiControlCall(Proc_Label_SetTextColor, cp, (ZuiAny)clrColor, NULL, NULL);
         }
         else if (wcscmp(Param1, L"textpadding") == 0) {
             //字体边距
@@ -182,7 +182,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         else {
             break;
         }
-        return;
+        return 0;
     }
     case Proc_OnCreate: {
         p = (ZuiLabel)malloc(sizeof(ZLabel));
@@ -204,7 +204,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         return 0;
     }
     case Proc_GetObject:
-        if (Param1 == Type_Label)
+        if (Param1 == (ZuiAny)Type_Label)
             return (ZuiAny)p;
         break;
     case Proc_GetType:
