@@ -423,7 +423,9 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
             if (pHeader != NULL && ZuiControlCall(Proc_Layout_GetCount, pHeader, NULL, NULL, NULL) > 0) {
                 SIZE sz = { rc.right - rc.left, rc.bottom - rc.top };
                 cxNeeded = MAX(0, ((SIZE *)ZuiControlCall(Proc_EstimateSize, pHeader, (void *)&sz, 0, 0))->cx);
-				ph = ((SIZE *)ZuiControlCall(Proc_EstimateSize, pHeader, (void *)&sz, 0, 0))->cy;
+				if (pHeader->m_bVisible) {
+					ph = ((SIZE *)ZuiControlCall(Proc_EstimateSize, pHeader, (void *)&sz, 0, 0))->cy;
+				}
 				ZRect rcHeader = *(ZRect *)ZuiControlCall(Proc_GetPos, pHeader, NULL, NULL, NULL);
                 if (op->m_pHorizontalScrollBar && op->m_pHorizontalScrollBar->m_bVisible)
                 {
@@ -642,7 +644,7 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
 		ZuiLayoutProc(ProcId, cp, p->old_udata, Param1, Param2, Param3);
 		if (p->m_pOwner == NULL) return FALSE;
 		ZuiControl pHeader = ZuiControlCall(Proc_List_GetHeader, p->m_pOwner, cp, NULL, NULL);
-		if (pHeader == NULL || !pHeader->m_bVisible)
+		if (pHeader == NULL)
 			return FALSE;
 		ZuiLayout op = ZuiControlCall(Proc_GetObject, cp, (ZuiAny)Type_Layout, NULL, NULL);
 		int i = darray_find(op->m_items, Param1);
@@ -806,7 +808,7 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
         //}
 
         ZuiControl pHeader = ZuiControlCall(Proc_List_GetHeader, p->m_pOwner, cp, NULL, NULL);
-        if (pHeader == NULL || !pHeader->m_bVisible)
+        if (pHeader == NULL)
             return 0;
         int nCount = op->m_items->count;
         for (int i = 0; i < nCount; i++)
