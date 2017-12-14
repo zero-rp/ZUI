@@ -3,6 +3,7 @@
 #include <ZUI.h>
 #include <platform/platform.h>
 #include "animation.h"
+#include "function.h"
 
 
 #define ZTYLE_BOX               1   //单线边框

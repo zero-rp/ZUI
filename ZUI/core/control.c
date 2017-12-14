@@ -641,13 +641,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         else if (wcscmp(Param1, L"maxwidth") == 0) ZuiControlCall(Proc_SetMaxWidth, p, _wtoi(Param2), NULL, NULL);
         else if (wcscmp(Param1, L"maxheight") == 0) ZuiControlCall(Proc_SetMaxHeight, p, _wtoi(Param2), NULL, NULL);
         else if (wcscmp(Param1, L"bkcolor") == 0) {
-            ZuiText pstr = NULL;
-            ZuiColor clrColor;
-            while (*(wchar_t *)Param2 > L'\0' && *(wchar_t *)Param2 <= L' ')
-                Param2 = ZuiCharNext((wchar_t *)Param2);
-            if (*(wchar_t *)Param2 == L'#') 
-                Param2 = ZuiCharNext((wchar_t *)Param2);
-            clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);
+			ZuiColor clrColor;
+			clrColor = ZuiStr2Color(Param2);
             ZuiControlCall(Proc_SetBkColor, p, clrColor, NULL, NULL);
         }
         else if (wcscmp(Param1, L"drag") == 0) ZuiControlCall(Proc_SetDrag, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);

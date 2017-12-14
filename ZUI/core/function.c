@@ -369,4 +369,14 @@ ZuiInt ZuiUnicodeToAscii(ZuiText str, ZuiInt slen, ZuiAny out, ZuiInt olen)
     return ZuiOsUnicodeToAscii(str, slen, out, olen);
 }
 
-
+ZuiColor ZuiStr2Color(ZuiAny str)
+{
+	ZuiText pstr = NULL;
+	ZuiColor clrColor;
+	while (*(ZuiText)str > L'\0' && *(ZuiText)str <= L' ')
+		str = ZuiCharNext((ZuiText)str);
+	if (*(ZuiText)str == L'#')
+		str = ZuiCharNext((ZuiText)str);
+	clrColor = _tcstoul((ZuiText)str, &pstr, 16);
+	return clrColor;
+}
