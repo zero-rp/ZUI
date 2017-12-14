@@ -354,7 +354,10 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
 		}
 		//if (op->m_pHorizontalScrollBar && op->m_pHorizontalScrollBar->m_bVisible)
 			//rc->bottom -= (ZuiInt)ZuiControlCall(Proc_GetFixedHeight, op->m_pHorizontalScrollBar, NULL, NULL, NULL);
-		ZuiControlCall(ProcId, ((ZuiList)ZuiControlCall(Proc_GetObject, p->m_pOwner, (ZuiAny)Type_List, NULL, NULL))->m_pHeader, Param1, rc, Param3);
+		ZuiControl pHeader = ((ZuiList)ZuiControlCall(Proc_GetObject, p->m_pOwner, (ZuiAny)Type_List, NULL, NULL))->m_pHeader;
+		if (pHeader->m_bVisible) {
+			ZuiControlCall(ProcId, pHeader, Param1, rc, Param3);
+		}
 		return 0;
 	}
 	case Proc_FindControl: {
