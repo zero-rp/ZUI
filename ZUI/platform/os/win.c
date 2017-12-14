@@ -835,7 +835,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     }
     case WM_NCHITTEST:
     {
-        if (!p->m_nobox)
+        if (!p->m_nobox || IsZoomed(p->m_hWnd))
             break;
         int x = GET_X_LPARAM(lParam);
         int	y = GET_Y_LPARAM(lParam);
