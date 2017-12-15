@@ -371,10 +371,14 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
         ZRect rc = *(ZRect*)Param1;
         ZuiLayout op = ZuiControlCall(Proc_GetObject, cp, (ZuiAny)Type_Layout, NULL, NULL);
         // Adjust for inset
-        rc.left += op->m_rcInset.left;
-        rc.top += op->m_rcInset.top;
-        rc.right -= op->m_rcInset.right;
-        rc.bottom -= op->m_rcInset.bottom;
+		rc.left += op->m_rcInset.left;
+		rc.top += op->m_rcInset.top;
+		rc.right -= op->m_rcInset.right;
+		rc.bottom -= op->m_rcInset.bottom;
+		rc.left += cp->m_BorderWidth;
+		rc.top += cp->m_BorderWidth;
+		rc.right -= cp->m_BorderWidth;
+		rc.bottom -= cp->m_BorderWidth;
         if (op->m_pVerticalScrollBar && op->m_pVerticalScrollBar->m_bVisible)
             rc.right -= (ZuiInt)ZuiControlCall(Proc_GetFixedWidth, op->m_pVerticalScrollBar, NULL, NULL, NULL);
         if (op->m_pHorizontalScrollBar && op->m_pHorizontalScrollBar->m_bVisible)
@@ -1315,7 +1319,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
 			while (*(wchar_t *)Param2 > L'\0' && *(wchar_t *)Param2 <= L' ') Param2 = ZuiCharNext((wchar_t *)Param2);
 			if (*(wchar_t *)Param2 == L'#') Param2 = ZuiCharNext((wchar_t *)Param2);
 			clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);*/
-			p->m_cTextColor = ZuiStr2Color;
+			p->m_cTextColor = ZuiStr2Color(Param2);
 		}
         break;
     }
