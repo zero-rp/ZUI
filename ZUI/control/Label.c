@@ -17,10 +17,10 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = &cp->m_rcItem;
         ZRectR pt;
-        pt.left = rc->left;
-        pt.top = rc->top;
-        pt.right = rc->right;
-        pt.bottom = rc->bottom;
+        pt.left = rc->left + p->m_rPadding.left + cp->m_BorderWidth;
+        pt.top = rc->top + p->m_rPadding.top + cp->m_BorderWidth;
+        pt.right = rc->right - p->m_rPadding.right - cp->m_BorderWidth;
+        pt.bottom = rc->bottom - p->m_rPadding.bottom - cp->m_BorderWidth;
         if (p->m_rFont)
             ZuiDrawString(gp, p->m_rFont->p, cp->m_sText, wcslen(cp->m_sText), &pt, p->m_cTextColor, p->m_uTextStyle);
         else
@@ -103,13 +103,17 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         if (p->m_rFont)
             ZuiResDBDelRes(p->m_rFont);
         p->m_rFont = Param1;
+		ZuiControlNeedUpdate(cp);
         return 0;
     }
     case Proc_Label_SetTextColor: {
         p->m_cTextColor = Param1;
+		ZuiControlNeedUpdate(cp);
         return 0;
     }
     case Proc_Label_SetTextPadding: {
+		memcpy(&p->m_rPadding, Param1, sizeof(ZRect));
+		ZuiControlNeedUpdate(cp);
         return 0;
     }
     case Proc_SetAttribute: {
@@ -128,6 +132,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
                 p->m_uTextStyle &= ~(ZDT_LEFT | ZDT_CENTER);
                 p->m_uTextStyle |= ZDT_RIGHT;
             }
+			ZuiControlNeedUpdate(cp);
         }
         else if (wcscmp(Param1, L"valign") == 0) {
             //纵向对齐方式
@@ -143,6 +148,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
                 p->m_uTextStyle &= ~(ZDT_TOP | ZDT_VCENTER | ZDT_WORDBREAK);
                 p->m_uTextStyle |= (ZDT_BOTTOM | ZDT_SINGLELINE);
             }
+			ZuiControlNeedUpdate(cp);
         }
         else if (wcscmp(Param1, L"textcolor") == 0) {
             //字体颜色

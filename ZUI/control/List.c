@@ -1296,6 +1296,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
 				p->m_uTextStyle &= ~(ZDT_LEFT | ZDT_CENTER);
 				p->m_uTextStyle |= ZDT_RIGHT;
 			}
+			ZuiControlNeedUpdate(cp);
 		}
 		else if (wcscmp(Param1, L"valign") == 0) {
 			//纵向对齐方式
@@ -1311,6 +1312,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
 				p->m_uTextStyle &= ~(ZDT_TOP | ZDT_VCENTER | ZDT_WORDBREAK);
 				p->m_uTextStyle |= (ZDT_BOTTOM | ZDT_SINGLELINE);
 			}
+			ZuiControlNeedUpdate(cp);
 		}
 		else if (wcscmp(Param1, L"textcolor") == 0) {
 			//字体颜色
@@ -1320,6 +1322,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
 			if (*(wchar_t *)Param2 == L'#') Param2 = ZuiCharNext((wchar_t *)Param2);
 			clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);*/
 			p->m_cTextColor = ZuiStr2Color(Param2);
+			ZuiControlNeedUpdate(cp);
 		}
         break;
     }
