@@ -22,7 +22,7 @@ ZuiAny ZCALL OnPaint(ZuiControl p, ZuiAny Param1, ZuiAny Param2) {
         //ZuiAlphaBlend(Param1, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, p->m_aAnime->m_hDcOffscreen, 0, 0, p->m_aAnime->steup * 10);
         
     }
-    
+	return 0;
 }
 ZuiVoid ZCALL OnSize(ZuiControl p, ZuiAny w, ZuiAny h) {
     if (p->m_aAnime->m_hDcOffscreen)
