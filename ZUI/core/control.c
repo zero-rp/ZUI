@@ -132,32 +132,18 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     }
     case Proc_SetText: {
         ZuiControlInvalidate(p, TRUE);
-        if (!p->m_sText)
-            p->m_sText = wcsdup((ZuiText)Param1);
-        if (wcscmp(p->m_sText, (ZuiText)Param1) == 0)
-            return 0;
-        free(p->m_sText);
-        p->m_sText = wcsdup((ZuiText)Param1);
+		CONTROL_SETSTR(p->m_sText, Param1);
         break;
     }
     case Proc_GetText: {
         return p->m_sText;
     }
     case Proc_SetName: {
-        if (!p->m_sName)
-            p->m_sName = wcsdup((ZuiText)Param1);
-        if (wcscmp(p->m_sName, (ZuiText)Param1) == 0)
-            return 0;
-        free(p->m_sName);
-        p->m_sName = wcsdup((ZuiText)Param1);
+		CONTROL_SETSTR(p->m_sName, Param1);
         break;
     }
     case Proc_SetTooltip: {
-        if (!p->m_sToolTip)
-            p->m_sToolTip = wcsdup((ZuiText)Param1);
-        if (wcscmp(p->m_sToolTip, (ZuiText)Param1) == 0)
-            return 0;
-        p->m_sToolTip = wcsdup((ZuiText)Param1);
+		CONTROL_SETSTR(p->m_sToolTip, Param1);
         break;
     }
     case Proc_GetPos: {
@@ -375,15 +361,15 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         break;
     }
 	case Proc_GetBorderWidth: {
-		return (void *)p->m_BorderWidth;
+		return (void *)p->m_dwBorderWidth;
 		break;
 	}
 	case Proc_SetBorderWidth: {
-		if (p->m_BorderWidth == (ZuiInt)Param1)
+		if (p->m_dwBorderWidth == (ZuiInt)Param1)
 			return 0;
 		if ((ZuiInt)Param1 < 0)
 			return 0;
-		p->m_BorderWidth = (ZuiInt)Param1;
+		p->m_dwBorderWidth = (ZuiInt)Param1;
 		ZuiControlNeedParentUpdate(p);
 		break;
 	}
@@ -548,6 +534,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         break;
     }
     case Proc_SetBorderColor: {
+		if (!p->m_dwBorderColor && !p->m_dwBorderWidth)
+			p->m_dwBorderWidth++;
         p->m_dwBorderColor = Param1;
         ZuiControlInvalidate(p, TRUE);
         break;
@@ -588,8 +576,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = &p->m_rcItem;
 		if (p->m_dwBorderColor) {
-			if(p->m_BorderWidth)
-				ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, p->m_BorderWidth);
+			if(p->m_dwBorderWidth)
+				ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, p->m_dwBorderWidth);
 			else
 				ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 1);
 		}

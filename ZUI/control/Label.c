@@ -17,10 +17,10 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = &cp->m_rcItem;
         ZRectR pt;
-        pt.left = rc->left + p->m_rPadding.left + cp->m_BorderWidth;
-        pt.top = rc->top + p->m_rPadding.top + cp->m_BorderWidth;
-        pt.right = rc->right - p->m_rPadding.right - cp->m_BorderWidth;
-        pt.bottom = rc->bottom - p->m_rPadding.bottom - cp->m_BorderWidth;
+        pt.left = rc->left + p->m_rPadding.left + cp->m_dwBorderWidth;
+        pt.top = rc->top + p->m_rPadding.top + cp->m_dwBorderWidth;
+        pt.right = rc->right - p->m_rPadding.right - cp->m_dwBorderWidth;
+        pt.bottom = rc->bottom - p->m_rPadding.bottom - cp->m_dwBorderWidth;
         if (p->m_rFont)
             ZuiDrawString(gp, p->m_rFont->p, cp->m_sText, wcslen(cp->m_sText), &pt, p->m_cTextColor, p->m_uTextStyle);
         else

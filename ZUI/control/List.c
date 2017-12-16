@@ -375,10 +375,10 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
 		rc.top += op->m_rcInset.top;
 		rc.right -= op->m_rcInset.right;
 		rc.bottom -= op->m_rcInset.bottom;
-		rc.left += cp->m_BorderWidth;
-		rc.top += cp->m_BorderWidth;
-		rc.right -= cp->m_BorderWidth;
-		rc.bottom -= cp->m_BorderWidth;
+		rc.left += cp->m_dwBorderWidth;
+		rc.top += cp->m_dwBorderWidth;
+		rc.right -= cp->m_dwBorderWidth;
+		rc.bottom -= cp->m_dwBorderWidth;
         if (op->m_pVerticalScrollBar && op->m_pVerticalScrollBar->m_bVisible)
             rc.right -= (ZuiInt)ZuiControlCall(Proc_GetFixedWidth, op->m_pVerticalScrollBar, NULL, NULL, NULL);
         if (op->m_pHorizontalScrollBar && op->m_pHorizontalScrollBar->m_bVisible)

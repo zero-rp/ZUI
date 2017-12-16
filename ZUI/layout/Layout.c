@@ -176,10 +176,10 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
 		rc.top += p->m_rcInset.top;
 		rc.right -= p->m_rcInset.right;
 		rc.bottom -= p->m_rcInset.bottom;
-		rc.left += cp->m_BorderWidth;
-		rc.top += cp->m_BorderWidth;
-		rc.right -= cp->m_BorderWidth;
-		rc.bottom -= cp->m_BorderWidth;
+		rc.left += cp->m_dwBorderWidth;
+		rc.top += cp->m_dwBorderWidth;
+		rc.right -= cp->m_dwBorderWidth;
+		rc.bottom -= cp->m_dwBorderWidth;
 
         for (int it = 0; it < darray_len(p->m_items); it++) {
             ZuiControl pControl = (ZuiControl)(p->m_items->data[it]);
@@ -530,8 +530,8 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
         ZSize *szXY = (ZSize *)ZuiControlCall(Proc_GetFixedXY, pControl, 0, 0, 0);
         ZSize sz = { (LONG)ZuiControlCall(Proc_GetFixedWidth, pControl, 0, 0, 0), (LONG)ZuiControlCall(Proc_GetFixedHeight, pControl, 0, 0, 0) };
         ZRectR rcPercent = { 0 };// pControl->GetFloatPercent();
-        LONG width = cp->m_rcItem.right - cp->m_rcItem.left - (cp->m_BorderWidth * 2);
-        LONG height = cp->m_rcItem.bottom - cp->m_rcItem.top - (cp->m_BorderWidth * 2);
+        LONG width = cp->m_rcItem.right - cp->m_rcItem.left - (cp->m_dwBorderWidth * 2);
+        LONG height = cp->m_rcItem.bottom - cp->m_rcItem.top - (cp->m_dwBorderWidth * 2);
         ZRect rcCtrl = { 0 };
         rcCtrl.left = (LONG)(width*rcPercent.left) + szXY->cx;
         rcCtrl.top = (LONG)(height*rcPercent.top) + szXY->cy;
@@ -541,11 +541,6 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
 
         break;
     }
-	case Proc_SetBorderColor: {
-		if (!cp->m_dwBorderColor && !cp->m_BorderWidth)
-			cp->m_BorderWidth++;
-		break;
-	}
     case Proc_Layout_SetInset: {
         memcpy(&p->m_rcInset, Param1, sizeof(ZRect));
         ZuiControlNeedParentUpdate(cp);
