@@ -132,18 +132,18 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     }
     case Proc_SetText: {
         ZuiControlInvalidate(p, TRUE);
-		CONTROL_SETSTR(p->m_sText, Param1);
+		CONTROL_SETSTR(p->m_sText, Param1,ZuiText);
         break;
     }
     case Proc_GetText: {
         return p->m_sText;
     }
     case Proc_SetName: {
-		CONTROL_SETSTR(p->m_sName, Param1);
+		CONTROL_SETSTR(p->m_sName, Param1, ZuiText);
         break;
     }
     case Proc_SetTooltip: {
-		CONTROL_SETSTR(p->m_sToolTip, Param1);
+		CONTROL_SETSTR(p->m_sToolTip, Param1, ZuiText);
         break;
     }
     case Proc_GetPos: {
