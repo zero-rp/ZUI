@@ -16,9 +16,16 @@ typedef struct _ZListHeaderItem
     ZuiRes m_diPushed;          //按下图片
     ZuiRes m_diFocused;         //焦点图片
     ZuiRes m_diSep;
+	ZuiColor m_ColorNormal;     //正常状态
+	ZuiColor m_ColorHot;        //高亮状态
+	ZuiColor m_ColorPushed;     //按下状态
+	ZuiColor m_ColorFocused;    //焦点图片
+	ZuiColor m_ColorSep;
 
     ZuiRes      m_rFont;         //字体
+	ZuiRes		m_rListFont;
     ZuiUInt     m_uTextStyle;    //字体控制
+	ZuiUInt		m_uListTextStyle;//ListElement字体控制
     ZuiColor    m_cTextColor;   //字体颜色
 
     ZRect Thumb;
@@ -63,6 +70,7 @@ typedef struct _ZListInfo
 
     ZuiBool bAlternateBk;       //使用交替背景色
     ZuiColor dwLineColor;          //行间线颜色
+	ZuiColor dwColumnColor;			//列间线颜色
     ZuiColor dwBkColor;            //背景色
     ZuiColor dwHotBkColor;         //点燃背景色
     ZuiColor dwSelectedBkColor;    //选中背景色

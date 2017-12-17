@@ -953,6 +953,9 @@ void Agg2D::text(Font& font, double x, double y, double x1, double y1, const wch
         //横向居中,
         start_x = (int)(x + (x1 - x) / 2 - font.textSize(str, len, style).x / 2);
     }
+	if ((style & ZDT_RIGHT) != 0) {
+		start_x = (int)(x + (x1 - x) - font.textSize(str, len, style).x);
+	}
 
     agg::trans_affine  mtx;
     agg::conv_transform<FontCacheManager::path_adaptor_type> tr(font.m_fontCacheManager.path_adaptor(), mtx);
@@ -960,6 +963,8 @@ void Agg2D::text(Font& font, double x, double y, double x1, double y1, const wch
     int i;
     for (i = 0; str[i]; i++)
     {
+		if (wcsncmp(&str[i],L" ",1) == 0)
+			start_x += font.textWidth(L'w');
         glyph = font.m_fontCacheManager.glyph(str[i]);//取字模
         if (glyph)
         {

@@ -40,6 +40,14 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
     }
     case Proc_SetAttribute: {
         if (wcscmp(Param1, _T("header")) == 0) ZuiControlCall(Proc_SetVisible, p->m_pHeader, (ZuiAny)(wcscmp(Param2, L"hidden") == 0 ? FALSE : TRUE), NULL, NULL);
+		else if (wcscmp(Param1, _T("linecolor")) == 0) {
+			p->m_ListInfo.dwLineColor = (ZuiAny)ZuiStr2Color(Param2);
+			p->m_ListInfo.bShowRowLine = TRUE;
+		}
+		else if (wcscmp(Param1, _T("columncolor")) == 0) {
+			p->m_ListInfo.dwColumnColor = (ZuiAny)ZuiStr2Color(Param2);
+			p->m_ListInfo.bShowColumnLine = TRUE;
+		}
 
 
         break;
@@ -662,8 +670,9 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
 
 			ZuiListHeaderItem lhi = ZuiControlCall(Proc_GetObject, pHeaderItem, (ZuiAny)Type_ListHeaderItem, NULL, NULL);
 			ZuiLabel lop = ZuiControlCall(Proc_GetObject, op->m_items->data[i], (ZuiAny)Type_Label, NULL, NULL);
-			lop->m_uTextStyle = lhi->m_uTextStyle;
+			lop->m_uTextStyle |= lhi->m_uListTextStyle;
 			lop->m_cTextColor = lhi->m_cTextColor;
+			lop->m_rFont = lhi->m_rListFont;
 
 		}
 		return (ZuiAny)TRUE;
@@ -895,11 +904,11 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
 
         if (pInfo->dwLineColor != 0) {
             if (pInfo->bShowRowLine) {
-                ZuiDrawLine(gp, pInfo->dwLineColor, rc->left, rc->bottom - 1, rc->right, rc->bottom - 1, 1);
+                ZuiDrawLine(gp, pInfo->dwLineColor, rc->left, rc->bottom - 1, rc->right, rc->bottom , 1);
             }
             if (pInfo->bShowColumnLine) {
                 for (int i = 0; i < pInfo->nColumns; i++) {
-                    ZuiDrawLine(gp, pInfo->dwLineColor, pInfo->rcColumn[i].right - 1, rc->top, pInfo->rcColumn[i].right - 1, rc->bottom - 1, 1);
+                    ZuiDrawLine(gp, pInfo->dwColumnColor, pInfo->rcColumn[i].right - 1, rc->top, pInfo->rcColumn[i].right, rc->bottom, 1);
                 }
             }
         }
@@ -1155,7 +1164,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
         ZRectR pt;
         pt.left = rc->left;
         pt.top = rc->top;
-        pt.right = rc->right;
+        pt.right = rc->right - p->m_iSepWidth;
         pt.bottom = rc->bottom;
         ZuiDrawString(gp, p->m_rFont ? p->m_rFont->p : Global_Font, cp->m_sText, wcslen(cp->m_sText), &pt, p->m_cTextColor, p->m_uTextStyle);
         return 0;
@@ -1177,6 +1186,8 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
                 img = p->m_diNormal->p;
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
             }
+			else
+				ZuiDrawFillRect(gp, p->m_ColorPushed, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
         }
         else if ((p->m_uButtonState & ZSTATE_HOT) != 0) {
             if (p->m_diHot) {
@@ -1187,6 +1198,8 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
                 img = p->m_diNormal->p;
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
             }
+			else
+				ZuiDrawFillRect(gp, p->m_ColorHot, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
         }
         else if ((p->m_uButtonState & ZSTATE_FOCUSED) != 0) {
             if (p->m_diFocused) {
@@ -1197,12 +1210,16 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
                 img = p->m_diNormal->p;
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
             }
+			else
+				ZuiDrawFillRect(gp, p->m_ColorFocused, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
         }
         else {
             if (p->m_diNormal) {
                 img = p->m_diNormal->p;
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
             }
+			else
+				ZuiDrawFillRect(gp, p->m_ColorNormal, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
         }
 
         ZRect *rcThumb = ZuiControlCall(Proc_ListHeaderItem_GetThumbRect, cp, NULL, NULL, NULL);
@@ -1211,6 +1228,10 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
             img = p->m_diSep->p;
             ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
         }
+		else {
+			rc = rcThumb;
+			ZuiDrawFillRect(gp, p->m_ColorSep, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+		}
         //DrawImage(hDC, );*/
 		return 0;
     }
@@ -1251,11 +1272,11 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
         p->ptLastMouse.x = p->ptLastMouse.y = 0;
         //ZuiControlCall(Proc_SetMinWidth, cp, 16, 0, 0);
 
-        p->m_diNormal = ZuiResDBGetRes(L"default:default/list_header_bg.png", ZREST_IMG);  //通常图片
-        p->m_diHot = ZuiResDBGetRes(L"default:default/list_header_hot.png", ZREST_IMG);        //点燃图片
-        p->m_diPushed = ZuiResDBGetRes(L"default:default/list_header_pushed.png", ZREST_IMG);  //按下图片
+        //p->m_diNormal = ZuiResDBGetRes(L"default:default/list_header_bg.png", ZREST_IMG);  //通常图片
+        //p->m_diHot = ZuiResDBGetRes(L"default:default/list_header_hot.png", ZREST_IMG);        //点燃图片
+        //p->m_diPushed = ZuiResDBGetRes(L"default:default/list_header_pushed.png", ZREST_IMG);  //按下图片
         //p->m_diFocused= ZuiResDBGetRes(L"default:default/list_header_bg.png", ZREST_IMG); //焦点图片
-        p->m_diSep = ZuiResDBGetRes(L"default:default/list_header_sep.png", ZREST_IMG);
+        //p->m_diSep = ZuiResDBGetRes(L"default:default/list_header_sep.png", ZREST_IMG);
 
         p->m_uTextStyle = ZDT_VCENTER | ZDT_SINGLELINE;
         p->m_cTextColor = ARGB(255, 0, 0, 0);
@@ -1265,6 +1286,16 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
         old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+		if (p->m_diNormal)
+			ZuiResDBDelRes(p->m_diNormal);
+		if (p->m_diHot)
+			ZuiResDBDelRes(p->m_diHot);
+		if (p->m_diPushed)
+			ZuiResDBDelRes(p->m_diPushed);
+		if (p->m_diFocused)
+			ZuiResDBDelRes(p->m_diFocused);
+		if (p->m_diSep)
+			ZuiResDBDelRes(p->m_diSep);
         free(p);
 
         return 0;
@@ -1281,7 +1312,24 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
         else if (wcscmp(Param1, _T("hotimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetHotImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         else if (wcscmp(Param1, _T("pushedimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetPushedImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         else if (wcscmp(Param1, _T("focusedimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetFocusedImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
-        else if (wcscmp(Param1, _T("sepimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetSepImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+		else if (wcscmp(Param1, _T("sepimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetSepImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+		else if (wcscmp(Param1, _T("normalcolor")) == 0)  p->m_ColorNormal = (ZuiAny)ZuiStr2Color(Param2);
+		else if (wcscmp(Param1, _T("hotcolor")) == 0)  p->m_ColorHot = (ZuiAny)ZuiStr2Color(Param2);
+		else if (wcscmp(Param1, _T("pushedcolor")) == 0)  p->m_ColorPushed = (ZuiAny)ZuiStr2Color(Param2);
+		else if (wcscmp(Param1, _T("focusedcolor")) == 0)  p->m_ColorFocused = (ZuiAny)ZuiStr2Color(Param2);
+		else if (wcscmp(Param1, _T("sepcolor")) == 0)  p->m_ColorSep = (ZuiAny)ZuiStr2Color(Param2);
+		else if (wcscmp(Param1, _T("font")) == 0) {
+			if (p->m_rFont)
+				ZuiResDBDelRes(p->m_rFont);
+			p->m_rFont = ZuiResDBGetRes(Param2, ZREST_FONT);
+			ZuiControlNeedUpdate(cp);
+		}
+		else if (wcscmp(Param1, L"listfont") == 0) {
+			if (p->m_rListFont)
+				ZuiResDBDelRes(p->m_rListFont);
+			p->m_rListFont = ZuiResDBGetRes(Param2, ZREST_FONT);
+			ZuiControlNeedUpdate(cp);
+		}
 		else if (wcscmp(Param1, L"align") == 0) {
 			//横向对齐方式
 			if (wcscmp(Param2, L"left") == 0) {
@@ -1313,6 +1361,37 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
 				p->m_uTextStyle |= (ZDT_BOTTOM | ZDT_SINGLELINE);
 			}
 			ZuiControlNeedUpdate(cp);
+		}
+		else if (wcscmp(Param1, L"listalign") == 0) {
+			//横向对齐方式
+			if (wcscmp(Param2, L"left") == 0) {
+				p->m_uListTextStyle &= ~(ZDT_CENTER | ZDT_RIGHT);
+				p->m_uListTextStyle |= ZDT_LEFT;
+			}
+			if (wcscmp(Param2, L"center") == 0) {
+				p->m_uListTextStyle &= ~(ZDT_LEFT | ZDT_RIGHT);
+				p->m_uListTextStyle |= ZDT_CENTER;
+			}
+			if (wcscmp(Param2, L"right") == 0) {
+				p->m_uListTextStyle &= ~(ZDT_LEFT | ZDT_CENTER);
+				p->m_uListTextStyle |= ZDT_RIGHT;
+			}
+			ZuiControlNeedUpdate(cp);
+		}
+		else if (wcscmp(Param1, L"listvalign") == 0) {
+			//纵向对齐方式
+			if (wcscmp(Param2, L"top") == 0) {
+				p->m_uListTextStyle &= ~(ZDT_BOTTOM | ZDT_VCENTER | ZDT_WORDBREAK);
+				p->m_uListTextStyle |= (ZDT_TOP | ZDT_SINGLELINE);
+			}
+			if (wcscmp(Param2, L"vcenter") == 0) {
+				p->m_uListTextStyle &= ~(ZDT_TOP | ZDT_BOTTOM | ZDT_WORDBREAK);
+				p->m_uListTextStyle |= (ZDT_VCENTER | ZDT_SINGLELINE);
+			}
+			if (wcscmp(Param2, L"bottom") == 0) {
+				p->m_uListTextStyle &= ~(ZDT_TOP | ZDT_VCENTER | ZDT_WORDBREAK);
+				p->m_uListTextStyle |= (ZDT_BOTTOM | ZDT_SINGLELINE);
+			}
 		}
 		else if (wcscmp(Param1, L"textcolor") == 0) {
 			//字体颜色
