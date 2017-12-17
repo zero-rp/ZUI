@@ -1005,7 +1005,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderProc(ZuiInt ProcId, ZuiControl cp, ZuiListHead
         //创建继承的控件 保存数据指针
         p->old_udata = ZuiHorizontalLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
         p->old_call = (ZCtlProc)&ZuiHorizontalLayoutProc;
-
+		cp->m_BkgColor= ARGB(255, 255, 255, 255);
 
         return p;
     }
