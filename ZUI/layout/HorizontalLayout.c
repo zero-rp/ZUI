@@ -13,10 +13,14 @@ void* ZCALL ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalLayo
 
         // Adjust for inset
         //GetManager()->GetDPIObj()->Scale(&m_rcInset);
-        rc.left += op->m_rcInset.left;
-        rc.top += op->m_rcInset.top;
-        rc.right -= op->m_rcInset.right;
-        rc.bottom -= op->m_rcInset.bottom;
+		rc.left += op->m_rcInset.left;
+		rc.top += op->m_rcInset.top;
+		rc.right -= op->m_rcInset.right;
+		rc.bottom -= op->m_rcInset.bottom;
+		rc.left += cp->m_dwBorderWidth;
+		rc.top += cp->m_dwBorderWidth;
+		rc.right -= cp->m_dwBorderWidth;
+		rc.bottom -= cp->m_dwBorderWidth;
 
 
         if (op->m_pVerticalScrollBar && op->m_pVerticalScrollBar->m_bVisible) { rc.right -= (ZuiInt)ZuiControlCall(Proc_GetFixedWidth, op->m_pVerticalScrollBar, NULL, NULL, NULL); }

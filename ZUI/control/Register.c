@@ -26,7 +26,7 @@ RB_GENERATE(_ZClass_Tree, _ZClass, entry, ZClass_Compare);
 struct _ZClass_Tree *Global_ControlClass = NULL;
 
 static ZuiBool ZuiCoreInit(void *data) {
-    return ((ZCtlProc)data)(Proc_CoreInit, NULL, NULL, NULL, NULL, NULL);
+    return (ZuiBool)((ZCtlProc)data)(Proc_CoreInit, NULL, NULL, NULL, NULL, NULL);
 }
 ZuiBool ZuiClassInit()
 {

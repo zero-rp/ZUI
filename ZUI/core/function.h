@@ -29,6 +29,7 @@ ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp,ZuiText text,ZuiText title);
 * @param num 目标数组大小
 * @return 此函数没有返回值.
 */
+ZuiColor ZuiStr2Color(ZuiAny str);
 ZuiVoid ZuiStingSplitA(char* src, char* pSeparator, char **dest, ZuiInt *num);
 ZuiVoid ZuiStingSplit(ZuiText src, ZuiText pSeparator, ZuiText *dest, ZuiInt *num);
 ZuiBool ZuiStingIsUtf8(ZuiAny str, ZuiInt length);

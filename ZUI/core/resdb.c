@@ -70,8 +70,8 @@ ZuiVoid ZuiResDBUnInit() {
     struct _ZResDB * c = NULL;
     struct _ZResDB * cc = NULL;
     RB_FOREACH_SAFE(c, _ZResDB_Tree, &Global_ResDB->resdb, cc) {
-        ZuiResDBDestroy(c);
         RB_REMOVE(_ZResDB_Tree, &Global_ResDB->resdb, c);
+		ZuiResDBDestroy(c);
         //free(c);
     }
     struct _ZRes * _c = NULL;
@@ -379,7 +379,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
                     free(res);
                     return NULL;
                 }
-                for (size_t i = 2; i < arrnum; i++)
+                for (ZuiInt i = 2; i < arrnum; i++)
                 {
                     if (wcsncmp(arr[i], L"src='", 5) == 0) {
                         ZuiText pstr = NULL;
@@ -392,7 +392,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 
             }
             else if (type == ZREST_TXT) {
-                int bufsize;
+                ZuiInt bufsize;
                 wchar_t *txtbuf;
                 if (ZuiStingIsUtf8(buf, buflen))
                 {
@@ -436,7 +436,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
                 ZuiUInt size = 12;
                 ZuiBool bold = FALSE;
                 ZuiBool italic = FALSE;
-                for (size_t i = 1; i < arrnum; i++)
+                for (ZuiInt i = 1; i < arrnum; i++)
                 {
                     if (wcsncmp(arr[i], L"name='", 6) == 0) {
                         if (arr[i][wcslen(arr[i])-1] == '\'')
@@ -531,7 +531,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBNewTempRes(ZuiAny b, ZuiInt buflen, ZuiInt type) {
         }
     }
     else if (type == ZREST_TXT) {
-        int bufsize;
+        ZuiInt bufsize;
         wchar_t *txtbuf;
         if (ZuiStingIsUtf8(buf, buflen))
         {

@@ -22,7 +22,7 @@ ZEXPORT ZuiAny ZCALL ZuiProgressBarProc(ZuiInt ProcId, ZuiControl cp, ZuiProgres
         return 0;
     }
     case Proc_GetObject:
-        if (Param1 == Type_ProgressBar)
+        if (Param1 == (ZuiAny)Type_ProgressBar)
             return (ZuiAny)p;
         break;
     case Proc_GetType:

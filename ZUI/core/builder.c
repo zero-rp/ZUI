@@ -42,13 +42,13 @@ static  ZuiControl ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
             */
             if (wcscmp(ClassName, L"Include") == 0) {//包含文件
                 ZuiText src = NULL;
-                for (size_t i = 0; i < node->value.num_attrs; i++)
+                for (ZuiInt i = 0; i < node->value.num_attrs; i++)
                 {
                     if (wcscmp(node->value.attrs[i].name, L"src") == 0) {
                         src = node->value.attrs[i].value;
                     }
                 }
-                ZuiRes res = ZuiResDBGetRes(src, NULL);
+                ZuiRes res = ZuiResDBGetRes(src, 0);
                 if (res) {
                     mxml_node_t *new_node = ZuiLayoutLoad(res->p, res->plen);
                     mxmlAdd(node->parent ? node->parent : node, MXML_ADD_BEFORE, node, new_node);
@@ -94,7 +94,7 @@ static  ZuiControl ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
                         break;//窗口创建失败就没必要继续下去了
                 }
                 /*解析属性*/
-                for (size_t i = 0; i < node->value.num_attrs; i++)
+                for (ZuiInt i = 0; i < node->value.num_attrs; i++)
                 {
                     ZuiControlCall(Proc_SetAttribute, Control, node->value.attrs[i].name, node->value.attrs[i].value, NULL);
                 }

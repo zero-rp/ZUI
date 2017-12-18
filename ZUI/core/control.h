@@ -3,7 +3,15 @@
 #include <ZUI.h>
 #include <platform/platform.h>
 #include "animation.h"
+#include "function.h"
 
+#define CONTROL_SETSTR(STRNAME,VALUE,TYPE)			\
+		if (STRNAME) {								\
+			if (wcscmp(STRNAME, (TYPE)VALUE) == 0)	\
+				return 0;							\
+			free(STRNAME);							\
+		}											\
+		STRNAME = wcsdup((TYPE)VALUE);				\
 
 #define ZTYLE_BOX               1   //单线边框
 #define ZTYLE_BKGColor          2   //具有背景色
@@ -108,6 +116,7 @@ typedef struct _ZControl
     ZuiColor m_BkgColor;            //背景颜色
     ZuiRes m_BkgImg;                //背景图片
     ZuiColor m_dwBorderColor;       //边框颜色
+	ZuiInt m_dwBorderWidth;
     //控件默认样式-------------------
 
     ZuiAnimation m_aAnime;          //控件动画

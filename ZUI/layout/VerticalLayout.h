@@ -10,5 +10,5 @@ typedef struct _ZuiVerticalLayout
     void *old_udata;
 }*ZuiVerticalLayout, ZVerticalLayout;
 
-void* ZCALL ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayout p, void* Param1, void* Param2, void* Param3);
+void* ZCALL ZuiVerticalLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiVerticalLayout p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 #endif // __UIVERTICALLAYOUT_H__

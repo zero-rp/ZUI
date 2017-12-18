@@ -94,7 +94,7 @@ extern "C"
             Graphics->graphics->graphics->lineWidth(LineWidth);
             Graphics->graphics->graphics->lineColor(ARGBTORGBA8(Color));
             Graphics->graphics->graphics->noFill();//不填充
-            Graphics->graphics->graphics->rectangle(Left + 0.5, Top + 0.5, Left + Width - 0.5, Top + Height - 0.5);
+            Graphics->graphics->graphics->rectangle(Left + LineWidth/2, Top + LineWidth / 2, Left + Width - LineWidth / 2, Top + Height - LineWidth / 2);
         }
     }
     /*画直线*/
@@ -103,7 +103,7 @@ extern "C"
         if (Graphics) {
             Graphics->graphics->graphics->lineWidth(LineWidth);
             Graphics->graphics->graphics->lineColor(ARGBTORGBA8(Color));
-            Graphics->graphics->graphics->line(x1 + 0.5, y1 + 0.5, x2 + 0.5, y2 - 0.5);
+            Graphics->graphics->graphics->line(x1 + LineWidth / 2, y1 + LineWidth / 2, x2 - LineWidth / 2, y2 - LineWidth / 2);
         }
     }
     /*画文本(按照计算好的坐标)*/

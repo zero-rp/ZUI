@@ -68,37 +68,17 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         break;
     }
 #endif
-    case Proc_SetBorderColor: {
-        if (!cp->m_dwBorderColor) {
-            //以前没有边框了,加上边距
-            ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.left += 1;
-            ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.bottom += 1;
-            ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.right += 1;
-            ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.top += 1;
-        }
-        break;
-    }
-    case Proc_Layout_SetInset: {
-        if (!cp->m_dwBorderColor) {
-            //以前没有边框了,加上边距
-            ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.left = 1;
-            ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.bottom = 1;
-            ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.right = 1;
-            ((ZuiLayout)((ZuiVerticalLayout)p->old_udata)->old_udata)->m_rcInset.top = 1;
-        }
-        break;
-    }
     case Proc_SetText: {
-        return ZuiOsSetWindowTitle(p->m_osWindow, Param1);
+        return (ZuiAny)ZuiOsSetWindowTitle(p->m_osWindow, Param1);
     }
     case Proc_Window_SetWindowMin: {
-        return ZuiOsSetWindowMin(p->m_osWindow);
+        return (ZuiAny)ZuiOsSetWindowMin(p->m_osWindow);
     }
     case Proc_Window_SetWindowMax: {
-        return ZuiOsSetWindowMax(p->m_osWindow);
+        return (ZuiAny)ZuiOsSetWindowMax(p->m_osWindow);
     }
     case Proc_Window_SetWindowRestor: {
-        return ZuiOsSetWindowRestor(p->m_osWindow);
+        return (ZuiAny)ZuiOsSetWindowRestor(p->m_osWindow);
     }
     case Proc_Window_SetMinInfo: {
         cp->m_pOs->m_szMinWindow.cx = Param1;
@@ -111,25 +91,25 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         break;
     }
     case Proc_Window_SetSize: {
-        return ZuiOsSetWindowSize(p->m_osWindow, Param1, Param2);
+        return (ZuiAny)ZuiOsSetWindowSize(p->m_osWindow, Param1, Param2);
     }
     case Proc_Window_SetNoBox: {
-        return ZuiOsSetWindowNoBox(p->m_osWindow, Param1);
+        return (ZuiAny)ZuiOsSetWindowNoBox(p->m_osWindow, Param1);
     }
     case Proc_Window_SetComBo: {
-        return ZuiOsSetWindowComBo(p->m_osWindow, Param1);
+        return (ZuiAny)ZuiOsSetWindowComBo(p->m_osWindow, Param1);
     }
     case Proc_Window_SetToolWindow: {
-        return ZuiOsSetWindowTool(p->m_osWindow, Param1);
+        return (ZuiAny)ZuiOsSetWindowTool(p->m_osWindow, Param1);
     }
     case Proc_Window_Popup: {
         cp->m_bVisible = TRUE;
         ZuiOsWindowPopup(p->m_osWindow, Param1);
-        return;
+        return 0;
     }
     case Proc_Window_Center: {
         ZuiOsSetWindowCenter(p->m_osWindow);
-        return;
+        return 0;
     }
     case Proc_SetAttribute: {
         if (wcscmp(Param1, L"nobox") == 0) ZuiControlCall(Proc_Window_SetNoBox, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
@@ -163,21 +143,24 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
             ZuiControlCall(Proc_Window_SetSize, cp, cx, cy, NULL);
         }
         else if (wcscmp(Param1, L"name") == 0) {
-            if (cp->m_sName && wcscmp(cp->m_sName, Param2) != 0) {
-                //删除以前的名字
-                ZWindows theNode = { 0 };
-                ZWindows *c;
-                theNode.key = Zui_Hash(cp->m_sName);
-                c = RB_FIND(_ZWindows_Tree, m_window, &theNode);
-                if (c) {
-                    RB_REMOVE(_ZWindows_Tree, m_window, c);
-                    free(c);
-                }
-                free(cp->m_sName);
-                cp->m_sName = NULL;
+            if (cp->m_sName) {
+				if (wcscmp(cp->m_sName, Param2) != 0) {
+					//删除以前的名字
+					ZWindows theNode = { 0 };
+					ZWindows *c;
+					theNode.key = Zui_Hash(cp->m_sName);
+					c = RB_FIND(_ZWindows_Tree, m_window, &theNode);
+					if (c) {
+						RB_REMOVE(_ZWindows_Tree, m_window, c);
+						free(c);
+					}
+					free(cp->m_sName);
+					cp->m_sName = NULL;
+				}
+				else {
+					return 0;
+				}
             }
-            else
-            {
                 //保存现在的名字
                 ZWindows *n = (ZWindows *)malloc(sizeof(ZWindows));
                 memset(n, 0, sizeof(ZWindows));
@@ -185,7 +168,6 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
                 n->p = cp;
                 RB_INSERT(_ZWindows_Tree, m_window, n);
                 cp->m_sName = wcsdup(Param2);
-            }
         }
         else if (wcscmp(Param1, L"center") == 0) {
             if (wcscmp(Param2, L"true") == 0) {
@@ -207,15 +189,15 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
     case Proc_SetVisible: {
         if (cp->m_bVisible == (BOOL)Param1)
             return 0;
-        ZuiOsSetWindowVisible(p->m_osWindow, Param1);
+        ZuiOsSetWindowVisible(p->m_osWindow, (ZuiBool)Param1);
         break;
     }
     case Proc_GetObject:
-        if (Param1 == Type_Window)
+        if (Param1 == (ZuiAny)Type_Window)
             return (ZuiAny)p;
         break;
     case Proc_GetType: {
-        return Type_Window;
+        return (ZuiAny)Type_Window;
     }
     case Proc_OnCreate: {
         p = (ZuiWindow)malloc(sizeof(ZWindow));
@@ -228,7 +210,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
             p->old_call = (ZCtlProc)&ZuiVerticalLayoutProc;
 
             //创建宿主窗口
-            p->m_osWindow = ZuiOsCreateWindow(cp, Param1);
+            p->m_osWindow = ZuiOsCreateWindow(cp, (ZuiBool)Param1);
 
 
             darray_append(m_window_array, cp);
@@ -239,8 +221,19 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
+		if (ZuiControlNotify(_T("onclose"), cp, 0, 0, 0))
+			return 0;
 
-
+		if (cp->m_sName) {
+			ZWindows theNode = { 0 };
+			ZWindows *c;
+			theNode.key = Zui_Hash(cp->m_sName);
+			c = RB_FIND(_ZWindows_Tree, m_window, &theNode);
+			if (c) {
+				RB_REMOVE(_ZWindows_Tree, m_window, c);
+				free(c);
+			}
+		}
         old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
 
         ZuiOsDestroyWindow(p->m_osWindow);
@@ -253,7 +246,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         m_window = (struct _ZWindows_Tree*)malloc(sizeof(struct _ZWindows_Tree));
         memset(m_window, 0, sizeof(struct _ZWindows_Tree));
         m_window_array = darray_create();
-        return TRUE;
+        return (ZuiAny)TRUE;
     }
     case Proc_CoreUnInit: {
         //这里销毁掉所有窗口
@@ -266,7 +259,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         free(m_window);
         for (size_t i = 0; i < m_window_array->count; i++)
         {
-            FreeZuiControl(m_window_array->data[i], FALSE);
+            FreeZuiControl(m_window_array->data[i], TRUE);
         }
         darray_destroy(m_window_array);
         return NULL;

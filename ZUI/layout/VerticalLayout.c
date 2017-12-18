@@ -3,7 +3,7 @@
 #include <core/control.h>
 #include <stdlib.h>
 
-void* ZCALL ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayout p, void* Param1, void* Param2, void* Param3) {
+void* ZCALL ZuiVerticalLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiVerticalLayout p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
     case Proc_SetPos: {
@@ -13,10 +13,14 @@ void* ZCALL ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayout p
 
         // Adjust for inset
         //GetManager()->GetDPIObj()->Scale(&m_rcInset);
-        rc.left += op->m_rcInset.left;
-        rc.top += op->m_rcInset.top;
-        rc.right -= op->m_rcInset.right;
-        rc.bottom -= op->m_rcInset.bottom;
+		rc.left += op->m_rcInset.left;
+		rc.top += op->m_rcInset.top;
+		rc.right -= op->m_rcInset.right;
+		rc.bottom -= op->m_rcInset.bottom;
+		rc.left += cp->m_dwBorderWidth;
+		rc.top += cp->m_dwBorderWidth;
+		rc.right -= cp->m_dwBorderWidth;
+		rc.bottom -= cp->m_dwBorderWidth;
 
         if (op->m_pVerticalScrollBar && op->m_pVerticalScrollBar->m_bVisible) { rc.right -= (ZuiInt)ZuiControlCall(Proc_GetFixedWidth, op->m_pVerticalScrollBar, NULL, NULL, NULL); }
         if (op->m_pHorizontalScrollBar && op->m_pHorizontalScrollBar->m_bVisible) { rc.bottom -= (ZuiInt)ZuiControlCall(Proc_GetFixedHeight, op->m_pHorizontalScrollBar, NULL, NULL, NULL); }
@@ -89,7 +93,7 @@ void* ZCALL ZuiVerticalLayoutProc(int ProcId, ZuiControl cp, ZuiVerticalLayout p
             ZuiControl pControl = (ZuiControl)(op->m_items->data[it2]);
             if (!pControl->m_bVisible) continue;
             if (pControl->m_bFloat) {
-                ZuiControlCall(Proc_Layout_SetFloatPos, cp, (void *)it2, 0, 0);
+                ZuiControlCall(Proc_Layout_SetFloatPos, cp, (ZuiAny)it2, 0, 0);
                 continue;
             }
 

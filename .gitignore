@@ -6,3 +6,5 @@ VS/dukluv/dukluv.vcxproj.user
 VS/duktape/duktape.vcxproj.user
 VS/libuv/libuv.vcxproj.user
 VS/zlib/zlib.vcxproj.user
+*~
+*.bak

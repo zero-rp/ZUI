@@ -105,6 +105,22 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         while (darray_len(p->m_aDelayedCleanup)) {
             ZuiControl cp = p->m_aDelayedCleanup->data[0];
             darray_delete(p->m_aDelayedCleanup, darray_find(p->m_aDelayedCleanup, cp));
+			if (cp == p->m_pRoot) {
+				//无焦点窗口不做任何处理
+				if (!p->m_bUnfocusPaintWindow)
+				{
+					SetFocus(NULL);
+				}
+
+				if (GetActiveWindow() == p->m_hWnd) {
+					HWND hwndParent = GetWindowOwner(p->m_hWnd);
+					//无焦点窗口不做任何处理
+					if (!p->m_bUnfocusPaintWindow)
+					{
+						if (hwndParent != NULL) SetFocus(hwndParent);
+					}
+				}
+			}
             if (darray_len(p->m_aDelayedCleanup) == 0) {
                 FreeZuiControl(cp, FALSE);
                 break;
@@ -835,7 +851,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     }
     case WM_NCHITTEST:
     {
-        if (!p->m_nobox)
+        if (!p->m_nobox || IsZoomed(p->m_hWnd))
             break;
         int x = GET_X_LPARAM(lParam);
         int	y = GET_Y_LPARAM(lParam);
@@ -1000,8 +1016,8 @@ ZuiBool ZuiOsSetWindowRestor(ZuiOsWindow OsWindow) {
     return ShowWindow(OsWindow->m_hWnd, SW_RESTORE);
 }
 ZuiBool ZuiOsSetWindowSize(ZuiOsWindow OsWindow, ZuiUInt w, ZuiUInt h) {
-    ZuiControlCall(Proc_SetFixedWidth, OsWindow->m_pRoot, w, NULL, NULL);
-    ZuiControlCall(Proc_SetFixedHeight, OsWindow->m_pRoot, h, NULL, NULL);
+    ZuiControlCall(Proc_SetFixedWidth, OsWindow->m_pRoot, (ZuiAny)w, NULL, NULL);
+    ZuiControlCall(Proc_SetFixedHeight, OsWindow->m_pRoot, (ZuiAny)h, NULL, NULL);
     return SetWindowPos(OsWindow->m_hWnd, NULL, 0, 0, w, h, SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
 }
 ZuiBool ZuiOsSetWindowNoBox(ZuiOsWindow OsWindow, ZuiBool b) {
@@ -1296,7 +1312,7 @@ ZuiVoid ZuiOsMsgLoopExit() {
     PostQuitMessage(0);
 }
 ZuiVoid ZuiOsPostTask(ZuiTask task) {
-    PostThreadMessage(m_hMainThreadId, WM_APP + 2, task, NULL);
+    PostThreadMessage(m_hMainThreadId, WM_APP + 2, (WPARAM)task, 0);
 }
 
 ZuiInt ZuiOsUtf8ToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen)

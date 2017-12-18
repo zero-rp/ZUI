@@ -15,5 +15,5 @@ typedef struct _ZAnimation
 }*ZuiAnimation, ZAnimation;
 
 ZuiAnimation ZuiAnimationNew(ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
-ZuiAnimation ZuiAnimationFree(ZuiAnimation p);
+ZuiVoid ZuiAnimationFree(ZuiAnimation p);
 #endif	//__ZUI_CORE_ANIMATION_H__
