@@ -152,11 +152,11 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         }
         else if (wcscmp(Param1, L"textcolor") == 0) {
             //字体颜色
-            ZuiText pstr = NULL;
+ /*           ZuiText pstr = NULL;
             ZuiColor clrColor;
             while (*(wchar_t *)Param2 > L'\0' && *(wchar_t *)Param2 <= L' ') Param2 = ZuiCharNext((wchar_t *)Param2);
-            if (*(wchar_t *)Param2 == L'#') Param2 = ZuiCharNext((wchar_t *)Param2);
-            clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);
+            if (*(wchar_t *)Param2 == L'#') Param2 = ZuiCharNext((wchar_t *)Param2);*/
+            ZuiColor clrColor = ZuiStr2Color(Param2);
             ZuiControlCall(Proc_Label_SetTextColor, cp, (ZuiAny)clrColor, NULL, NULL);
         }
         else if (wcscmp(Param1, L"textpadding") == 0) {
@@ -198,6 +198,8 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
 
         p->m_uTextStyle = ZDT_VCENTER | ZDT_SINGLELINE;
         p->m_cTextColor = ARGB(255,0,0,0);
+		ZRect rctmp = { 2,1,2,1 };
+		p->m_rPadding = rctmp;
         return p;
     }
     case Proc_OnDestroy: {
