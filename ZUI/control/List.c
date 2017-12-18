@@ -902,10 +902,12 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
         //    }
         //}
 
-        if (pInfo->dwLineColor != 0) {
-            if (pInfo->bShowRowLine) {
-                ZuiDrawLine(gp, pInfo->dwLineColor, rc->left, rc->bottom - 1, rc->right, rc->bottom , 1);
-            }
+		if (pInfo->dwLineColor != 0) {
+			if (pInfo->bShowRowLine) {
+				ZuiDrawLine(gp, pInfo->dwLineColor, rc->left, rc->bottom - 1, rc->right, rc->bottom, 1);
+			}
+		}
+		if (pInfo->dwColumnColor){
             if (pInfo->bShowColumnLine) {
                 for (int i = 0; i < pInfo->nColumns; i++) {
                     ZuiDrawLine(gp, pInfo->dwColumnColor, pInfo->rcColumn[i].right - 1, rc->top, pInfo->rcColumn[i].right, rc->bottom, 1);

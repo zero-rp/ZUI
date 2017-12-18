@@ -134,7 +134,7 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
                         if (pControl->m_aAnime)
                             pControl->m_aAnime->OnPaint(pControl, Param1, Param2);
                         else {
-                            IntersectRect(&rcTemp, (ZRect *)Param2, &pControl->m_rcItem);
+                            IntersectRect(&rcTemp, (ZRect *)Param2, &rcTemp);
                             MAKEZRECT(rcClip, rcTemp.left, rcTemp.top, rcTemp.right, rcTemp.bottom);
                             ZuiGraphicsSetClipBox((ZuiGraphics)Param1, &rcClip);
                             ZuiControlCall(Proc_OnPaint, pControl, Param1, &rcTemp, Param3);

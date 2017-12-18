@@ -890,14 +890,19 @@ Agg2D::PointD Agg2D::Font::textSize(const wchar_t* str, const int len, unsigned 
     int i;
     for (i = 0; str[i]; i++)
     {
-        glyph = m_fontCacheManager.glyph(str[i]);//取字模
+		if (wcsncmp(&str[i], L" ", 1) == 0)
+			if (m_fontEngine.width() == 0)
+				point.x += (m_fontEngine.height() / 2.4);
+			else
+				point.x += m_fontEngine.width() *2.4;
+		glyph = m_fontCacheManager.glyph(str[i]);//取字模
         if (glyph)
         {
             if (glyph->bounds.x1 < 0)
                 point.x += -glyph->bounds.x1;
 
             //调整坐标
-            point.x += glyph->bounds.x2;
+			point.x += glyph->bounds.x2;
             point.y += glyph->advance_y;
         }
     }
@@ -937,8 +942,8 @@ void Agg2D::Font::textHints(bool hints)
 void Agg2D::text(Font& font, double x, double y, double x1, double y1, const wchar_t* str, const int len, unsigned int style)
 {
     RectD  old_clipBox = m_clipBox;//保存之前的剪裁区
-    m_clipBox.clip(x, y, x1, y1);//计算新的剪裁区
-    clipBox(m_clipBox.x1, m_clipBox.y1, m_clipBox.x2, m_clipBox.y2);          //设置新的剪裁区
+    //m_clipBox.clip(x, y, x1, y1);//计算新的剪裁区
+    //clipBox(m_clipBox.x1, m_clipBox.y1, m_clipBox.x2, m_clipBox.y2);          //设置新的剪裁区
 
     double asc = font.fontHeight();         //字体高度
     const agg::glyph_cache* glyph = NULL;   //字模
@@ -963,8 +968,11 @@ void Agg2D::text(Font& font, double x, double y, double x1, double y1, const wch
     int i;
     for (i = 0; str[i]; i++)
     {
-		if (wcsncmp(&str[i],L" ",1) == 0)
-			start_x += font.textWidth(L'w');
+		if (wcsncmp(&str[i], L" ", 1) == 0)
+			if (font.m_fontEngine.width() == 0)
+				start_x += (asc / 2.4);
+			else
+				start_x += font.m_fontEngine.width() *2.4;
         glyph = font.m_fontCacheManager.glyph(str[i]);//取字模
         if (glyph)
         {
