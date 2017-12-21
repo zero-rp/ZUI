@@ -412,6 +412,11 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             event.wKeyState = MapKeyState();
             ZuiControlEvent(p->m_pFocus, &event);
         }
+		if (wParam == SIZE_RESTORED) {
+			ZuiControl pmax = ZuiControlFindName(p->m_pRoot, _T("WindowCtl_max"));
+			if (pmax)
+				ZuiControlCall(Proc_Option_SetSelected, pmax, (ZuiAny)FALSE, NULL, NULL);
+		}
         if (p->m_pRoot != NULL)
             ZuiControlNeedUpdate(p->m_pRoot);
         if (p->m_bLayered)
@@ -1268,7 +1273,7 @@ ZuiVoid ZuiOsReapObjects(ZuiOsWindow p, ZuiControl pControl) {
 
 ZuiVoid ZuiOsAddDelayedCleanup(ZuiOsWindow p, ZuiControl pControl)
 {
-    ZuiControlCall(Proc_Layout_Remove, pControl->m_pParent, pControl, TRUE, NULL);
+    ZuiControlCall(Proc_Layout_Remove, pControl->m_pParent, pControl, (ZuiAny)TRUE, NULL);
     ZuiControlCall(Proc_SetOs, pControl, p, NULL, (void*)FALSE);
     darray_append(p->m_aDelayedCleanup, pControl);
     PostMessage(p->m_hWnd, WM_APP + 1, 0, 0L);

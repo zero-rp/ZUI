@@ -1118,7 +1118,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
                     rc.left -= p->ptLastMouse.x - event->ptMouse.x;
                 }
 
-                if (rc.right - rc.left > ZuiControlCall(Proc_GetMinWidth, cp, 0, 0, 0)) {
+                if (rc.right - rc.left > (int)(ZuiControlCall(Proc_GetMinWidth, cp, 0, 0, 0)) + 3) {
                     cp->m_cxyFixed.cx = rc.right - rc.left;
                     p->ptLastMouse = event->ptMouse;
                     if (cp->m_pParent)
@@ -1135,10 +1135,10 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
             else
                 rcSeparator->right += 4;
             if (cp->m_bEnabled && p->m_bDragable && PtInRect((LPRECT)rcSeparator, *(POINT *)&event->ptMouse)) {
-                SetCursor(LoadCursor(NULL, MAKEINTRESOURCE(IDC_SIZEWE)));
+				ZuiOsSetCursor(IDC_SIZEWE);
                 return 0;
             }
-			SetCursor(LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
+			ZuiOsSetCursor(IDC_ARROW);
         }
         if (event->Type == ZEVENT_MOUSEENTER)
         {

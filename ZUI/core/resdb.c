@@ -227,9 +227,10 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
             }
         }
         /*字节*/else if (db->type == ZRESDBT_STREAM) {
-            buflen = _wtoi(arr[2]);
+			if (arrnum < 4) return NULL;
+            buflen = _wtoi(arr[3]);
             buf = malloc(buflen);
-            memcpy(buf, _wtoi(arr[1]), buflen);
+            memcpy(buf, _wtoi(arr[2]), buflen);
         }
 #if (defined PLATFORM_OS_WIN)
         /*网络*/else if (db->type == ZRESDBT_URL) {
@@ -474,7 +475,13 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
             }
             //保存到资源map
             res->ref++;////增加引用计数
-            res->hash = Zui_Hash(Path);
+			if (db->type == ZRESDBT_STREAM) {			//从字节流添加资源stream:name:address:size 后，
+				TCHAR * pstr = _tcschr(Path, _T(':'));	//使用stream:name 引用资源 address:size 不需要一直保存。
+				pstr = _tcschr(++pstr, _T(':'));
+				if (pstr)
+					*pstr = 0;
+			}
+			res->hash = Zui_Hash(Path);
             RB_INSERT(_ZRes_Tree, &Global_ResDB->res, res);
             return res;
         }
