@@ -17,10 +17,10 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = &cp->m_rcItem;
         ZRectR pt;
-        pt.left = rc->left + p->m_rPadding.left + cp->m_dwBorderWidth;
-        pt.top = rc->top + p->m_rPadding.top + cp->m_dwBorderWidth;
-        pt.right = rc->right - p->m_rPadding.right - cp->m_dwBorderWidth;
-        pt.bottom = rc->bottom - p->m_rPadding.bottom - cp->m_dwBorderWidth;
+        pt.left = rc->left + p->m_rcPadding.left + cp->m_dwBorderWidth;
+        pt.top = rc->top + p->m_rcPadding.top + cp->m_dwBorderWidth;
+        pt.right = rc->right - p->m_rcPadding.right - cp->m_dwBorderWidth;
+        pt.bottom = rc->bottom - p->m_rcPadding.bottom - cp->m_dwBorderWidth;
         if (p->m_rFont)
             ZuiDrawString(gp, p->m_rFont->p, cp->m_sText, wcslen(cp->m_sText), &pt, p->m_cTextColor, p->m_uTextStyle);
         else
@@ -112,7 +112,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         return 0;
     }
     case Proc_Label_SetTextPadding: {
-		memcpy(&p->m_rPadding, Param1, sizeof(ZRect));
+		memcpy(&p->m_rcPadding, Param1, sizeof(ZRect));
 		ZuiControlNeedUpdate(cp);
         return 0;
     }
@@ -199,7 +199,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         p->m_uTextStyle = ZDT_VCENTER | ZDT_SINGLELINE;
         p->m_cTextColor = ARGB(255,0,0,0);
 		ZRect rctmp = { 2,1,2,1 };
-		p->m_rPadding = rctmp;
+		p->m_rcPadding = rctmp;
         return p;
     }
     case Proc_OnDestroy: {

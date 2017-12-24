@@ -1164,10 +1164,10 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = &cp->m_rcItem;
         ZRectR pt;
-        pt.left = rc->left + p->m_rPadding.left;
-        pt.top = rc->top + p->m_rPadding.top;
-        pt.right = rc->right - p->m_rPadding.right - p->m_iSepWidth;
-        pt.bottom = rc->bottom - p->m_rPadding.bottom;
+        pt.left = rc->left + p->m_rcPadding.left;
+        pt.top = rc->top + p->m_rcPadding.top;
+        pt.right = rc->right - p->m_rcPadding.right - p->m_iSepWidth;
+        pt.bottom = rc->bottom - p->m_rcPadding.bottom;
         ZuiDrawString(gp, p->m_rFont ? p->m_rFont->p : Global_Font, cp->m_sText, wcslen(cp->m_sText), &pt, p->m_cTextColor, p->m_uTextStyle);
         return 0;
     }
@@ -1283,7 +1283,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
         p->m_uTextStyle = ZDT_VCENTER | ZDT_SINGLELINE;
         p->m_cTextColor = ARGB(255, 0, 0, 0);
 		ZRect rctmp = { 2,1,2,1 };
-		p->m_rPadding = rctmp;
+		p->m_rcPadding = rctmp;
         return p;
     }
     case Proc_OnDestroy: {
@@ -1415,7 +1415,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
 			rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
 			rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
 			rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
-			memcpy(&p->m_rPadding, &rcPadding, sizeof(ZRect));
+			memcpy(&p->m_rcPadding, &rcPadding, sizeof(ZRect));
 			ZuiControlNeedUpdate(cp);
 		}
         break;

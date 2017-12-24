@@ -27,7 +27,7 @@ typedef struct _ZListHeaderItem
     ZuiUInt     m_uTextStyle;    //字体控制
 	ZuiUInt		m_uListTextStyle;//ListElement字体控制
     ZuiColor    m_cTextColor;   //字体颜色
-	ZRect		m_rPadding;
+	ZRect		m_rcPadding;
 
     ZRect Thumb;
     ZuiAny old_udata;
