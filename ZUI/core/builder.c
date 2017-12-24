@@ -40,6 +40,10 @@ static  ZuiControl ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
                     continue;
             }
             */
+			if (wcsncmp(ClassName, L"?", 1) == 0) {//跳过<? xxx ?>节点
+				node->user_data = node->parent->user_data;
+				continue;
+			}
             if (wcscmp(ClassName, L"Include") == 0) {//包含文件
                 ZuiText src = NULL;
                 for (ZuiInt i = 0; i < node->value.num_attrs; i++)
