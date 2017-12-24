@@ -20,8 +20,8 @@ static  ZuiControl ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
             LOG_DEGUB(L"layout创建控件: 类名:%ls\r\n", ClassName);
             if (wcscmp(ClassName, L"Template") == 0) {//模版类
                 ZuiAddTemplate(node);
-                node = node->next;
-                if (node) {
+                if (node->next) {
+					node = node->next;
                     ClassName = node->value.name;
                     goto LoadNodeBedin;
                 }
@@ -48,10 +48,10 @@ static  ZuiControl ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
                         src = node->value.attrs[i].value;
                     }
                 }
-                ZuiRes res = ZuiResDBGetRes(src, 0);
+                ZuiRes res = ZuiResDBGetRes(src, ZREST_STREAM);
                 if (res) {
-                    mxml_node_t *new_node = ZuiLayoutLoad(res->p, res->plen);
-                    mxmlAdd(node->parent ? node->parent : node, MXML_ADD_BEFORE, node, new_node);
+                    mxml_node_t *new_node = mxmlLoadString(NULL,res->p, res->plen);
+                    mxmlAdd(node->parent ? node->parent : node, MXML_ADD_AFTER, node, new_node);
                     ZuiResDBDelRes(res);
                 }
             }
