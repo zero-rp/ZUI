@@ -101,6 +101,12 @@ ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromBuf(ZuiAny data, ZuiInt len, ZuiText Pa
                 bufsize = ZuiAsciiToUnicode(&name, bufsize / sizeof(wchar_t), txtbuf, bufsize);
                 //添加到资源池
                 p->key = Zui_Hash(txtbuf);
+				if (RB_FIND(_ZResDB_Tree, &Global_ResDB->resdb, p)) {
+					unzClose(p->uf);
+					free(p);
+					free(txtbuf);
+					return NULL;
+				}
                 RB_INSERT(_ZResDB_Tree, &Global_ResDB->resdb, p);
 #if (defined HAVE_JS) && (HAVE_JS == 1)
                 //加载引导文件
@@ -136,6 +142,12 @@ ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromFile(ZuiText FileName, ZuiText Pass)
             bufsize = ZuiAsciiToUnicode(&name, bufsize / sizeof(wchar_t), txtbuf, bufsize);
             //添加到资源池
             p->key = Zui_Hash(txtbuf);
+			if (RB_FIND(_ZResDB_Tree, &Global_ResDB->resdb, p)) {
+				unzClose(p->uf);
+				free(p);
+				free(txtbuf);
+				return NULL;
+			}
             RB_INSERT(_ZResDB_Tree, &Global_ResDB->resdb, p);
             free(txtbuf);
             return p;
