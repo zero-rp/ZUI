@@ -8,3 +8,4 @@ VS/libuv/libuv.vcxproj.user
 VS/zlib/zlib.vcxproj.user
 *~
 *.bak
+*.log
