@@ -41,11 +41,11 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
     case Proc_SetAttribute: {
         if (wcscmp(Param1, _T("header")) == 0) ZuiControlCall(Proc_SetVisible, p->m_pHeader, (ZuiAny)(wcscmp(Param2, L"hidden") == 0 ? FALSE : TRUE), NULL, NULL);
 		else if (wcscmp(Param1, _T("linecolor")) == 0) {
-			p->m_ListInfo.dwLineColor = (ZuiAny)ZuiStr2Color(Param2);
+			p->m_ListInfo.dwLineColor = ZuiStr2Color(Param2);
 			p->m_ListInfo.bShowRowLine = TRUE;
 		}
 		else if (wcscmp(Param1, _T("columncolor")) == 0) {
-			p->m_ListInfo.dwColumnColor = (ZuiAny)ZuiStr2Color(Param2);
+			p->m_ListInfo.dwColumnColor = ZuiStr2Color(Param2);
 			p->m_ListInfo.bShowColumnLine = TRUE;
 		}
 
@@ -964,7 +964,7 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
-        old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        old_call(ProcId, cp, old_udata, TRUE, Param2, Param3); //设置Param1 让子控件不处理字体资源。
         free(p);
 
         return 0;
@@ -1317,11 +1317,11 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
         else if (wcscmp(Param1, _T("pushedimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetPushedImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         else if (wcscmp(Param1, _T("focusedimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetFocusedImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
 		else if (wcscmp(Param1, _T("sepimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetSepImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
-		else if (wcscmp(Param1, _T("normalcolor")) == 0)  p->m_ColorNormal = (ZuiAny)ZuiStr2Color(Param2);
-		else if (wcscmp(Param1, _T("hotcolor")) == 0)  p->m_ColorHot = (ZuiAny)ZuiStr2Color(Param2);
-		else if (wcscmp(Param1, _T("pushedcolor")) == 0)  p->m_ColorPushed = (ZuiAny)ZuiStr2Color(Param2);
-		else if (wcscmp(Param1, _T("focusedcolor")) == 0)  p->m_ColorFocused = (ZuiAny)ZuiStr2Color(Param2);
-		else if (wcscmp(Param1, _T("sepcolor")) == 0)  p->m_ColorSep = (ZuiAny)ZuiStr2Color(Param2);
+		else if (wcscmp(Param1, _T("normalcolor")) == 0)  p->m_ColorNormal = ZuiStr2Color(Param2);
+		else if (wcscmp(Param1, _T("hotcolor")) == 0)  p->m_ColorHot = ZuiStr2Color(Param2);
+		else if (wcscmp(Param1, _T("pushedcolor")) == 0)  p->m_ColorPushed = ZuiStr2Color(Param2);
+		else if (wcscmp(Param1, _T("focusedcolor")) == 0)  p->m_ColorFocused = ZuiStr2Color(Param2);
+		else if (wcscmp(Param1, _T("sepcolor")) == 0)  p->m_ColorSep = ZuiStr2Color(Param2);
 		else if (wcscmp(Param1, _T("font")) == 0) {
 			if (p->m_rFont)
 				ZuiResDBDelRes(p->m_rFont);
