@@ -180,7 +180,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
     if (Path) {
         _ZuiText pathbuf[1024];
         ZuiText arr[20];
-        ZuiInt arrnum = 20;
+        int arrnum = 20;
         wcscpy(pathbuf, Path);
         ZuiStingSplit(pathbuf, L":", arr, &arrnum);
         if (arrnum < 2)

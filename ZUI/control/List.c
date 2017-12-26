@@ -1300,6 +1300,10 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
 			ZuiResDBDelRes(p->m_diFocused);
 		if (p->m_diSep)
 			ZuiResDBDelRes(p->m_diSep);
+		if (p->m_rFont)
+			ZuiResDBDelRes(p->m_rFont);
+		if (p->m_rListFont)
+			ZuiResDBDelRes(p->m_rListFont);
         free(p);
 
         return 0;
