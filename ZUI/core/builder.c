@@ -25,8 +25,19 @@ static  ZuiControl ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
                     ClassName = node->value.name;
                     goto LoadNodeBedin;
                 }
-                else
-                    continue;
+				else if (node->parent) {
+					node = node->parent->next;
+					if (node) {
+						ClassName = node->value.name;
+						goto LoadNodeBedin;
+					}
+					else
+						continue;
+				}
+				else {
+					node = NULL;//模板节点既没有兄弟节点也没有父节点，设置为空。
+					continue;
+				}
             }
             /*
             if (wcscmp(ClassName, L"Menu") == 0) {//菜单类

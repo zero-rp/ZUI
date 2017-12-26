@@ -47,7 +47,7 @@ ZuiAnimation ZuiAnimationNew(ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 }
 ZuiVoid ZuiAnimationFree(ZuiAnimation p) {
     if (!p)
-        return;
-    ZuiOsKillTimer_Id(p, 1);
+        return 0;
+    //ZuiOsKillTimer_Id(p, 1);
     free(p);
 }

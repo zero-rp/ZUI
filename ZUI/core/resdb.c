@@ -102,8 +102,7 @@ ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromBuf(ZuiAny data, ZuiInt len, ZuiText Pa
                 //添加到资源池
                 p->key = Zui_Hash(txtbuf);
 				if (RB_FIND(_ZResDB_Tree, &Global_ResDB->resdb, p)) {
-					unzClose(p->uf);
-					free(p);
+					ZuiResDBDestroy(p);
 					free(txtbuf);
 					return NULL;
 				}
@@ -143,8 +142,7 @@ ZEXPORT ZuiResDB ZCALL ZuiResDBCreateFromFile(ZuiText FileName, ZuiText Pass)
             //添加到资源池
             p->key = Zui_Hash(txtbuf);
 			if (RB_FIND(_ZResDB_Tree, &Global_ResDB->resdb, p)) {
-				unzClose(p->uf);
-				free(p);
+				ZuiResDBDestroy(p);
 				free(txtbuf);
 				return NULL;
 			}
@@ -507,7 +505,7 @@ ZEXPORT ZuiVoid ZCALL ZuiResDBDelRes(ZuiRes res) {
             //计数为0,释放资源
             RB_REMOVE(_ZRes_Tree, &Global_ResDB->res, res);//从map中移除
             if (res->type == ZREST_IMG) {
-                //ZuiDestroyImage(res->p);
+                ZuiDestroyImage(res->p);
             }
             else if (res->type == ZREST_TXT || res->type == ZREST_STREAM) {
                 free(res->p);
