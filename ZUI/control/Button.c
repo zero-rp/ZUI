@@ -152,23 +152,23 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         return 0;
     }
     case Proc_Button_SetColorNormal: {
-        p->m_ColorNormal = Param1;
+        p->m_ColorNormal = (ZuiColor)Param1;
         return 0;
     }
     case Proc_Button_SetColorHot: {
-        p->m_ColorHot = Param1;
+        p->m_ColorHot = (ZuiColor)Param1;
         return 0;
     }
     case Proc_Button_SetColorPushed: {
-        p->m_ColorPushed = Param1;
+        p->m_ColorPushed = (ZuiColor)Param1;
         return 0;
     }
     case Proc_Button_SetColorFocused: {
-        p->m_ColorFocused = Param1;
+        p->m_ColorFocused = (ZuiColor)Param1;
         return 0;
     }
     case Proc_Button_SetColorDisabled: {
-        p->m_ColorDisabled = Param1;
+        p->m_ColorDisabled = (ZuiColor)Param1;
         return 0;
     }
     case Proc_SetAnimation: {

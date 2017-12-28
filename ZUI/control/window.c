@@ -91,16 +91,16 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         break;
     }
     case Proc_Window_SetSize: {
-        return (ZuiAny)ZuiOsSetWindowSize(p->m_osWindow, Param1, Param2);
+        return (ZuiAny)(ZuiOsSetWindowSize(p->m_osWindow, Param1, Param2));
     }
     case Proc_Window_SetNoBox: {
-        return (ZuiAny)ZuiOsSetWindowNoBox(p->m_osWindow, Param1);
+        return (ZuiAny)(ZuiOsSetWindowNoBox(p->m_osWindow, Param1));
     }
     case Proc_Window_SetComBo: {
-        return (ZuiAny)ZuiOsSetWindowComBo(p->m_osWindow, Param1);
+        return (ZuiAny)(ZuiOsSetWindowComBo(p->m_osWindow, Param1));
     }
     case Proc_Window_SetToolWindow: {
-        return (ZuiAny)ZuiOsSetWindowTool(p->m_osWindow, Param1);
+        return (ZuiAny)(ZuiOsSetWindowTool(p->m_osWindow, Param1));
     }
     case Proc_Window_Popup: {
         cp->m_bVisible = TRUE;
@@ -112,9 +112,9 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         return 0;
     }
     case Proc_SetAttribute: {
-        if (wcscmp(Param1, L"nobox") == 0) ZuiControlCall(Proc_Window_SetNoBox, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
-        else if (wcscmp(Param1, L"combo") == 0) ZuiControlCall(Proc_Window_SetComBo, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
-        else if (wcscmp(Param1, L"toolwindow") == 0) ZuiControlCall(Proc_Window_SetToolWindow, cp, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
+        if (wcscmp(Param1, L"nobox") == 0) ZuiControlCall(Proc_Window_SetNoBox, cp, (ZuiAny)(wcscmp(Param2, L"true") == 0 ? TRUE : FALSE), NULL, NULL);
+        else if (wcscmp(Param1, L"combo") == 0) ZuiControlCall(Proc_Window_SetComBo, cp, (ZuiAny)(wcscmp(Param2, L"true") == 0 ? TRUE : FALSE), NULL, NULL);
+        else if (wcscmp(Param1, L"toolwindow") == 0) ZuiControlCall(Proc_Window_SetToolWindow, cp, (ZuiAny)(wcscmp(Param2, L"true") == 0 ? TRUE : FALSE), NULL, NULL);
         else if (wcscmp(Param1, L"layered") == 0) {
             //if (wcscmp(Param2, L"true") == 0) {
             //    ZuiPaintManagerSetLayered(p->m_pm, TRUE);
@@ -128,19 +128,19 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
             ZuiText pstr = NULL;
             int cx = wcstol(Param2, &pstr, 10);  ASSERT(pstr);
             int cy = wcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
-            ZuiControlCall(Proc_Window_SetMinInfo, cp, cx, cy, NULL);
+            ZuiControlCall(Proc_Window_SetMinInfo, cp, (ZuiAny)cx, (ZuiAny)cy, NULL);
         }
         else if (wcscmp(Param1, L"maxinfo") == 0) {
             ZuiText pstr = NULL;
             int cx = wcstol(Param2, &pstr, 10);  ASSERT(pstr);
             int cy = wcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
-            ZuiControlCall(Proc_Window_SetMaxInfo, cp, cx, cy, NULL);
+            ZuiControlCall(Proc_Window_SetMaxInfo, cp, (ZuiAny)cx, (ZuiAny)cy, NULL);
         }
         else if (wcscmp(Param1, L"size") == 0) {
             ZuiText pstr = NULL;
             int cx = wcstol(Param2, &pstr, 10);  ASSERT(pstr);
             int cy = wcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
-            ZuiControlCall(Proc_Window_SetSize, cp, cx, cy, NULL);
+            ZuiControlCall(Proc_Window_SetSize, cp, (ZuiAny)cx, (ZuiAny)cy, NULL);
         }
         else if (wcscmp(Param1, L"name") == 0) {
             if (cp->m_sName) {
@@ -257,7 +257,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
             free(c);
         }
         free(m_window);
-        for (size_t i = 0; i < m_window_array->count; i++)
+        for (int i = 0; i < m_window_array->count; i++)
         {
             FreeZuiControl(m_window_array->data[i], TRUE);
         }

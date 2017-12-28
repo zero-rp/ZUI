@@ -3,7 +3,7 @@
 #include <ZUI.h>
 
 #if (defined NDEBUG)
-int _stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, ZuiText lpCmdLine, int nCmdShow) {
+int _stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
     ZInitConfig config;
     config.m_hInstance = hInstance;
     config.default_res = L"file:default.zip";

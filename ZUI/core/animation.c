@@ -1,7 +1,7 @@
 ﻿#include "animation.h"
 #include "control.h"
 #include <platform/platform.h>
-ZuiAny ZCALL OnPaint(ZuiControl p, ZuiAny Param1, ZuiAny Param2) {
+ZuiVoid ZCALL OnPaint(ZuiControl p, ZuiAny Param1, ZuiAny Param2) {
     if (!p->m_aAnime->steup) {
         //动画开始
         ZuiOsKillTimer_Id(p, 1);
@@ -47,7 +47,7 @@ ZuiAnimation ZuiAnimationNew(ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 }
 ZuiVoid ZuiAnimationFree(ZuiAnimation p) {
     if (!p)
-        return 0;
+        return;
     //ZuiOsKillTimer_Id(p, 1);
     free(p);
 }

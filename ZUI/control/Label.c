@@ -107,7 +107,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         return 0;
     }
     case Proc_Label_SetTextColor: {
-        p->m_cTextColor = Param1;
+        p->m_cTextColor = (ZuiColor)Param1;
 		ZuiControlNeedUpdate(cp);
         return 0;
     }

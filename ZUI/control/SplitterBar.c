@@ -28,7 +28,7 @@ ZEXPORT ZuiAny ZCALL ZuiSplitterBarProc(ZuiInt ProcId, ZuiControl cp, ZuiSplitte
             if (p->mousedown && cp->m_pParent)
             {
                 ZuiInt index;
-                if ((index = ZuiControlCall(Proc_Layout_GetItemIndex, cp->m_pParent, cp, NULL, NULL)) > 0)
+                if ((index = (ZuiInt)ZuiControlCall(Proc_Layout_GetItemIndex, cp->m_pParent, cp, NULL, NULL)) > 0)
                 {
                     ZuiControl lp = ZuiControlCall(Proc_Layout_GetItemAt, cp->m_pParent, (ZuiAny)(index - 1), NULL, NULL);//上一个控件
                     ZuiControl np = ZuiControlCall(Proc_Layout_GetItemAt, cp->m_pParent, (ZuiAny)(index + 1), NULL, NULL);//下一个控件

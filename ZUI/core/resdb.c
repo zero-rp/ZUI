@@ -214,13 +214,14 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
             if (ret == 0)
             {
                 unzGetCurrentFileInfo64(db->uf, &info, n, 256, 0, 0, 0, 0);
-                unzOpenCurrentFilePassword(db->uf, db->pass);
-                buf = malloc(info.uncompressed_size);
+                unzOpenCurrentFilePassword(db->uf, (const char *)db->pass);
+                buf = malloc((size_t)info.uncompressed_size);
                 buflen = (int)info.uncompressed_size;
-                ret = unzReadCurrentFile(db->uf, buf, info.uncompressed_size);
+                ret = unzReadCurrentFile(db->uf, buf, (int)info.uncompressed_size);
                 if (ret < 0) {
                     free(buf);
-                    buf = buflen = 0;
+					buf = NULL;
+					buflen = 0;
                 }
             }
             free(n);
@@ -240,7 +241,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 			if (arrnum < 4) return NULL;
             buflen = _wtoi(arr[3]);
             buf = malloc(buflen);
-            memcpy(buf, _wtoi(arr[2]), buflen);
+            memcpy(buf, (void *)_wtoi(arr[2]), buflen);
         }
 #if (defined PLATFORM_OS_WIN)
         /*网络*/else if (db->type == ZRESDBT_URL) {
@@ -370,7 +371,8 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
 #endif
         /*字体*/else if (db->type == ZRESDBT_FONT)
         {
-            buf = buflen = -1;
+			buf = (ZuiAny)-1;
+			buflen = -1;
         }
         if (buf == 0 || buflen == 0)
             return NULL;

@@ -35,7 +35,7 @@ ZEXPORT ZuiAny ZCALL ZuiTreeViewProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeView p
         if (!Param1)
             return FALSE;
 
-        if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) != Type_TreeNode)
+        if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) != (ZuiAny)Type_TreeNode)
             return FALSE;
 
         ZuiControlRegNotify(Param1, ZuiTreeViewNotifyProc);
@@ -56,7 +56,7 @@ ZEXPORT ZuiAny ZCALL ZuiTreeViewProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeView p
         if (!Param1)
             return (ZuiAny)-1;
 
-        if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) != Type_TreeNode)
+        if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) != (ZuiAny)Type_TreeNode)
             return (ZuiAny)-1;
 
         //ZuiControl* pParent = ZuiControlCall(Proc_List_GetItemAt, cp, Param2, NULL, NULL);
@@ -80,7 +80,7 @@ ZEXPORT ZuiAny ZCALL ZuiTreeViewProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeView p
 
         if (ZuiControlCall(Proc_TreeNode_GetCountChild, Param1, NULL, NULL, NULL) > 0)
         {
-            int nCount = ZuiControlCall(Proc_TreeNode_GetCountChild, Param1, NULL, NULL, NULL);
+            int nCount = (int)ZuiControlCall(Proc_TreeNode_GetCountChild, Param1, NULL, NULL, NULL);
             for (int nIndex = 0; nIndex < nCount; nIndex++)
             {
                 ZuiControl pNode = ZuiControlCall(Proc_TreeNode_GetChildNode, Param1, (ZuiAny)nIndex, NULL, NULL);
@@ -217,7 +217,7 @@ ZEXPORT ZuiAny ZCALL ZuiTreeNodeProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeNode p
     switch (ProcId)
     {
     case Proc_TreeNode_Add: {
-        if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) == Type_TreeNode)
+        if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) == (ZuiAny)Type_TreeNode)
             return ZuiControlCall(Proc_TreeNode_AddChildNode, cp, Param1, NULL, NULL);//作为子节点插入
         return ZuiControlCall(Proc_TreeNode_Add, p->pHoriz, Param1, NULL, NULL);
         break;//普通插入,直接交给原型处理
@@ -232,7 +232,7 @@ ZEXPORT ZuiAny ZCALL ZuiTreeNodeProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeNode p
         if (!Param1)
             return FALSE;
 
-        if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) != Type_TreeNode)
+        if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) != (ZuiAny)Type_TreeNode)
             return FALSE;
         //计算缩进
         Param1 = ZuiControlCall(Proc_TreeNode_CalLocation, cp, Param1, NULL, NULL);
@@ -262,7 +262,7 @@ ZEXPORT ZuiAny ZCALL ZuiTreeNodeProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeNode p
         ZuiControlCall(Proc_SetVisible, ZuiControlCall(Proc_TreeNode_GetDottedLine, Param1, NULL, NULL, NULL), (ZuiAny)TRUE, NULL, NULL);
         ZuiControlCall(Proc_SetFixedWidth,
             ZuiControlCall(Proc_TreeNode_GetDottedLine, Param1, NULL, NULL, NULL),
-            (ZuiInt)ZuiControlCall(Proc_GetFixedWidth, p->pDottedLine, NULL, NULL, NULL) + 16, NULL, NULL);
+            (ZuiAny)((ZuiInt)ZuiControlCall(Proc_GetFixedWidth, p->pDottedLine, NULL, NULL, NULL) + 16), NULL, NULL);
         ZuiControlCall(Proc_TreeNode_SetParentNode, Param1, cp, NULL, NULL);
         //ZuiControlCall(Proc_TreeNode_GetItemButton, Param1, NULL, NULL, NULL)
         //_pTreeNodeUI->GetItemButton()->SetGroup(pItemButton->GetGroup());
@@ -273,10 +273,10 @@ ZEXPORT ZuiAny ZCALL ZuiTreeNodeProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeNode p
         if (p->mTreeNodes->count == 0)
             return cp;
 
-        ZuiControl* nRetNode = NULL;
+        ZuiControl nRetNode = NULL;
 
         for (int nIndex = 0; nIndex < p->mTreeNodes->count; nIndex++) {
-            ZuiControl* pNode = p->mTreeNodes->data[nIndex];
+            ZuiControl pNode = p->mTreeNodes->data[nIndex];
             if (!pNode)
                 continue;
 
@@ -292,8 +292,8 @@ ZEXPORT ZuiAny ZCALL ZuiTreeNodeProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeNode p
         if (!p->pTreeView)
             return (ZuiAny)-1;
 
-        for (int nIndex = 0; nIndex < ZuiControlCall(Proc_List_GetCount, p->pTreeView, NULL, NULL, NULL); nIndex++) {
-            if (cp == ZuiControlCall(Proc_List_GetItemAt, p->pTreeView, nIndex, NULL, NULL))
+        for (int nIndex = 0; nIndex < (int)(ZuiControlCall(Proc_List_GetCount, p->pTreeView, NULL, NULL, NULL)); nIndex++) {
+            if (cp == ZuiControlCall(Proc_List_GetItemAt, p->pTreeView, (ZuiAny)nIndex, NULL, NULL))
                 return (ZuiAny)nIndex;
         }
 
@@ -314,7 +314,7 @@ ZEXPORT ZuiAny ZCALL ZuiTreeNodeProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeNode p
         return 0;
     }
     case Proc_TreeNode_IsHasChild: {
-        return (ZuiAny)p->mTreeNodes->count != 0;
+        return (ZuiAny)(p->mTreeNodes->count != 0);
     }
     case Proc_TreeNode_SetVisibleFolderBtn: {
         return ZuiControlCall(Proc_SetVisible, p->pFolderButton, Param1, NULL, NULL);
