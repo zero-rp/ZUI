@@ -80,7 +80,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
                 p->m_pHeader = Param1;
 				if (cp->m_pOs != NULL)
 					ZuiControlCall(Proc_SetOs, (ZuiControl)p->m_pHeader, cp->m_pOs, cp, (ZuiAny)TRUE);
-                p->m_ListInfo.nColumns = MIN((int)ZuiControlCall(Proc_Layout_GetCount, p->m_pHeader, NULL, NULL, NULL), (ZuiAny)ZLIST_MAX_COLUMNS);
+                p->m_ListInfo.nColumns = MIN((int)ZuiControlCall(Proc_Layout_GetCount, p->m_pHeader, NULL, NULL, NULL), ZLIST_MAX_COLUMNS);
 				return 0;//ZuiVerticalLayoutProc(Proc_Layout_AddAt, cp, p->old_udata, p->m_pHeader, 0, NULL);
             }
             return FALSE;
@@ -90,7 +90,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
             //插入到头容器
             ZuiBool ret = (ZuiBool)ZuiControlCall(Proc_Layout_Add, p->m_pHeader, Param1, 0, NULL);
             //计算列数量
-            p->m_ListInfo.nColumns = MIN((int)ZuiControlCall(Proc_Layout_GetCount, p->m_pHeader, NULL, NULL, NULL), (ZuiAny)ZLIST_MAX_COLUMNS);
+            p->m_ListInfo.nColumns = MIN((int)ZuiControlCall(Proc_Layout_GetCount, p->m_pHeader, NULL, NULL, NULL), ZLIST_MAX_COLUMNS);
             return (ZuiAny)ret;
         }
         // 插入的元素是行数据
@@ -111,7 +111,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
                 p->m_pHeader = Param1;
 				if (cp->m_pOs != NULL)
 					ZuiControlCall(Proc_SetOs, (ZuiControl)p->m_pHeader, cp->m_pOs, cp, (void*)TRUE);
-                p->m_ListInfo.nColumns = MIN((int)ZuiControlCall(Proc_Layout_GetCount, p->m_pHeader, NULL, NULL, NULL), (ZuiAny)ZLIST_MAX_COLUMNS);
+                p->m_ListInfo.nColumns = MIN((int)ZuiControlCall(Proc_Layout_GetCount, p->m_pHeader, NULL, NULL, NULL), ZLIST_MAX_COLUMNS);
                 //表头永远在第一个位置
 				return 0; //ZuiVerticalLayoutProc(Proc_Layout_AddAt, cp, p->old_udata, p->m_pHeader, 0, NULL);
             }
@@ -122,7 +122,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
             //插入到头容器指定位置
             ZuiBool ret = (ZuiBool)ZuiControlCall(Proc_Layout_AddAt, p->m_pHeader, Param1, Param2, NULL);
             //计算列数量
-            p->m_ListInfo.nColumns = MIN((int)ZuiControlCall(Proc_Layout_GetCount, p->m_pHeader, NULL, NULL, NULL), (ZuiAny)ZLIST_MAX_COLUMNS);
+            p->m_ListInfo.nColumns = MIN((int)ZuiControlCall(Proc_Layout_GetCount, p->m_pHeader, NULL, NULL, NULL), ZLIST_MAX_COLUMNS);
             return (ZuiAny)ret;
         }
         // 插入的元素是行数据
@@ -845,6 +845,10 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
                 ZuiControlCall(Proc_SetPos, pListItem, &rt, FALSE, 0);
             }
         }
+		ZuiControl tmpHeaderItem = ZuiControlCall(Proc_Layout_GetItemAt, pHeader, (ZuiAny)((int)ZuiControlCall(Proc_Layout_GetCount, pHeader, NULL, NULL, NULL)-1), NULL, NULL);
+		if (tmpHeaderItem) {
+			cp->m_rcItem.right = tmpHeaderItem->m_rcItem.right;
+		}
         return 0;
     }
     case Proc_OnPaintBkColor: {
