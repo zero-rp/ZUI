@@ -48,6 +48,12 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
 			p->m_ListInfo.dwColumnColor = ZuiStr2Color(Param2);
 			p->m_ListInfo.bShowColumnLine = TRUE;
 		}
+		else if (wcscmp(Param1, _T("hotbkcolor")) == 0) {
+			p->m_ListInfo.dwHotBkColor = ZuiStr2Color(Param2);
+		}
+		else if (wcscmp(Param1, _T("selectedbkcolor")) == 0) {
+			p->m_ListInfo.dwSelectedBkColor = ZuiStr2Color(Param2);
+		}
 
 
         break;

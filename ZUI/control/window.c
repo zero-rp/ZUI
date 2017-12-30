@@ -199,6 +199,20 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
     case Proc_GetType: {
         return (ZuiAny)Type_Window;
     }
+	case Proc_SetPos: {
+		if (cp->m_pOs->m_bMax) {
+			ZuiInt tmpwidth = cp->m_dwBorderWidth;
+			cp->m_dwBorderWidth = 0;
+			p->old_call(ProcId, cp, p->old_udata, Param1, Param2, Param3);
+			cp->m_dwBorderWidth = tmpwidth;
+			return;
+		}
+		break;
+	}
+	case Proc_OnPaintBorder: {
+		if (cp->m_pOs->m_bMax) return 0;
+		break;
+	}
     case Proc_OnCreate: {
         p = (ZuiWindow)malloc(sizeof(ZWindow));
         if (p)

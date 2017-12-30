@@ -378,5 +378,5 @@ ZuiColor ZuiStr2Color(ZuiAny str)
 	if (*(ZuiText)str == L'#')
 		str = ZuiCharNext((ZuiText)str);
 	clrColor = _tcstoul((ZuiText)str, &pstr, 16);
-	return clrColor;
+	return clrColor|0xFF000000;
 }

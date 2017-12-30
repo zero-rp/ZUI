@@ -326,7 +326,7 @@ extern "C"
         if (!Image) { return NULL; }
         memset(Image, 0, sizeof(ZImage));
         Image->image = new ZuiAggImage();
-        if (!Image->image) { return NULL; }
+		if (!Image->image) { free(Image); return NULL; }
         HGLOBAL hMem = GlobalAlloc(GMEM_ZEROINIT | GMEM_MOVEABLE, len);
         void *str;
         CreateStreamOnHGlobal(hMem, 0, &str);
