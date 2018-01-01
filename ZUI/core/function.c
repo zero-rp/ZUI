@@ -195,12 +195,13 @@ ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
         //禁用掉父窗口
         EnableWindow(rp->m_pOs->m_hWnd, FALSE);
         MSG Msg;
-        while (1)
+        while (GetMessage(&Msg, NULL, 0, 0))
         {
-            GetMessage(&Msg, NULL, 0, 0);
 			if (Msg.message == WM_CLOSE)
 			{
 				nRet = Msg.wParam;
+				EnableWindow(rp->m_pOs->m_hWnd, TRUE);
+				SetFocus(rp->m_pOs->m_hWnd);
 			}
 			if (Msg.hwnd == MsgBox_pRoot->m_pOs->m_hWnd || Msg.message == WM_PAINT) {
 				TranslateMessage(&Msg);
