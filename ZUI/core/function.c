@@ -147,16 +147,30 @@ ZuiAny ZCALL MsgBox_Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAn
     if (wcscmp(msg, L"onclick") == 0)
     {
         if (wcscmp(p->m_sName, L"WindowCtl_clos") == 0) {
-            FreeZuiControl(p->m_pOs->m_pRoot, TRUE);
+            ZuiControlCall(Proc_OnClose,p->m_pOs->m_pRoot, (ZuiAny)ZuiCANCEL,NULL,NULL);
             //PostMessage(0, WM_APP + 10, 0, 0);
         }
+		else if (wcscmp(p->m_sName, L"ok") == 0) {
+			ZuiControlCall(Proc_OnClose, p->m_pOs->m_pRoot, (ZuiAny)ZuiOK, NULL, NULL);
+		}
+		else if (wcscmp(p->m_sName, L"cancel") == 0) {
+			ZuiControlCall(Proc_OnClose, p->m_pOs->m_pRoot, (ZuiAny)ZuiCANCEL, NULL, NULL);
+		}
     }
-    return 0;
+    return (ZuiAny)TRUE;
+}
+
+ZuiAny ZCALL MsgBox_Notify(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+	if (wcscmp(msg, L"ondestroy") == 0) {
+		ZuiMsgLoop_exit();
+	}
+	return (ZuiAny)TRUE;
 }
 
 ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
     ZuiControl p;
     MsgBox_pRoot = NewZuiControl(L"MessageBox", NULL, NULL, NULL);
+	ZuiControlRegNotify(MsgBox_pRoot, MsgBox_Notify);
     //取消最小化按钮
     p = ZuiControlFindName(MsgBox_pRoot, L"WindowCtl_min");
     ZuiControlCall(Proc_SetVisible, p, FALSE, NULL, NULL);
@@ -177,22 +191,29 @@ ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
     ZuiControlCall(Proc_SetText, p, text, NULL, NULL);
     p = ZuiControlFindName(MsgBox_pRoot, L"title");
     ZuiControlCall(Proc_SetText, p, title, NULL, NULL);
-    /*
+	ZuiInt nRet;
         //禁用掉父窗口
         EnableWindow(rp->m_pOs->m_hWnd, FALSE);
         MSG Msg;
         while (1)
         {
             GetMessage(&Msg, NULL, 0, 0);
-            if (Msg.message == WM_APP + 10)
-                break;
-            TranslateMessage(&Msg);
-            DispatchMessage(&Msg);
+			if (Msg.message == WM_CLOSE)
+			{
+				nRet = Msg.wParam;
+			}
+			if (Msg.hwnd == MsgBox_pRoot->m_pOs->m_hWnd || Msg.message == WM_PAINT) {
+				TranslateMessage(&Msg);
+				DispatchMessage(&Msg);
+			}
+			if (Msg.message == WM_QUIT) {
+				break;
+			}
         }
         //重新开启父窗口
         EnableWindow(rp->m_pOs->m_hWnd, TRUE);
-    */
-    return TRUE;
+		SetFocus(rp->m_pOs->m_hWnd);
+    return nRet;
 }
 ZuiBool ZuiIsPointInRect(ZuiRect Rect, ZuiPoint pt) {
     int xl, xr, yt, yb;

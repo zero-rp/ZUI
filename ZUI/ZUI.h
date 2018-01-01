@@ -177,6 +177,11 @@ enum ZREST
 #define ZLOG_TYPE_WARNING     2
 #define ZLOG_TYPE_INFO     3
 
+#define ZuiOK		1
+#define ZuiCANCEL	2
+#define ZuiYES		3
+#define ZuiNO		4
+
 #if LOG_DEBUG || RUN_DEBUG
 
 
@@ -304,6 +309,7 @@ enum ZREST
 #define Proc_SetAnimationType   70  //设置动画类型
 #define	Proc_SetBorderWidth		71
 #define	Proc_GetBorderWidth		72
+#define Proc_OnClose			73
 
 
 #define ZuiControlSetDrag(p,b)  ZuiControlCall(Proc_SetDrag,(p),(b),NULL,NULL)
@@ -564,6 +570,8 @@ extern "C"
     ZEXPORT ZuiVoid ZCALL FreeZuiControl(ZuiControl p, ZuiBool Delayed);//销毁控件
     ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);//调用控件处理函数
 	ZEXPORT ZuiControl ZCALL ZuiControlFindName(ZuiControl p, ZuiText Name);
+	ZEXPORT ZuiVoid ZCALL ZuiControlRegNotify(ZuiControl p, ZNotifyProc pNotify);
+	ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title);
 
     //载入布局窗口
     ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len);

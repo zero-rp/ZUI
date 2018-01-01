@@ -205,7 +205,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
 			cp->m_dwBorderWidth = 0;
 			p->old_call(ProcId, cp, p->old_udata, Param1, Param2, Param3);
 			cp->m_dwBorderWidth = tmpwidth;
-			return;
+			return 0;
 		}
 		break;
 	}
@@ -232,11 +232,16 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         }
         return NULL;
     }
+	case Proc_OnClose: {
+		if (ZuiControlNotify(_T("onclose"), cp, 0, 0, 0)) {
+			PostMessage(cp->m_pOs->m_hWnd, WM_CLOSE, Param1, Param2);
+		}
+		return 0;
+	}
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
-		if (ZuiControlNotify(_T("onclose"), cp, 0, 0, 0))
-			return 0;
+		ZuiControlNotify(_T("ondestroy"), cp, 0, 0, 0);
 
 		if (cp->m_sName) {
 			ZWindows theNode = { 0 };

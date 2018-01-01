@@ -15,6 +15,11 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         TEventUI *event = (TEventUI *)Param1;
         switch (event->Type)
         {
+		case ZEVENT_KILLFOCUS:
+		{
+			p->type = 0;
+			break;
+		}
         case ZEVENT_MOUSELEAVE: {
             p->type = 0;
             ZuiControlInvalidate(cp, TRUE);

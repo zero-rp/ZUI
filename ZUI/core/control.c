@@ -88,7 +88,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     case Proc_Invalidate: {
         ZRect invalidateRc = p->m_rcItem;
         if (!p->m_bVisible) return 0;
-        {
+		else
+		{
             ZuiControl pParent = p;
             ZRect rcTemp;
             ZRect *rcParent;

@@ -18,7 +18,7 @@ static  ZuiControl ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
         LoadNodeBedin:
             ClassName = node->value.name;
             LOG_DEGUB(L"layout创建控件: 类名:%ls\r\n", ClassName);
-            if (wcscmp(ClassName, L"Template") == 0) {//模版类
+            if (wcsicmp(ClassName, L"Template") == 0) {//模版类
                 ZuiAddTemplate(node);
                 if (node->next) {
 					node = node->next;
@@ -51,15 +51,15 @@ static  ZuiControl ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
                     continue;
             }
             */
-			if (wcsncmp(ClassName, L"?", 1) == 0) {//跳过<? xxx ?>节点
+			if (wcsnicmp(ClassName, L"?", 1) == 0) {//跳过<? xxx ?>节点
 				node->user_data = node->parent->user_data;
 				continue;
 			}
-            if (wcscmp(ClassName, L"Include") == 0) {//包含文件
+            if (wcsicmp(ClassName, L"Include") == 0) {//包含文件
                 ZuiText src = NULL;
                 for (ZuiInt i = 0; i < node->value.num_attrs; i++)
                 {
-                    if (wcscmp(node->value.attrs[i].name, L"src") == 0) {
+                    if (wcsicmp(node->value.attrs[i].name, L"src") == 0) {
                         src = node->value.attrs[i].value;
                     }
                 }
