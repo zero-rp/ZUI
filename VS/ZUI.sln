@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZUI", "ZUI\ZUI.vcxproj", "{22BC8FDB-392F-49C4-AE49-AA0E38409549}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "依赖库", "依赖库", "{E073B356-BD01-4DFB-9C2D-BE1744D74890}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dukluv", "dukluv\dukluv.vcxproj", "{EF94D9B9-0235-4DBE-8AA3-0FC213F22C4E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "example", "example\example.vcxproj", "{FC6DEDCA-36B7-4D4C-91EF-23B730031188}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +101,18 @@ Global
 		{EF94D9B9-0235-4DBE-8AA3-0FC213F22C4E}.Release|x64.Build.0 = Release|x64
 		{EF94D9B9-0235-4DBE-8AA3-0FC213F22C4E}.Release|x86.ActiveCfg = Release|Win32
 		{EF94D9B9-0235-4DBE-8AA3-0FC213F22C4E}.Release|x86.Build.0 = Release|Win32
+		{FC6DEDCA-36B7-4D4C-91EF-23B730031188}.Debug|x64.ActiveCfg = Debug|x64
+		{FC6DEDCA-36B7-4D4C-91EF-23B730031188}.Debug|x64.Build.0 = Debug|x64
+		{FC6DEDCA-36B7-4D4C-91EF-23B730031188}.Debug|x86.ActiveCfg = Debug|Win32
+		{FC6DEDCA-36B7-4D4C-91EF-23B730031188}.Debug|x86.Build.0 = Debug|Win32
+		{FC6DEDCA-36B7-4D4C-91EF-23B730031188}.Release_vc6|x64.ActiveCfg = Release|x64
+		{FC6DEDCA-36B7-4D4C-91EF-23B730031188}.Release_vc6|x64.Build.0 = Release|x64
+		{FC6DEDCA-36B7-4D4C-91EF-23B730031188}.Release_vc6|x86.ActiveCfg = Release|Win32
+		{FC6DEDCA-36B7-4D4C-91EF-23B730031188}.Release_vc6|x86.Build.0 = Release|Win32
+		{FC6DEDCA-36B7-4D4C-91EF-23B730031188}.Release|x64.ActiveCfg = Release|x64
+		{FC6DEDCA-36B7-4D4C-91EF-23B730031188}.Release|x64.Build.0 = Release|x64
+		{FC6DEDCA-36B7-4D4C-91EF-23B730031188}.Release|x86.ActiveCfg = Release|Win32
+		{FC6DEDCA-36B7-4D4C-91EF-23B730031188}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -109,5 +123,8 @@ Global
 		{713D47AC-A11F-4F5F-AB54-806CA3D6E0AE} = {E073B356-BD01-4DFB-9C2D-BE1744D74890}
 		{8C2C4CB2-D4D5-4D7D-9DA1-9402DBF08C60} = {E073B356-BD01-4DFB-9C2D-BE1744D74890}
 		{EF94D9B9-0235-4DBE-8AA3-0FC213F22C4E} = {E073B356-BD01-4DFB-9C2D-BE1744D74890}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5D0F0719-0AFB-48F1-B530-1C4BE55BEFD3}
 	EndGlobalSection
 EndGlobal
