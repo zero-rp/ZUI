@@ -234,7 +234,8 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
     }
 	case Proc_OnClose: {
 		if (ZuiControlNotify(_T("onclose"), cp, 0, 0, 0)) {
-			PostMessage(cp->m_pOs->m_hWnd, WM_CLOSE, Param1, Param2);
+			PostMessage(cp->m_pOs->m_hWnd, WM_APP+3, Param1, Param2);
+			ZuiOsAddDelayedCleanup(cp->m_pOs, cp);
 		}
 		return 0;
 	}

@@ -148,22 +148,10 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             ZuiControlEvent(p->m_pEventClick, &event);
         }
 
-        //无焦点窗口不做任何处理
-        if (!p->m_bUnfocusPaintWindow)
-        {
-            SetFocus(NULL);
-        }
 
-        if (GetActiveWindow() == p->m_hWnd) {
-            HWND hwndParent = GetWindowOwner(p->m_hWnd);
-            //无焦点窗口不做任何处理
-            if (!p->m_bUnfocusPaintWindow)
-            {
-                if (hwndParent != NULL) SetFocus(hwndParent);
-            }
-        }
-		FreeZuiControl(p->m_pRoot, FALSE);
-        break;
+		//FreeZuiControl(p->m_pRoot, FALSE);
+		ZuiControlCall(Proc_OnClose, p->m_pRoot, 0, 0, 0);
+        return 0;
     }
     case WM_ERASEBKGND:
     {

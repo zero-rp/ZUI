@@ -157,20 +157,23 @@ ZuiAny ZCALL MsgBox_Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAn
 			ZuiControlCall(Proc_OnClose, p->m_pOs->m_pRoot, (ZuiAny)ZuiCANCEL, NULL, NULL);
 		}
     }
-    return (ZuiAny)TRUE;
+    return 0;
 }
 
-ZuiAny ZCALL MsgBox_Notify(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+ZuiAny ZCALL Default_NotifyProc(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 	if (wcscmp(msg, L"ondestroy") == 0) {
 		ZuiMsgLoop_exit();
 	}
-	return (ZuiAny)TRUE;
+	else if (wcscmp(msg, L"onclose") == 0) {
+		return (ZuiAny)1;
+	}
+	return 0;
 }
 
 ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
     ZuiControl p;
     MsgBox_pRoot = NewZuiControl(L"MessageBox", NULL, NULL, NULL);
-	ZuiControlRegNotify(MsgBox_pRoot, MsgBox_Notify);
+	ZuiControlRegNotify(MsgBox_pRoot, Default_NotifyProc);
     //取消最小化按钮
     p = ZuiControlFindName(MsgBox_pRoot, L"WindowCtl_min");
     ZuiControlCall(Proc_SetVisible, p, FALSE, NULL, NULL);
@@ -197,16 +200,12 @@ ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
         MSG Msg;
         while (GetMessage(&Msg, NULL, 0, 0))
         {
-			if (Msg.message == WM_CLOSE)
+			if (Msg.message == WM_APP+3)
 			{
 				nRet = Msg.wParam;
-				EnableWindow(rp->m_pOs->m_hWnd, TRUE);
-				SetFocus(rp->m_pOs->m_hWnd);
 			}
-			if (Msg.hwnd == MsgBox_pRoot->m_pOs->m_hWnd || Msg.message == WM_PAINT) {
 				TranslateMessage(&Msg);
 				DispatchMessage(&Msg);
-			}
 			if (Msg.message == WM_QUIT) {
 				break;
 			}
