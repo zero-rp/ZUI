@@ -401,6 +401,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             ZuiControlEvent(p->m_pFocus, &event);
         }
 		if (wParam == SIZE_RESTORED) {
+			p->m_bMax = FALSE;
 			ZuiControl pmax = ZuiControlFindName(p->m_pRoot, _T("WindowCtl_max"));
 			if (pmax)
 				ZuiControlCall(Proc_Option_SetSelected, pmax, (ZuiAny)FALSE, NULL, NULL);
@@ -939,9 +940,9 @@ ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show) {
         memset(OsWindow, 0, sizeof(ZOsWindow));
 
         OsWindow->m_hWnd = CreateWindowEx(0, L"ZUI", L"",
-            WS_POPUP | WS_CLIPCHILDREN,
+            WS_POPUP |WS_VISIBLE| WS_CLIPCHILDREN |WS_CLIPSIBLINGS| WS_SYSMENU | WS_MINIMIZEBOX,
             CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-            NULL, NULL, GetModuleHandleA(NULL),
+            NULL, NULL, GetModuleHandle(NULL),
             OsWindow);
 
         OsWindow->m_hIMC = ImmGetContext(OsWindow->m_hWnd);//获取系统的输入法
@@ -1017,12 +1018,13 @@ ZuiBool ZuiOsSetWindowNoBox(ZuiOsWindow OsWindow, ZuiBool b) {
     if (OsWindow->m_nobox == b)
         return FALSE;
     OsWindow->m_nobox = b;
+	DWORD dwStyle = GetWindowLong(OsWindow->m_hWnd, GWL_STYLE);
     if (b)
     {
-        SetWindowLong(OsWindow->m_hWnd, GWL_STYLE, WS_VISIBLE | WS_POPUP | WS_CLIPCHILDREN);
+        SetWindowLong(OsWindow->m_hWnd, GWL_STYLE, dwStyle | WS_VISIBLE | WS_POPUP | WS_CLIPCHILDREN);
     }
     else {
-        SetWindowLong(OsWindow->m_hWnd, GWL_STYLE, WS_VISIBLE | WS_POPUP | WS_CLIPCHILDREN);
+        SetWindowLong(OsWindow->m_hWnd, GWL_STYLE, dwStyle | WS_VISIBLE | WS_POPUP | WS_CLIPCHILDREN);
     }
     GetWindowRect(OsWindow->m_hWnd, &OsWindow->m_rect);
     return TRUE;

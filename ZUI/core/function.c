@@ -161,10 +161,7 @@ ZuiAny ZCALL MsgBox_Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAn
 }
 
 ZuiAny ZCALL Default_NotifyProc(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
-	if (wcscmp(msg, L"ondestroy") == 0) {
-		ZuiMsgLoop_exit();
-	}
-	else if (wcscmp(msg, L"onclose") == 0) {
+	if (wcscmp(msg, L"onclose") == 0) {
 		return (ZuiAny)1;
 	}
 	return 0;
@@ -195,17 +192,23 @@ ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
     p = ZuiControlFindName(MsgBox_pRoot, L"title");
     ZuiControlCall(Proc_SetText, p, title, NULL, NULL);
 	ZuiInt nRet;
+	HWND tmphwnd = MsgBox_pRoot->m_pOs->m_hWnd;
+	SetWindowPos(tmphwnd,HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
         //禁用掉父窗口
         EnableWindow(rp->m_pOs->m_hWnd, FALSE);
         MSG Msg;
-        while (GetMessage(&Msg, NULL, 0, 0))
+        while (IsWindow(tmphwnd)  && GetMessage(&Msg, NULL, 0, 0))
         {
 			if (Msg.message == WM_APP+3)
 			{
 				nRet = Msg.wParam;
+				EnableWindow(rp->m_pOs->m_hWnd, TRUE);
+				SetFocus(rp->m_pOs->m_hWnd);
 			}
+			if (Msg.hwnd == tmphwnd || Msg.message == WM_PAINT) {
 				TranslateMessage(&Msg);
 				DispatchMessage(&Msg);
+			}
 			if (Msg.message == WM_QUIT) {
 				break;
 			}
