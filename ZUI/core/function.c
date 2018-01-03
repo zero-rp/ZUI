@@ -169,7 +169,7 @@ ZuiAny ZCALL Default_NotifyProc(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiA
 
 ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
     ZuiControl p;
-    MsgBox_pRoot = NewZuiControl(L"MessageBox", NULL, NULL, NULL);
+    MsgBox_pRoot = NewZuiControl(L"MessageBox", NULL, rp, NULL);
 	ZuiControlRegNotify(MsgBox_pRoot, Default_NotifyProc);
     //取消最小化按钮
     p = ZuiControlFindName(MsgBox_pRoot, L"WindowCtl_min");
@@ -191,32 +191,8 @@ ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
     ZuiControlCall(Proc_SetText, p, text, NULL, NULL);
     p = ZuiControlFindName(MsgBox_pRoot, L"title");
     ZuiControlCall(Proc_SetText, p, title, NULL, NULL);
-	ZuiInt nRet;
-	HWND tmphwnd = MsgBox_pRoot->m_pOs->m_hWnd;
-	SetWindowPos(tmphwnd,HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
-        //禁用掉父窗口
-        EnableWindow(rp->m_pOs->m_hWnd, FALSE);
-        MSG Msg;
-        while (IsWindow(tmphwnd)  && GetMessage(&Msg, NULL, 0, 0))
-        {
-			if (Msg.message == WM_APP+3)
-			{
-				nRet = Msg.wParam;
-				EnableWindow(rp->m_pOs->m_hWnd, TRUE);
-				SetFocus(rp->m_pOs->m_hWnd);
-			}
-			if (Msg.hwnd == tmphwnd || Msg.message == WM_PAINT) {
-				TranslateMessage(&Msg);
-				DispatchMessage(&Msg);
-			}
-			if (Msg.message == WM_QUIT) {
-				break;
-			}
-        }
-        //重新开启父窗口
-        EnableWindow(rp->m_pOs->m_hWnd, TRUE);
-		SetFocus(rp->m_pOs->m_hWnd);
-    return nRet;
+
+    return ZuiDoModel((ZuiAny)MsgBox_pRoot->m_pOs->m_hWnd);
 }
 ZuiBool ZuiIsPointInRect(ZuiRect Rect, ZuiPoint pt) {
     int xl, xr, yt, yb;

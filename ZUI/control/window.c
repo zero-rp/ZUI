@@ -224,7 +224,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
             p->old_call = (ZCtlProc)&ZuiVerticalLayoutProc;
 
             //创建宿主窗口
-            p->m_osWindow = ZuiOsCreateWindow(cp, (ZuiBool)Param1);
+            p->m_osWindow = ZuiOsCreateWindow(cp, (ZuiBool)Param1,Param2);
 
 
             darray_append(m_window_array, cp);

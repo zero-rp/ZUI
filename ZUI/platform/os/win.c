@@ -932,9 +932,12 @@ ZuiBool ZuiOsUnInitialize() {
     return TRUE;
 }
 
-ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show) {
+ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show, ZuiAny pcontrol) {
     /*保存相关参数到ZOsWindow*/
     ZuiOsWindow OsWindow = (ZuiOsWindow)malloc(sizeof(ZOsWindow));
+	HWND tmphwnd = NULL;
+	if (pcontrol)
+		tmphwnd = ((ZuiControl)pcontrol)->m_pOs->m_hWnd;
     if (OsWindow)
     {
         memset(OsWindow, 0, sizeof(ZOsWindow));
@@ -942,7 +945,7 @@ ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show) {
         OsWindow->m_hWnd = CreateWindowEx(0, L"ZUI", L"",
             WS_POPUP |WS_VISIBLE| WS_CLIPCHILDREN |WS_CLIPSIBLINGS| WS_SYSMENU | WS_MINIMIZEBOX,
             CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-            NULL, NULL, GetModuleHandle(NULL),
+            tmphwnd, NULL, GetModuleHandle(NULL),
             OsWindow);
 
         OsWindow->m_hIMC = ImmGetContext(OsWindow->m_hWnd);//获取系统的输入法
@@ -1309,7 +1312,35 @@ ZuiVoid ZuiOsMsgLoopExit() {
 ZuiVoid ZuiOsPostTask(ZuiTask task) {
     PostThreadMessage(m_hMainThreadId, WM_APP + 2, (WPARAM)task, 0);
 }
-
+ZEXPORT ZuiInt ZuiDoModel(ZuiAny chwnd)
+{
+	ZuiInt nRet;
+	HWND phwnd = GetWindowOwner((HWND)chwnd);
+	SetWindowPos((HWND)chwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+	//禁用掉父窗口
+	EnableWindow((HWND)phwnd, FALSE);
+	MSG Msg;
+	while (IsWindow((HWND)chwnd) && GetMessage(&Msg, NULL, 0, 0))
+	{
+		if (Msg.message == WM_APP + 3)
+		{
+			nRet = Msg.wParam;
+			EnableWindow((HWND)phwnd, TRUE);
+			SetFocus((HWND)phwnd);
+		}
+		if (Msg.hwnd == (HWND)chwnd || Msg.message == WM_PAINT) {
+			TranslateMessage(&Msg);
+			DispatchMessage(&Msg);
+		}
+		if (Msg.message == WM_QUIT) {
+			break;
+		}
+	}
+	//重新开启父窗口
+	EnableWindow((HWND)phwnd, TRUE);
+	SetFocus((HWND)phwnd);
+	return nRet;
+}
 ZuiInt ZuiOsUtf8ToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen)
 {
     return MultiByteToWideChar(CP_UTF8, 0, str, slen, out, olen);
