@@ -148,22 +148,10 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             ZuiControlEvent(p->m_pEventClick, &event);
         }
 
-        //无焦点窗口不做任何处理
-        if (!p->m_bUnfocusPaintWindow)
-        {
-            SetFocus(NULL);
-        }
 
-        if (GetActiveWindow() == p->m_hWnd) {
-            HWND hwndParent = GetWindowOwner(p->m_hWnd);
-            //无焦点窗口不做任何处理
-            if (!p->m_bUnfocusPaintWindow)
-            {
-                if (hwndParent != NULL) SetFocus(hwndParent);
-            }
-        }
-		FreeZuiControl(p->m_pRoot, FALSE);
-        break;
+		//FreeZuiControl(p->m_pRoot, FALSE);
+		ZuiControlCall(Proc_OnClose, p->m_pRoot, 0, 0, 0);
+        return 0;
     }
     case WM_ERASEBKGND:
     {
@@ -412,6 +400,12 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             event.wKeyState = MapKeyState();
             ZuiControlEvent(p->m_pFocus, &event);
         }
+		if (wParam == SIZE_RESTORED) {
+			p->m_bMax = FALSE;
+			ZuiControl pmax = ZuiControlFindName(p->m_pRoot, _T("WindowCtl_max"));
+			if (pmax)
+				ZuiControlCall(Proc_Option_SetSelected, pmax, (ZuiAny)FALSE, NULL, NULL);
+		}
         if (p->m_pRoot != NULL)
             ZuiControlNeedUpdate(p->m_pRoot);
         if (p->m_bLayered)
@@ -938,17 +932,20 @@ ZuiBool ZuiOsUnInitialize() {
     return TRUE;
 }
 
-ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show) {
+ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show, ZuiAny pcontrol) {
     /*保存相关参数到ZOsWindow*/
     ZuiOsWindow OsWindow = (ZuiOsWindow)malloc(sizeof(ZOsWindow));
+	HWND tmphwnd = NULL;
+	if (pcontrol)
+		tmphwnd = ((ZuiControl)pcontrol)->m_pOs->m_hWnd;
     if (OsWindow)
     {
         memset(OsWindow, 0, sizeof(ZOsWindow));
 
         OsWindow->m_hWnd = CreateWindowEx(0, L"ZUI", L"",
-            WS_POPUP | WS_CLIPCHILDREN,
+            WS_POPUP |WS_VISIBLE| WS_CLIPCHILDREN |WS_CLIPSIBLINGS| WS_SYSMENU | WS_MINIMIZEBOX,
             CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-            NULL, NULL, GetModuleHandleA(NULL),
+            tmphwnd, NULL, GetModuleHandle(NULL),
             OsWindow);
 
         OsWindow->m_hIMC = ImmGetContext(OsWindow->m_hWnd);//获取系统的输入法
@@ -1024,12 +1021,13 @@ ZuiBool ZuiOsSetWindowNoBox(ZuiOsWindow OsWindow, ZuiBool b) {
     if (OsWindow->m_nobox == b)
         return FALSE;
     OsWindow->m_nobox = b;
+	DWORD dwStyle = GetWindowLong(OsWindow->m_hWnd, GWL_STYLE);
     if (b)
     {
-        SetWindowLong(OsWindow->m_hWnd, GWL_STYLE, WS_VISIBLE | WS_POPUP | WS_CLIPCHILDREN);
+        SetWindowLong(OsWindow->m_hWnd, GWL_STYLE, dwStyle | WS_VISIBLE | WS_POPUP | WS_CLIPCHILDREN);
     }
     else {
-        SetWindowLong(OsWindow->m_hWnd, GWL_STYLE, WS_VISIBLE | WS_POPUP | WS_CLIPCHILDREN);
+        SetWindowLong(OsWindow->m_hWnd, GWL_STYLE, dwStyle | WS_VISIBLE | WS_POPUP | WS_CLIPCHILDREN);
     }
     GetWindowRect(OsWindow->m_hWnd, &OsWindow->m_rect);
     return TRUE;
@@ -1268,7 +1266,7 @@ ZuiVoid ZuiOsReapObjects(ZuiOsWindow p, ZuiControl pControl) {
 
 ZuiVoid ZuiOsAddDelayedCleanup(ZuiOsWindow p, ZuiControl pControl)
 {
-    ZuiControlCall(Proc_Layout_Remove, pControl->m_pParent, pControl, TRUE, NULL);
+    ZuiControlCall(Proc_Layout_Remove, pControl->m_pParent, pControl, (ZuiAny)TRUE, NULL);
     ZuiControlCall(Proc_SetOs, pControl, p, NULL, (void*)FALSE);
     darray_append(p->m_aDelayedCleanup, pControl);
     PostMessage(p->m_hWnd, WM_APP + 1, 0, 0L);
@@ -1314,7 +1312,35 @@ ZuiVoid ZuiOsMsgLoopExit() {
 ZuiVoid ZuiOsPostTask(ZuiTask task) {
     PostThreadMessage(m_hMainThreadId, WM_APP + 2, (WPARAM)task, 0);
 }
-
+ZEXPORT ZuiInt ZuiDoModel(ZuiAny chwnd)
+{
+	ZuiInt nRet;
+	HWND phwnd = GetWindowOwner((HWND)chwnd);
+	SetWindowPos((HWND)chwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+	//禁用掉父窗口
+	EnableWindow((HWND)phwnd, FALSE);
+	MSG Msg;
+	while (IsWindow((HWND)chwnd) && GetMessage(&Msg, NULL, 0, 0))
+	{
+		if (Msg.message == WM_APP + 3)
+		{
+			nRet = Msg.wParam;
+			EnableWindow((HWND)phwnd, TRUE);
+			SetFocus((HWND)phwnd);
+		}
+		if (Msg.hwnd == (HWND)chwnd || Msg.message == WM_PAINT) {
+			TranslateMessage(&Msg);
+			DispatchMessage(&Msg);
+		}
+		if (Msg.message == WM_QUIT) {
+			break;
+		}
+	}
+	//重新开启父窗口
+	EnableWindow((HWND)phwnd, TRUE);
+	SetFocus((HWND)phwnd);
+	return nRet;
+}
 ZuiInt ZuiOsUtf8ToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen)
 {
     return MultiByteToWideChar(CP_UTF8, 0, str, slen, out, olen);

@@ -18,15 +18,26 @@ static  ZuiControl ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
         LoadNodeBedin:
             ClassName = node->value.name;
             LOG_DEGUB(L"layout创建控件: 类名:%ls\r\n", ClassName);
-            if (wcscmp(ClassName, L"Template") == 0) {//模版类
+            if (wcsicmp(ClassName, L"Template") == 0) {//模版类
                 ZuiAddTemplate(node);
-                node = node->next;
-                if (node) {
+                if (node->next) {
+					node = node->next;
                     ClassName = node->value.name;
                     goto LoadNodeBedin;
                 }
-                else
-                    continue;
+				else if (node->parent) {
+					node = node->parent->next;
+					if (node) {
+						ClassName = node->value.name;
+						goto LoadNodeBedin;
+					}
+					else
+						continue;
+				}
+				else {
+					node = NULL;//模板节点既没有兄弟节点也没有父节点，设置为空。
+					continue;
+				}
             }
             /*
             if (wcscmp(ClassName, L"Menu") == 0) {//菜单类
@@ -40,18 +51,22 @@ static  ZuiControl ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
                     continue;
             }
             */
-            if (wcscmp(ClassName, L"Include") == 0) {//包含文件
+			if (wcsnicmp(ClassName, L"?", 1) == 0) {//跳过<? xxx ?>节点
+				node->user_data = node->parent->user_data;
+				continue;
+			}
+            if (wcsicmp(ClassName, L"Include") == 0) {//包含文件
                 ZuiText src = NULL;
                 for (ZuiInt i = 0; i < node->value.num_attrs; i++)
                 {
-                    if (wcscmp(node->value.attrs[i].name, L"src") == 0) {
+                    if (wcsicmp(node->value.attrs[i].name, L"src") == 0) {
                         src = node->value.attrs[i].value;
                     }
                 }
-                ZuiRes res = ZuiResDBGetRes(src, 0);
+                ZuiRes res = ZuiResDBGetRes(src, ZREST_STREAM);
                 if (res) {
-                    mxml_node_t *new_node = ZuiLayoutLoad(res->p, res->plen);
-                    mxmlAdd(node->parent ? node->parent : node, MXML_ADD_BEFORE, node, new_node);
+                    mxml_node_t *new_node = mxmlLoadString(NULL,res->p, res->plen);
+                    mxmlAdd(node->parent ? node->parent : node, MXML_ADD_AFTER, node, new_node);
                     ZuiResDBDelRes(res);
                 }
             }

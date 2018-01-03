@@ -48,6 +48,12 @@ ZuiVoid ZuiAddTemplate(mxml_node_t *node)
     }
     if (classname)
     {
+		ZTemplate tmp = { 0 };
+		tmp.key = Zui_Hash(classname);
+		if (RB_FIND(_ZTemplate_Tree, Global_TemplateClass, &tmp))
+		{
+			return;
+		}
         mxml_node_t *new_node = mxmlClone(node, NULL);
         if (new_node)
         {

@@ -32,7 +32,7 @@ ZEXPORT ZuiControl ZCALL NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny 
 
         p->m_piFloatPercent.left = p->m_piFloatPercent.top = p->m_piFloatPercent.right = p->m_piFloatPercent.bottom = 0.0f;
 
-        p->call = &ZuiDefaultControlProc;
+        p->call = ZuiDefaultControlProc;
 
         //p->m_dwBorderColor = ARGB(255, 255, 0, 0);
 #if RUN_DEBUG
@@ -88,7 +88,8 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     case Proc_Invalidate: {
         ZRect invalidateRc = p->m_rcItem;
         if (!p->m_bVisible) return 0;
-        {
+		else
+		{
             ZuiControl pParent = p;
             ZRect rcTemp;
             ZRect *rcParent;
@@ -103,10 +104,10 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             }
             //重置动画
             if (Param1 && p->m_aAnime)
-                p->m_aAnime->steup = NULL;
+                p->m_aAnime->steup = 0;
             if (p->m_pOs != NULL) ZuiOsInvalidateRect(p->m_pOs, &invalidateRc);
         }
-        return;
+        return 0;
     }
     case Proc_Activate: {
         if (!p->m_bVisible) return FALSE;
@@ -128,7 +129,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         break;
     }
     case Proc_GetVisible: {
-        return p->m_bVisible;
+        return (ZuiAny)p->m_bVisible;
     }
     case Proc_SetText: {
         ZuiControlInvalidate(p, TRUE);
@@ -193,7 +194,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 
         if (!p->m_bSetPos && bSize) {
             p->m_bSetPos = TRUE;
-            ZuiControlCall(Proc_OnSize, p, p->m_rcItem.right - p->m_rcItem.left, p->m_rcItem.bottom - p->m_rcItem.top, NULL);
+            ZuiControlCall(Proc_OnSize, p, (ZuiAny)(p->m_rcItem.right - p->m_rcItem.left), (ZuiAny)(p->m_rcItem.bottom - p->m_rcItem.top), NULL);
             p->m_bSetPos = FALSE;
         }
 
@@ -288,7 +289,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 duk_pop(p->m_pOs->m_ctx);
             }
 #endif
-            ZuiControlNotify(L"onmouseenter", p, ((TEventUI *)Param1)->ptMouse.x, ((TEventUI *)Param1)->ptMouse.y, NULL);
+            ZuiControlNotify(L"onmouseenter", p, (ZuiAny)(((TEventUI *)Param1)->ptMouse.x), (ZuiAny)(((TEventUI *)Param1)->ptMouse.y), NULL);
         }
                                 break;
         case ZEVENT_LBUTTONDOWN: {
@@ -304,7 +305,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 duk_pop(p->m_pOs->m_ctx);
             }
 #endif
-            ZuiControlNotify(L"onlbuttondown", p, ((TEventUI *)Param1)->ptMouse.x, ((TEventUI *)Param1)->ptMouse.y, NULL);
+            ZuiControlNotify(L"onlbuttondown", p, (ZuiAny)(((TEventUI *)Param1)->ptMouse.x), (ZuiAny)(((TEventUI *)Param1)->ptMouse.y), NULL);
         }
                                  break;
         case ZEVENT_LBUTTONUP: {
@@ -320,7 +321,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 duk_pop(p->m_pOs->m_ctx);
             }
 #endif
-            ZuiControlNotify(L"onclick", p, ((TEventUI *)Param1)->ptMouse.x, ((TEventUI *)Param1)->ptMouse.y, NULL);
+            ZuiControlNotify(L"onclick", p, (ZuiAny)(((TEventUI *)Param1)->ptMouse.x), (ZuiAny)(((TEventUI *)Param1)->ptMouse.y), NULL);
             break;
         }
         case ZEVENT_CHAR: {
@@ -494,10 +495,10 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         break;
     }
     case Proc_SetEnabled: {
-        if (p->m_bEnabled == Param1)
+        if (p->m_bEnabled == (ZuiBool)Param1)
             return 0;
 
-        p->m_bEnabled = Param1;
+        p->m_bEnabled = (ZuiBool)Param1;
         ZuiControlInvalidate(p, TRUE);
         break;
     }
@@ -507,10 +508,10 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         break;
     }
     case Proc_SetDrag: {
-        if (p->m_drag == Param1)
+        if (p->m_drag == (ZuiBool)Param1)
             return 0;
 
-        p->m_drag = Param1;
+        p->m_drag = (ZuiBool)Param1;
         break;
     }
     case Proc_EstimateSize: {
@@ -529,14 +530,14 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         break;
     }
     case Proc_SetBkColor: {
-        p->m_BkgColor = Param1;
+        p->m_BkgColor = (ZuiColor)Param1;
         ZuiControlInvalidate(p, TRUE);
         break;
     }
     case Proc_SetBorderColor: {
 		if (!p->m_dwBorderColor && !p->m_dwBorderWidth)
 			p->m_dwBorderWidth++;
-        p->m_dwBorderColor = Param1;
+        p->m_dwBorderColor = (ZuiColor)Param1;
         ZuiControlInvalidate(p, TRUE);
         break;
     }
@@ -595,7 +596,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         if (p->m_BkgImg)
             ZuiResDBDelRes(p->m_BkgImg);
         if (p->m_pParent && !Param1)
-            ZuiControlCall(Proc_Layout_Remove, p->m_pParent, p, TRUE, NULL);
+            ZuiControlCall(Proc_Layout_Remove, p->m_pParent, p, (ZuiAny)TRUE, NULL);
         if (p->m_pOs != NULL)
             ZuiOsReapObjects(p->m_pOs, p);
 #if (defined HAVE_JS) && (HAVE_JS == 1)
@@ -621,19 +622,19 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     case Proc_SetAttribute: {
         if (wcscmp(Param1, L"text") == 0) ZuiControlCall(Proc_SetText, p, Param2, NULL, NULL);
         else if (wcscmp(Param1, L"tooltip") == 0) ZuiControlCall(Proc_SetTooltip, p, Param2, NULL, NULL);
-        else if (wcscmp(Param1, L"width") == 0) ZuiControlCall(Proc_SetFixedWidth, p, _wtoi(Param2), NULL, NULL);
-		else if (wcscmp(Param1, L"borderwidth") == 0) ZuiControlCall(Proc_SetBorderWidth, p, _wtoi(Param2), NULL, NULL);
-        else if (wcscmp(Param1, L"height") == 0) ZuiControlCall(Proc_SetFixedHeight, p, _wtoi(Param2), NULL, NULL);
-        else if (wcscmp(Param1, L"minwidth") == 0) ZuiControlCall(Proc_SetMinWidth, p, _wtoi(Param2), NULL, NULL);
-        else if (wcscmp(Param1, L"minheight") == 0) ZuiControlCall(Proc_SetMinHeight, p, _wtoi(Param2), NULL, NULL);
-        else if (wcscmp(Param1, L"maxwidth") == 0) ZuiControlCall(Proc_SetMaxWidth, p, _wtoi(Param2), NULL, NULL);
-        else if (wcscmp(Param1, L"maxheight") == 0) ZuiControlCall(Proc_SetMaxHeight, p, _wtoi(Param2), NULL, NULL);
+        else if (wcscmp(Param1, L"width") == 0) ZuiControlCall(Proc_SetFixedWidth, p, (ZuiAny)(_wtoi(Param2)), NULL, NULL);
+		else if (wcscmp(Param1, L"borderwidth") == 0) ZuiControlCall(Proc_SetBorderWidth, p, (ZuiAny)(_wtoi(Param2)), NULL, NULL);
+        else if (wcscmp(Param1, L"height") == 0) ZuiControlCall(Proc_SetFixedHeight, p, (ZuiAny)(_wtoi(Param2)), NULL, NULL);
+        else if (wcscmp(Param1, L"minwidth") == 0) ZuiControlCall(Proc_SetMinWidth, p, (ZuiAny)(_wtoi(Param2)), NULL, NULL);
+        else if (wcscmp(Param1, L"minheight") == 0) ZuiControlCall(Proc_SetMinHeight, p, (ZuiAny)(_wtoi(Param2)), NULL, NULL);
+        else if (wcscmp(Param1, L"maxwidth") == 0) ZuiControlCall(Proc_SetMaxWidth, p, (ZuiAny)(_wtoi(Param2)), NULL, NULL);
+        else if (wcscmp(Param1, L"maxheight") == 0) ZuiControlCall(Proc_SetMaxHeight, p, (ZuiAny)(_wtoi(Param2)), NULL, NULL);
         else if (wcscmp(Param1, L"bkcolor") == 0) {
 			ZuiColor clrColor;
 			clrColor = ZuiStr2Color(Param2);
-            ZuiControlCall(Proc_SetBkColor, p, clrColor, NULL, NULL);
+            ZuiControlCall(Proc_SetBkColor, p, (ZuiAny)clrColor, NULL, NULL);
         }
-        else if (wcscmp(Param1, L"drag") == 0) ZuiControlCall(Proc_SetDrag, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
+        else if (wcscmp(Param1, L"drag") == 0) ZuiControlCall(Proc_SetDrag, p, (ZuiAny)(wcscmp(Param2, L"true") == 0 ? TRUE : FALSE), NULL, NULL);
         else if (wcscmp(Param1, L"bkimage") == 0) ZuiControlCall(Proc_SetBkImage, p, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         else if (wcscmp(Param1, L"padding") == 0) {
             ZRect rcPadding = { 0 };
@@ -647,12 +648,12 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         else if (wcscmp(Param1, L"bordercolor") == 0) {
 			ZuiColor clrColor;
 			clrColor = ZuiStr2Color(Param2);
-            ZuiControlCall(Proc_SetBorderColor, p, clrColor, NULL, NULL);
+            ZuiControlCall(Proc_SetBorderColor, p, (ZuiAny)clrColor, NULL, NULL);
         }
         else if (wcscmp(Param1, L"name") == 0) ZuiControlCall(Proc_SetName, p, Param2, NULL, NULL);
         else if (wcscmp(Param1, L"float") == 0) {
             if (wcschr(Param2, ',') == 0) {
-                ZuiControlCall(Proc_SetFloat, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
+                ZuiControlCall(Proc_SetFloat, p, (ZuiAny)(wcscmp(Param2, L"true") == 0 ? TRUE : FALSE), NULL, NULL);
             }
             else {
                 ZRectR piFloatPercent = { 0 };
@@ -662,10 +663,10 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                 piFloatPercent.right = _tcstod(pstr + 1, &pstr);  ASSERT(pstr);
                 piFloatPercent.bottom = _tcstod(pstr + 1, &pstr); ASSERT(pstr);
                 ZuiControlCall(Proc_SetFloatPercent, p, &piFloatPercent, NULL, NULL);
-                ZuiControlCall(Proc_SetFloat, p, TRUE, NULL, NULL);
+                ZuiControlCall(Proc_SetFloat, p, (ZuiAny)TRUE, NULL, NULL);
             }
         }
-        else if (wcscmp(Param1, L"visible") == 0) ZuiControlCall(Proc_SetVisible, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
+        else if (wcscmp(Param1, L"visible") == 0) ZuiControlCall(Proc_SetVisible, p, (ZuiAny)(wcscmp(Param2, L"true") == 0 ? TRUE : FALSE), NULL, NULL);
         else if (wcscmp(Param1, L"pos") == 0) {
             ZRect rcPos = { 0 };
             ZuiText pstr = NULL;
@@ -673,11 +674,11 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             rcPos.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
             rcPos.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
             rcPos.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
-            ZuiControlCall(Proc_SetFixedXY, p, rcPos.left, rcPos.top, NULL);
-            ZuiControlCall(Proc_SetFixedWidth, p, rcPos.right - rcPos.left, NULL, NULL);
-            ZuiControlCall(Proc_SetFixedHeight, p, rcPos.bottom - rcPos.top, NULL, NULL);
+            ZuiControlCall(Proc_SetFixedXY, p, (ZuiAny)rcPos.left, (ZuiAny)rcPos.top, NULL);
+            ZuiControlCall(Proc_SetFixedWidth, p, (ZuiAny)(rcPos.right - rcPos.left), NULL, NULL);
+            ZuiControlCall(Proc_SetFixedHeight, p, (ZuiAny)(rcPos.bottom - rcPos.top), NULL, NULL);
         }
-        else if (wcscmp(Param1, L"enabled") == 0) ZuiControlCall(Proc_SetEnabled, p, wcscmp(Param2, L"true") == 0 ? TRUE : FALSE, NULL, NULL);
+        else if (wcscmp(Param1, L"enabled") == 0) ZuiControlCall(Proc_SetEnabled, p, (ZuiAny)(wcscmp(Param2, L"true") == 0 ? TRUE : FALSE), NULL, NULL);
         break;
     }
     case Proc_GetAttribute: {

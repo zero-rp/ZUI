@@ -14,7 +14,7 @@
 /**按钮控件结构*/
 typedef struct _ZLabel
 {
-	ZRect		m_rPadding;
+	ZRect		m_rcPadding;
     ZuiRes      m_rFont;         //字体
     ZuiUInt     m_uTextStyle;    //字体控制
     ZuiColor    m_cTextColor;   //字体颜色

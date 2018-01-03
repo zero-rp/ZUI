@@ -7,7 +7,7 @@
 
 
 */
-/*资源包类型*/
+/*资源包来源位置及类型*/
 enum ZRESDBT
 {
     ZRESDBT_ZIP_FILE = 1, ///压缩文件,来自文件

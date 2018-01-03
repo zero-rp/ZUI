@@ -1,7 +1,7 @@
 ﻿#include "animation.h"
 #include "control.h"
 #include <platform/platform.h>
-ZuiAny ZCALL OnPaint(ZuiControl p, ZuiAny Param1, ZuiAny Param2) {
+ZuiVoid ZCALL OnPaint(ZuiControl p, ZuiAny Param1, ZuiAny Param2) {
     if (!p->m_aAnime->steup) {
         //动画开始
         ZuiOsKillTimer_Id(p, 1);
@@ -17,12 +17,12 @@ ZuiAny ZCALL OnPaint(ZuiControl p, ZuiAny Param1, ZuiAny Param2) {
         if (p->m_aAnime->steup * 10 > 255) {
             ZuiOsKillTimer_Id(p, 1);
             //ZuiAlphaBlend(Param1, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, p->m_aAnime->m_hDcOffscreen, 0, 0, 255);
-            return 0;
+            return;
         }
         //ZuiAlphaBlend(Param1, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, p->m_aAnime->m_hDcOffscreen, 0, 0, p->m_aAnime->steup * 10);
         
     }
-	return 0;
+	return;
 }
 ZuiVoid ZCALL OnSize(ZuiControl p, ZuiAny w, ZuiAny h) {
     if (p->m_aAnime->m_hDcOffscreen)
@@ -48,6 +48,6 @@ ZuiAnimation ZuiAnimationNew(ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 ZuiVoid ZuiAnimationFree(ZuiAnimation p) {
     if (!p)
         return;
-    ZuiOsKillTimer_Id(p, 1);
+    //ZuiOsKillTimer_Id(p, 1);
     free(p);
 }

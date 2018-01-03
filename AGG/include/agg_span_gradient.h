@@ -315,7 +315,7 @@ namespace agg
     public:
         static AGG_INLINE int calculate(int x, int y, int) 
         { 
-            return fast_sqrt(abs(x) * abs(y)); 
+            return (int)fast_sqrt(abs(x) * abs(y));
         }
     };
 

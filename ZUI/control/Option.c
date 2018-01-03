@@ -59,8 +59,8 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
         break;
     }
     case Proc_Option_SetSelected: {
-        if (p->m_bSelected == Param1) return 0;
-        p->m_bSelected = Param1;
+        if (p->m_bSelected == (ZuiBool)Param1) return 0;
+        p->m_bSelected = (ZuiBool)Param1;
 
         if (p->m_bGroup) {
             if (Param1) {
@@ -113,11 +113,11 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
         break;
     }
     case Proc_Option_SetGroup: {
-        p->m_bGroup = Param1;
+        p->m_bGroup = (ZuiBool)Param1;
         break;
     }
     case Proc_Option_GetSelected: {
-        return p->m_bSelected;
+        return (ZuiAny)p->m_bSelected;
     }
     case Proc_Option_SetResSelected: {
         if (p->m_ResSelected)
@@ -218,7 +218,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
         return 0;
     }
     case Proc_GetObject:
-        if (Param1 == Type_Option)
+        if (Param1 == (ZuiAny)Type_Option)
             return (ZuiAny)p;
         break;
     case Proc_GetType:

@@ -147,16 +147,30 @@ ZuiAny ZCALL MsgBox_Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAn
     if (wcscmp(msg, L"onclick") == 0)
     {
         if (wcscmp(p->m_sName, L"WindowCtl_clos") == 0) {
-            FreeZuiControl(p->m_pOs->m_pRoot, TRUE);
+            ZuiControlCall(Proc_OnClose,p->m_pOs->m_pRoot, (ZuiAny)ZuiCANCEL,NULL,NULL);
             //PostMessage(0, WM_APP + 10, 0, 0);
         }
+		else if (wcscmp(p->m_sName, L"ok") == 0) {
+			ZuiControlCall(Proc_OnClose, p->m_pOs->m_pRoot, (ZuiAny)ZuiOK, NULL, NULL);
+		}
+		else if (wcscmp(p->m_sName, L"cancel") == 0) {
+			ZuiControlCall(Proc_OnClose, p->m_pOs->m_pRoot, (ZuiAny)ZuiCANCEL, NULL, NULL);
+		}
     }
     return 0;
 }
 
+ZuiAny ZCALL Default_NotifyProc(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+	if (wcscmp(msg, L"onclose") == 0) {
+		return (ZuiAny)1;
+	}
+	return 0;
+}
+
 ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
     ZuiControl p;
-    MsgBox_pRoot = NewZuiControl(L"MessageBox", NULL, NULL, NULL);
+    MsgBox_pRoot = NewZuiControl(L"MessageBox", NULL, rp, NULL);
+	ZuiControlRegNotify(MsgBox_pRoot, Default_NotifyProc);
     //取消最小化按钮
     p = ZuiControlFindName(MsgBox_pRoot, L"WindowCtl_min");
     ZuiControlCall(Proc_SetVisible, p, FALSE, NULL, NULL);
@@ -177,22 +191,8 @@ ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
     ZuiControlCall(Proc_SetText, p, text, NULL, NULL);
     p = ZuiControlFindName(MsgBox_pRoot, L"title");
     ZuiControlCall(Proc_SetText, p, title, NULL, NULL);
-    /*
-        //禁用掉父窗口
-        EnableWindow(rp->m_pOs->m_hWnd, FALSE);
-        MSG Msg;
-        while (1)
-        {
-            GetMessage(&Msg, NULL, 0, 0);
-            if (Msg.message == WM_APP + 10)
-                break;
-            TranslateMessage(&Msg);
-            DispatchMessage(&Msg);
-        }
-        //重新开启父窗口
-        EnableWindow(rp->m_pOs->m_hWnd, TRUE);
-    */
-    return TRUE;
+
+    return ZuiDoModel((ZuiAny)MsgBox_pRoot->m_pOs->m_hWnd);
 }
 ZuiBool ZuiIsPointInRect(ZuiRect Rect, ZuiPoint pt) {
     int xl, xr, yt, yb;
@@ -378,5 +378,5 @@ ZuiColor ZuiStr2Color(ZuiAny str)
 	if (*(ZuiText)str == L'#')
 		str = ZuiCharNext((ZuiText)str);
 	clrColor = _tcstoul((ZuiText)str, &pstr, 16);
-	return clrColor;
+	return clrColor|0xFF000000;
 }

@@ -143,7 +143,7 @@ void* ZCALL ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalLayo
             if (sz.cy > szControlAvailable.cy) sz.cy = szControlAvailable.cy;
             if (sz.cy < (ZuiInt)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0)) sz.cy = (ZuiInt)ZuiControlCall(Proc_GetMinHeight, pControl, 0, 0, 0);
 
-            ZuiUInt iChildAlign = ZuiControlCall(Proc_Layout_GetChildVAlign, cp, NULL, NULL, NULL);
+            ZuiUInt iChildAlign = (ZuiUInt)ZuiControlCall(Proc_Layout_GetChildVAlign, cp, NULL, NULL, NULL);
             if (iChildAlign == ZDT_VCENTER) {
                 int iPosY = (rc.bottom + rc.top) / 2;
                 if (op->m_pVerticalScrollBar && op->m_pVerticalScrollBar->m_bVisible) {
@@ -201,7 +201,7 @@ void* ZCALL ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalLayo
         return 0;
     }
     case Proc_GetObject:
-        if (Param1 == Type_HorizontalLayout)
+        if (Param1 == (ZuiAny)Type_HorizontalLayout)
             return (ZuiAny)p;
         break;
     case Proc_GetType:

@@ -663,9 +663,9 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         break;
     }
     case Proc_ScrollBar_SetHorizontal: {
-        if (p->m_bHorizontal == Param1) return 0;
+        if (p->m_bHorizontal == (ZuiBool)Param1) return 0;
 
-        p->m_bHorizontal = Param1;
+        p->m_bHorizontal = (ZuiBool)Param1;
         if (p->m_bHorizontal) {
             if (cp->m_cxyFixed.cy == 0) {
                 cp->m_cxyFixed.cx = 0;
@@ -686,28 +686,28 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         break;
     }
     case Proc_ScrollBar_SetScrollPos: {
-        if (p->m_nScrollPos == Param1) return 0;
+        if (p->m_nScrollPos == (int)Param1) return 0;
 
-        p->m_nScrollPos = Param1;
+        p->m_nScrollPos = (int)Param1;
         if (p->m_nScrollPos < 0) p->m_nScrollPos = 0;
         if (p->m_nScrollPos > p->m_nRange) p->m_nScrollPos = p->m_nRange;
         ZuiControlCall(Proc_SetPos, cp, &cp->m_rcItem, NULL, NULL);
         break;
     }
     case Proc_ScrollBar_GetScrollPos: {
-        return p->m_nScrollPos;
+        return (ZuiAny)p->m_nScrollPos;
     }
     case Proc_ScrollBar_GetScrollRange: {
-        return p->m_nRange;
+        return (ZuiAny)p->m_nRange;
     }
     case Proc_ScrollBar_SetOwner: {
         p->m_pOwner = Param1;
         break;
     }
     case Proc_ScrollBar_SetScrollRange: {
-        if (p->m_nRange == Param1) return 0;
+        if (p->m_nRange == (int)Param1) return 0;
 
-        p->m_nRange = Param1;
+        p->m_nRange = (int)Param1;
         if (p->m_nRange < 0) p->m_nRange = 0;
         if (p->m_nScrollPos > p->m_nRange) p->m_nScrollPos = p->m_nRange;
         ZuiControlCall(Proc_SetPos, cp, &cp->m_rcItem, NULL, NULL);
@@ -777,7 +777,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         return 0;
     }
     case Proc_GetObject:
-        if (Param1 == Type_ScrollBar)
+        if (Param1 == (ZuiAny)Type_ScrollBar)
             return (ZuiAny)p;
         break;
     case Proc_GetType:
