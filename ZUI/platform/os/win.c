@@ -807,6 +807,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         event.pSender = p->m_pRoot;
         event.dwTimestamp = GetTickCount();
         ZuiControlEvent(p->m_pRoot, &event);
+		p->m_bMouseTracking = FALSE;
     }
     case WM_NOTIFY:
     {
@@ -943,7 +944,7 @@ ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show, ZuiAny pcontrol) {
         memset(OsWindow, 0, sizeof(ZOsWindow));
 
         OsWindow->m_hWnd = CreateWindowEx(0, L"ZUI", L"",
-            WS_POPUP |WS_VISIBLE| WS_CLIPCHILDREN |WS_CLIPSIBLINGS| WS_SYSMENU | WS_MINIMIZEBOX,
+            WS_POPUP |WS_VISIBLE| WS_CLIPCHILDREN |WS_CLIPSIBLINGS| WS_MINIMIZEBOX,
             CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
             tmphwnd, NULL, GetModuleHandle(NULL),
             OsWindow);
@@ -1328,7 +1329,7 @@ ZEXPORT ZuiInt ZuiDoModel(ZuiAny chwnd)
 			EnableWindow((HWND)phwnd, TRUE);
 			SetFocus((HWND)phwnd);
 		}
-		if (Msg.hwnd == (HWND)chwnd || Msg.message == WM_PAINT) {
+		if (Msg.hwnd == (HWND)chwnd || Msg.message == WM_PAINT || Msg.message == WM_TIMER) {
 			TranslateMessage(&Msg);
 			DispatchMessage(&Msg);
 		}
