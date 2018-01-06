@@ -522,7 +522,7 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
         }
         cyNeeded += (nEstimateNum - 1) * op->m_iChildPadding;
 
-        if (op->m_pHorizontalScrollBar != NULL) {
+ /*       if (op->m_pHorizontalScrollBar != NULL) {
             if (cxNeeded > rc.right - rc.left) {
                 if (op->m_pHorizontalScrollBar->m_bVisible) {
                     ZuiControlCall(Proc_ScrollBar_SetScrollRange, op->m_pHorizontalScrollBar, (ZuiAny)(cxNeeded - (rc.right - rc.left)), NULL, NULL);
@@ -542,7 +542,7 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
                     rc.bottom += (LONG)ZuiControlCall(Proc_GetFixedHeight, op->m_pHorizontalScrollBar, 0, 0, 0);
                 }
             }
-        }
+        } */
         // Process the scrollbar
 		rc.top -= ph; cyNeeded += ph;
         ZuiControlCall(Proc_Layout_ProcessScrollBar, cp, (ZuiAny)&rc, (ZuiAny)cxNeeded, (ZuiAny)cyNeeded);

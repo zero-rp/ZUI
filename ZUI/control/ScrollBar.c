@@ -217,7 +217,9 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
             if ((p->m_uThumbState & ZSTATE_CAPTURED) != 0) {
                 if (!p->m_bHorizontal) {
                     if (p->m_pOwner != NULL) {
-                        ZSize sz = { ((ZSize *)ZuiControlCall(Proc_Layout_GetScrollPos, p->m_pOwner, NULL, NULL, NULL))->cx, p->m_nLastScrollPos + p->m_nLastScrollOffset };
+                        ZSize sz = { 0,0 };
+                        ZuiControlCall(Proc_Layout_GetScrollPos, p->m_pOwner, &sz, NULL, NULL);
+                        sz.cy = p->m_nLastScrollPos + p->m_nLastScrollOffset;
                         ZuiControlCall(Proc_Layout_SetScrollPos, p->m_pOwner, &sz, NULL, NULL);
                     }
                     else
@@ -225,7 +227,9 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 }
                 else {
                     if (p->m_pOwner != NULL) {
-                        ZSize sz = { p->m_nLastScrollPos + p->m_nLastScrollOffset, ((ZSize *)ZuiControlCall(Proc_Layout_GetScrollPos, p->m_pOwner, NULL, NULL, NULL))->cy };
+                        ZSize sz = { 0,0 };
+                        ZuiControlCall(Proc_Layout_GetScrollPos, p->m_pOwner, &sz, NULL, NULL);
+                        sz.cx = p->m_nLastScrollPos + p->m_nLastScrollOffset;
                         ZuiControlCall(Proc_Layout_SetScrollPos, p->m_pOwner, &sz, NULL, NULL);
                     }
                     else
