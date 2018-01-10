@@ -302,29 +302,22 @@ enum ZREST
 #define Proc_SetDrag            66  //设置拖拽控件
 
 //-------绘图资源
-#define Proc_SetBkColor         67  //设置背景色
+#define Proc_SetColor           67  //设置背景色
 #define Proc_SetBkImage         68  //设置背景图片
-#define Proc_SetBorderColor     69  //设置边框颜色
+//#define Proc_SetBorderColor     69  //设置边框颜色
 
 #define Proc_SetAnimationType   70  //设置动画类型
 #define	Proc_SetBorderWidth		71
 #define	Proc_GetBorderWidth		72
 #define Proc_OnClose			73
-
+//------属性名称
+#define BK_Color        0x00000001 //背景色
+#define Border_Color    0x00000002 //边框颜色
 
 #define ZuiControlSetDrag(p,b)  ZuiControlCall(Proc_SetDrag,(p),(b),NULL,NULL)
 #define ZuiControlSetFixedHeight(p,h) ZuiControlCall(Proc_SetFixedHeight,(p),(h),NULL,NULL)
 #endif // 1
-//--------------------------------------------------------------------ScrollBar类
-#if 1
-#define Type_ScrollBar                  0xd2473c6e
-#define Proc_ScrollBar_SetHorizontal    1000 //设置为横向滚动条
-#define Proc_ScrollBar_SetScrollPos     1001 //设置位置
-#define Proc_ScrollBar_GetScrollPos     1002 //获取位置
-#define Proc_ScrollBar_GetScrollRange   1003
-#define Proc_ScrollBar_SetOwner         1004
-#define Proc_ScrollBar_SetScrollRange   1005
-#endif //1
+
 //--------------------------------------------------------------------Layout类
 #if 1
 #define Type_Layout                     0xbebc5b1a
@@ -345,13 +338,8 @@ enum ZREST
 #define Proc_Layout_GetItemAt           109 ///索引取控件
 #define Proc_Layout_SetFloatPos         110 ///设置浮动控件位置
 #define Proc_Layout_SetInset            112 ///设置内边距
-//--------Tile
-#define Proc_TileLayout_SetColumns      150
-#define Proc_TileLayout_SetItemSize     151
-//--------Tab
-#define Proc_TabLayout_SelectItem       151    //当前Tab
 
-//--------滚动条
+//--------滚动条（由Layout管理）
 #define Proc_Layout_GetScrollPos        113
 #define Proc_Layout_GetScrollRange      114
 #define Proc_Layout_SetScrollPos        115
@@ -379,46 +367,49 @@ enum ZREST
 #define ZuiLayoutAdd(p,cp) ZuiControlCall(Proc_Layout_Add,(p),(cp),NULL,NULL)
 
 #endif // 1
-//--------------------------------------------------------------------Window类
+
+//--------Tile
+#define Proc_TileLayout_SetColumns      150
+#define Proc_TileLayout_SetItemSize     151
+//--------Tab
+#define Proc_TabLayout_SelectItem       151    //当前Tab
+
 #if 1
-#define Type_Window                 0x5e298cdf
-
-#define Proc_Window_SetNoBox        1001    //设置为无边框窗体
-#define Proc_Window_SetWindowMin    1002    //
-#define Proc_Window_SetWindowMax    1003
-#define Proc_Window_SetWindowRestor 1004
-#define Proc_Window_SetMinInfo      1005
-#define Proc_Window_SetMaxInfo      1006
-#define Proc_Window_SetSize         1007
-#define Proc_Window_SetComBo        1008
-#define Proc_Window_Popup           1009
-#define Proc_Window_SetToolWindow   1010
-#define Proc_Window_Center          1011
-
+#define Type_Label                  0xe538ac26
+#define Proc_Label_SetFont          171     //设置字体
+#define Proc_Label_SetTextColor     172     //设置文本颜色
+#define Proc_Label_SetTextPadding   173     //字体边距
 #endif // 1
+
 //--------------------------------------------------------------------Button类
 #if 1
 #define Type_Button                 0x5e7331d7
 
-#define Proc_Button_SetResNormal    201    //
-#define Proc_Button_SetResHot       202    //高亮状态
-#define Proc_Button_SetResPushed    203    //按下状态
-#define Proc_Button_SetResFocused   204    //焦点图片
-#define Proc_Button_SetResDisabled  205    //非激活状态
+#define Proc_Button_SetRes    201    //
+//#define Proc_Button_SetResHot       202    //高亮状态
+//#define Proc_Button_SetResPushed    203    //按下状态
+//#define Proc_Button_SetResFocused   204    //焦点图片
+//#define Proc_Button_SetResDisabled  205    //非激活状态
 
-#define Proc_Button_SetColorNormal    206    //
-#define Proc_Button_SetColorHot       207    //高亮状态
-#define Proc_Button_SetColorPushed    208    //按下状态
-#define Proc_Button_SetColorFocused   209    //焦点图片
-#define Proc_Button_SetColorDisabled  210    //非激活状态
+#define Proc_Button_SetColor   206    //
+//#define Proc_Button_SetColorHot       207    //高亮状态
+//#define Proc_Button_SetColorPushed    208    //按下状态
+//#define Proc_Button_SetColorFocused   209    //焦点图片
+//#define Proc_Button_SetColorDisabled  210    //非激活状态
+//------属性名称
+#define Button_N_Color      0x00000001 //普通颜色
+#define Button_H_Color      0x00000002 //高亮颜色
+#define Button_P_Color      0x00000004
+#define Button_F_Color      0x00000008
+#define Button_D_Color      0x00000010
+#define Button_N_Res      0x00000001 //普通图片
+#define Button_H_Res      0x00000002 //高亮图片
+#define Button_P_Res      0x00000004
+#define Button_F_Res      0x00000008
+#define Button_D_Res      0x00000010
 #endif // 1
 //--------------------------------------------------------------------Label类
-#if 1
-#define Type_Label                  0xe538ac26
-#define Proc_Label_SetFont          151     //设置字体
-#define Proc_Label_SetTextColor     152     //设置文本颜色
-#define Proc_Label_SetTextPadding   153     //字体边距
-#endif // 1
+
 //--------------------------------------------------------------------类
 #if 1
 
@@ -434,17 +425,8 @@ enum ZREST
 //--------------------------------------------------------------------ProgressBar类
 #if 1
 #define Type_ProgressBar            0x251a8a44
-#endif // 1
-//--------------------------------------------------------------------Option类
-#if 1
-#define Type_Option                         0x8f0a0522
-#define Proc_Option_SetSelected             1031    //
-#define Proc_Option_GetSelected             1032    //
-#define Proc_Option_SetResSelected          1033    //选中的普通状态
-#define Proc_Option_SetResSelectedHot       1034    //选中的点燃状态
-#define Proc_Option_SetResSelectedPushed    1035    //选中的按下状态
-#define Proc_Option_SetGroup                1036
-#endif // 1
+#endif
+
 //--------------------------------------------------------------------CheckBox类
 #if 1
 #define Type_CheckBox            0x251a8a44
@@ -501,6 +483,64 @@ enum ZREST
 #define Proc_ListElement_Select             403     //选中
 #define Proc_ListElement_SelectMulti        404     //多选
 #endif // 1
+
+//--------------------------------------------------------------------Window类
+#if 1
+#define Type_Window                 0x5e298cdf
+
+#define Proc_Window_SetNoBox        1001    //设置为无边框窗体
+#define Proc_Window_SetWindowMin    1002    //
+#define Proc_Window_SetWindowMax    1003
+#define Proc_Window_SetWindowRestor 1004
+#define Proc_Window_SetMinInfo      1005
+#define Proc_Window_SetMaxInfo      1006
+#define Proc_Window_SetSize         1007
+#define Proc_Window_SetComBo        1008
+#define Proc_Window_Popup           1009
+#define Proc_Window_SetToolWindow   1010
+#define Proc_Window_Center          1011
+
+#endif // 1
+
+//--------------------------------------------------------------------Option类
+#if 1
+#define Type_Option                         0x8f0a0522
+#define Proc_Option_SetSelected             1031    //
+#define Proc_Option_GetSelected             1032    //
+#define Proc_Option_SetRes                  1033    //选中的普通状态
+//#define Proc_Option_SetResSelectedHot       1034    //选中的点燃状态
+//#define Proc_Option_SetResSelectedPushed    1035    //选中的按下状态
+#define Proc_Option_SetGroup                1036
+//------属性名称
+#define Option_SN_Res      0x00000001 //选中普通图片
+#define Option_SH_Res      0x00000002 //选中高亮图片
+#define Option_SP_Res      0x00000004
+#endif // 1
+
+//--------------------------------------------------------------------ScrollBar类
+#if 1
+#define Type_ScrollBar                  0xd2473c6e
+#define Proc_ScrollBar_SetHorizontal    1050 //设置为横向滚动条
+#define Proc_ScrollBar_SetScrollPos     1051 //设置位置
+#define Proc_ScrollBar_GetScrollPos     1052 //获取位置
+#define Proc_ScrollBar_GetScrollRange   1053
+#define Proc_ScrollBar_SetOwner         1054
+#define Proc_ScrollBar_SetScrollRange   1055
+#define Proc_ScrollBar_SetColor         1056
+#define Proc_ScrollBar_bShow            1057
+//------属性名称
+#define ScrollBar_tN_Color        0x00000001 //滑块普通颜色
+#define ScrollBar_tH_Color        0x00000002
+#define ScrollBar_tP_Color        0x00000004
+#define ScrollBar_bN_Color        0x00000008 //按钮普通颜色
+#define ScrollBar_bH_Color        0x00000010
+#define ScrollBar_bP_Color        0x00000020
+#define ScrollBar_Di_Color        0x00000040 //禁用时颜色
+#define ScrollBar_BK_Color        0x00000080 //背景色
+#define ScrollBar_B1_Show         0x00000001
+#define ScrollBar_B2_Show         0x00000002
+
+#endif //1
 //--------------------------------------------------------------------TreeView类
 #if 1
 #define Type_TreeView                   0xa1526942
@@ -511,29 +551,29 @@ enum ZREST
 #define Proc_TreeView_Remove                Proc_Layout_Remove
 #define Proc_TreeView_RemoveAt              Proc_Layout_RemoveAt
 #define Proc_TreeView_RemoveAll             Proc_Layout_RemoveAll
-#define Proc_TreeView_SetItemExpand         1000    //展开关闭
-#define Proc_TreeView_SetItemCheckBox       1001    //选中反选
+#define Proc_TreeView_SetItemExpand         1100    //展开关闭
+#define Proc_TreeView_SetItemCheckBox       1101    //选中反选
 
-#define Proc_TreeNode_GetCountChild         1000
-#define Proc_TreeNode_GetChildNode          1001
-#define Proc_TreeNode_SetTreeView           1002
+#define Proc_TreeNode_GetCountChild         1100
+#define Proc_TreeNode_GetChildNode          1101
+#define Proc_TreeNode_SetTreeView           1102
 #define Proc_TreeNode_Add                   Proc_Layout_Add  
 #define Proc_TreeNode_AddAt                 Proc_Layout_AddAt
 #define Proc_TreeNode_Remove                Proc_Layout_Remove
-#define Proc_TreeNode_AddChildNode          1003
-#define Proc_TreeNode_CalLocation           1004    //计算缩进
-#define Proc_TreeNode_GetLastNode           1005
-#define Proc_TreeNode_GetTreeIndex          1006    //取得全局树视图的索引
-#define Proc_TreeNode_GetDottedLine         1007
-#define Proc_TreeNode_SetParentNode         1008    //设置父节点
-#define Proc_TreeNode_GetItemButton         1009
-#define Proc_TreeNode_IsHasChild            1010    //是否有子节点
-#define Proc_TreeNode_SetVisibleFolderBtn   1011
-#define Proc_TreeNode_GetVisibleFolderBtn   1012
-#define Proc_TreeNode_SetVisibleCheckBtn    1013
-#define Proc_TreeNode_GetVisibleCheckBtn    1014
-#define Proc_TreeNode_GetFolderButton       1015
-#define Proc_TreeNode_GetCheckBox           1016
+#define Proc_TreeNode_AddChildNode          1103
+#define Proc_TreeNode_CalLocation           1104    //计算缩进
+#define Proc_TreeNode_GetLastNode           1105
+#define Proc_TreeNode_GetTreeIndex          1106    //取得全局树视图的索引
+#define Proc_TreeNode_GetDottedLine         1107
+#define Proc_TreeNode_SetParentNode         1108    //设置父节点
+#define Proc_TreeNode_GetItemButton         1109
+#define Proc_TreeNode_IsHasChild            1110    //是否有子节点
+#define Proc_TreeNode_SetVisibleFolderBtn   1111
+#define Proc_TreeNode_GetVisibleFolderBtn   1112
+#define Proc_TreeNode_SetVisibleCheckBtn    1113
+#define Proc_TreeNode_GetVisibleCheckBtn    1114
+#define Proc_TreeNode_GetFolderButton       1115
+#define Proc_TreeNode_GetCheckBox           1116
 #endif // 1
 //--------------------------------------------------------------------内部函数
 //zui引擎

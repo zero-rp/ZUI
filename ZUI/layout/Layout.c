@@ -412,7 +412,63 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
         else if (wcscmp(Param1, _T("hscrollbar")) == 0) {
             ZuiControlCall(Proc_Layout_EnableScrollBar, cp, (ZuiAny)(ZuiControlCall(Proc_Layout_GetVerticalScrollBar, cp, NULL, NULL, NULL) != NULL), (ZuiAny)((_tcscmp(Param2, _T("true"))) == 0), NULL);
         }
+        else if (wcscmp(Param1, _T("sbbkcolor")) == 0) {
+                ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
+                ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
+        }
+        else if (wcscmp(Param1, _T("sbtnormalcolor")) == 0) {
+                ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
+                ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
+        }
+        else if (wcscmp(Param1, _T("sbthotcolor")) == 0) {
+                ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
+                ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
+        }
+        else if (wcscmp(Param1, _T("sbtpushcolor")) == 0) {
+                ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
+                ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
+        }
+        else if (wcscmp(Param1, _T("sbbnormalcolor")) == 0) {
+                ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
+                ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
+        }
+        else if (wcscmp(Param1, _T("sbbhotcolor")) == 0) {
+                ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
+                ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
+        }
+        else if (wcscmp(Param1, _T("sbbpushcolor")) == 0) {
+                ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
+                ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
+        }
+        else if (wcscmp(Param1, _T("sbdisablecolor")) == 0) {
+                ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
+                ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
+        }
+        else if (wcscmp(Param1, _T("sbb1show")) == 0) {
+                ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
+                ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
+        }
+        else if (wcscmp(Param1, _T("sbb2show")) == 0) {
+                ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
+                ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
+        }
+        else if (wcscmp(Param1, _T("sbimageres")) == 0) {
+            ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
+            ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
+        }
+        else if (wcscmp(Param1, _T("sbvsrc")) == 0) {
+            ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
+            ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
+        }
+        else if (wcscmp(Param1, _T("sbhsrc")) == 0) {
+            ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
+            ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
+        }
         break;
+    }
+    case Proc_ScrollBar_SetColor: {
+        ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
+        ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
     }
     case Proc_SetOs: {
         for (int it = 0; it < darray_len(p->m_items); it++) {
@@ -809,7 +865,7 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
 
         while (p->m_pVerticalScrollBar)
         {
-            if (cyRequired > rc->bottom - rc->top && !p->m_pVerticalScrollBar->m_bVisible) {
+            if (cyRequired > rc->bottom - rc->top && !bVbarVisible) {
                 ZuiControlCall(Proc_SetVisible, p->m_pVerticalScrollBar, (ZuiAny)TRUE, NULL, NULL);
                 ZuiControlCall(Proc_ScrollBar_SetScrollRange, p->m_pVerticalScrollBar, (ZuiAny)(cyRequired - (rc->bottom - rc->top)), NULL, NULL);
                 ZuiControlCall(Proc_ScrollBar_SetScrollPos, p->m_pVerticalScrollBar, 0, NULL, NULL);
