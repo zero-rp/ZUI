@@ -942,17 +942,21 @@ void Agg2D::Font::textHints(bool hints)
 void Agg2D::text(Font& font, double x, double y, double x1, double y1, const wchar_t* str, const int len, unsigned int style)
 {
     RectD  old_clipBox = m_clipBox;//保存之前的剪裁区
-    //m_clipBox.clip(x, y, x1, y1);//计算新的剪裁区
-    //clipBox(m_clipBox.x1, m_clipBox.y1, m_clipBox.x2, m_clipBox.y2);          //设置新的剪裁区
+    m_clipBox.clip(x, y, x1, y1);//计算新的剪裁区
+    clipBox(m_clipBox.x1, m_clipBox.y1, m_clipBox.x2, m_clipBox.y2);          //设置新的剪裁区
 
     double asc = font.fontHeight();         //字体高度
     const agg::glyph_cache* glyph = NULL;   //字模
     double start_x = x;
-    double start_y = y + asc;
+    double start_y = y + asc - 1;
 
     if ((style & ZDT_VCENTER) != 0) {
         //纵向居中,
         start_y = (int)(y + (y1 - y + asc) / 2)-1;
+    }
+    if ((style & ZDT_BOTTOM) != 0) {
+        //纵向靠底,
+        start_y = y1 - 1;
     }
     if ((style & ZDT_CENTER) != 0) {
         //横向居中,

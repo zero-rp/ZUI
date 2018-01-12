@@ -529,16 +529,19 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         return ((FINDCONTROLPROC)Param1)(p, Param2);
         break;
     }
-    case Proc_SetBkColor: {
-        p->m_BkgColor = (ZuiColor)Param1;
-        ZuiControlInvalidate(p, TRUE);
-        break;
-    }
-    case Proc_SetBorderColor: {
-		if (!p->m_dwBorderColor && !p->m_dwBorderWidth)
-			p->m_dwBorderWidth++;
-        p->m_dwBorderColor = (ZuiColor)Param1;
-        ZuiControlInvalidate(p, TRUE);
+    case Proc_SetColor: {
+        if ((int)Param1 & BK_Color) {
+            p->m_BkgColor = (ZuiColor)Param2;
+            ZuiControlInvalidate(p, TRUE);
+            break;
+        }
+        else if ((int)Param1 & Border_Color) {
+            if (!p->m_dwBorderColor && !p->m_dwBorderWidth)
+                p->m_dwBorderWidth++;
+            p->m_dwBorderColor = (ZuiColor)Param2;
+            ZuiControlInvalidate(p, TRUE);
+            break;
+        }
         break;
     }
     case Proc_SetBkImage: {
@@ -632,7 +635,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         else if (wcscmp(Param1, L"bkcolor") == 0) {
 			ZuiColor clrColor;
 			clrColor = ZuiStr2Color(Param2);
-            ZuiControlCall(Proc_SetBkColor, p, (ZuiAny)clrColor, NULL, NULL);
+            ZuiControlCall(Proc_SetColor, p, BK_Color,(ZuiAny)clrColor, NULL);
         }
         else if (wcscmp(Param1, L"drag") == 0) ZuiControlCall(Proc_SetDrag, p, (ZuiAny)(wcscmp(Param2, L"true") == 0 ? TRUE : FALSE), NULL, NULL);
         else if (wcscmp(Param1, L"bkimage") == 0) ZuiControlCall(Proc_SetBkImage, p, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
@@ -648,7 +651,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         else if (wcscmp(Param1, L"bordercolor") == 0) {
 			ZuiColor clrColor;
 			clrColor = ZuiStr2Color(Param2);
-            ZuiControlCall(Proc_SetBorderColor, p, (ZuiAny)clrColor, NULL, NULL);
+            ZuiControlCall(Proc_SetColor, p, Border_Color,(ZuiAny)clrColor, NULL);
         }
         else if (wcscmp(Param1, L"name") == 0) ZuiControlCall(Proc_SetName, p, Param2, NULL, NULL);
         else if (wcscmp(Param1, L"float") == 0) {
