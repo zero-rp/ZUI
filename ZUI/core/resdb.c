@@ -4,7 +4,7 @@
 #include "resdb.h"
 #include "function.h"
 #include "builder.h"
-#include <unzip.h>
+#include "unzip.h"
 #include "string.h"
 
 #if (defined PLATFORM_OS_WIN)
