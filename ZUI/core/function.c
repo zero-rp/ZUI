@@ -371,12 +371,19 @@ ZuiInt ZuiUnicodeToAscii(ZuiText str, ZuiInt slen, ZuiAny out, ZuiInt olen)
 
 ZuiColor ZuiStr2Color(ZuiAny str)
 {
-	ZuiText pstr = NULL;
-	ZuiColor clrColor;
-	while (*(ZuiText)str > L'\0' && *(ZuiText)str <= L' ')
-		str = ZuiCharNext((ZuiText)str);
-	if (*(ZuiText)str == L'#')
-		str = ZuiCharNext((ZuiText)str);
-	clrColor = _tcstoul((ZuiText)str, &pstr, 16);
-	return clrColor|0xFF000000;
+    ZuiText pstr = NULL;
+    ZuiColor clrColor = 0xFFFFFFFF;
+    while (*(ZuiText)str > _T('\0') && *(ZuiText)str <= _T(' '))
+        str = ZuiCharNext((ZuiText)str);
+    if (*(ZuiText)str == _T('#')){
+        str = ZuiCharNext((ZuiText)str);
+    }
+    else if (*(ZuiText)str == _T('0') && *((ZuiText)str+1) == _T('x')){
+            str = ZuiCharNext((ZuiText)str);
+            str = ZuiCharNext((ZuiText)str);
+    }
+    else
+        return clrColor;
+    clrColor = _tcstoul((ZuiText)str, &pstr, 16);
+    return clrColor | 0xFF000000;
 }
