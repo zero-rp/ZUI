@@ -192,7 +192,7 @@ ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
     p = ZuiControlFindName(MsgBox_pRoot, L"title");
     ZuiControlCall(Proc_SetText, p, title, NULL, NULL);
 
-    return ZuiDoModel((ZuiAny)MsgBox_pRoot->m_pOs->m_hWnd);
+    return ZuiDoModel(MsgBox_pRoot);
 }
 ZuiBool ZuiIsPointInRect(ZuiRect Rect, ZuiPoint pt) {
     int xl, xr, yt, yb;

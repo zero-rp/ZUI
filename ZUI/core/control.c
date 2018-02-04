@@ -42,13 +42,13 @@ ZEXPORT ZuiControl ZCALL NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny 
         //通知重载的对象开始创建
         //没有重载的
         /*查找类名*/
-        wchar_t name[256];
-        int l = (int)wcslen(classname);
+        ZText name[256];
+        int l = (int)_tcslen(classname);
         if (l > 255)
             return p;
-        memset(name, 0, 256 * sizeof(wchar_t));
-        memcpy(name, classname, l * sizeof(wchar_t));
-        wcslwr(name);
+        memset(name, 0, 256 * sizeof(ZText));
+        memcpy(name, classname, l * sizeof(ZText));
+        _tcslwr(name);
 
         ZClass theNode = { 0 };
         ZClass *node;
@@ -481,9 +481,9 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         ZuiControl pParent = p->m_pParent;
         if (pParent != NULL) {
             ZRect *rcParentPos = (ZRect *)ZuiControlCall(Proc_GetPos, pParent, NULL, NULL, NULL);
-            ZRect rcRelativePos = p->m_rcItem;
-            OffsetRect(&rcRelativePos, -rcParentPos->left, -rcParentPos->top);
-            return &rcRelativePos;
+            memcpy(Param1,&p->m_rcItem,sizeof(ZRect));
+            OffsetRect((LPRECT)Param1, -rcParentPos->left, -rcParentPos->top);
+            return 0;
         }
         break;
     }
@@ -635,7 +635,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         else if (wcscmp(Param1, L"bkcolor") == 0) {
 			ZuiColor clrColor;
 			clrColor = ZuiStr2Color(Param2);
-            ZuiControlCall(Proc_SetColor, p, BK_Color,(ZuiAny)clrColor, NULL);
+            ZuiControlCall(Proc_SetColor, p, (ZuiAny)BK_Color,(ZuiAny)clrColor, NULL);
         }
         else if (wcscmp(Param1, L"drag") == 0) ZuiControlCall(Proc_SetDrag, p, (ZuiAny)(wcscmp(Param2, L"true") == 0 ? TRUE : FALSE), NULL, NULL);
         else if (wcscmp(Param1, L"bkimage") == 0) ZuiControlCall(Proc_SetBkImage, p, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
@@ -651,7 +651,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         else if (wcscmp(Param1, L"bordercolor") == 0) {
 			ZuiColor clrColor;
 			clrColor = ZuiStr2Color(Param2);
-            ZuiControlCall(Proc_SetColor, p, Border_Color,(ZuiAny)clrColor, NULL);
+            ZuiControlCall(Proc_SetColor, p, (ZuiAny)Border_Color,(ZuiAny)clrColor, NULL);
         }
         else if (wcscmp(Param1, L"name") == 0) ZuiControlCall(Proc_SetName, p, Param2, NULL, NULL);
         else if (wcscmp(Param1, L"float") == 0) {

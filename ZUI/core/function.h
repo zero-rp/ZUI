@@ -1,6 +1,7 @@
 ﻿#ifndef __ZUI_CORE_FUNCTION_H__
 #define __ZUI_CORE_FUNCTION_H__
 #include <ZUI.h>
+#include "tree.h"
 
 extern  ZuiText Global_DefaultFontName;     //系统默认字体名称
 extern  ZuiFont Global_Font;                //默认字体
