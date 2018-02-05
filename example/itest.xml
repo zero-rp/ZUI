@@ -1,2 +1,2 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Label name="includetest" text="inclllllllwwwwwwwwwwwwwwwwwl" textcolor="0xFF0000" endellipsis="true" float="true" pos="130,1,280,21"  />
+<Label name="includetest" text="inclllllllwwwwwwwwwwwwwwwwwl" textcolor="0xFF0000" endellipsis="true" float="30%,1%,10%,99%" valign="bottom" />

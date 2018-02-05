@@ -589,10 +589,10 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
         int width = cp->m_rcItem.right - cp->m_rcItem.left - (cp->m_dwBorderWidth * 2);
         int height = cp->m_rcItem.bottom - cp->m_rcItem.top - (cp->m_dwBorderWidth * 2);
         ZRect rcCtrl = { 0 };
-        rcCtrl.left = cp->m_rcItem.left + szXY->cx;
-        rcCtrl.top = cp->m_rcItem.top + szXY->cy;
-        rcCtrl.right = rcCtrl.left + sz.cx;
-        rcCtrl.bottom = rcCtrl.top + sz.cy;
+        rcCtrl.left = cp->m_rcItem.left + width * pControl->m_piFloatPercent.left + szXY->cx;
+        rcCtrl.top = cp->m_rcItem.top + height * pControl->m_piFloatPercent.top + szXY->cy;
+        rcCtrl.right = rcCtrl.left + width * pControl->m_piFloatPercent.right + sz.cx;
+        rcCtrl.bottom = rcCtrl.top + height * pControl->m_piFloatPercent.bottom + sz.cy;
         ZuiControlCall(Proc_SetPos, pControl, &rcCtrl, FALSE, 0);
 
         break;

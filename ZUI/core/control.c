@@ -661,10 +661,10 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             else {
                 ZRectR piFloatPercent = { 0 };
                 ZuiText pstr = NULL;
-                piFloatPercent.left = _tcstod(Param2, &pstr);  ASSERT(pstr);
-                piFloatPercent.top = _tcstod(pstr + 1, &pstr);    ASSERT(pstr);
-                piFloatPercent.right = _tcstod(pstr + 1, &pstr);  ASSERT(pstr);
-                piFloatPercent.bottom = _tcstod(pstr + 1, &pstr); ASSERT(pstr);
+                piFloatPercent.left = _tcstod(Param2, &pstr);  ASSERT(pstr); if (*pstr == _T('%')) { piFloatPercent.left /= 100; pstr++; }
+                piFloatPercent.top = _tcstod(pstr + 1, &pstr);    ASSERT(pstr); if (*pstr == _T('%')) { piFloatPercent.top /= 100; pstr++; }
+                piFloatPercent.right = _tcstod(pstr + 1, &pstr);  ASSERT(pstr); if (*pstr == _T('%')) { piFloatPercent.right /= 100; pstr++; }
+                piFloatPercent.bottom = _tcstod(pstr + 1, &pstr); ASSERT(pstr); if (*pstr == _T('%')) { piFloatPercent.bottom /= 100; pstr++; }
                 ZuiControlCall(Proc_SetFloatPercent, p, &piFloatPercent, NULL, NULL);
                 ZuiControlCall(Proc_SetFloat, p, (ZuiAny)TRUE, NULL, NULL);
             }
