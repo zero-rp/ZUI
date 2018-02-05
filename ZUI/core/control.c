@@ -43,12 +43,12 @@ ZEXPORT ZuiControl ZCALL NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny 
         //没有重载的
         /*查找类名*/
         ZText name[256];
-        int l = (int)_tcslen(classname);
+        int l = (int)wcslen(classname);
         if (l > 255)
             return p;
-        memset(name, 0, 256 * sizeof(ZText));
+        memset(name, 0, sizeof(name));
         memcpy(name, classname, l * sizeof(ZText));
-        _tcslwr(name);
+        wcslwr(name);
 
         ZClass theNode = { 0 };
         ZClass *node;
