@@ -945,6 +945,8 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
     case Proc_OnDestroy: {
         p->old_call(ProcId, cp, 0, Param1, Param2, Param3);
 
+        if (p->m_sImageRes)
+            ZuiResDBDelRes(p->m_sImageRes);
         free(p);
         return 0;
     }

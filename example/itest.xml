@@ -1,2 +1,2 @@
-<?xml version="1.0" encoding="gbk"?>
-<Label name="includetest" text="inclllllllwwwwwwwwwwwwwwwwwl" textcolor="#FF0000" endellipsis="true"  width="50" valign="bottom" />
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Label name="includetest" text="inclllllllwwwwwwwwwwwwwwwwwl" textcolor="0xFF0000" endellipsis="true" float="30%,1%,10%,99%" valign="bottom" />

@@ -220,8 +220,11 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
                         pControl = (ZuiControl)(p->m_aFoundControls->data[it]);
                         if (!pControl->m_bFloat)
                             ZuiControlCall(Proc_SetPos, pControl, (ZRect *)ZuiControlCall(Proc_GetPos, pControl, NULL, NULL, NULL), (void *)TRUE, 0);
-                        else
-                            ZuiControlCall(Proc_SetPos, pControl, ZuiControlCall(Proc_GetRelativePos, pControl, NULL, NULL, NULL), (void *)TRUE, 0);
+                        else {
+                            RECT rcP;
+                            ZuiControlCall(Proc_GetRelativePos, pControl, &rcP, NULL, NULL);
+                            ZuiControlCall(Proc_SetPos, pControl, &rcP, (void *)TRUE, 0);
+                        }
                     }
                 }
                 // We'll want to notify the window when it is first initialized
@@ -1310,18 +1313,21 @@ ZuiInt ZuiOsMsgLoop() {
 ZuiVoid ZuiOsMsgLoopExit() {
     PostQuitMessage(0);
 }
+ZuiVoid ZuiOsPostMessage(ZuiControl cp, ZuiAny Msg, ZuiAny Param1, ZuiAny Param2) {
+    PostMessage(cp->m_pOs->m_hWnd, (UINT)Msg, (WPARAM)Param1, (LPARAM)Param2);
+}
 ZuiVoid ZuiOsPostTask(ZuiTask task) {
     PostThreadMessage(m_hMainThreadId, WM_APP + 2, (WPARAM)task, 0);
 }
-ZEXPORT ZuiInt ZuiDoModel(ZuiAny chwnd)
+ZEXPORT ZuiInt ZuiDoModel(ZuiControl cp)
 {
 	ZuiInt nRet;
-	HWND phwnd = GetWindowOwner((HWND)chwnd);
-	SetWindowPos((HWND)chwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+	HWND phwnd = GetWindowOwner((HWND)cp->m_pOs->m_hWnd);
+	SetWindowPos((HWND)cp->m_pOs->m_hWnd, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
 	//禁用掉父窗口
 	EnableWindow((HWND)phwnd, FALSE);
 	MSG Msg;
-	while (IsWindow((HWND)chwnd) && GetMessage(&Msg, NULL, 0, 0))
+	while (IsWindow((HWND)cp->m_pOs->m_hWnd) && GetMessage(&Msg, NULL, 0, 0))
 	{
 		if (Msg.message == WM_APP + 3)
 		{
@@ -1329,7 +1335,7 @@ ZEXPORT ZuiInt ZuiDoModel(ZuiAny chwnd)
 			EnableWindow((HWND)phwnd, TRUE);
 			SetFocus((HWND)phwnd);
 		}
-		if (Msg.hwnd == (HWND)chwnd || Msg.message == WM_PAINT || Msg.message == WM_TIMER) {
+		if (Msg.hwnd == (HWND)cp->m_pOs->m_hWnd || Msg.message == WM_PAINT || Msg.message == WM_TIMER) {
 			TranslateMessage(&Msg);
 			DispatchMessage(&Msg);
 		}

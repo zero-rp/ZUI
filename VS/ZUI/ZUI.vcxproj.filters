@@ -110,6 +110,9 @@
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ZUI\vc6.cpp" />
+    <ClCompile Include="..\..\ZUI\core\unzip.c">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ZUI\ZUI.h" />
@@ -214,6 +217,9 @@
       <Filter>control</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ZUI\core\builder.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\unzip.h">
       <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>

@@ -34,7 +34,6 @@
     <ClCompile Include="..\..\zlib\inflate.c" />
     <ClCompile Include="..\..\zlib\inftrees.c" />
     <ClCompile Include="..\..\zlib\trees.c" />
-    <ClCompile Include="..\..\zlib\unzip.c" />
     <ClCompile Include="..\..\zlib\zutil.c" />
   </ItemGroup>
   <ItemGroup>
@@ -45,7 +44,6 @@
     <ClInclude Include="..\..\zlib\inflate.h" />
     <ClInclude Include="..\..\zlib\inftrees.h" />
     <ClInclude Include="..\..\zlib\trees.h" />
-    <ClInclude Include="..\..\zlib\unzip.h" />
     <ClInclude Include="..\..\zlib\zconf.h" />
     <ClInclude Include="..\..\zlib\zlib.h" />
     <ClInclude Include="..\..\zlib\zutil.h" />

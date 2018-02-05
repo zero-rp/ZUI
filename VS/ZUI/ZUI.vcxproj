@@ -273,6 +273,7 @@
     <ClCompile Include="..\..\ZUI\core\mxml.c" />
     <ClCompile Include="..\..\ZUI\core\resdb.c" />
     <ClCompile Include="..\..\ZUI\core\template.c" />
+    <ClCompile Include="..\..\ZUI\core\unzip.c" />
     <ClCompile Include="..\..\ZUI\layout\HorizontalLayout.c" />
     <ClCompile Include="..\..\ZUI\layout\Layout.c" />
     <ClCompile Include="..\..\ZUI\layout\TabLayout.c" />
@@ -310,6 +311,7 @@
     <ClInclude Include="..\..\ZUI\core\resdb.h" />
     <ClInclude Include="..\..\ZUI\core\template.h" />
     <ClInclude Include="..\..\ZUI\core\tree.h" />
+    <ClInclude Include="..\..\ZUI\core\unzip.h" />
     <ClInclude Include="..\..\ZUI\layout\HorizontalLayout.h" />
     <ClInclude Include="..\..\ZUI\layout\Layout.h" />
     <ClInclude Include="..\..\ZUI\layout\TabLayout.h" />

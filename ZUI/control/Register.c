@@ -76,6 +76,7 @@ ZuiBool ZuiControlRegisterAdd(ZuiText name, ZCtlProc Proc)
     {
         struct _ZClass *n = (struct _ZClass *)malloc(sizeof(struct _ZClass));
         memset(n, 0, sizeof(struct _ZClass));
+        _tcslwr(name);
         n->key = Zui_Hash(name);
         n->cb = Proc;
         RB_INSERT(_ZClass_Tree, Global_ControlClass, n);

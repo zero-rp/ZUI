@@ -7,11 +7,11 @@
 
 #define CONTROL_SETSTR(STRNAME,VALUE,TYPE)			\
 		if (STRNAME) {								\
-			if (wcscmp(STRNAME, (TYPE)VALUE) == 0)	\
+			if (_tcscmp(STRNAME, (TYPE)VALUE) == 0)	\
 				return 0;							\
 			free(STRNAME);							\
 		}											\
-		STRNAME = wcsdup((TYPE)VALUE);				\
+		STRNAME = _tcsdup((TYPE)VALUE);				\
 
 #define ZTYLE_BOX               1   //单线边框
 #define ZTYLE_BKGColor          2   //具有背景色

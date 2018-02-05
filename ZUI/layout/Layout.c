@@ -585,14 +585,14 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
         }
         ZSize *szXY = (ZSize *)ZuiControlCall(Proc_GetFixedXY, pControl, 0, 0, 0);
         ZSize sz = { (LONG)ZuiControlCall(Proc_GetFixedWidth, pControl, 0, 0, 0), (LONG)ZuiControlCall(Proc_GetFixedHeight, pControl, 0, 0, 0) };
-        ZRectR rcPercent = { 0 };// pControl->GetFloatPercent();
-        LONG width = cp->m_rcItem.right - cp->m_rcItem.left - (cp->m_dwBorderWidth * 2);
-        LONG height = cp->m_rcItem.bottom - cp->m_rcItem.top - (cp->m_dwBorderWidth * 2);
+        //ZRectR rcPercent = { 0 };// pControl->GetFloatPercent();
+        int width = cp->m_rcItem.right - cp->m_rcItem.left - (cp->m_dwBorderWidth * 2);
+        int height = cp->m_rcItem.bottom - cp->m_rcItem.top - (cp->m_dwBorderWidth * 2);
         ZRect rcCtrl = { 0 };
-        rcCtrl.left = (LONG)(width*rcPercent.left) + szXY->cx;
-        rcCtrl.top = (LONG)(height*rcPercent.top) + szXY->cy;
-        rcCtrl.right = (LONG)(width*rcPercent.right) + szXY->cx + sz.cx;
-        rcCtrl.bottom = (LONG)(height*rcPercent.bottom) + szXY->cy + sz.cy;
+        rcCtrl.left = cp->m_rcItem.left + width * pControl->m_piFloatPercent.left + szXY->cx;
+        rcCtrl.top = cp->m_rcItem.top + height * pControl->m_piFloatPercent.top + szXY->cy;
+        rcCtrl.right = rcCtrl.left + width * pControl->m_piFloatPercent.right + sz.cx;
+        rcCtrl.bottom = rcCtrl.top + height * pControl->m_piFloatPercent.bottom + sz.cy;
         ZuiControlCall(Proc_SetPos, pControl, &rcCtrl, FALSE, 0);
 
         break;

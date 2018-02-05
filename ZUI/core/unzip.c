@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 #ifdef STDC
 #  include <stddef.h>
 #  include <string.h>
@@ -20,7 +19,7 @@
 //-------------------------------------------------------------------------头-----------------------------------------------------------------------------------------------------------
 
 #ifndef _ZLIB_H
-#include "../zlib/zlib.h"
+#include "zlib.h"
 #endif
 #include <stdlib.h>
 
