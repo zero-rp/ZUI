@@ -602,7 +602,7 @@ extern "C"
     //Zui消息循环.
     ZEXPORT ZuiInt ZCALL ZuiMsgLoop();
     //退出Zui消息循环.
-    ZEXPORT ZuiVoid ZCALL ZuiMsgLoop_exit();
+    ZEXPORT ZuiVoid ZCALL ZuiMsgLoop_exit(int nRet);
     //投递一个任务到Zui线程
     ZEXPORT ZuiVoid ZCALL ZuiPostTask(ZuiTask task);
     

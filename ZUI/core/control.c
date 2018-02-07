@@ -77,7 +77,7 @@ ZEXPORT void ZCALL FreeZuiControl(ZuiControl p, ZuiBool Delayed)
     if (!Delayed)
         ZuiControlCall(Proc_OnDestroy, p, NULL, NULL, NULL);
     else
-        ZuiOsAddDelayedCleanup(p->m_pOs, p);
+        ZuiOsAddDelayedCleanup(p,0,0);
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -173,14 +173,14 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                     rcParentPos->left + rc->right, rcParentPos->top + rc->bottom };
                 p->m_rcItem = rcCtrl;
 
-                ZuiInt width = rcParentPos->right - rcParentPos->left;
+/*                ZuiInt width = rcParentPos->right - rcParentPos->left;
                 ZuiInt height = rcParentPos->bottom - rcParentPos->top;
                 ZRect rcPercent = { (ZuiInt)(width*p->m_piFloatPercent.left), (ZuiInt)(height*p->m_piFloatPercent.top),
                     (ZuiInt)(width*p->m_piFloatPercent.right), (ZuiInt)(height*p->m_piFloatPercent.bottom) };
                 p->m_cXY.cx = rc->left - rcPercent.left;
                 p->m_cXY.cy = rc->top - rcPercent.top;
                 p->m_cxyFixed.cx = rc->right - rcPercent.right - p->m_cXY.cx;
-                p->m_cxyFixed.cy = rc->bottom - rcPercent.bottom - p->m_cXY.cy;
+                p->m_cxyFixed.cy = rc->bottom - rcPercent.bottom - p->m_cXY.cy; */
             }
         }
         else {

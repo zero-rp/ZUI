@@ -122,11 +122,11 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 				}
 			}
             if (darray_len(p->m_aDelayedCleanup) == 0) {
-                FreeZuiControl(cp, FALSE);
+                ZuiControlCall(Proc_OnDestroy, cp, (ZuiAny)wParam, (ZuiAny)lParam, NULL);
                 break;
             }
             else
-                FreeZuiControl(cp, FALSE);
+                ZuiControlCall(Proc_OnDestroy, cp, (ZuiAny)wParam, (ZuiAny)lParam, NULL);
         };
         return 0;
     }
@@ -1268,12 +1268,12 @@ ZuiVoid ZuiOsReapObjects(ZuiOsWindow p, ZuiControl pControl) {
     ZuiOsKillTimer(pControl);
 }
 
-ZuiVoid ZuiOsAddDelayedCleanup(ZuiOsWindow p, ZuiControl pControl)
+ZuiVoid ZuiOsAddDelayedCleanup(ZuiControl pControl,ZuiAny Param1,ZuiAny Param2)
 {
     ZuiControlCall(Proc_Layout_Remove, pControl->m_pParent, pControl, (ZuiAny)TRUE, NULL);
-    ZuiControlCall(Proc_SetOs, pControl, p, NULL, (void*)FALSE);
-    darray_append(p->m_aDelayedCleanup, pControl);
-    PostMessage(p->m_hWnd, WM_APP + 1, 0, 0L);
+    //ZuiControlCall(Proc_SetOs, pControl, pControl->m_pOs, NULL, (void*)FALSE);
+    darray_append(pControl->m_pOs->m_aDelayedCleanup, pControl);
+    PostMessage(pControl->m_pOs->m_hWnd, WM_APP + 1, (WPARAM)Param1, (LPARAM)Param2);
 }
 
 ZuiInt ZuiOsMsgLoop() {
@@ -1310,8 +1310,8 @@ ZuiInt ZuiOsMsgLoop() {
     return Msg.wParam;
 #endif
 }
-ZuiVoid ZuiOsMsgLoopExit() {
-    PostQuitMessage(0);
+ZuiVoid ZuiOsMsgLoopExit(int nRet) {
+    PostQuitMessage(nRet);
 }
 ZuiVoid ZuiOsPostMessage(ZuiControl cp, ZuiAny Msg, ZuiAny Param1, ZuiAny Param2) {
     PostMessage(cp->m_pOs->m_hWnd, (UINT)Msg, (WPARAM)Param1, (LPARAM)Param2);
@@ -1327,11 +1327,10 @@ ZEXPORT ZuiInt ZuiDoModel(ZuiControl cp)
 	//禁用掉父窗口
 	EnableWindow((HWND)phwnd, FALSE);
 	MSG Msg;
-	while (IsWindow((HWND)cp->m_pOs->m_hWnd) && GetMessage(&Msg, NULL, 0, 0))
+	while (GetMessage(&Msg, NULL, 0, 0))
 	{
-		if (Msg.message == WM_APP + 3)
+		if (Msg.message == WM_APP + 1)
 		{
-			nRet = Msg.wParam;
 			EnableWindow((HWND)phwnd, TRUE);
 			SetFocus((HWND)phwnd);
 		}
@@ -1344,6 +1343,7 @@ ZEXPORT ZuiInt ZuiDoModel(ZuiControl cp)
 		}
 	}
 	//重新开启父窗口
+    nRet = Msg.wParam;
 	EnableWindow((HWND)phwnd, TRUE);
 	SetFocus((HWND)phwnd);
 	return nRet;

@@ -135,8 +135,8 @@ ZEXPORT ZuiBool ZCALL ZuiUnInit() {
 ZEXPORT ZuiInt ZCALL ZuiMsgLoop() {
     return ZuiOsMsgLoop();
 }
-ZEXPORT ZuiVoid ZCALL ZuiMsgLoop_exit() {
-    ZuiOsMsgLoopExit();
+ZEXPORT ZuiVoid ZCALL ZuiMsgLoop_exit(int nRet) {
+    ZuiOsMsgLoopExit(nRet);
 }
 ZEXPORT ZuiVoid ZCALL ZuiPostTask(ZuiTask task) {
     ZuiOsPostTask(task);
@@ -162,8 +162,11 @@ ZuiAny ZCALL MsgBox_Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAn
 
 ZuiAny ZCALL Default_NotifyProc(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 	if (wcscmp(msg, L"onclose") == 0) {
-		return (ZuiAny)1;
+        ZuiOsAddDelayedCleanup(p, Param1, Param2);
 	}
+    else if (wcscmp(msg, L"ondestroy") == 0) {
+        ZuiMsgLoop_exit((int)Param1);
+    }
 	return 0;
 }
 

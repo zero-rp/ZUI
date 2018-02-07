@@ -93,12 +93,12 @@ ZuiAny ZCALL Main_Notify(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Para
 	{
 		ZuiInt ret = ZuiMsgBox(win, L"是否退出程序？", L"提示!!");
 		if (ret == ZuiOK) {
-			return (ZuiAny)1;
+            FreeZuiControl(win, 1);
 		}
 	}
 	else if (wcscmp(msg, L"ondestroy") == 0)
 	{
-		ZuiMsgLoop_exit();
+		ZuiMsgLoop_exit(0);
 	}
 	return 0;
 }
