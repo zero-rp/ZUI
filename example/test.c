@@ -89,23 +89,23 @@ ZuiAny ZCALL Main_Notify_ctl_max(ZuiText msg, ZuiControl p, ZuiAny UserData, Zui
 	return 0;
 }
 ZuiAny ZCALL Main_Notify(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
-	if (wcscmp(msg, L"onclose") == 0)
-	{
-		ZuiInt ret = ZuiMsgBox(win, L"是否退出程序？", L"提示!!");
-		if (ret == ZuiOK) {
+    if (wcscmp(msg, L"onclose") == 0)
+    {
+        ZuiInt ret = ZuiMsgBox(win, L"是否退出程序？", L"提示!!");
+        if (ret == ZuiOK) {
             FreeZuiControl(win, 1);
-		}
-	}
-	else if (wcscmp(msg, L"ondestroy") == 0)
-	{
-		ZuiMsgLoop_exit(0);
-	}
-	return 0;
+        }
+    }
+    else if (wcscmp(msg, L"ondestroy") == 0)
+    {
+        ZuiMsgLoop_exit(0);
+    }
+    return 0;
 }
 ZuiAny ZCALL msgbox_Notify(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
-	if (wcscmp(msg, L"onclick") == 0)
-	{
-		ZuiMsgBox(win, L"HELLO WORLD!!", L"Hello World!!");
-	}
-	return 0;
+    if (wcscmp(msg, L"onclick") == 0)
+    {
+        ZuiMsgBox(win, L"HELLO WORLD!!", L"Hello World!!");
+    }
+    return 0;
 }

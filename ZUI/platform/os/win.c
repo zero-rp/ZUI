@@ -1342,11 +1342,11 @@ ZEXPORT ZuiInt ZuiDoModel(ZuiControl cp)
 			break;
 		}
 	}
-	//重新开启父窗口
+    //重新开启父窗口
     nRet = Msg.wParam;
-	EnableWindow((HWND)phwnd, TRUE);
-	SetFocus((HWND)phwnd);
-	return nRet;
+    EnableWindow((HWND)phwnd, TRUE);
+    SetFocus((HWND)phwnd);
+    return nRet;
 }
 ZuiInt ZuiOsUtf8ToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen)
 {
