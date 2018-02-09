@@ -8,33 +8,8 @@
 #include <platform/platform.h>
 //创建控件
 ZEXPORT ZuiControl ZCALL NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
-    ZuiControl p = (ZuiControl)malloc(sizeof(ZControl));
+    ZuiControl p = ZuiDefaultControlProc(Proc_OnCreate,0,0,0,0,0);
     if (p) {
-        memset(p, 0, sizeof(ZControl));
-        p->m_pParent = NULL;
-        p->m_bUpdateNeeded = TRUE;
-        p->m_bVisible = TRUE;
-        p->m_bFocused = FALSE;
-        p->m_bEnabled = TRUE;
-        p->m_bMouseEnabled = TRUE;
-        p->m_bKeyboardEnabled = TRUE;
-        p->m_bFloat = FALSE;
-        p->m_bSetPos = FALSE;
-        p->m_chShortcut = '\0';
-        p->m_nTooltipWidth = 300;
-        p->m_aAnime = NULL;
-
-        p->m_cXY.cx = p->m_cXY.cy = 0;
-        p->m_cxyFixed.cx = p->m_cxyFixed.cy = 0;
-        p->m_cxyMin.cx = p->m_cxyMin.cy = 0;
-        p->m_cxyMax.cx = p->m_cxyMax.cy = 9999;
-
-
-        p->m_piFloatPercent.left = p->m_piFloatPercent.top = p->m_piFloatPercent.right = p->m_piFloatPercent.bottom = 0.0f;
-
-        p->call = ZuiDefaultControlProc;
-
-        //p->m_dwBorderColor = ARGB(255, 255, 0, 0);
 #if RUN_DEBUG
         p->m_sClassName = ZuiWcsdup(classname);
 #endif // RUN_DEBUG
@@ -586,6 +561,36 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 				ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 1);
 		}
         break;
+    }
+    case Proc_OnCreate: {
+        ZuiControl p = (ZuiControl)malloc(sizeof(ZControl));
+        if (p) {
+            memset(p, 0, sizeof(ZControl));
+            p->m_pParent = NULL;
+            p->m_bUpdateNeeded = TRUE;
+            p->m_bVisible = TRUE;
+            p->m_bFocused = FALSE;
+            p->m_bEnabled = TRUE;
+            p->m_bMouseEnabled = TRUE;
+            p->m_bKeyboardEnabled = TRUE;
+            p->m_bFloat = FALSE;
+            p->m_bSetPos = FALSE;
+            p->m_chShortcut = '\0';
+            p->m_nTooltipWidth = 300;
+            p->m_aAnime = NULL;
+
+            p->m_cXY.cx = p->m_cXY.cy = 0;
+            p->m_cxyFixed.cx = p->m_cxyFixed.cy = 0;
+            p->m_cxyMin.cx = p->m_cxyMin.cy = 0;
+            p->m_cxyMax.cx = p->m_cxyMax.cy = 9999;
+
+
+            p->m_piFloatPercent.left = p->m_piFloatPercent.top = p->m_piFloatPercent.right = p->m_piFloatPercent.bottom = 0.0f;
+
+            p->call = ZuiDefaultControlProc;
+            return p;
+        }
+        return NULL;
     }
     case Proc_OnDestroy: {
         if (p->m_aAnime)
