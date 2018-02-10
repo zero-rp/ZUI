@@ -173,6 +173,10 @@ ZuiAny ZCALL Default_NotifyProc(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiA
 ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
     ZuiControl p;
     MsgBox_pRoot = NewZuiControl(L"MessageBox", NULL, rp, NULL);
+    if (!MsgBox_pRoot->m_pOs) {
+        FreeZuiControl(MsgBox_pRoot, FALSE);
+        return NULL;
+    }
 	ZuiControlRegNotify(MsgBox_pRoot, Default_NotifyProc);
     //取消最小化按钮
     p = ZuiControlFindName(MsgBox_pRoot, L"WindowCtl_min");
