@@ -1321,27 +1321,28 @@ ZuiVoid ZuiOsPostTask(ZuiTask task) {
 }
 ZEXPORT ZuiInt ZuiDoModel(ZuiControl cp)
 {
-	ZuiInt nRet;
-	HWND phwnd = GetWindowOwner((HWND)cp->m_pOs->m_hWnd);
-	SetWindowPos((HWND)cp->m_pOs->m_hWnd, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
-	//禁用掉父窗口
-	EnableWindow((HWND)phwnd, FALSE);
-	MSG Msg;
-	while (GetMessage(&Msg, NULL, 0, 0))
-	{
-		if (Msg.message == WM_APP + 1)
-		{
-			EnableWindow((HWND)phwnd, TRUE);
-			SetFocus((HWND)phwnd);
-		}
-		if (Msg.hwnd == (HWND)cp->m_pOs->m_hWnd || Msg.message == WM_PAINT || Msg.message == WM_TIMER) {
-			TranslateMessage(&Msg);
-			DispatchMessage(&Msg);
-		}
-		if (Msg.message == WM_QUIT) {
-			break;
-		}
-	}
+    ZuiInt nRet;
+    HWND chwnd = cp->m_pOs->m_hWnd;
+    HWND phwnd = GetWindowOwner((HWND)chwnd);
+    SetWindowPos((HWND)chwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+    //禁用掉父窗口
+    EnableWindow((HWND)phwnd, FALSE);
+    MSG Msg;
+    while (GetMessage(&Msg, NULL, 0, 0))
+    {
+        if (Msg.message == WM_APP + 1)
+        {
+            EnableWindow((HWND)phwnd, TRUE);
+            SetFocus((HWND)phwnd);
+        }
+        if (Msg.hwnd == (HWND)chwnd || Msg.message == WM_PAINT || Msg.message == WM_TIMER) {
+            TranslateMessage(&Msg);
+            DispatchMessage(&Msg);
+        }
+    if (Msg.message == WM_QUIT) {
+            break;
+        }
+    }
     //重新开启父窗口
     nRet = Msg.wParam;
     EnableWindow((HWND)phwnd, TRUE);
