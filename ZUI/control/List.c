@@ -81,7 +81,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) == (ZuiAny)Type_ListHeader) {
             if (p->m_pHeader != Param1 && ZuiControlCall(Proc_Layout_GetCount, p->m_pHeader, NULL, NULL, NULL) == 0) {
                 //删除原来的头元素
-                ZuiVerticalLayoutProc(Proc_Layout_Remove, cp, p->old_udata, p->m_pHeader, (ZuiAny)TRUE, NULL);
+                //ZuiVerticalLayoutProc(Proc_Layout_Remove, cp, p->old_udata, p->m_pHeader, (ZuiAny)TRUE, NULL);
                 FreeZuiControl(p->m_pHeader, FALSE);
                 p->m_pHeader = Param1;
 				if (cp->m_pOs != NULL)
@@ -94,7 +94,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) == (ZuiAny)Type_ListBody) {
             if (p->m_pList != Param1 && ZuiControlCall(Proc_Layout_GetCount, p->m_pList, NULL, NULL, NULL) == 0) {
                 //删除原来的表体
-                ZuiVerticalLayoutProc(Proc_Layout_Remove, cp, p->old_udata, p->m_pList, (ZuiAny)TRUE, NULL);
+                //(Proc_Layout_Remove, cp, p->old_udata, p->m_pList, (ZuiAny)TRUE, NULL);
                 FreeZuiControl(p->m_pList, FALSE);
                 p->m_pList = Param1;
                 if (cp->m_pOs != NULL)
@@ -125,7 +125,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) == (ZuiAny)Type_ListHeader) {
             if (p->m_pHeader != Param1 && ZuiControlCall(Proc_Layout_GetCount, p->m_pHeader, NULL, NULL, NULL) == 0) {
                 //删除原来的头元素
-                ZuiVerticalLayoutProc(Proc_Layout_Remove, cp, p->old_udata, p->m_pHeader, (ZuiAny)TRUE, NULL);
+                //ZuiVerticalLayoutProc(Proc_Layout_Remove, cp, p->old_udata, p->m_pHeader, (ZuiAny)TRUE, NULL);
 				FreeZuiControl(p->m_pHeader, FALSE);
                 p->m_pHeader = Param1;
 				if (cp->m_pOs != NULL)
@@ -168,24 +168,21 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
     }
     case Proc_List_Remove: {
         //判断删除的元素是否是表头控件
-        if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) == (ZuiAny)Type_ListHeader)
-            return ZuiVerticalLayoutProc(Proc_Layout_Remove, cp, p->old_udata, Param1, Param2, Param3);
+        //if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) == (ZuiAny)Type_ListHeader)
+        //    return ZuiVerticalLayoutProc(Proc_Layout_Remove, cp, p->old_udata, Param1, Param2, Param3);
         //判断删除的元素是否是表头元素
         if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) == (ZuiAny)Type_ListHeaderItem)
             return ZuiControlCall(Proc_Layout_Remove, p->m_pHeader, Param1, Param2, Param3);
         //判断删除的元素是否是表体控件
-        if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) == (ZuiAny)Type_ListBody)
-            return ZuiVerticalLayoutProc(Proc_Layout_Remove, cp, p->old_udata, Param1, Param2, Param3);
+        //if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) == (ZuiAny)Type_ListBody)
+        //    return ZuiVerticalLayoutProc(Proc_Layout_Remove, cp, p->old_udata, Param1, Param2, Param3);
         // 删除的元素是行数据
         int iIndex = -1;
         if (ZuiControlCall(Proc_GetType, Param1, NULL, NULL, NULL) == (ZuiAny)Type_ListElement) {
             iIndex = (int)ZuiControlCall(Proc_Layout_GetItemIndex, p->m_pList, Param1, 0, 0);
             if (iIndex == -1) return FALSE;
+            return ZuiControlCall(Proc_Layout_RemoveAt, p->m_pList, Param1, (ZuiAny)iIndex, NULL);
         }
-
-        if (!ZuiControlCall(Proc_Layout_RemoveAt, p->m_pList, Param1, (ZuiAny)iIndex, NULL))
-            return FALSE;
-
         //for (int i = iIndex; i < m_pList->GetCount(); ++i) {
         //    CControlUI* p = m_pList->GetItemAt(i);
         //    IListItemUI* pListItem = static_cast<IListItemUI*>(p->GetInterface(_T("ListItem")));
@@ -200,7 +197,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         //    SelectItem(FindSelectable(iSel, false));
         //}
         //else if (iIndex < m_iCurSel) m_iCurSel -= 1;
-        return (ZuiAny)TRUE;
+        break;
     }
     case Proc_List_RemoveAt: {
         //此调用只删除表数据,不影响表头
