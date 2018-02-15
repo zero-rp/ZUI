@@ -233,16 +233,13 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         return NULL;
     }
 	case Proc_OnClose: {
-		if (ZuiControlNotify(_T("onclose"), cp, 0, 0, 0)) {
-			ZuiOsPostMessage(cp, WM_APP+3, Param1, Param2);
-			ZuiOsAddDelayedCleanup(cp->m_pOs, cp);
-		}
+        ZuiControlNotify(_T("onclose"), cp, Param1, Param2, Param3);
 		return 0;
 	}
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
-		ZuiControlNotify(_T("ondestroy"), cp, 0, 0, 0);
+		ZuiControlNotify(_T("ondestroy"), cp, Param1, Param2, Param3);
 
 		if (cp->m_sName) {
 			ZWindows theNode = { 0 };

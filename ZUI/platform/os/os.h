@@ -99,12 +99,13 @@ ZuiVoid ZuiOsSetFocus(ZuiOsWindow p, ZuiControl pControl, ZuiBool bFocusWnd);
 //移除控件在系统层的对象
 ZuiVoid ZuiOsReapObjects(ZuiOsWindow p, ZuiControl pControl);
 //延迟销毁控件
-ZuiVoid ZuiOsAddDelayedCleanup(ZuiOsWindow p, ZuiControl pControl);
+ZuiVoid ZuiOsAddDelayedCleanup(ZuiControl pControl,ZuiAny Param1,ZuiAny Param2);
 //系统消息循环
 ZuiInt ZuiOsMsgLoop();
-ZEXPORT ZuiInt ZuiDoModel(ZuiAny chwnd);
+ZEXPORT ZuiVoid ZuiOsPostMessage(ZuiControl cp, ZuiAny Msg, ZuiAny Param1, ZuiAny Param2);
+ZEXPORT ZuiInt ZuiDoModel(ZuiControl cp);
 //退出系统消息循环
-ZuiVoid ZuiOsMsgLoopExit();
+ZuiVoid ZuiOsMsgLoopExit(int nRet);
 //投递一个任务到UI线程
 ZuiVoid ZuiOsPostTask(ZuiTask task);
 ZuiInt ZuiOsUtf8ToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen);

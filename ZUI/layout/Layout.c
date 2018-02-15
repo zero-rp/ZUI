@@ -4,7 +4,7 @@
 #include <core/builder.h>
 #include <stdlib.h>
 
-void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, void* Param2, void* Param3) {
+void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
     case Proc_FindControl: {
@@ -589,8 +589,8 @@ void* ZCALL ZuiLayoutProc(int ProcId, ZuiControl cp, ZuiLayout p, void* Param1, 
         int width = cp->m_rcItem.right - cp->m_rcItem.left - (cp->m_dwBorderWidth * 2);
         int height = cp->m_rcItem.bottom - cp->m_rcItem.top - (cp->m_dwBorderWidth * 2);
         ZRect rcCtrl = { 0 };
-        rcCtrl.left = cp->m_rcItem.left + width * pControl->m_piFloatPercent.left + szXY->cx;
-        rcCtrl.top = cp->m_rcItem.top + height * pControl->m_piFloatPercent.top + szXY->cy;
+        rcCtrl.left = width * pControl->m_piFloatPercent.left + szXY->cx;
+        rcCtrl.top = height * pControl->m_piFloatPercent.top + szXY->cy;
         rcCtrl.right = rcCtrl.left + width * pControl->m_piFloatPercent.right + sz.cx;
         rcCtrl.bottom = rcCtrl.top + height * pControl->m_piFloatPercent.bottom + sz.cy;
         ZuiControlCall(Proc_SetPos, pControl, &rcCtrl, FALSE, 0);
