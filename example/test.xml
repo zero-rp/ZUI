@@ -16,7 +16,7 @@
 							<ListHeaderItem text="Domain" listfont="font:size=14:bold=true" width="260" sepwidth="1"  listalign="right"  textcolor="#FFFFFFFF" sepcolor="#FF686868" normalcolor="#FF151515" hotcolor="#FF484848" pushedcolor="#FF686868"/>
 							<ListHeaderItem text="Description" font="1" width="240" sepwidth="1"  textcolor="#FFFFFFFF" sepcolor="#FF686868" normalcolor="#FF151515" hotcolor="#FF484848" pushedcolor="#FF686868"/>
 							<ListHeaderItem text="Domain" font="1" width="260" sepwidth="1"  textcolor="#FFFFFFFF" sepcolor="#FF686868" normalcolor="#FF151515" hotcolor="#FF484848" pushedcolor="#FF686868"/>
-							<ListHeaderItem text="Description" font="1" width="240" sepwidth="1"  textcolor="#FFFFFFFF" sepcolor="#FF686868" normalcolor="#FF151515" hotcolor="FF484848" pushedcolor="#FF686868"/>
+							<ListHeaderItem text="Description" font="1" width="240" sepwidth="1"  textcolor="#FFFFFFFF" sepcolor="#FF686868" normalcolor="#FF151515" hotcolor="#FF484848" pushedcolor="#FF686868"/>
 						</ListHeader>
 						<listbody  vscrollbar="true" hscrollbar="true"  sbbkcolor="#FF484848"  sbbdisablecolor="#FF00FF00" sbb2show="true" sbhsrc="0,0,16,16" sbvsrc="0,90,16,16">
 						<listelement height="24">
@@ -287,7 +287,7 @@
 					</List>
 		</VerticalLayout>
 		<NULL height="1" bkcolor="#9933cc"/>
-		<VerticalLayout height="23"><!--×´Ì¬À¸-->
-			<Button name="msgbox" text="¶Ô»°¿ò" textcolor="#FFFFFF"/>
+		<VerticalLayout height="23" calign="center"><!--×´Ì¬À¸-->
+			<Button name="msgbox" text="¶Ô»°¿ò" textcolor="#FFFFFF" width="100"/>
 		</VerticalLayout>
 </Window>
