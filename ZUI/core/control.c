@@ -1011,7 +1011,7 @@ ZEXPORT ZuiAny ZCALL ZuiControlNotify(ZuiText msg, ZuiControl p, ZuiAny Param1, 
     {
         return p->m_pNotify(msg, p, p->m_sUserData, Param1, Param2, Param3);
     }
-    return NULL;
+    return (ZuiAny)-1;
 }
 
 ZEXPORT ZuiVoid ZCALL ZuiControlRegNotify(ZuiControl p, ZNotifyProc pNotify) {

@@ -932,7 +932,7 @@ ZuiBool ZuiOsInitialize() {
     return TRUE;
 }
 ZuiBool ZuiOsUnInitialize() {
-
+    if (m_hUpdateRectPen) DeleteObject(m_hUpdateRectPen);
     return TRUE;
 }
 
@@ -998,8 +998,14 @@ ZuiVoid ZuiOsDestroyWindow(ZuiOsWindow OsWindow) {
 		OsWindow->m_hwndTooltip = NULL;
 	}
     SetWindowLong(OsWindow->m_hWnd, GWLP_WNDPROC, DefWindowProc);
+    if (OsWindow->m_hIMC) ImmReleaseContext(OsWindow->m_hWnd, OsWindow->m_hIMC);
+    if (OsWindow->m_hDcPaint) ReleaseDC(OsWindow->m_hWnd, OsWindow->m_hDcPaint);
     DestroyWindow(OsWindow->m_hWnd);
-	if (OsWindow->m_hDcOffscreen) ZuiDestroyGraphics(OsWindow->m_hDcOffscreen);
+    if (OsWindow->m_hDcOffscreen) ZuiDestroyGraphics(OsWindow->m_hDcOffscreen);
+    if (OsWindow->m_aTimers) darray_destroy(OsWindow->m_aTimers);
+    if (OsWindow->m_aPostPaintControls)  darray_destroy(OsWindow->m_aPostPaintControls);
+    if (OsWindow->m_aFoundControls)  darray_destroy(OsWindow->m_aFoundControls);
+    if (OsWindow->m_aDelayedCleanup)  darray_destroy(OsWindow->m_aDelayedCleanup);
     free(OsWindow);
 }
 ZuiBool ZuiOsSetWindowTitle(ZuiOsWindow OsWindow, ZuiText Title) {
@@ -1335,11 +1341,11 @@ ZEXPORT ZuiInt ZuiDoModel(ZuiControl cp)
             EnableWindow((HWND)phwnd, TRUE);
             SetFocus((HWND)phwnd);
         }
-        if (Msg.hwnd == (HWND)chwnd || Msg.message == WM_PAINT || Msg.message == WM_TIMER) {
+        //if (Msg.hwnd == (HWND)chwnd || Msg.message == WM_PAINT || Msg.message == WM_TIMER) {
             TranslateMessage(&Msg);
             DispatchMessage(&Msg);
-        }
-    if (Msg.message == WM_QUIT) {
+        //}
+        if (Msg.message == WM_QUIT) {
             break;
         }
     }
