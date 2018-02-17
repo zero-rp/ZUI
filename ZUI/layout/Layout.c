@@ -396,6 +396,12 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
         }
         break;
     }
+    case Proc_Layout_GetChildVAlign: {
+        return (ZuiAny)p->m_iChildVAlign;
+    }
+    case Proc_Layout_GetChildAlign: {
+        return (ZuiAny)p->m_iChildAlign;
+    }
     case Proc_SetAttribute: {
         if (wcscmp(Param1, _T("inset")) == 0) {
             ZRect rcInset = { 0 };
@@ -405,6 +411,38 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
             rcInset.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
             rcInset.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
             ZuiControlCall(Proc_Layout_SetInset, cp, &rcInset, NULL, NULL);
+        }
+        else if (wcscmp(Param1, L"cvalign") == 0) {
+            //纵向对齐方式
+            if (wcscmp(Param2, L"top") == 0) {
+                p->m_iChildVAlign &= ~(ZDT_BOTTOM | ZDT_VCENTER);
+                p->m_iChildVAlign |= ZDT_TOP;
+            }
+            if (wcscmp(Param2, L"vcenter") == 0) {
+                p->m_iChildVAlign &= ~(ZDT_TOP | ZDT_BOTTOM);
+                p->m_iChildVAlign |= ZDT_VCENTER;
+            }
+            if (wcscmp(Param2, L"bottom") == 0) {
+                p->m_iChildVAlign &= ~(ZDT_TOP | ZDT_VCENTER);
+                p->m_iChildVAlign |= ZDT_BOTTOM;
+            }
+            ZuiControlNeedUpdate(cp);
+        }
+        else if (wcscmp(Param1, L"calign") == 0) {
+            //横向对齐方式
+            if (wcscmp(Param2, L"left") == 0) {
+                p->m_iChildAlign &= ~(ZDT_RIGHT | ZDT_CENTER);
+                p->m_iChildAlign |= ZDT_LEFT;
+            }
+            if (wcscmp(Param2, L"center") == 0) {
+                p->m_iChildAlign &= ~(ZDT_LEFT | ZDT_RIGHT);
+                p->m_iChildAlign |= ZDT_CENTER;
+            }
+            if (wcscmp(Param2, L"right") == 0) {
+                p->m_iChildAlign &= ~(ZDT_LEFT | ZDT_CENTER);
+                p->m_iChildAlign |= ZDT_RIGHT;
+            }
+            ZuiControlNeedUpdate(cp);
         }
         else if (wcscmp(Param1, _T("vscrollbar")) == 0) {
             ZuiControlCall(Proc_Layout_EnableScrollBar, cp, (ZuiAny)(_tcscmp(Param2, _T("true")) == 0), (ZuiAny)(ZuiControlCall(Proc_Layout_GetHorizontalScrollBar, cp, NULL, NULL, NULL) != NULL), NULL);
