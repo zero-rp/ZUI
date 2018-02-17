@@ -96,7 +96,7 @@ void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Pa
         break;
     }
 #endif
-    case Proc_TabLayout_Add: {
+    case Proc_Layout_Add: {
         ZuiBool ret = (ZuiBool)ZuiLayoutProc(Proc_Layout_Add, cp, p->old_udata, Param1, Param2, Param3);
         if (!ret)
             return (ZuiAny)ret;
@@ -112,7 +112,7 @@ void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Pa
 
         return (ZuiAny)ret;
     }
-    case Proc_TabLayout_AddAt: {
+    case Proc_Layout_AddAt: {
         ZuiBool ret = (ZuiBool)ZuiLayoutProc(Proc_Layout_AddAt, cp, p->old_udata, Param1, Param2, Param3);
         if (!ret)
             return (ZuiAny)ret;
@@ -132,7 +132,7 @@ void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Pa
 
         return (ZuiAny)ret;
     }
-    case Proc_TabLayout_Remove: {
+    case Proc_Layout_Remove: {
         if (Param1 == NULL)
             return FALSE;
 
@@ -159,7 +159,7 @@ void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Pa
 
         return (ZuiAny)1;
     }
-    case Proc_TabLayout_RemoveAll: {
+    case Proc_Layout_RemoveAll: {
         p->m_iCurSel = -1;
         ZuiLayoutProc(Proc_Layout_RemoveAll, cp, p->old_udata, Param1, Param2, Param3);
         ZuiControlNeedParentUpdate(cp);
