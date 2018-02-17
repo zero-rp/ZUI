@@ -516,8 +516,8 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
             if ((ZuiControl)(p->m_items->data[it]) == (ZuiControl)Param1) {
                 ZuiControlNeedUpdate(cp);
 				darray_delete(p->m_items, it);
-                if (!Param2)
-                    FreeZuiControl((ZuiControl)Param1, FALSE);
+                //if (!Param2)
+                //   FreeZuiControl((ZuiControl)Param1, FALSE);
 				return (ZuiAny)TRUE;
             }
         }

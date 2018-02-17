@@ -372,7 +372,12 @@ enum ZREST
 #define Proc_TileLayout_SetColumns      150
 #define Proc_TileLayout_SetItemSize     151
 //--------Tab
-#define Proc_TabLayout_SelectItem       151    //当前Tab
+#define Proc_TabLayout_SelectItem       161    //当前Tab
+#define Proc_TabLayout_Add              162
+#define Proc_TabLayout_AddAt            163
+#define Proc_TabLayout_Remove           164
+#define Proc_TabLayout_RemoveAt         165
+#define Proc_TabLayout_RemoveAll        166
 
 #if 1
 #define Type_Label                  0xe538ac26
