@@ -409,6 +409,7 @@ ZEXPORT ZuiAny ZCALL ZuiTreeNodeProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeNode p
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
         old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        if (p->mTreeNodes) darray_destroy(p->mTreeNodes);
         free(p);
 
         return 0;
