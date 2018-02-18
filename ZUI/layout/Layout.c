@@ -868,9 +868,6 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
                 return 0;   //垂直滚动条在 重新布局中刷新，本次数据计算垂直滚动条已经不正确。
                 //break;
             }
-            else if(cxRequired <= rc->right - rc->left){
-                ZuiControlCall(Proc_SetVisible, p->m_pHorizontalScrollBar, (ZuiAny)FALSE, NULL, NULL);
-            }
 
             if (!p->m_pHorizontalScrollBar->m_bVisible) break;
 
@@ -881,6 +878,7 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
                 ZuiControlCall(Proc_ScrollBar_SetScrollPos, p->m_pHorizontalScrollBar, 0, NULL, NULL);
                 ZuiControlCall(Proc_ScrollBar_SetScrollRange, p->m_pHorizontalScrollBar, 0, NULL, NULL);
                 ZuiControlCall(Proc_SetPos, cp, &cp->m_rcItem, FALSE, 0);
+                return 0;
             }
             else
             {
