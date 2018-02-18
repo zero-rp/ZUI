@@ -854,9 +854,6 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
         ZRect *rc = Param1;
         int cxRequired = (int)Param2;
         int cyRequired = (int)Param3;
-        ZuiBool bVbarVisible = 0;
-        if (p->m_pVerticalScrollBar)
-            bVbarVisible = p->m_pVerticalScrollBar->m_bVisible;
 
         while (p->m_pHorizontalScrollBar)
         {
@@ -868,7 +865,11 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
                 p->m_bScrollProcess = TRUE;
                 ZuiControlCall(Proc_SetPos, cp, &cp->m_rcItem, FALSE, 0);
                 p->m_bScrollProcess = FALSE;
-                break;
+                return 0;   //垂直滚动条在 重新布局中刷新，本次数据计算垂直滚动条已经不正确。
+                //break;
+            }
+            else if(cxRequired <= rc->right - rc->left){
+                ZuiControlCall(Proc_SetVisible, p->m_pHorizontalScrollBar, (ZuiAny)FALSE, NULL, NULL);
             }
 
             if (!p->m_pHorizontalScrollBar->m_bVisible) break;
@@ -903,7 +904,7 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
 
         while (p->m_pVerticalScrollBar)
         {
-            if (cyRequired > rc->bottom - rc->top && !bVbarVisible) {
+            if (cyRequired > rc->bottom - rc->top && !p->m_pVerticalScrollBar->m_bVisible) {
                 ZuiControlCall(Proc_SetVisible, p->m_pVerticalScrollBar, (ZuiAny)TRUE, NULL, NULL);
                 ZuiControlCall(Proc_ScrollBar_SetScrollRange, p->m_pVerticalScrollBar, (ZuiAny)(cyRequired - (rc->bottom - rc->top)), NULL, NULL);
                 ZuiControlCall(Proc_ScrollBar_SetScrollPos, p->m_pVerticalScrollBar, 0, NULL, NULL);
@@ -913,7 +914,7 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
                 break;
             }
             // No scrollbar required
-            if (!bVbarVisible) break;
+            if (!p->m_pVerticalScrollBar->m_bVisible) break;
 
             // Scroll not needed anymore?
             int cyScroll = cyRequired - (rc->bottom - rc->top);

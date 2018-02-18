@@ -287,7 +287,9 @@
 					</List>
 		</VerticalLayout>
 		<NULL height="1" bkcolor="#9933cc"/>
-		<VerticalLayout height="23" calign="center"><!--×´Ì¬À¸-->
-			<Button name="msgbox" text="¶Ô»°¿ò" textcolor="#FFFFFF" width="100"/>
+		<VerticalLayout  vscrollbar="true" hscrollbar="true" calign="center" sbbkcolor="#FF484848"><!--×´Ì¬À¸-->
+			<NULL height="100" width="2000"/>
+			<Button name="msgbox" text="¶Ô»°¿ò" textcolor="#FFFFFF" width="100" height="23"/>
+			<NULL height="100" width="2000"/>
 		</VerticalLayout>
 </Window>
