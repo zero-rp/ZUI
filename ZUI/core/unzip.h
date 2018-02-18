@@ -4,7 +4,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#    define OF(args)  args
+#define OF(args)  args
 
 typedef void* unzFile;
 typedef unsigned long  uLong; /* 32 bits or more */
