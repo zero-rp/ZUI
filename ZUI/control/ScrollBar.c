@@ -690,7 +690,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 memset(&p->m_rcThumb, 0, sizeof(p->m_rcThumb));
             }
         }
-        break;
+        return 0;
     }
     case Proc_ScrollBar_SetHorizontal: {
         if (p->m_bHorizontal == (ZuiBool)Param1) return 0;
