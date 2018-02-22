@@ -412,7 +412,7 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
             rcInset.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
             ZuiControlCall(Proc_Layout_SetInset, cp, &rcInset, NULL, NULL);
         }
-        else if (wcscmp(Param1, L"cvalign") == 0) {
+        else if (wcscmp(Param1, L"valign") == 0) {
             //纵向对齐方式
             if (wcscmp(Param2, L"top") == 0) {
                 p->m_iChildVAlign &= ~(ZDT_BOTTOM | ZDT_VCENTER);
@@ -428,7 +428,7 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
             }
             ZuiControlNeedUpdate(cp);
         }
-        else if (wcscmp(Param1, L"calign") == 0) {
+        else if (wcscmp(Param1, L"align") == 0) {
             //横向对齐方式
             if (wcscmp(Param2, L"left") == 0) {
                 p->m_iChildAlign &= ~(ZDT_RIGHT | ZDT_CENTER);
@@ -450,57 +450,21 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
         else if (wcscmp(Param1, _T("hscrollbar")) == 0) {
             ZuiControlCall(Proc_Layout_EnableScrollBar, cp, (ZuiAny)(ZuiControlCall(Proc_Layout_GetVerticalScrollBar, cp, NULL, NULL, NULL) != NULL), (ZuiAny)((_tcscmp(Param2, _T("true"))) == 0), NULL);
         }
-        else if (wcscmp(Param1, _T("sbbkcolor")) == 0) {
+        else if ((wcscmp(Param1, _T("sbbkcolor")) == 0) ||
+                (wcscmp(Param1, _T("sbtnormalcolor")) == 0) ||
+                (wcscmp(Param1, _T("sbthotcolor")) == 0) ||
+                (wcscmp(Param1, _T("sbtpushcolor")) == 0) ||
+                (wcscmp(Param1, _T("sbbnormalcolor")) == 0) ||
+                (wcscmp(Param1, _T("sbbhotcolor")) == 0) ||
+                (wcscmp(Param1, _T("sbbpushcolor")) == 0) ||
+                (wcscmp(Param1, _T("sbdisablecolor")) == 0) ||
+                (wcscmp(Param1, _T("sbb1show")) == 0) ||
+                (wcscmp(Param1, _T("sbb2show")) == 0) ||
+                (wcscmp(Param1, _T("sbimageres")) == 0) ||
+                (wcscmp(Param1, _T("sbvsrc")) == 0) ||
+                (wcscmp(Param1, _T("sbhsrc")) == 0)){
                 ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
                 ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
-        }
-        else if (wcscmp(Param1, _T("sbtnormalcolor")) == 0) {
-                ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
-                ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
-        }
-        else if (wcscmp(Param1, _T("sbthotcolor")) == 0) {
-                ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
-                ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
-        }
-        else if (wcscmp(Param1, _T("sbtpushcolor")) == 0) {
-                ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
-                ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
-        }
-        else if (wcscmp(Param1, _T("sbbnormalcolor")) == 0) {
-                ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
-                ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
-        }
-        else if (wcscmp(Param1, _T("sbbhotcolor")) == 0) {
-                ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
-                ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
-        }
-        else if (wcscmp(Param1, _T("sbbpushcolor")) == 0) {
-                ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
-                ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
-        }
-        else if (wcscmp(Param1, _T("sbdisablecolor")) == 0) {
-                ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
-                ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
-        }
-        else if (wcscmp(Param1, _T("sbb1show")) == 0) {
-                ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
-                ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
-        }
-        else if (wcscmp(Param1, _T("sbb2show")) == 0) {
-                ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
-                ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
-        }
-        else if (wcscmp(Param1, _T("sbimageres")) == 0) {
-            ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
-            ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
-        }
-        else if (wcscmp(Param1, _T("sbvsrc")) == 0) {
-            ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
-            ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
-        }
-        else if (wcscmp(Param1, _T("sbhsrc")) == 0) {
-            ZuiControlCall(ProcId, p->m_pVerticalScrollBar, Param1, Param2, Param3);
-            ZuiControlCall(ProcId, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
         }
         break;
     }
