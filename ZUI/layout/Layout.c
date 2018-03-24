@@ -69,7 +69,7 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
         //这里是所有绘制的调度中心
         ZRect rcTemp = { 0 };
         //ZuiRect rc = Param2;
-        if (!IntersectRect(&rcTemp, (ZRect *)Param2, &cp->m_rcItem))
+        if (!IntersectRect((LPRECT)&rcTemp, (const RECT *)Param2, (const RECT *)&cp->m_rcItem))
             //不在绘制区域
             return 0;
         //保存原始剪裁区
@@ -91,14 +91,14 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
             if (p->m_pVerticalScrollBar && p->m_pVerticalScrollBar->m_bVisible) rc.right -= (ZuiInt)ZuiControlCall(Proc_GetFixedWidth, p->m_pVerticalScrollBar, NULL, NULL, NULL);
             if (p->m_pHorizontalScrollBar && p->m_pHorizontalScrollBar->m_bVisible) rc.bottom -= (ZuiInt)ZuiControlCall(Proc_GetFixedHeight, p->m_pHorizontalScrollBar, NULL, NULL, NULL);
 
-            if (!IntersectRect(&rcTemp, (ZRect *)Param2, &rc)) {
+            if (!IntersectRect((LPRECT)&rcTemp, (const RECT *)Param2, (const RECT *)&rc)) {
                 for (int it = 0; it < darray_len(p->m_items); it++) {
                     ZuiControl pControl = (ZuiControl)(p->m_items->data[it]);
                     if (!pControl->m_bVisible) continue;
-                    if (!IntersectRect(&rcTemp, (ZRect *)Param2, (ZRect *)ZuiControlCall(Proc_GetPos, pControl, 0, 0, 0))) continue;
+                    if (!IntersectRect((LPRECT)&rcTemp, (const RECT *)Param2, (const RECT *)ZuiControlCall(Proc_GetPos, pControl, 0, 0, 0))) continue;
                     if (pControl->m_bFloat) {
-                        if (!IntersectRect(&rcTemp, &cp->m_rcItem, (ZRect *)ZuiControlCall(Proc_GetPos, pControl, 0, 0, 0))) continue;
-                        IntersectRect(&rcTemp, (ZRect *)Param2, &pControl->m_rcItem);
+                        if (!IntersectRect((LPRECT)&rcTemp, (const RECT *)&cp->m_rcItem, (const RECT *)ZuiControlCall(Proc_GetPos, pControl, 0, 0, 0))) continue;
+                        IntersectRect((LPRECT)&rcTemp, (const RECT *)Param2, (const RECT *)&pControl->m_rcItem);
                         MAKEZRECT(rcClip, rcTemp.left, rcTemp.top, rcTemp.right, rcTemp.bottom);
                         ZuiGraphicsSetClipBox((ZuiGraphics)Param1, &rcClip);
                         ZuiControlCall(Proc_OnPaint, pControl, Param1, &rcTemp, Param3);
@@ -116,11 +116,11 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
                 for (int it = 0; it < darray_len(p->m_items); it++) {
                     ZuiControl pControl = (ZuiControl)(p->m_items->data[it]);
                     if (!pControl->m_bVisible) continue;
-                    if (!IntersectRect(&rcTemp, (ZRect *)Param2, (ZRect *)ZuiControlCall(Proc_GetPos, pControl, 0, 0, 0))) continue;
+                    if (!IntersectRect((LPRECT)&rcTemp, (const RECT *)Param2, (const RECT *)ZuiControlCall(Proc_GetPos, pControl, 0, 0, 0))) continue;
                     if (pControl->m_bFloat) {
-                        if (!IntersectRect(&rcTemp, (ZRect *)Param2, (ZRect *)ZuiControlCall(Proc_GetPos, pControl, 0, 0, 0)))
+                        if (!IntersectRect((LPRECT)&rcTemp, (const RECT *)Param2, (const RECT *)ZuiControlCall(Proc_GetPos, pControl, 0, 0, 0)))
                             continue;
-                        IntersectRect(&rcTemp, (ZRect *)Param2, &pControl->m_rcItem);
+                        IntersectRect((LPRECT)&rcTemp, (const RECT *)Param2, (const RECT *)&pControl->m_rcItem);
                         MAKEZRECT(rcClip, rcTemp.left, rcTemp.top, rcTemp.right, rcTemp.bottom);
                         ZuiGraphicsSetClipBox((ZuiGraphics)Param1, &rcClip);
                         if (pControl->m_aAnime)
@@ -130,11 +130,11 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
                         ZuiGraphicsSetClipBox((ZuiGraphics)Param1, &OldBox_child);
                     }
                     else {
-                        if (!IntersectRect(&rcTemp, &rc, (ZRect *)ZuiControlCall(Proc_GetPos, pControl, 0, 0, 0))) continue;
+                        if (!IntersectRect((LPRECT)&rcTemp, (const RECT *)&rc, (const RECT *)ZuiControlCall(Proc_GetPos, pControl, 0, 0, 0))) continue;
                         if (pControl->m_aAnime)
                             pControl->m_aAnime->OnPaint(pControl, Param1, Param2);
                         else {
-                            IntersectRect(&rcTemp, (ZRect *)Param2, &rcTemp);
+                            IntersectRect((LPRECT)&rcTemp, (const RECT *)Param2, (const RECT *)&rcTemp);
                             MAKEZRECT(rcClip, rcTemp.left, rcTemp.top, rcTemp.right, rcTemp.bottom);
                             ZuiGraphicsSetClipBox((ZuiGraphics)Param1, &rcClip);
                             ZuiControlCall(Proc_OnPaint, pControl, Param1, &rcTemp, Param3);
@@ -148,13 +148,13 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
         }
         //绘制滚动条
         if (p->m_pVerticalScrollBar != NULL && p->m_pVerticalScrollBar->m_bVisible) {
-            if (IntersectRect(&rcTemp, Param2, (ZRect *)ZuiControlCall(Proc_GetPos, p->m_pVerticalScrollBar, 0, 0, 0))) {
+            if (IntersectRect((LPRECT)&rcTemp, (const RECT *)Param2, (const RECT *)ZuiControlCall(Proc_GetPos, p->m_pVerticalScrollBar, 0, 0, 0))) {
                 ZuiControlCall(Proc_OnPaint, p->m_pVerticalScrollBar, Param1, Param2, Param3);
             }
         }
 
         if (p->m_pHorizontalScrollBar != NULL && p->m_pHorizontalScrollBar->m_bVisible) {
-            if (IntersectRect(&rcTemp, Param2, (ZRect *)ZuiControlCall(Proc_GetPos, p->m_pHorizontalScrollBar, 0, 0, 0))) {
+            if (IntersectRect((LPRECT)&rcTemp, (const RECT *)Param2, (const RECT *)ZuiControlCall(Proc_GetPos, p->m_pHorizontalScrollBar, 0, 0, 0))) {
                 ZuiControlCall(Proc_OnPaint, p->m_pHorizontalScrollBar, Param1, Param2, Param3);
             }
         }
@@ -411,6 +411,9 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
             rcInset.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
             rcInset.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
             ZuiControlCall(Proc_Layout_SetInset, cp, &rcInset, NULL, NULL);
+        }
+        else if (wcscmp(Param1, L"stepsize") == 0) {
+            ZuiControlCall(Proc_Layout_SetScrollStepSize, cp, (ZuiAny)(_wtoi(Param2)), NULL, NULL);
         }
         else if (wcscmp(Param1, L"valign") == 0) {
             //纵向对齐方式

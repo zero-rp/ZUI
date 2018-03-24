@@ -304,10 +304,10 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
                     wport = _wtoi(prot);
                     //解析端口
                 }
-                HINTERNET hInet = InternetOpen(L"ZuiHttp", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, NULL);
+                HINTERNET hInet = InternetOpen(L"ZuiHttp", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
                 if (hInet)
                 {
-                    HINTERNET  hConnect = InternetConnect(hInet, host, wport, NULL, NULL, INTERNET_SERVICE_HTTP, 0, NULL);
+                    HINTERNET  hConnect = InternetConnect(hInet, host, wport, NULL, NULL, INTERNET_SERVICE_HTTP, 0, 0);
                     if (hConnect)
                     {
                         HINTERNET hOpenRequest = 0;
@@ -341,7 +341,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
         /*PE*/else if (db->type == ZRESDBT_PE)
         {
             //定位我们的自定义资源，这里因为我们是从本模块定位资源，所以将句柄简单地置为NULL即可
-            HRSRC hRsrc = FindResource(db->Instance, _wtoi(arr[2]), arr[1]);
+            HRSRC hRsrc = FindResource(db->Instance, (LPCWSTR)_wtoi(arr[2]), arr[1]);
             if (hRsrc) {
                 //获取资源的大小
                 buflen = SizeofResource(db->Instance, hRsrc);
@@ -479,7 +479,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
                         }
                     }
                 }
-                res->p = ZuiCreateFont(name, size, bold, italic);
+                res->p = ZuiCreateFont(name, (ZuiReal)size, bold, italic);
             }
             if (!res->p) {
                 free(res);

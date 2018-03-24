@@ -81,26 +81,26 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         return (ZuiAny)ZuiOsSetWindowRestor(p->m_osWindow);
     }
     case Proc_Window_SetMinInfo: {
-        cp->m_pOs->m_szMinWindow.cx = Param1;
-        cp->m_pOs->m_szMinWindow.cy = Param2;
+        cp->m_pOs->m_szMinWindow.cx = (LONG)Param1;
+        cp->m_pOs->m_szMinWindow.cy = (LONG)Param2;
         break;
     }
     case Proc_Window_SetMaxInfo: {
-        cp->m_pOs->m_szMaxWindow.cx = Param1;
-        cp->m_pOs->m_szMaxWindow.cy = Param2;
+        cp->m_pOs->m_szMaxWindow.cx = (LONG)Param1;
+        cp->m_pOs->m_szMaxWindow.cy = (LONG)Param2;
         break;
     }
     case Proc_Window_SetSize: {
-        return (ZuiAny)(ZuiOsSetWindowSize(p->m_osWindow, Param1, Param2));
+        return (ZuiAny)(ZuiOsSetWindowSize(p->m_osWindow, (ZuiUInt)Param1, (ZuiUInt)Param2));
     }
     case Proc_Window_SetNoBox: {
-        return (ZuiAny)(ZuiOsSetWindowNoBox(p->m_osWindow, Param1));
+        return (ZuiAny)(ZuiOsSetWindowNoBox(p->m_osWindow, (ZuiBool)Param1));
     }
     case Proc_Window_SetComBo: {
-        return (ZuiAny)(ZuiOsSetWindowComBo(p->m_osWindow, Param1));
+        return (ZuiAny)(ZuiOsSetWindowComBo(p->m_osWindow, (ZuiBool)Param1));
     }
     case Proc_Window_SetToolWindow: {
-        return (ZuiAny)(ZuiOsSetWindowTool(p->m_osWindow, Param1));
+        return (ZuiAny)(ZuiOsSetWindowTool(p->m_osWindow, (ZuiBool)Param1));
     }
     case Proc_Window_Popup: {
         cp->m_bVisible = TRUE;
@@ -167,7 +167,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
                 n->key = Zui_Hash(Param2);
                 n->p = cp;
                 RB_INSERT(_ZWindows_Tree, m_window, n);
-                cp->m_sName = wcsdup(Param2);
+                cp->m_sName = _wcsdup(Param2);
         }
         else if (wcscmp(Param1, L"center") == 0) {
             if (wcscmp(Param2, L"true") == 0) {
@@ -233,8 +233,8 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         return NULL;
     }
 	case Proc_OnClose: {
-        if (ZuiControlNotify(_T("onclose"), cp, Param1, Param2, Param3) == -1) { //未设置控件m_pNotify的默认处理。
-            ZuiOsAddDelayedCleanup(p, Param1, Param2);
+        if ((int)ZuiControlNotify(_T("onclose"), cp, Param1, Param2, Param3) == -1) { //未设置控件m_pNotify的默认处理。
+            ZuiOsAddDelayedCleanup(cp, Param1, Param2);
         }
 		return 0;
 	}

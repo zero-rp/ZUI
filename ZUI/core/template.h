@@ -11,7 +11,7 @@ typedef struct _ZTemplate
     ZuiUInt key;
 }*ZuiTemplate, ZTemplate;
 RB_HEAD(_ZTemplate_Tree, _ZTemplate);
-RB_PROTOTYPE(_ZTemplate_Tree, _ZTemplate);
+RB_PROTOTYPE(_ZTemplate_Tree, _ZTemplate,,);
 
 extern struct _ZTemplate_Tree *Global_TemplateClass;
 
