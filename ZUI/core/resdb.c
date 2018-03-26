@@ -275,7 +275,7 @@ ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type) {
                     parseptr2++;
                 }
                 parseptr1 = wcschr(parseptr2, L':');
-                parseptr1 = NULL;
+                //parseptr1 = NULL;
                 if (NULL == parseptr1)//判断有无端口号
                 {
                     parseptr1 = wcschr(parseptr2, L'/');
