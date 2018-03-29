@@ -615,6 +615,7 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
             cx = (ZuiInt)ZuiControlCall(Proc_ScrollBar_GetScrollPos, op->m_pHorizontalScrollBar, NULL, NULL, NULL) - iLastScrollPos;
         }
 
+        if (cx == 0 && cy == 0) return 0;
         ZRect rcPos;
 
         if (p->m_pOwner) {
