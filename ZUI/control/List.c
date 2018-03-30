@@ -330,7 +330,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         //创建表头
         p->m_pHeader = NewZuiControl(L"ListHeader", NULL, NULL, NULL);
         ZuiVerticalLayoutProc(Proc_Layout_Add, cp, p->old_udata, p->m_pHeader, NULL, NULL);
-        ZuiControlCall(Proc_SetColor, p->m_pHeader, BK_Color,(ZuiAny)ARGB(255, 111, 222, 200), NULL);
+        ZuiControlCall(Proc_SetColor, p->m_pHeader, (ZuiAny)BK_Color,(ZuiAny)ARGB(255, 111, 222, 200), NULL);
         //创建表主体
         p->m_pList = NewZuiControl(L"ListBody", NULL, NULL, NULL);
         ZuiVerticalLayoutProc(Proc_Layout_Add, cp, p->old_udata, p->m_pList, NULL, NULL);
@@ -385,9 +385,9 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
         if (!ZuiVerticalLayoutProc(Proc_Layout_AddAt, cp,p->old_udata, Param1, Param2, NULL)) return FALSE;
         ZuiControlCall(Proc_ListElement_SetOwner, Param1, cp, NULL, NULL);
         ZuiControlCall(Proc_ListElement_SetIndex, Param1, Param2, NULL, NULL);
-        int j = ZuiControlCall(Proc_List_GetCount, cp, NULL, NULL, NULL);
+        int j = (int)ZuiControlCall(Proc_List_GetCount, cp, NULL, NULL, NULL);
         for (int index = (int)Param2 + 1; index < j; index++) {
-            ZuiControl pControl = ZuiControlCall(Proc_Layout_GetItemAt,cp,index,NULL,NULL);
+            ZuiControl pControl = ZuiControlCall(Proc_Layout_GetItemAt,cp, (ZuiAny)index,NULL,NULL);
             if(pControl)
                 ZuiControlCall(Proc_ListElement_SetIndex, pControl, (ZuiAny)index, NULL, NULL);
         }
@@ -396,9 +396,9 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
     case Proc_Layout_RemoveAt:
     {
         if (!ZuiVerticalLayoutProc(Proc_Layout_RemoveAt, cp, p->old_udata, Param1, Param2, NULL)) return FALSE;
-        int j = ZuiControlCall(Proc_List_GetCount, cp, NULL, NULL, NULL);
+        int j = (int)ZuiControlCall(Proc_List_GetCount, cp, NULL, NULL, NULL);
         for (int index = (int)Param2; index < j; index++) {
-            ZuiControl pControl = ZuiControlCall(Proc_Layout_GetItemAt, cp, index, NULL, NULL);
+            ZuiControl pControl = ZuiControlCall(Proc_Layout_GetItemAt, cp, (ZuiAny)index, NULL, NULL);
             if (pControl)
                 ZuiControlCall(Proc_ListElement_SetIndex, pControl, (ZuiAny)index, NULL, NULL);
         }
@@ -615,6 +615,7 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
             cx = (ZuiInt)ZuiControlCall(Proc_ScrollBar_GetScrollPos, op->m_pHorizontalScrollBar, NULL, NULL, NULL) - iLastScrollPos;
         }
 
+        if (cx == 0 && cy == 0) return 0;
         ZRect rcPos;
 
         if (p->m_pOwner) {
@@ -831,7 +832,7 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
                     rc.bottom -= (ZuiInt)ZuiControlCall(Proc_GetFixedHeight, pParentContainer->m_pHorizontalScrollBar, NULL, NULL, NULL);
 
                 ZRect invalidateRc = cp->m_rcItem;
-                if (!IntersectRect(&invalidateRc, (LPRECT)&cp->m_rcItem, &rc))
+                if (!IntersectRect((LPRECT)&invalidateRc, (const RECT *)&cp->m_rcItem, (const RECT *)&rc))
                 {
                     return 0;
                 }
@@ -843,7 +844,7 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
                 {
                     rcTemp = invalidateRc;
                     rcParent = (ZRect *)ZuiControlCall(Proc_GetPos, pParent, NULL, NULL, NULL);
-                    if (!IntersectRect(&invalidateRc, (LPRECT)&rcTemp, rcParent))
+                    if (!IntersectRect((LPRECT)&invalidateRc, (const RECT *)&rcTemp, (const RECT *)rcParent))
                     {
                         return 0;
                     }
@@ -1075,7 +1076,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderProc(ZuiInt ProcId, ZuiControl cp, ZuiListHead
         //创建继承的控件 保存数据指针
         p->old_udata = ZuiHorizontalLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
         p->old_call = (ZCtlProc)&ZuiHorizontalLayoutProc;
-		cp->m_BkgColor= ARGB(255, 255, 255, 255);
+		//cp->m_BkgColor= ARGB(255, 255, 255, 255);
 
         return p;
     }
@@ -1194,10 +1195,10 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
             else
                 rcSeparator->right += 4;
             if (cp->m_bEnabled && p->m_bDragable && PtInRect((LPRECT)rcSeparator, *(POINT *)&event->ptMouse)) {
-				ZuiOsSetCursor(IDC_SIZEWE);
+				ZuiOsSetCursor((ZuiUInt)IDC_SIZEWE);
                 return 0;
             }
-			ZuiOsSetCursor(IDC_ARROW);
+			ZuiOsSetCursor((ZuiUInt)IDC_ARROW);
         }
         if (event->Type == ZEVENT_MOUSEENTER)
         {

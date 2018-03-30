@@ -79,7 +79,7 @@ ZuiBool ZuiControlRegisterAdd(ZuiText name, ZCtlProc Proc)
         ZText _name[256];
         memset(_name, 0, sizeof(_name));
         wcsncpy(_name, name, 256);
-        wcslwr(_name);
+        _wcslwr(_name);
         n->key = Zui_Hash(_name);
         n->cb = Proc;
         RB_INSERT(_ZClass_Tree, Global_ControlClass, n);

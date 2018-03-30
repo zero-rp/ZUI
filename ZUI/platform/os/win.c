@@ -497,7 +497,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             GetWindowRect(p->m_hWnd, &rcWnd);
             if (!IsIconic(p->m_hWnd) && GetActiveWindow() == p->m_hWnd && ZuiIsPointInRect((ZuiRect)&rcWnd, &pt)) {
                 if (SendMessage(p->m_hWnd, WM_NCHITTEST, 0, MAKELPARAM(pt.x, pt.y)) == HTCLIENT) {
-                    ScreenToClient(p->m_hWnd, &pt);
+                    ScreenToClient(p->m_hWnd, (LPPOINT)&pt);
                     SendMessage(p->m_hWnd, WM_MOUSEMOVE, 0, MAKELPARAM(pt.x, pt.y));
                 }
                 else
@@ -683,7 +683,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         if (p->m_pRoot == NULL) break;
         if (p->m_bMouseCapture) break;
         ZPoint pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
-        ScreenToClient(p->m_hWnd, &pt);
+        ScreenToClient(p->m_hWnd, (LPPOINT)&pt);
         p->m_ptLastMousePos = pt;
         if (p->m_pEventClick == NULL) break;
         TEventUI event = { 0 };
@@ -701,7 +701,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     {
         if (p->m_pRoot == NULL) break;
         ZPoint pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
-        ScreenToClient(p->m_hWnd, &pt);
+        ScreenToClient(p->m_hWnd, (LPPOINT)&pt);
         p->m_ptLastMousePos = pt;
         ZuiControl pControl = NULL;
         if (p->m_pRoot)
@@ -779,8 +779,8 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         if (LOWORD(lParam) != HTCLIENT) break;
         if (p->m_bMouseCapture) return TRUE;
 
-        GetCursorPos(&pt);
-        ScreenToClient(p->m_hWnd, &pt);
+        GetCursorPos((LPPOINT)&pt);
+        ScreenToClient(p->m_hWnd, (LPPOINT)&pt);
         ZuiControl pControl = NULL;
         if (p->m_pRoot)
             pControl = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_HITTEST | ZFIND_TOP_FIRST));
@@ -893,7 +893,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     }
     case WM_MOVE:
     {
-        GetWindowRect(hWnd, &p->m_rect);
+        GetWindowRect(hWnd, (LPRECT)&p->m_rect);
     }
     default:
         return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -997,7 +997,7 @@ ZuiVoid ZuiOsDestroyWindow(ZuiOsWindow OsWindow) {
 		DestroyWindow(OsWindow->m_hwndTooltip);
 		OsWindow->m_hwndTooltip = NULL;
 	}
-    SetWindowLong(OsWindow->m_hWnd, GWLP_WNDPROC, DefWindowProc);
+    SetWindowLong(OsWindow->m_hWnd, GWLP_WNDPROC, (LONG)DefWindowProc);
     if (OsWindow->m_hIMC) ImmReleaseContext(OsWindow->m_hWnd, OsWindow->m_hIMC);
     if (OsWindow->m_hDcPaint) ReleaseDC(OsWindow->m_hWnd, OsWindow->m_hDcPaint);
     DestroyWindow(OsWindow->m_hWnd);
@@ -1039,7 +1039,7 @@ ZuiBool ZuiOsSetWindowNoBox(ZuiOsWindow OsWindow, ZuiBool b) {
     else {
         SetWindowLong(OsWindow->m_hWnd, GWL_STYLE, dwStyle | WS_VISIBLE | WS_POPUP | WS_CLIPCHILDREN);
     }
-    GetWindowRect(OsWindow->m_hWnd, &OsWindow->m_rect);
+    GetWindowRect(OsWindow->m_hWnd, (LPRECT)&OsWindow->m_rect);
     return TRUE;
 }
 ZuiBool ZuiOsSetWindowComBo(ZuiOsWindow OsWindow, ZuiBool b) {
@@ -1089,7 +1089,7 @@ ZuiVoid ZuiOsSetWindowCenter(ZuiOsWindow OsWindow) {
     rc.top = 0;
     rc.right = width;
     rc.bottom = height;
-    GetClientRect(OsWindow->m_hWnd, &rc1);
+    GetClientRect(OsWindow->m_hWnd, (LPRECT)&rc1);
     rctomove.left = (rc.right - rc.left) / 2 - (rc1.right - rc1.left) / 2;
     rctomove.right = (rc.right - rc.left) / 2 + (rc1.right - rc1.left) / 2;
     rctomove.top = (rc.bottom - rc.top) / 2 - (rc1.bottom - rc1.top) / 2;
@@ -1115,8 +1115,8 @@ ZuiVoid ZuiOsInvalidate(ZuiOsWindow p) {
         InvalidateRect(p->m_hWnd, NULL, FALSE);
     else {
         ZRect rcClient = { 0 };
-        GetClientRect(p->m_hWnd, &rcClient);
-        UnionRect(&p->m_rcLayeredUpdate, &p->m_rcLayeredUpdate, &rcClient);
+        GetClientRect(p->m_hWnd, (LPRECT)&rcClient);
+        UnionRect((LPRECT)&p->m_rcLayeredUpdate, (const RECT *)&p->m_rcLayeredUpdate, (const RECT *)&rcClient);
     }
 }
 //指定区域失效
@@ -1132,9 +1132,9 @@ ZuiVoid ZuiOsInvalidateRect(ZuiOsWindow p, ZRect *rcItem)
     if (rc.right < rc.left) rc.right = rc.left;
     if (rc.bottom < rc.top) rc.bottom = rc.top;
     if (!p->m_bLayered)
-        InvalidateRect(p->m_hWnd, &rc, FALSE);
+        InvalidateRect(p->m_hWnd, (const RECT *)&rc, FALSE);
     else
-        UnionRect(&p->m_rcLayeredUpdate, &p->m_rcLayeredUpdate, &rc);
+        UnionRect((LPRECT)&p->m_rcLayeredUpdate, (const RECT *)&p->m_rcLayeredUpdate, (const RECT *)&rc);
 }
 //创建时钟
 ZuiBool ZuiOsSetTimer(ZuiControl pControl, ZuiUInt nTimerID, ZuiUInt uElapse) {
@@ -1372,12 +1372,12 @@ ZuiInt ZuiOsUnicodeToAscii(ZuiText str, ZuiInt slen, ZuiAny out, ZuiInt olen)
 
 ZuiVoid ZuiOsClientToScreen(ZuiControl p, ZuiPoint pt) {
     if (p && pt) {
-        ClientToScreen(p->m_pOs->m_hWnd, pt);
+        ClientToScreen(p->m_pOs->m_hWnd, (LPPOINT)pt);
     }
 }
 ZuiVoid ZuiOsScreenToClient(ZuiControl p, ZuiPoint pt) {
     if (p && pt) {
-        ScreenToClient(p->m_pOs->m_hWnd, pt);
+        ScreenToClient(p->m_pOs->m_hWnd, (LPPOINT)pt);
     }
 }
 

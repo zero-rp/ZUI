@@ -23,7 +23,7 @@ ZEXPORT ZuiControl ZCALL NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny 
             return p;
         memset(name, 0, sizeof(name));
         memcpy(name, classname, len * sizeof(ZText));
-        wcslwr(name);
+        _wcslwr(name);
 
         ZClass theNode = { 0 };
         ZClass *node;
@@ -72,7 +72,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             {
                 rcTemp = invalidateRc;
                 rcParent = (ZRect *)ZuiControlCall(Proc_GetPos, pParent, NULL, NULL, NULL);
-                if (!IntersectRect(&invalidateRc, &rcTemp, rcParent))
+                if (!IntersectRect((LPRECT)&invalidateRc, (const RECT *)&rcTemp, (const RECT *)rcParent))
                 {
                     return 0;
                 }
@@ -134,7 +134,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         if (rc->right < rc->left) rc->right = rc->left;
         if (rc->bottom < rc->top) rc->bottom = rc->top;
 
-        if (IsRectEmpty(&invalidateRc)) invalidateRc = *rc;
+        if (IsRectEmpty((RECT *)&invalidateRc)) invalidateRc = *rc;
         //防止不必要的调用
         if (rc->right - rc->left != p->m_rcItem.right - p->m_rcItem.left ||
             rc->bottom - rc->top != p->m_rcItem.bottom - p->m_rcItem.top)
@@ -185,7 +185,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                     return 0;
                 rcTemp = invalidateRc;
                 rcParent = (ZRect *)ZuiControlCall(Proc_GetPos, pParent, NULL, NULL, NULL);
-                if (!IntersectRect(&invalidateRc, &rcTemp, rcParent))
+                if (!IntersectRect((LPRECT)&invalidateRc, (const RECT *)&rcTemp, (const RECT *)rcParent))
                     return 0;
             }
             ZuiOsInvalidateRect(p->m_pOs, &invalidateRc);
@@ -222,7 +222,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         {
         case ZEVENT_SETCURSOR:
         {
-            ZuiOsSetCursor(ZDC_ARROW);
+            ZuiOsSetCursor((ZuiUInt)ZDC_ARROW);
             return 0;
         }
         case ZEVENT_SETFOCUS:

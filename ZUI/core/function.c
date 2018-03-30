@@ -68,7 +68,7 @@ ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
 #if (defined PLATFORM_OS_WIN)
         LOGFONT lf;
         SystemParametersInfo(SPI_GETICONTITLELOGFONT, sizeof(LOGFONT), &lf, 0);
-        Global_DefaultFontName = wcsdup(lf.lfFaceName);
+        Global_DefaultFontName = _wcsdup(lf.lfFaceName);
         Global_Font = ZuiCreateFont(Global_DefaultFontName, 12, FALSE, FALSE);
 #endif
     }
@@ -175,7 +175,7 @@ ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
     MsgBox_pRoot = NewZuiControl(L"MessageBox", NULL, rp, NULL);
     if (!MsgBox_pRoot->m_pOs) {
         FreeZuiControl(MsgBox_pRoot, FALSE);
-        return NULL;
+        return 0;
     }
 	ZuiControlRegNotify(MsgBox_pRoot, Default_NotifyProc);
     //取消最小化按钮

@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <wchar.h>
 #include <string.h>
-#define strdup wcsdup
+#define strdup _wcsdup
 #define mxml_bad_char(ch) ((ch) < L' ' && (ch) != L'\n' && (ch) != L'\r' && (ch) != L'\t')
 
 /*判断字符是否为空白字符*/

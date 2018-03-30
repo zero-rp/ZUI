@@ -9,7 +9,7 @@ typedef struct _ZClass
     ZuiUInt key;
 }*ZuiClass, ZClass;
 RB_HEAD(_ZClass_Tree, _ZClass);
-RB_PROTOTYPE(_ZClass_Tree, _ZClass);
+RB_PROTOTYPE(_ZClass_Tree, _ZClass,,);
 extern struct _ZClass_Tree *Global_ControlClass;
 
 /**

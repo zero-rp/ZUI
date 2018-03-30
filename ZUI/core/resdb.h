@@ -31,7 +31,7 @@ typedef struct _ZResDB
     ZuiInt type; //资源包类型
 } *ZuiResDB, ZResDB;
 RB_HEAD(_ZResDB_Tree, _ZResDB);
-RB_PROTOTYPE(_ZResDB_Tree, _ZResDB);
+RB_PROTOTYPE(_ZResDB_Tree, _ZResDB,,);
 /**单个资源*/
 typedef struct _ZRes
 {
@@ -45,7 +45,7 @@ typedef struct _ZRes
     ZuiInt type; //资源类型
 } *ZuiRes, ZRes;
 RB_HEAD(_ZRes_Tree, _ZRes);
-RB_PROTOTYPE(_ZRes_Tree, _ZRes);
+RB_PROTOTYPE(_ZRes_Tree, _ZRes,,);
 /**资源池*/
 typedef struct _ZResDBPool
 {

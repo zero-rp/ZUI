@@ -18,7 +18,7 @@ static  ZuiControl ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
         LoadNodeBedin:
             ClassName = node->value.name;
             LOG_DEGUB(L"layout创建控件: 类名:%ls\r\n", ClassName);
-            if (wcsicmp(ClassName, L"Template") == 0) {//模版类
+            if (_wcsicmp(ClassName, L"Template") == 0) {//模版类
                 ZuiAddTemplate(node);
                 if (node->next) {
 					node = node->next;
@@ -51,15 +51,15 @@ static  ZuiControl ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
                     continue;
             }
             */
-			if (wcsnicmp(ClassName, L"?", 1) == 0) {//跳过<? xxx ?>节点
+			if (_wcsnicmp(ClassName, L"?", 1) == 0) {//跳过<? xxx ?>节点
 				node->user_data = node->parent->user_data;
 				continue;
 			}
-            if (wcsicmp(ClassName, L"Include") == 0) {//包含文件
+            if (_wcsicmp(ClassName, L"Include") == 0) {//包含文件
                 ZuiText src = NULL;
                 for (ZuiInt i = 0; i < node->value.num_attrs; i++)
                 {
-                    if (wcsicmp(node->value.attrs[i].name, L"src") == 0) {
+                    if (_wcsicmp(node->value.attrs[i].name, L"src") == 0) {
                         src = node->value.attrs[i].value;
                     }
                 }
@@ -84,7 +84,7 @@ static  ZuiControl ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
 #endif
             else if (!node->user_data) {//当前节点还未创建
                 Control = NewZuiControl(ClassName, NULL, NULL, NULL);
-                if (node->parent->user_data && wcsicmp(ClassName, L"window") != 0) {
+                if (node->parent->user_data && _wcsicmp(ClassName, L"window") != 0) {
                     //上级控件已存在且当前欲创建的子窗口不为窗口对象
                     if (Control) {
                         node->user_data = Control;//保存控件到节点
@@ -99,7 +99,7 @@ static  ZuiControl ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
                         continue;//窗口创建失败就没必要继续下去了
                     }
                 }
-                else if (!node->parent->user_data && wcsicmp(ClassName, L"window") == 0) {
+                else if (!node->parent->user_data && _wcsicmp(ClassName, L"window") == 0) {
                     //上级控件已存在且当前欲创建的子窗口为窗口对象
                     if (Control) {
                         node->user_data = Control;//保存控件到节点

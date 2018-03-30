@@ -57,7 +57,7 @@ ZuiVoid ZuiAddTemplate(mxml_node_t *node)
         mxml_node_t *new_node = mxmlClone(node, NULL);
         if (new_node)
         {
-            wcslwr(classname);
+            _wcslwr(classname);
             struct _ZTemplate *n = malloc(sizeof(struct _ZTemplate));
             memset(n, 0, sizeof(struct _ZTemplate));
             n->key = Zui_Hash(classname);

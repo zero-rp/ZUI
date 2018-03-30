@@ -818,11 +818,11 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
             break;
         }
         else if (wcscmp(Param1, _T("sbb1show")) == 0) {
-            ZuiControlCall(Proc_ScrollBar_bShow, cp, (ZuiAny)ScrollBar_B1_Show, (ZuiAny)(_tcscmp(Param2, _T("true")) == 0)?TRUE:FALSE, NULL);
+            ZuiControlCall(Proc_ScrollBar_bShow, cp, (ZuiAny)ScrollBar_B1_Show, (ZuiAny)(_tcscmp(Param2, _T("true")) == 0? TRUE:FALSE), NULL);
             break;
         }
         else if (wcscmp(Param1, _T("sbb2show")) == 0) {
-            ZuiControlCall(Proc_ScrollBar_bShow, cp, (ZuiAny)ScrollBar_B2_Show, (ZuiAny)(_tcscmp(Param2, _T("true")) == 0) ? TRUE : FALSE, NULL);
+            ZuiControlCall(Proc_ScrollBar_bShow, cp, (ZuiAny)ScrollBar_B2_Show, (ZuiAny)(_tcscmp(Param2, _T("true")) == 0? TRUE:FALSE), NULL);
             break;
         }
         else if (wcscmp(Param1, _T("sbimageres")) == 0) {
