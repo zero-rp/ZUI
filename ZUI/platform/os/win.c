@@ -810,7 +810,8 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         event.pSender = p->m_pRoot;
         event.dwTimestamp = GetTickCount();
         ZuiControlEvent(p->m_pRoot, &event);
-		p->m_bMouseTracking = FALSE;
+        p->m_bMouseTracking = FALSE;
+        p->m_pEventHover = NULL;
     }
     case WM_NOTIFY:
     {

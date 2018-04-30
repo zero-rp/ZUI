@@ -791,8 +791,6 @@ static int mxml_parse_element(mxml_node_t *node, void *p, mxml_getc mxml_string_
         * Read the attribute name...
         */
 
-        name[0] = ch;
-        ptr = name + 1;
 
         if (ch == L'\"' || ch == L'\'')
         {
@@ -801,9 +799,14 @@ static int mxml_parse_element(mxml_node_t *node, void *p, mxml_getc mxml_string_
             */
 
             quote = ch;
+            ptr = name;
 
             while ((ch = mxml_string_getc(p)) != WEOF)
             {
+                if (ch == quote) {
+                    ch = mxml_string_getc(p);
+                    break;
+                }
                 if (ch == L'&') {
                     if ((ch = mxml_get_entity(node, p, mxml_string_getc)) == WEOF)
                         goto error;
@@ -813,8 +816,6 @@ static int mxml_parse_element(mxml_node_t *node, void *p, mxml_getc mxml_string_
                 if (mxml_add_char(ch, &ptr, &name, &namesize))
                     goto error;
 
-                if (ch == quote)
-                    break;
             }
         }
         else
@@ -823,6 +824,8 @@ static int mxml_parse_element(mxml_node_t *node, void *p, mxml_getc mxml_string_
             * Grab an normal, non-quoted name...
             */
 
+            name[0] = ch;
+            ptr = name + 1;
             while ((ch = mxml_string_getc(p)) != WEOF)
                 if (mxml_isspace(ch) || ch == L'=' || ch == L'/' || ch == L'>' ||
                     ch == L'?')
