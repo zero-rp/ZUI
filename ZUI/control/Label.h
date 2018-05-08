@@ -18,6 +18,7 @@ typedef struct _ZLabel
     ZuiRes      m_rFont;         //字体
     ZuiUInt     m_uTextStyle;    //字体控制
     ZuiColor    m_cTextColor;   //字体颜色
+    ZuiColor    m_cTextColorDisabled;
     ZCtlProc old_call;
 }*ZuiLabel, ZLabel;
 ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);

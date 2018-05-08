@@ -9,6 +9,7 @@ ZuiAny ZCALL Main_Notify_ctl_max(ZuiText msg, ZuiControl p, ZuiAny UserData, Zui
 ZuiAny ZCALL Main_Notify(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 ZuiAny ZCALL Main_Notify_ctl_min(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 ZuiAny ZCALL msgbox_Notify(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+ZuiAny ZCALL Main_Button_enable(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 
 ZuiControl win;
 
@@ -50,6 +51,9 @@ int _stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	p = ZuiControlFindName(win, L"msgbox");
 	ZuiControlRegNotify(p, msgbox_Notify);
 
+    p = ZuiControlFindName(win, L"buttonenable");
+    ZuiControlRegNotify(p, Main_Button_enable);
+
 	ZuiMsgLoop();
 	printf("Loop done!!\n");
 	Sleep(2000);
@@ -60,6 +64,21 @@ int main() {
 	WinMain(GetModuleHandle(NULL), 0, 0, 0);
 }
 
+ZuiAny ZCALL Main_Button_enable(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+    if (wcscmp(msg, L"onclick") == 0)
+    {
+        ZuiControl tmp = ZuiControlFindName(win, L"buttondisable");
+        if (!ZuiControlCall(Proc_GetEnabled, tmp, 0, 0, 0)) {
+            ZuiControlCall(Proc_SetEnabled, tmp, (ZuiAny)1, 0, 0);
+            ZuiControlCall(Proc_SetText,  p, L"禁用", 0, 0);
+        }
+        else {
+            ZuiControlCall(Proc_SetEnabled, tmp, 0, 0, 0);
+            ZuiControlCall(Proc_SetText, p, L"启用", 0, 0);
+        }
+    }
+    return 0;
+}
 ZuiAny ZCALL Main_Notify_ctl_clos(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
 	if (wcscmp(msg, L"onclick") == 0)
 	{

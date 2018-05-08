@@ -12,8 +12,13 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
     switch (ProcId)
     {
     case Proc_OnPaintText: {
+        ZuiColor tmpTColor;
         if (!cp->m_sText)
             return 0;
+        if (cp->m_bEnabled)
+            tmpTColor = p->m_cTextColor;
+        else
+            tmpTColor = p->m_cTextColorDisabled;
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = &cp->m_rcItem;
         ZRectR pt;
@@ -22,9 +27,9 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         pt.right = rc->right - p->m_rcPadding.right - cp->m_dwBorderWidth;
         pt.bottom = rc->bottom - p->m_rcPadding.bottom - cp->m_dwBorderWidth;
         if (p->m_rFont)
-            ZuiDrawString(gp, p->m_rFont->p, cp->m_sText, wcslen(cp->m_sText), &pt, p->m_cTextColor, p->m_uTextStyle);
+            ZuiDrawString(gp, p->m_rFont->p, cp->m_sText, wcslen(cp->m_sText), &pt, tmpTColor, p->m_uTextStyle);
         else
-            ZuiDrawString(gp, Global_Font, cp->m_sText, wcslen(cp->m_sText), &pt, p->m_cTextColor, p->m_uTextStyle);
+            ZuiDrawString(gp, Global_Font, cp->m_sText, wcslen(cp->m_sText), &pt, tmpTColor, p->m_uTextStyle);
         return 0;
     }
 #if (defined HAVE_JS) && (HAVE_JS == 1)
@@ -111,6 +116,11 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
 		ZuiControlNeedUpdate(cp);
         return 0;
     }
+    case Proc_Label_SetTextColorDisabled: {
+        p->m_cTextColorDisabled = (ZuiColor)Param1;
+        ZuiControlNeedUpdate(cp);
+        return 0;
+    }
     case Proc_Label_SetTextPadding: {
 		memcpy(&p->m_rcPadding, Param1, sizeof(ZRect));
 		ZuiControlNeedUpdate(cp);
@@ -159,6 +169,10 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
             ZuiColor clrColor = ZuiStr2Color(Param2);
             ZuiControlCall(Proc_Label_SetTextColor, cp, (ZuiAny)clrColor, NULL, NULL);
         }
+        else if (wcscmp(Param1, L"textcolordisabled") == 0) {
+            ZuiColor clrColor = ZuiStr2Color(Param2);
+            ZuiControlCall(Proc_Label_SetTextColorDisabled, cp, (ZuiAny)clrColor, NULL, NULL);
+        }
         else if (wcscmp(Param1, L"textpadding") == 0) {
             //字体边距
             ZRect rcPadding = { 0 };
@@ -198,6 +212,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
 
         p->m_uTextStyle = ZDT_VCENTER | ZDT_SINGLELINE;
         p->m_cTextColor = ARGB(255,0,0,0);
+        p->m_cTextColorDisabled = ARGB(255, 176, 176, 176);
 		ZRect rctmp = { 2,1,2,1 };
 		p->m_rcPadding = rctmp;
         return p;

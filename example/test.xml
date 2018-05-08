@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="gbk"?>
 <include src="default:default_ctl.xml" />
-<Window nobox="true"  borderwidth="1" bordercolor="#1874CD" bkcolor="0x282828" text="Demo" size="400,300" mininfo="300,200" center="true" bkimage="url:https://www.baidu.com/img/bd_logo1.png"  name="window_main" tooltip="主窗口">
+<Window nobox="true"  borderwidth="1" bordercolor="#1874CD" bkcolor="0x282828" text="Demo" size="400,300" mininfo="300,200" center="true"  name="window_main" tooltip="主窗口">
 		<HorizontalLayout name="head" drag="true"  height="23"><!--标题栏-->
 			<Label  name="titletxt" textcolor="#FFFFFFFF" text="你好Hello" tooltip="标题栏" font="font:name='微软雅黑':size=14" drag="true"/>
 			<Include src="file:itest.xml" />
@@ -9,7 +9,7 @@
 		<NULL height="1" bkcolor="0x9933CC"/>
 		<VerticalLayout>
 			<List name="domainlist"  inset="0,0,0,0" itemshowhtml="true"  itemalign="center" itemaltbk="true" menu="true">
-						<ListHeader height="24" menu="true" name="header1" bkcolor="0x282828">
+						<ListHeader height="24" menu="true" name="header1" >
 							<ListHeaderItem text="N o" font="1" width="30" sepwidth="1"  textcolor="#FFFFFFFF" sepcolor="#FF686868" normalcolor="#FF151515" hotcolor="#FF484848" pushedcolor="#FF686868"/>
 							<ListHeaderItem text="Domain" font="1" width="50" sepwidth="1"  textcolor="#FFFFFFFF" sepcolor="#FF686868" normalcolor="#FF151515" hotcolor="#FF484848" pushedcolor="#FF686868"/>
 							<ListHeaderItem text="Description" width="240" align="right"  textcolor="#FFFFFFFF" sepcolor="#FF686868" normalcolor="#FF151515" hotcolor="#FF484848" pushedcolor="#FF686868" sepwidth="1"/>
@@ -18,7 +18,7 @@
 							<ListHeaderItem text="Domain" font="1" width="260" sepwidth="1"  textcolor="#FFFFFFFF" sepcolor="#FF686868" normalcolor="#FF151515" hotcolor="#FF484848" pushedcolor="#FF686868"/>
 							<ListHeaderItem text="Description" font="1" width="240" sepwidth="1"  textcolor="#FFFFFFFF" sepcolor="#FF686868" normalcolor="#FF151515" hotcolor="#FF484848" pushedcolor="#FF686868"/>
 						</ListHeader>
-						<listbody  vscrollbar="true" hscrollbar="true"  sbbkcolor="#FF484848"  sbbdisablecolor="#FF00FF00" sbb2show="true" sbhsrc="0,0,16,16" sbvsrc="0,90,16,16">
+						<listbody  vscrollbar="true" hscrollbar="true"  sbbkcolor="#FF484848" stepsize="16"  sbbdisablecolor="#FF00FF00" sbb2show="true" sbhsrc="0,0,16,16" sbvsrc="0,90,16,16">
 						<listelement height="24">
 							<Label text="11111"/>
 							<Label text="你好"/>
@@ -287,7 +287,11 @@
 					</List>
 		</VerticalLayout>
 		<NULL height="1" bkcolor="#9933cc"/>
-		<VerticalLayout height="23"><!--状态栏-->
-			<Button name="msgbox" text="对话框" textcolor="#FFFFFF"/>
+		<VerticalLayout  vscrollbar="true" hscrollbar="true" align="center" sbbkcolor="#FF484848"><!--状态栏-->
+			<NULL height="100" width="2000"/>
+			<Button name="msgbox" text="对话框" textcolor="#FFFFFF" width="100" height="23"/>
+			<Button name="buttondisable" text="按钮禁用状态测试" textcolor="#FFFFFF" enabled="false" disabledcolor="#8c8c8c" width="150" height="23"/>
+			<Button name="buttonenable" text="启用" textcolor="#FFFFFF"  width="100" height="23"/>
+			<NULL "height"="100"  width="2000"/>
 		</VerticalLayout>
 </Window>
