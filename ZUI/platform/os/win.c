@@ -527,7 +527,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         p->m_ptLastMousePos = pt;
         ZuiControl pNewHover = NULL;
         if (p->m_pRoot)
-            pNewHover = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_HITTEST | ZFIND_TOP_FIRST));
+            pNewHover = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_ENABLED | ZFIND_HITTEST | ZFIND_TOP_FIRST));
         if (pNewHover != NULL && pNewHover->m_pOs != p) break;
         TEventUI event = { 0 };
         event.ptMouse = pt;
@@ -538,7 +538,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         if (!p->m_bMouseCapture) {
             pNewHover = NULL;
             if (p->m_pRoot)
-                pNewHover = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_HITTEST | ZFIND_TOP_FIRST));
+                pNewHover = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_ENABLED | ZFIND_HITTEST | ZFIND_TOP_FIRST));
             if (pNewHover != NULL && pNewHover->m_pOs != p) break;
             if (pNewHover != p->m_pEventHover && p->m_pEventHover != NULL) {
                 event.Type = ZEVENT_MOUSELEAVE;
@@ -581,7 +581,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         p->m_ptLastMousePos = pt;
         ZuiControl pControl = NULL;
         if (p->m_pRoot)
-            pControl = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_HITTEST | ZFIND_TOP_FIRST));
+            pControl = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_ENABLED | ZFIND_HITTEST | ZFIND_TOP_FIRST));
         if (pControl == NULL) break;
         if (pControl->m_pOs != p) break;
         if (pControl->m_drag) {
@@ -618,7 +618,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         p->m_ptLastMousePos = pt;
         ZuiControl pControl = NULL;
         if (p->m_pRoot)
-            pControl = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_HITTEST | ZFIND_TOP_FIRST));
+            pControl = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_ENABLED | ZFIND_HITTEST | ZFIND_TOP_FIRST));
         if (pControl == NULL) break;
         if (pControl->m_pOs != p) break;
         ZuiOsSetCapture(p);
@@ -810,7 +810,8 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         event.pSender = p->m_pRoot;
         event.dwTimestamp = GetTickCount();
         ZuiControlEvent(p->m_pRoot, &event);
-		p->m_bMouseTracking = FALSE;
+        p->m_bMouseTracking = FALSE;
+        p->m_pEventHover = NULL;
     }
     case WM_NOTIFY:
     {

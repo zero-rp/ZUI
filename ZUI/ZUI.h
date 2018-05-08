@@ -310,6 +310,7 @@ enum ZREST
 #define	Proc_SetBorderWidth		71
 #define	Proc_GetBorderWidth		72
 #define Proc_OnClose			73
+#define Proc_GetEnabled         74
 //------属性名称
 #define BK_Color        0x00000001 //背景色
 #define Border_Color    0x00000002 //边框颜色
@@ -379,6 +380,7 @@ enum ZREST
 #define Proc_Label_SetFont          171     //设置字体
 #define Proc_Label_SetTextColor     172     //设置文本颜色
 #define Proc_Label_SetTextPadding   173     //字体边距
+#define Proc_Label_SetTextColorDisabled     174
 #endif // 1
 
 //--------------------------------------------------------------------Button类

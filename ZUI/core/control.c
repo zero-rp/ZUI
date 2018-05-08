@@ -477,6 +477,9 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         ZuiControlInvalidate(p, TRUE);
         break;
     }
+    case Proc_GetEnabled: {
+        return (ZuiAny)p->m_bEnabled;
+    }
     case Proc_SetFocus: {
         if (p->m_pOs != NULL)
             ZuiOsSetFocus(p->m_pOs, p, FALSE);

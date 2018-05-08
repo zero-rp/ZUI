@@ -48,8 +48,8 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
     case Proc_OnPaint: {
         //调整绘制顺序
         ZuiControlCall(Proc_OnPaintBkColor, cp, Param1, Param2, NULL);
-        ZuiControlCall(Proc_OnPaintStatusImage, cp, Param1, Param2, NULL);
         ZuiControlCall(Proc_OnPaintBkImage, cp, Param1, Param2, NULL);
+        ZuiControlCall(Proc_OnPaintStatusImage, cp, Param1, Param2, NULL);
         ZuiControlCall(Proc_OnPaintText, cp, Param1, Param2, NULL);
         ZuiControlCall(Proc_OnPaintBorder, cp, Param1, Param2, NULL);
         return 0;
@@ -93,6 +93,13 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         break;
     }
 #endif
+    case Proc_SetEnabled: {
+        if (0 == (ZuiBool)Param1)
+            p->type = -1;
+        else
+            p->type = 0;
+        break;
+    }
     case Proc_OnPaintStatusImage: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = (ZRect *)&cp->m_rcItem;
@@ -122,6 +129,15 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
             }
             else {
                 ZuiDrawFillRect(gp, p->m_ColorPushed, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+            }
+        }
+        else  {
+            if (p->m_ResPushed) {
+                img = p->m_ResDisabled->p;
+                ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
+            }
+            else {
+                ZuiDrawFillRect(gp, p->m_ColorDisabled, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
             }
         }
         return 0;
@@ -233,6 +249,7 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         p->m_ColorNormal = ARGB(200, 0, 3, 255);
         p->m_ColorHot = ARGB(200, 0, 255, 255);
         p->m_ColorPushed = ARGB(200, 255, 255, 255);
+        p->m_ColorDisabled = ARGB(140, 140, 140, 255);
 
         ((ZuiLabel)p->old_udata)->m_uTextStyle |= ZDT_CENTER;
 
