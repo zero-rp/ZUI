@@ -105,8 +105,9 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         ZRect *rc = (ZRect *)&cp->m_rcItem;
         ZuiImage img;
         if (p->type == 0) {
-            if (p->m_ResNormal) {
-                img = p->m_ResNormal->p;
+            if (p->m_BtnRes) {
+                img = p->m_BtnRes->p;
+                memcpy(&img->src, &p->m_rcBtn[0], sizeof(ZRect));
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
             }
             else {
@@ -114,8 +115,9 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
             }
         }
         else if (p->type == 1) {
-            if (p->m_ResHot) {
-                img = p->m_ResHot->p;
+            if (p->m_BtnRes) {
+                img = p->m_BtnRes->p;
+                memcpy(&img->src, &p->m_rcBtn[1], sizeof(ZRect));
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
             }
             else {
@@ -123,8 +125,9 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
             }
         }
         else if (p->type == 2) {
-            if (p->m_ResPushed) {
-                img = p->m_ResPushed->p;
+            if (p->m_BtnRes) {
+                img = p->m_BtnRes->p;
+                memcpy(&img->src, &p->m_rcBtn[2], sizeof(ZRect));
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
             }
             else {
@@ -132,8 +135,9 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
             }
         }
         else  {
-            if (p->m_ResPushed) {
-                img = p->m_ResDisabled->p;
+            if (p->m_BtnRes) {
+                img = p->m_BtnRes->p;
+                memcpy(&img->src, &p->m_rcBtn[3], sizeof(ZRect));
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
             }
             else {
@@ -143,40 +147,9 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         return 0;
     }
     case Proc_Button_SetRes: {
-        switch ((int)Param1) {
-        case Button_N_Res: {
-            if (p->m_ResNormal)
-                ZuiResDBDelRes(p->m_ResNormal);
-            p->m_ResNormal = Param2;
-            break;
-        }
-        case Button_H_Res: {
-            if (p->m_ResHot)
-                ZuiResDBDelRes(p->m_ResHot);
-            p->m_ResHot = Param2;
-            break;
-        }
-        case Button_P_Res: {
-            if (p->m_ResPushed)
-                ZuiResDBDelRes(p->m_ResPushed);
-            p->m_ResPushed = Param2;
-            break;
-        }
-        case Button_F_Res: {
-            if (p->m_ResFocused)
-                ZuiResDBDelRes(p->m_ResFocused);
-            p->m_ResFocused = Param2;
-            break;
-        }
-        case Button_D_Res: {
-            if (p->m_ResDisabled)
-                ZuiResDBDelRes(p->m_ResDisabled);
-            p->m_ResDisabled = Param2;
-            break;
-        }
-        default:
-            break;
-        }
+        if (p->m_BtnRes)
+            ZuiResDBDelRes(p->m_BtnRes);
+        p->m_BtnRes = (ZuiRes)Param1;
         ZuiControlInvalidate(cp, TRUE);
         return 0;
     }
@@ -215,16 +188,23 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         return 0;
     }
     case Proc_SetAttribute: {
-        if (wcscmp(Param1, L"normalimage") == 0)
-            ZuiControlCall(Proc_Button_SetRes, cp, (ZuiAny)Button_N_Res, ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
-        else if (wcscmp(Param1, L"hotimage") == 0)
-            ZuiControlCall(Proc_Button_SetRes, cp, (ZuiAny)Button_H_Res, ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
-        else if (wcscmp(Param1, L"pushedimage") == 0)
-            ZuiControlCall(Proc_Button_SetRes, cp, (ZuiAny)Button_P_Res, ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
-        else if (wcscmp(Param1, L"focusedimage") == 0)
-            ZuiControlCall(Proc_Button_SetRes, cp, (ZuiAny)Button_F_Res, ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
-        else if (wcscmp(Param1, L"disabledimage") == 0)
-            ZuiControlCall(Proc_Button_SetRes, cp, (ZuiAny)Button_D_Res, ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
+        if (wcscmp(Param1, L"btnsrc") == 0) {
+            ZRect rcTmp = { 0 };
+            ZuiText pstr = NULL;
+            rcTmp.left = _tcstol(Param2, &pstr, 10);  ASSERT(pstr);
+            rcTmp.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+            rcTmp.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+            rcTmp.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+
+            for (int i = 0; i < 4; i++) {
+                p->m_rcBtn[i].left = rcTmp.left + i * rcTmp.right;
+                p->m_rcBtn[i].top = rcTmp.top;
+                p->m_rcBtn[i].right = rcTmp.right;
+                p->m_rcBtn[i].bottom = rcTmp.bottom;
+            }
+        }
+        else if (wcscmp(Param1, L"btnres") == 0)
+            ZuiControlCall(Proc_Button_SetRes, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         
         else if (wcscmp(Param1, L"normalcolor") == 0)
             ZuiControlCall(Proc_Button_SetColor, cp, (ZuiAny)Button_N_Color, (ZuiAny)ZuiStr2Color(Param2), NULL);
@@ -258,16 +238,8 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
-        if (p->m_ResNormal)
-            ZuiResDBDelRes(p->m_ResNormal);
-        if (p->m_ResHot)
-            ZuiResDBDelRes(p->m_ResHot);
-        if (p->m_ResPushed)
-            ZuiResDBDelRes(p->m_ResPushed);
-        if (p->m_ResFocused)
-            ZuiResDBDelRes(p->m_ResFocused);
-        if (p->m_ResDisabled)
-            ZuiResDBDelRes(p->m_ResDisabled);
+        if (p->m_BtnRes)
+            ZuiResDBDelRes(p->m_BtnRes);
 
         old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
 

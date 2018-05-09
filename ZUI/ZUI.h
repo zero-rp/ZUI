@@ -404,11 +404,6 @@ enum ZREST
 #define Button_P_Color      0x00000004
 #define Button_F_Color      0x00000008
 #define Button_D_Color      0x00000010
-#define Button_N_Res      0x00000001 //普通图片
-#define Button_H_Res      0x00000002 //高亮图片
-#define Button_P_Res      0x00000004
-#define Button_F_Res      0x00000008
-#define Button_D_Res      0x00000010
 #endif // 1
 //--------------------------------------------------------------------Label类
 
@@ -515,11 +510,6 @@ enum ZREST
 //#define Proc_Option_SetResSelectedPushed    1035    //选中的按下状态
 #define Proc_Option_SetGroup                1036
 //------属性名称
-#define Option_SN_Res      0x00000001 //选中普通图片
-#define Option_SH_Res      0x00000002 //选中高亮图片
-#define Option_SP_Res      0x00000004
-#define Option_SD_Res      0x00000008
-#define Option_SF_Res      0x00000010
 #define Option_SN_Color      0x00000001 //选中普通颜色
 #define Option_SH_Color      0x00000002 //选中高亮颜色
 #define Option_SP_Color      0x00000004

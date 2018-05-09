@@ -13,11 +13,9 @@
 /**按钮控件结构*/
 typedef struct _ZButton
 {
-    ZuiRes m_ResNormal;     //正常状态
-    ZuiRes m_ResHot;        //高亮状态
-    ZuiRes m_ResPushed;     //按下状态
-    ZuiRes m_ResFocused;    //焦点图片
-    ZuiRes m_ResDisabled;   //非激活状态
+    ZuiRes m_BtnRes;
+    ZRect  m_rcBtn[4];
+
 
     ZuiColor m_ColorNormal;     //正常状态
     ZuiColor m_ColorHot;        //高亮状态
