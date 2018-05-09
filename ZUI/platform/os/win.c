@@ -999,7 +999,7 @@ ZuiVoid ZuiOsDestroyWindow(ZuiOsWindow OsWindow) {
 		DestroyWindow(OsWindow->m_hwndTooltip);
 		OsWindow->m_hwndTooltip = NULL;
 	}
-    SetWindowLong(OsWindow->m_hWnd, GWLP_WNDPROC, (LONG)DefWindowProc);
+    SetWindowLong(OsWindow->m_hWnd, GWLP_WNDPROC, DefWindowProc);
     if (OsWindow->m_hIMC) ImmReleaseContext(OsWindow->m_hWnd, OsWindow->m_hIMC);
     if (OsWindow->m_hDcPaint) ReleaseDC(OsWindow->m_hWnd, OsWindow->m_hDcPaint);
     DestroyWindow(OsWindow->m_hWnd);

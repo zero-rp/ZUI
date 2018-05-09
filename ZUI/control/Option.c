@@ -53,6 +53,15 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
                     ZuiDrawFillRect(gp, p->m_ColorSelectedPushed, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
                 }
             }
+            else {
+                if (p->m_ResSelectedPushed) {
+                    img = p->m_ResSelectedDisabled->p;
+                    ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
+                }
+                else {
+                    ZuiDrawFillRect(gp, p->m_ColorSelectedDisabled, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+                }
+            }
             ZuiControlCall(Proc_OnPaintText, cp, Param1, Param2, NULL);//绘制文本
             return 0;//选择状态下不由按钮控件绘制
         }
@@ -139,6 +148,40 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
             p->m_ResSelectedPushed = Param2;
             break;
         }
+        case Option_SD_Res: {
+            if (p->m_ResSelectedDisabled)
+                ZuiResDBDelRes(p->m_ResSelectedDisabled);
+            p->m_ResSelectedDisabled = Param2;
+            break;
+        }
+        default:
+            break;
+        }
+        ZuiControlInvalidate(cp, TRUE);
+        return 0;
+    }
+    case Proc_Option_SetColor: {
+        switch ((int)Param1) {
+        case Option_SN_Color: {
+            p->m_ColorSelected = (ZuiColor)Param2;
+            break;
+        }
+        case Option_SH_Color: {
+            p->m_ColorSelectedHot = (ZuiColor)Param2;
+            break;
+        }
+        case Option_SP_Color: {
+            p->m_ColorSelectedPushed = (ZuiColor)Param2;
+            break;
+        }
+        case Option_SF_Color: {
+            p->m_ColorSelectedFocused = (ZuiColor)Param2;
+            break;
+        }
+        case Option_SD_Color: {
+            p->m_ColorSelectedDisabled = (ZuiColor)Param2;
+            break;
+        }
         default:
             break;
         }
@@ -156,6 +199,20 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
             ZuiControlCall(Proc_Option_SetRes, cp, (ZuiAny)Option_SH_Res, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
         else if (_tcscmp(Param1, _T("selectedpushedimage")) == 0)
             ZuiControlCall(Proc_Option_SetRes, cp, (ZuiAny)Option_SP_Res, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
+        else if (_tcscmp(Param1, _T("selectedfocusedimage")) == 0)
+            ZuiControlCall(Proc_Option_SetRes, cp, (ZuiAny)Option_SF_Res, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
+        else if (_tcscmp(Param1, _T("selecteddisabledimage")) == 0)
+            ZuiControlCall(Proc_Option_SetRes, cp, (ZuiAny)Option_SD_Res, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
+        else if (wcscmp(Param1, L"selectedcolor") == 0)
+            ZuiControlCall(Proc_Button_SetColor, cp, (ZuiAny)Option_SN_Color, (ZuiAny)ZuiStr2Color(Param2), NULL);
+        else if (wcscmp(Param1, L"hotselectedcolor") == 0)
+            ZuiControlCall(Proc_Button_SetColor, cp, (ZuiAny)Option_SH_Color, (ZuiAny)ZuiStr2Color(Param2), NULL);
+        else if (wcscmp(Param1, L"pushedselectedcolor") == 0)
+            ZuiControlCall(Proc_Button_SetColor, cp, (ZuiAny)Option_SP_Color, (ZuiAny)ZuiStr2Color(Param2), NULL);
+        else if (wcscmp(Param1, L"focusedselectedcolor") == 0)
+            ZuiControlCall(Proc_Button_SetColor, cp, (ZuiAny)Option_SF_Color, (ZuiAny)ZuiStr2Color(Param2), NULL);
+        else if (wcscmp(Param1, L"disabledselectedcolor") == 0)
+            ZuiControlCall(Proc_Button_SetColor, cp, (ZuiAny)Option_SD_Color, (ZuiAny)ZuiStr2Color(Param2), NULL);
         break;
     }
 #if (defined HAVE_JS) && (HAVE_JS == 1)
@@ -220,6 +277,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
         p->m_ColorSelected = ARGB(200, 12, 111, 255);		//选中的普通状态
         p->m_ColorSelectedHot = ARGB(200, 0, 255, 255);		//选中的点燃状态
         p->m_ColorSelectedPushed = ARGB(200, 255, 255, 255);	//选中的按下状态
+        p->m_ColorSelectedDisabled = ARGB(173, 173, 173, 255);
         return p;
     }
     case Proc_OnDestroy: {
