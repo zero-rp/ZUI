@@ -160,8 +160,8 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     }
     case WM_PAINT:  //绘制
     {
+        PAINTSTRUCT ps = { 0 };
         if (p->m_pRoot == NULL) {	//没有控件树
-            PAINTSTRUCT ps = { 0 };
             BeginPaint(p->m_hWnd, &ps);
             //CRenderEngine::DrawColor(p->m_hDcPaint, ps.rcPaint, 0xFFFF0000);
             EndPaint(p->m_hWnd, &ps);
@@ -172,6 +172,8 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         GetClientRect(p->m_hWnd, &rcClient);
         if (rcClient.right - rcClient.left==0 ||rcClient.bottom - rcClient.top==0)
         {
+            BeginPaint(p->m_hWnd, &ps);
+            EndPaint(p->m_hWnd, &ps);
             return 0;
         }
         RECT rcPaint = { 0 };
@@ -182,7 +184,6 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             rcPaint.right = p->m_rcLayeredUpdate.right;
             rcPaint.top = p->m_rcLayeredUpdate.top;
             if (IsRectEmpty((LPRECT)&p->m_rcLayeredUpdate)) {
-                PAINTSTRUCT ps = { 0 };
                 BeginPaint(p->m_hWnd, &ps);
                 EndPaint(p->m_hWnd, &ps);
                 return TRUE;
@@ -210,6 +211,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
                         rcRoot.right -= p->m_rcLayeredInset.right;
                         rcRoot.bottom -= p->m_rcLayeredInset.bottom;
                     }
+                    p->m_pRoot->m_bUpdateNeeded = FALSE;
                     ZuiControlCall(Proc_SetPos, p->m_pRoot, &rcRoot, (void *)TRUE, 0);
                 }
                 else {
@@ -283,7 +285,6 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             p->m_hDcOffscreen = ZuiCreateGraphicsInMemory(rcClient.right - rcClient.left, rcClient.bottom - rcClient.top);
         }
         // 开始窗口绘制
-        PAINTSTRUCT ps = { 0 };
         BeginPaint(p->m_hWnd, &ps);
         //是否双缓存绘图
         if (p->m_bOffscreenPaint)
@@ -998,7 +999,7 @@ ZuiVoid ZuiOsDestroyWindow(ZuiOsWindow OsWindow) {
 		DestroyWindow(OsWindow->m_hwndTooltip);
 		OsWindow->m_hwndTooltip = NULL;
 	}
-    SetWindowLong(OsWindow->m_hWnd, GWLP_WNDPROC, (LONG)DefWindowProc);
+    SetWindowLong(OsWindow->m_hWnd, GWLP_WNDPROC, DefWindowProc);
     if (OsWindow->m_hIMC) ImmReleaseContext(OsWindow->m_hWnd, OsWindow->m_hIMC);
     if (OsWindow->m_hDcPaint) ReleaseDC(OsWindow->m_hWnd, OsWindow->m_hDcPaint);
     DestroyWindow(OsWindow->m_hWnd);

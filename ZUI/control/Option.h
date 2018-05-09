@@ -17,10 +17,14 @@ typedef struct _ZOption
     ZuiRes      m_ResSelected;          //选中的普通状态
     ZuiRes      m_ResSelectedHot;       //选中的点燃状态
     ZuiRes      m_ResSelectedPushed;    //选中的按下状态
+    ZuiRes      m_ResSelectedFocused;
+    ZuiRes      m_ResSelectedDisabled;
 
     ZuiColor    m_ColorSelected;        //选中的普通状态
     ZuiColor    m_ColorSelectedHot;     //选中的点燃状态
     ZuiColor    m_ColorSelectedPushed;  //选中的按下状态
+    ZuiColor    m_ColorSelectedFocused;
+    ZuiColor    m_ColorSelectedDisabled;
 #if (defined HAVE_JS) && (HAVE_JS == 1)
     ZuiInt      m_rOnselected;          //js回调
 #endif

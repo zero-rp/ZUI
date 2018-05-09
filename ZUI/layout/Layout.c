@@ -5,6 +5,8 @@
 #include <stdlib.h>
 
 void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+    ZSize sz = { 0, 0 };
+    ZSize sz1 = { 0,0 };
     switch (ProcId)
     {
     case Proc_FindControl: {
@@ -673,7 +675,6 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
             //if (m_pManager) cyLine = m_pManager->GetDefaultFontInfo()->tm.tmHeight + 8;
         }
 
-        ZSize sz = { 0, 0 };
         ZuiControlCall(Proc_Layout_GetScrollPos, cp, &sz, NULL, NULL);
         sz.cy -= cyLine;
         ZuiControlCall(Proc_Layout_SetScrollPos, cp, &sz, NULL, NULL);
@@ -687,14 +688,12 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
             //if (m_pManager) cyLine = m_pManager->GetDefaultFontInfo()->tm.tmHeight + 8;
         }
 
-        ZSize sz = { 0, 0 };
         ZuiControlCall(Proc_Layout_GetScrollPos, cp, &sz, NULL, NULL);
         sz.cy += cyLine;
         ZuiControlCall(Proc_Layout_SetScrollPos, cp, &sz, NULL, NULL);
         break;
     }
     case Proc_Layout_PageUp: {
-        ZSize sz = { 0, 0 };
         ZuiControlCall(Proc_Layout_GetScrollPos, cp, &sz, NULL, NULL);
         int iOffset = cp->m_rcItem.bottom - cp->m_rcItem.top - p->m_rcInset.top - p->m_rcInset.bottom;
         if (p->m_pHorizontalScrollBar && p->m_pHorizontalScrollBar->m_bVisible) iOffset -= (ZuiInt)ZuiControlCall(Proc_GetFixedHeight, p->m_pHorizontalScrollBar, NULL, NULL, NULL);
@@ -703,7 +702,6 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
         break;
     }
     case Proc_Layout_PageDown: {
-        ZSize sz = { 0, 0 };
         ZuiControlCall(Proc_Layout_GetScrollPos, cp, &sz, NULL, NULL);
         int iOffset = cp->m_rcItem.bottom - cp->m_rcItem.top - p->m_rcInset.top - p->m_rcInset.bottom;
         if (p->m_pHorizontalScrollBar && p->m_pHorizontalScrollBar->m_bVisible) iOffset -= (ZuiInt)ZuiControlCall(Proc_GetFixedHeight, p->m_pHorizontalScrollBar, NULL, NULL, NULL);
@@ -712,15 +710,12 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
         break;
     }
     case Proc_Layout_HomeUp: {
-        ZSize sz = { 0, 0 };
         ZuiControlCall(Proc_Layout_GetScrollPos, cp, &sz, NULL, NULL);
         sz.cy = 0;
         ZuiControlCall(Proc_Layout_SetScrollPos, cp, &sz, NULL, NULL);
         break;
     }
     case Proc_Layout_EndDown: {
-        ZSize sz = { 0, 0 };
-        ZSize sz1 = { 0,0 };
         ZuiControlCall(Proc_Layout_GetScrollPos, cp, &sz, NULL, NULL);
         ZuiControlCall(Proc_Layout_GetScrollRange, cp, &sz1, NULL, NULL);
         sz.cy = sz1.cy;
@@ -730,7 +725,6 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
     case Proc_Layout_LineLeft: {
         int cxLine = p->m_nScrollStepSize == 0 ? 8 : p->m_nScrollStepSize;
 
-        ZSize sz = { 0, 0 };
         ZuiControlCall(Proc_Layout_GetScrollPos, cp, &sz, NULL, NULL);
         sz.cx -= cxLine;
         ZuiControlCall(Proc_Layout_SetScrollPos, cp, &sz, NULL, NULL);
@@ -739,14 +733,12 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
     case Proc_Layout_LineRight: {
         int cxLine = p->m_nScrollStepSize == 0 ? 8 : p->m_nScrollStepSize;
 
-        ZSize sz = { 0, 0 };
         ZuiControlCall(Proc_Layout_GetScrollPos, cp, &sz, NULL, NULL);
         sz.cx += cxLine;
         ZuiControlCall(Proc_Layout_SetScrollPos, cp, &sz, NULL, NULL);
         break;
     }
     case Proc_Layout_PageLeft: {
-        ZSize sz = { 0, 0 };
         ZuiControlCall(Proc_Layout_GetScrollPos, cp, &sz, NULL, NULL);
         int iOffset = cp->m_rcItem.right - cp->m_rcItem.left - p->m_rcInset.left - p->m_rcInset.right;
         if (p->m_pVerticalScrollBar && p->m_pVerticalScrollBar->m_bVisible) iOffset -= (ZuiInt)ZuiControlCall(Proc_GetFixedWidth, p->m_pVerticalScrollBar, NULL, NULL, NULL);
@@ -755,7 +747,6 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
         break;
     }
     case Proc_Layout_PageRight: {
-        ZSize sz = { 0, 0 };
         ZuiControlCall(Proc_Layout_GetScrollPos, cp, &sz, NULL, NULL);
         int iOffset = cp->m_rcItem.right - cp->m_rcItem.left - p->m_rcInset.left - p->m_rcInset.right;
         if (p->m_pVerticalScrollBar && p->m_pVerticalScrollBar->m_bVisible) iOffset -= (ZuiInt)ZuiControlCall(Proc_GetFixedWidth, p->m_pVerticalScrollBar, NULL, NULL, NULL);
@@ -764,15 +755,12 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
         break;
     }
     case Proc_Layout_HomeLeft: {
-        ZSize sz = { 0, 0 };
         ZuiControlCall(Proc_Layout_GetScrollPos, cp, &sz, NULL, NULL);
         sz.cx = 0;
         ZuiControlCall(Proc_Layout_SetScrollPos, cp, &sz, NULL, NULL);
         break;
     }
     case Proc_Layout_EndRight: {
-        ZSize sz = { 0, 0 };
-        ZSize sz1 = { 0,0 };
         ZuiControlCall(Proc_Layout_GetScrollPos, cp, &sz, NULL, NULL);
         ZuiControlCall(Proc_Layout_GetScrollRange, cp, &sz1, NULL, NULL);
         sz.cx = sz1.cx;
@@ -787,6 +775,7 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
             ZuiControlCall(Proc_ScrollBar_SetOwner, p->m_pVerticalScrollBar, cp, NULL, NULL);
             p->m_pVerticalScrollBar->m_pOs = cp->m_pOs;
             p->m_pVerticalScrollBar->m_pParent = cp;
+            p->m_pVerticalScrollBar->m_bVisible = FALSE;
             //			m_pVerticalScrollBar->SetVisible(false);
         }
         else if (!bEnableVertical && p->m_pVerticalScrollBar) {
@@ -800,6 +789,7 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
             ZuiControlCall(Proc_ScrollBar_SetOwner, p->m_pHorizontalScrollBar, cp, NULL, NULL);
             p->m_pHorizontalScrollBar->m_pOs = cp->m_pOs;
             p->m_pHorizontalScrollBar->m_pParent = cp;
+            p->m_pHorizontalScrollBar->m_bVisible = FALSE;
             //  m_pHorizontalScrollBar->SetVisible(false);
 
         }
