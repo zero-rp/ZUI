@@ -373,15 +373,13 @@ ZEXPORT ZuiAny ZCALL ZuiTreeNodeProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeNode p
         p->pItemButton = NewZuiControl(L"Option", NULL, NULL, NULL);
 
         //加载默认资源
-        ZuiControlCall(Proc_Button_SetRes, p->pFolderButton, (ZuiAny)Button_N_Res, ZuiResDBGetRes(L"default:default/treeview_a.png:src='0,0,16,16'", ZREST_IMG), NULL);
-        ZuiControlCall(Proc_Button_SetRes, p->pFolderButton, (ZuiAny)Button_H_Res, ZuiResDBGetRes(L"default:default/treeview_a.png:src='16,0,16,16'", ZREST_IMG), NULL);
+        ZuiControlCall(Proc_Button_SetRes, p->pFolderButton, ZuiResDBGetRes(L"default:default/treeview_a_1.png", ZREST_IMG), NULL, NULL);
+        ZuiControlCall(Proc_SetAttribute, p->pFolderButton, L"btnsrc", L"0,0,16,16", NULL, NULL);
 
-        ZuiControlCall(Proc_Button_SetRes, p->pCheckBox, (ZuiAny)Button_N_Res, ZuiResDBGetRes(L"default:default/unchecked.png", ZREST_IMG), NULL);
-        ZuiControlCall(Proc_Button_SetRes, p->pCheckBox, (ZuiAny)Button_H_Res, ZuiResDBGetRes(L"default:default/unchecked.png", ZREST_IMG), NULL);
-        ZuiControlCall(Proc_Button_SetRes, p->pCheckBox, (ZuiAny)Button_P_Res, ZuiResDBGetRes(L"default:default/unchecked.png", ZREST_IMG), NULL);
-        ZuiControlCall(Proc_Option_SetRes, p->pCheckBox, (ZuiAny)Option_SN_Res, ZuiResDBGetRes(L"default:default/checked.png", ZREST_IMG), NULL);
-        ZuiControlCall(Proc_Option_SetRes, p->pCheckBox, (ZuiAny)Option_SH_Res, ZuiResDBGetRes(L"default:default/checked.png", ZREST_IMG), NULL);
-        ZuiControlCall(Proc_Option_SetRes, p->pCheckBox, (ZuiAny)Option_SP_Res, ZuiResDBGetRes(L"default:default/checked.png", ZREST_IMG), NULL);
+        ZuiControlCall(Proc_Button_SetRes, p->pCheckBox, ZuiResDBGetRes(L"default:default/unchecked_1.png", ZREST_IMG), NULL, NULL);
+        ZuiControlCall(Proc_SetAttribute, p->pCheckBox, L"btnsrc", L"0,0,16,16", NULL, NULL);
+        ZuiControlCall(Proc_Option_SetRes, p->pCheckBox, ZuiResDBGetRes(L"default:default/checked_1.png", ZREST_IMG), NULL, NULL);
+        ZuiControlCall(Proc_SetAttribute, p->pCheckBox, L"optsrc", L"0,0,16,16", NULL, NULL);
 
         ZuiControlCall(Proc_SetFixedHeight, cp, (ZuiAny)18, NULL, NULL);
         ZuiControlCall(Proc_SetFixedWidth, cp, (ZuiAny)250, NULL, NULL);

@@ -14,11 +14,8 @@ typedef struct _ZOption
     ZuiBool m_bSelected;        //是否选择
     ZuiBool m_bGroup;           //
     //控件继承自按钮控件
-    ZuiRes      m_ResSelected;          //选中的普通状态
-    ZuiRes      m_ResSelectedHot;       //选中的点燃状态
-    ZuiRes      m_ResSelectedPushed;    //选中的按下状态
-    ZuiRes      m_ResSelectedFocused;
-    ZuiRes      m_ResSelectedDisabled;
+    ZuiRes      m_OptRes;
+    ZRect       m_rcOpt[4];
 
     ZuiColor    m_ColorSelected;        //选中的普通状态
     ZuiColor    m_ColorSelectedHot;     //选中的点燃状态

@@ -27,36 +27,40 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
         if (p->m_bSelected) {
             ZuiImage img;
             if (((ZuiButton)p->old_udata)->type == 0) {
-                if (p->m_ResSelected) {
-                    img = p->m_ResSelected->p;
-                    ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
+                if (p->m_OptRes) {
+                    img = p->m_OptRes->p;
+                    memcpy(&img->src, &p->m_rcOpt[0], sizeof(ZRect));
+                    ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
                 }
                 else {
                     ZuiDrawFillRect(gp, p->m_ColorSelected, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
                 }
             }
             else if (((ZuiButton)p->old_udata)->type == 1) {
-                if (p->m_ResSelectedHot) {
-                    img = p->m_ResSelectedHot->p;
-                    ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
+                if (p->m_OptRes) {
+                    img = p->m_OptRes->p;
+                    memcpy(&img->src, &p->m_rcOpt[1], sizeof(ZRect));
+                    ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
                 }
                 else {
                     ZuiDrawFillRect(gp, p->m_ColorSelectedHot, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
                 }
             }
             else if (((ZuiButton)p->old_udata)->type == 2) {
-                if (p->m_ResSelectedPushed) {
-                    img = p->m_ResSelectedPushed->p;
-                    ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
+                if (p->m_OptRes) {
+                    img = p->m_OptRes->p;
+                    memcpy(&img->src, &p->m_rcOpt[2], sizeof(ZRect));
+                    ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
                 }
                 else {
                     ZuiDrawFillRect(gp, p->m_ColorSelectedPushed, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
                 }
             }
             else {
-                if (p->m_ResSelectedPushed) {
-                    img = p->m_ResSelectedDisabled->p;
-                    ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
+                if (p->m_OptRes) {
+                    img = p->m_OptRes->p;
+                    memcpy(&img->src, &p->m_rcOpt[3], sizeof(ZRect));
+                    ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
                 }
                 else {
                     ZuiDrawFillRect(gp, p->m_ColorSelectedDisabled, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
@@ -129,34 +133,9 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
         return (ZuiAny)p->m_bSelected;
     }
     case Proc_Option_SetRes: {
-        switch ((int)Param1) {
-        case Option_SN_Res: {
-            if (p->m_ResSelected)
-                ZuiResDBDelRes(p->m_ResSelected);
-            p->m_ResSelected = Param2;
-            break;
-        }
-        case Option_SH_Res: {
-            if (p->m_ResSelectedHot)
-                ZuiResDBDelRes(p->m_ResSelectedHot);
-            p->m_ResSelectedHot = Param2;
-            break;
-        }
-        case Option_SP_Res: {
-            if (p->m_ResSelectedPushed)
-                ZuiResDBDelRes(p->m_ResSelectedPushed);
-            p->m_ResSelectedPushed = Param2;
-            break;
-        }
-        case Option_SD_Res: {
-            if (p->m_ResSelectedDisabled)
-                ZuiResDBDelRes(p->m_ResSelectedDisabled);
-            p->m_ResSelectedDisabled = Param2;
-            break;
-        }
-        default:
-            break;
-        }
+        if (p->m_OptRes)
+            ZuiResDBDelRes(p->m_OptRes);
+        p->m_OptRes = (ZuiRes)Param1;
         ZuiControlInvalidate(cp, TRUE);
         return 0;
     }
@@ -193,16 +172,23 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
             ZuiControlCall(Proc_Option_SetGroup, cp, (ZuiAny)(wcscmp(Param2, L"true") == 0 ? TRUE : FALSE), NULL, NULL);
         else if (_tcscmp(Param1, _T("selected")) == 0)
             ZuiControlCall(Proc_Option_SetSelected, cp, (ZuiAny)(wcscmp(Param2, L"true") == 0 ? TRUE : FALSE), NULL, NULL);
-        else if (_tcscmp(Param1, _T("selectedimage")) == 0)
-            ZuiControlCall(Proc_Option_SetRes, cp, (ZuiAny)Option_SN_Res, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
-        else if (_tcscmp(Param1, _T("selectedhotimage")) == 0)
-            ZuiControlCall(Proc_Option_SetRes, cp, (ZuiAny)Option_SH_Res, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
-        else if (_tcscmp(Param1, _T("selectedpushedimage")) == 0)
-            ZuiControlCall(Proc_Option_SetRes, cp, (ZuiAny)Option_SP_Res, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
-        else if (_tcscmp(Param1, _T("selectedfocusedimage")) == 0)
-            ZuiControlCall(Proc_Option_SetRes, cp, (ZuiAny)Option_SF_Res, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
-        else if (_tcscmp(Param1, _T("selecteddisabledimage")) == 0)
-            ZuiControlCall(Proc_Option_SetRes, cp, (ZuiAny)Option_SD_Res, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
+        else if (wcscmp(Param1, L"optsrc") == 0) {
+            ZRect rcTmp = { 0 };
+            ZuiText pstr = NULL;
+            rcTmp.left = _tcstol(Param2, &pstr, 10);  ASSERT(pstr);
+            rcTmp.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+            rcTmp.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+            rcTmp.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+
+            for (int i = 0; i < 4; i++) {
+                p->m_rcOpt[i].left = rcTmp.left + i * rcTmp.right;
+                p->m_rcOpt[i].top = rcTmp.top;
+                p->m_rcOpt[i].right = rcTmp.right;
+                p->m_rcOpt[i].bottom = rcTmp.bottom;
+            }
+        }
+        else if (wcscmp(Param1, L"optres") == 0)
+            ZuiControlCall(Proc_Option_SetRes, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         else if (wcscmp(Param1, L"selectedcolor") == 0)
             ZuiControlCall(Proc_Button_SetColor, cp, (ZuiAny)Option_SN_Color, (ZuiAny)ZuiStr2Color(Param2), NULL);
         else if (wcscmp(Param1, L"hotselectedcolor") == 0)
@@ -283,6 +269,8 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
+        if (p->m_OptRes)
+            ZuiResDBDelRes(p->m_OptRes);
         old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
         free(p);
 
