@@ -945,6 +945,8 @@ void Agg2D::text(Font& font, double x, double y, double x1, double y1, const wch
     m_clipBox.clip(x, y, x1, y1);//计算新的剪裁区
     clipBox(m_clipBox.x1, m_clipBox.y1, m_clipBox.x2, m_clipBox.y2);          //设置新的剪裁区
 
+    Agg2D::PointD point = font.textSize(str, len, style);
+    double w = font.textWidth(L'…');
     double asc = font.fontHeight();         //字体高度
     const agg::glyph_cache* glyph = NULL;   //字模
     double start_x = x;
@@ -970,14 +972,17 @@ void Agg2D::text(Font& font, double x, double y, double x1, double y1, const wch
     agg::conv_transform<FontCacheManager::path_adaptor_type> tr(font.m_fontCacheManager.path_adaptor(), mtx);
 
     int i;
+    wchar_t ch;
+    int ellipsis = 1;
     for (i = 0; str[i]; i++)
     {
-		if (wcsncmp(&str[i], L" ", 1) == 0)
+        ch = str[i];
+        if (wcsncmp(&ch, L" ", 1) == 0)
 			if (font.m_fontEngine.width() == 0)
 				start_x += (asc / 2.4);
 			else
 				start_x += font.m_fontEngine.width() *2.4;
-        glyph = font.m_fontCacheManager.glyph(str[i]);//取字模
+reglyph:  glyph = font.m_fontCacheManager.glyph(ch);//取字模
         if (glyph)
         {
             if (glyph->bounds.x1 < 0)
@@ -991,10 +996,32 @@ void Agg2D::text(Font& font, double x, double y, double x1, double y1, const wch
             start_y += glyph->advance_y;
 
             //超出显示范围
-            if (start_x > x1) {
-
-                break;
+            if (style & ZDT_END_ELLIPSIS) {
+                if (ellipsis > 0 && start_x > x1 - w) {
+                    start_x -= glyph->bounds.x2;
+                    start_y -= glyph->advance_y;
+                    if (glyph->bounds.x1 < 0)
+                        start_x -= glyph->bounds.x1;
+                    ch = L'…';
+                    ellipsis--;
+                    goto reglyph;
+                }
+                if (ellipsis < 0)
+                    break;
+                if (ellipsis == 0)
+                    ellipsis--;
             }
+            else
+                if (start_x > x1) {
+                    if (style & ZDT_WORDBREAK) {
+                        start_x = x;
+                        start_y += asc + 1;
+                        goto reglyph;
+                    }
+                    else
+                        break;
+                }
+
             if (start_y > y1)
                 break;
 

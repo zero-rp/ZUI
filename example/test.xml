@@ -292,6 +292,7 @@
 			<Button name="msgbox" text="¶Ô»°¿ò" textcolor="#FFFFFF" width="100" height="23"/>
 			<Option name="buttondisable" text="°´Å¥½ûÓÃ×´Ì¬²âÊÔ" textcolor="#FFFFFF" enabled="false" disabledcolor="#8c8c8c" width="150" height="23"/>
 			<Button name="buttonenable" text="ÆôÓÃ" textcolor="#FFFFFF"  width="100" height="23"/>
+			<Label text="°´Å¥½ûÓÃ×´Ì¬²âÊÔ°´Å¥½ûÓÃ×´Ì¬²âÊÔ°´Å¥½ûÓÃ×´Ì¬²âÊÔ°´" wordbreak="true" width="150" height="48"/>
 			<NULL "height"="100"  width="800"/>
 		</VerticalLayout>
 </Window>
