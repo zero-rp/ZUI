@@ -131,15 +131,15 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         if (wcscmp(Param1, L"align") == 0) {
             //横向对齐方式
             if (wcscmp(Param2,  L"left") == 0) {
-                p->m_uTextStyle &= ~(ZDT_CENTER | ZDT_RIGHT);
+                p->m_uTextStyle &= ~(ZDT_CENTER | ZDT_RIGHT | ZDT_WORDBREAK | ZDT_EDITCONTROL);
                 p->m_uTextStyle |= ZDT_LEFT;
             }
             if (wcscmp(Param2, L"center") == 0) {
-                p->m_uTextStyle &= ~(ZDT_LEFT | ZDT_RIGHT);
+                p->m_uTextStyle &= ~(ZDT_LEFT | ZDT_RIGHT | ZDT_WORDBREAK | ZDT_EDITCONTROL);
                 p->m_uTextStyle |= ZDT_CENTER;
             }
             if (wcscmp(Param2, L"right") == 0) {
-                p->m_uTextStyle &= ~(ZDT_LEFT | ZDT_CENTER);
+                p->m_uTextStyle &= ~(ZDT_LEFT | ZDT_CENTER | ZDT_WORDBREAK | ZDT_EDITCONTROL);
                 p->m_uTextStyle |= ZDT_RIGHT;
             }
 			ZuiControlNeedUpdate(cp);
@@ -147,15 +147,15 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         else if (wcscmp(Param1, L"valign") == 0) {
             //纵向对齐方式
             if (wcscmp(Param2, L"top") == 0) {
-                p->m_uTextStyle &= ~(ZDT_BOTTOM | ZDT_VCENTER | ZDT_WORDBREAK);
+                p->m_uTextStyle &= ~(ZDT_BOTTOM | ZDT_VCENTER | ZDT_WORDBREAK | ZDT_EDITCONTROL);
                 p->m_uTextStyle |= (ZDT_TOP | ZDT_SINGLELINE);
             }
             if (wcscmp(Param2, L"vcenter") == 0) {
-                p->m_uTextStyle &= ~(ZDT_TOP | ZDT_BOTTOM | ZDT_WORDBREAK);
+                p->m_uTextStyle &= ~(ZDT_TOP | ZDT_BOTTOM | ZDT_WORDBREAK | ZDT_EDITCONTROL);
                 p->m_uTextStyle |= (ZDT_VCENTER | ZDT_SINGLELINE);
             }
             if (wcscmp(Param2, L"bottom") == 0) {
-                p->m_uTextStyle &= ~(ZDT_TOP | ZDT_VCENTER | ZDT_WORDBREAK);
+                p->m_uTextStyle &= ~(ZDT_TOP | ZDT_VCENTER | ZDT_WORDBREAK | ZDT_EDITCONTROL);
                 p->m_uTextStyle |= (ZDT_BOTTOM | ZDT_SINGLELINE);
             }
 			ZuiControlNeedUpdate(cp);
@@ -186,7 +186,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         else if (wcscmp(Param1, L"wordbreak") == 0) {
             //自动换行
             if (wcscmp(Param2, L"true") == 0) {
-                p->m_uTextStyle &= ~ZDT_SINGLELINE;
+                p->m_uTextStyle &= 0;  //清除对齐方式。
                 p->m_uTextStyle |= ZDT_WORDBREAK | ZDT_EDITCONTROL;
             }
             else {
@@ -196,7 +196,10 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         }
         else if (wcscmp(Param1, L"endellipsis") == 0) {
             //替换超出部分为...
-            if (wcscmp(Param2, L"true") == 0) p->m_uTextStyle |= ZDT_END_ELLIPSIS;
+            if (wcscmp(Param2, L"true") == 0) {
+                p->m_uTextStyle &= ~(ZDT_WORDBREAK | ZDT_EDITCONTROL); //自动换行和超出替换互斥。
+                p->m_uTextStyle |= ZDT_END_ELLIPSIS;
+            }
             else p->m_uTextStyle &= ~ZDT_END_ELLIPSIS;
         }
         else {
