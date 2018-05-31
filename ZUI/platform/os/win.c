@@ -105,22 +105,22 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         while (darray_len(p->m_aDelayedCleanup)) {
             ZuiControl cp = p->m_aDelayedCleanup->data[0];
             darray_delete(p->m_aDelayedCleanup, darray_find(p->m_aDelayedCleanup, cp));
-			if (cp == p->m_pRoot) {
-				//无焦点窗口不做任何处理
-				if (!p->m_bUnfocusPaintWindow)
-				{
-					SetFocus(NULL);
-				}
+            if (cp == p->m_pRoot) {
+                //无焦点窗口不做任何处理
+                if (!p->m_bUnfocusPaintWindow)
+                {
+                    SetFocus(NULL);
+                }
 
-				if (GetActiveWindow() == p->m_hWnd) {
-					HWND hwndParent = GetWindowOwner(p->m_hWnd);
-					//无焦点窗口不做任何处理
-					if (!p->m_bUnfocusPaintWindow)
-					{
-						if (hwndParent != NULL) SetFocus(hwndParent);
-					}
-				}
-			}
+                if (GetActiveWindow() == p->m_hWnd) {
+                    HWND hwndParent = GetWindowOwner(p->m_hWnd);
+                    //无焦点窗口不做任何处理
+                    if (!p->m_bUnfocusPaintWindow)
+                    {
+                        if (hwndParent != NULL) SetFocus(hwndParent);
+                    }
+                }
+            }
             if (darray_len(p->m_aDelayedCleanup) == 0) {
                 ZuiControlCall(Proc_OnDestroy, cp, (ZuiAny)wParam, (ZuiAny)lParam, NULL);
                 break;
@@ -149,8 +149,8 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         }
 
 
-		//FreeZuiControl(p->m_pRoot, FALSE);
-		ZuiControlCall(Proc_OnClose, p->m_pRoot, 0, 0, 0);
+        //FreeZuiControl(p->m_pRoot, FALSE);
+        ZuiControlCall(Proc_OnClose, p->m_pRoot, 0, 0, 0);
         return 0;
     }
     case WM_ERASEBKGND:
@@ -170,7 +170,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 
         RECT rcClient = { 0 };
         GetClientRect(p->m_hWnd, &rcClient);
-        if (rcClient.right - rcClient.left==0 ||rcClient.bottom - rcClient.top==0)
+        if (rcClient.right - rcClient.left == 0 || rcClient.bottom - rcClient.top == 0)
         {
             BeginPaint(p->m_hWnd, &ps);
             EndPaint(p->m_hWnd, &ps);
@@ -404,12 +404,12 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             event.wKeyState = MapKeyState();
             ZuiControlEvent(p->m_pFocus, &event);
         }
-		if (wParam == SIZE_RESTORED) {
-			p->m_bMax = FALSE;
-			ZuiControl pmax = ZuiControlFindName(p->m_pRoot, _T("WindowCtl_max"));
-			if (pmax)
-				ZuiControlCall(Proc_Option_SetSelected, pmax, (ZuiAny)FALSE, NULL, NULL);
-		}
+        if (wParam == SIZE_RESTORED) {
+            p->m_bMax = FALSE;
+            ZuiControl pmax = ZuiControlFindName(p->m_pRoot, _T("WindowCtl_max"));
+            if (pmax)
+                ZuiControlCall(Proc_Option_SetSelected, pmax, (ZuiAny)FALSE, NULL, NULL);
+        }
         if (p->m_pRoot != NULL)
             ZuiControlNeedUpdate(p->m_pRoot);
         if (p->m_bLayered)
@@ -904,6 +904,17 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 }
 
 ZuiBool ZuiOsInitialize() {
+    // 关闭DPI缩放 ,UI库自己实现缩放
+    FARPROC spdpia = GetProcAddress(GetModuleHandle(TEXT("user32")), "SetProcessDPIAware");
+    if (spdpia != NULL)
+        spdpia();
+    // 获取DPI  
+    HDC hdc = GetDC(NULL);
+    if (hdc != NULL) {
+        //g_dpix = GetDeviceCaps(hdc, LOGPIXELSX);
+        //g_dpiy = GetDeviceCaps(hdc, LOGPIXELSY);
+        ReleaseDC(NULL, hdc);
+    }
     WNDCLASS wc = { 0 };
     wc.style = 8;
     wc.cbClsExtra = 0;
@@ -921,7 +932,7 @@ ZuiBool ZuiOsInitialize() {
         m_hUpdateRectPen = CreatePen(PS_SOLID, 1, RGB(220, 0, 0));
         InitCommonControls();
         LoadLibrary(_T("msimg32.dll"));
-    }
+}
 #if ((defined HAVE_UV) && (HAVE_UV == 1))
 #include <uv.h>
     Global_loop = uv_default_loop();
@@ -941,15 +952,15 @@ ZuiBool ZuiOsUnInitialize() {
 ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show, ZuiAny pcontrol) {
     /*保存相关参数到ZOsWindow*/
     ZuiOsWindow OsWindow = (ZuiOsWindow)malloc(sizeof(ZOsWindow));
-	HWND tmphwnd = NULL;
-	if (pcontrol)
-		tmphwnd = ((ZuiControl)pcontrol)->m_pOs->m_hWnd;
+    HWND tmphwnd = NULL;
+    if (pcontrol)
+        tmphwnd = ((ZuiControl)pcontrol)->m_pOs->m_hWnd;
     if (OsWindow)
     {
         memset(OsWindow, 0, sizeof(ZOsWindow));
 
         OsWindow->m_hWnd = CreateWindowEx(0, L"ZUI", L"",
-            WS_POPUP |WS_VISIBLE| WS_CLIPCHILDREN |WS_CLIPSIBLINGS| WS_MINIMIZEBOX,
+            WS_POPUP | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_MINIMIZEBOX,
             CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
             tmphwnd, NULL, GetModuleHandle(NULL),
             OsWindow);
@@ -965,7 +976,7 @@ ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show, ZuiAny pcontrol) {
 
         // Initiate all control
         ZuiControlCall(Proc_SetOs, root, OsWindow, NULL, (void*)TRUE);
-        
+
         OsWindow->m_iTooltipWidth = -1;
         OsWindow->m_iHoverTime = 1000;
         //p->m_bShowUpdateRect = TRUE;
@@ -973,7 +984,7 @@ ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show, ZuiAny pcontrol) {
         OsWindow->m_bFirstLayout = TRUE;
         OsWindow->m_bOffscreenPaint = TRUE;
         OsWindow->m_nOpacity = 0xFF;
-        
+
         OsWindow->m_ptLastMousePos.x = OsWindow->m_ptLastMousePos.y = -1;
 #if (defined HAVE_JS) && (HAVE_JS == 1)
         OsWindow->m_ctx = ZuiBuilderJs(OsWindow);
@@ -994,11 +1005,11 @@ ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show, ZuiAny pcontrol) {
     return NULL;
 }
 ZuiVoid ZuiOsDestroyWindow(ZuiOsWindow OsWindow) {
-	if (OsWindow->m_hwndTooltip != NULL) //by jiangdong 修改当父窗体以成员变量形式在窗口类中存在时候,当点击父窗体关闭按钮的时候,提示框内容还停留在页面中，没有销毁。
-	{
-		DestroyWindow(OsWindow->m_hwndTooltip);
-		OsWindow->m_hwndTooltip = NULL;
-	}
+    if (OsWindow->m_hwndTooltip != NULL) //by jiangdong 修改当父窗体以成员变量形式在窗口类中存在时候,当点击父窗体关闭按钮的时候,提示框内容还停留在页面中，没有销毁。
+    {
+        DestroyWindow(OsWindow->m_hwndTooltip);
+        OsWindow->m_hwndTooltip = NULL;
+    }
     SetWindowLong(OsWindow->m_hWnd, GWLP_WNDPROC, DefWindowProc);
     if (OsWindow->m_hIMC) ImmReleaseContext(OsWindow->m_hWnd, OsWindow->m_hIMC);
     if (OsWindow->m_hDcPaint) ReleaseDC(OsWindow->m_hWnd, OsWindow->m_hDcPaint);
@@ -1033,7 +1044,7 @@ ZuiBool ZuiOsSetWindowNoBox(ZuiOsWindow OsWindow, ZuiBool b) {
     if (OsWindow->m_nobox == b)
         return FALSE;
     OsWindow->m_nobox = b;
-	DWORD dwStyle = GetWindowLong(OsWindow->m_hWnd, GWL_STYLE);
+    DWORD dwStyle = GetWindowLong(OsWindow->m_hWnd, GWL_STYLE);
     if (b)
     {
         SetWindowLong(OsWindow->m_hWnd, GWL_STYLE, dwStyle | WS_VISIBLE | WS_POPUP | WS_CLIPCHILDREN);
@@ -1213,7 +1224,7 @@ ZuiVoid ZuiOsKillTimer(ZuiControl pControl) {
     }
 }
 //销毁全部时钟
-ZuiVoid ZuiOsRemoveAllTimers(ZuiOsWindow p){
+ZuiVoid ZuiOsRemoveAllTimers(ZuiOsWindow p) {
     for (int i = 0; i < darray_len(p->m_aTimers); i++) {
         TIMERINFO* pTimer = (TIMERINFO*)(p->m_aTimers->data[i]);
         if (pTimer->hWnd == p->m_hWnd) {
@@ -1276,7 +1287,7 @@ ZuiVoid ZuiOsReapObjects(ZuiOsWindow p, ZuiControl pControl) {
     ZuiOsKillTimer(pControl);
 }
 
-ZuiVoid ZuiOsAddDelayedCleanup(ZuiControl pControl,ZuiAny Param1,ZuiAny Param2)
+ZuiVoid ZuiOsAddDelayedCleanup(ZuiControl pControl, ZuiAny Param1, ZuiAny Param2)
 {
     ZuiControlCall(Proc_Layout_Remove, pControl->m_pParent, pControl, (ZuiAny)TRUE, NULL);
     //ZuiControlCall(Proc_SetOs, pControl, pControl->m_pOs, NULL, (void*)FALSE);
@@ -1304,7 +1315,7 @@ ZuiInt ZuiOsMsgLoop() {
         uv_run(Global_loop, UV_RUN_NOWAIT);
         TranslateMessage(&Msg);
         DispatchMessageW(&Msg);
-    }
+}
     return Msg.wParam;
 #else
     MSG Msg;
@@ -1344,8 +1355,8 @@ ZEXPORT ZuiInt ZuiDoModel(ZuiControl cp)
             SetFocus((HWND)phwnd);
         }
         //if (Msg.hwnd == (HWND)chwnd || Msg.message == WM_PAINT || Msg.message == WM_TIMER) {
-            TranslateMessage(&Msg);
-            DispatchMessage(&Msg);
+        TranslateMessage(&Msg);
+        DispatchMessage(&Msg);
         //}
         if (Msg.message == WM_QUIT) {
             break;
