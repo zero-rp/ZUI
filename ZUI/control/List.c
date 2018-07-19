@@ -40,20 +40,20 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
     }
     case Proc_SetAttribute: {
         if (wcscmp(Param1, _T("header")) == 0) ZuiControlCall(Proc_SetVisible, p->m_pHeader, (ZuiAny)(wcscmp(Param2, L"hidden") == 0 ? FALSE : TRUE), NULL, NULL);
-		else if (wcscmp(Param1, _T("linecolor")) == 0) {
-			p->m_ListInfo.dwLineColor = ZuiStr2Color(Param2);
-			p->m_ListInfo.bShowRowLine = TRUE;
-		}
-		else if (wcscmp(Param1, _T("columncolor")) == 0) {
-			p->m_ListInfo.dwColumnColor = ZuiStr2Color(Param2);
-			p->m_ListInfo.bShowColumnLine = TRUE;
-		}
-		else if (wcscmp(Param1, _T("hotbkcolor")) == 0) {
-			p->m_ListInfo.dwHotBkColor = ZuiStr2Color(Param2);
-		}
-		else if (wcscmp(Param1, _T("selectedbkcolor")) == 0) {
-			p->m_ListInfo.dwSelectedBkColor = ZuiStr2Color(Param2);
-		}
+        else if (wcscmp(Param1, _T("linecolor")) == 0) {
+            p->m_ListInfo.dwLineColor = ZuiStr2Color(Param2);
+            p->m_ListInfo.bShowRowLine = TRUE;
+        }
+        else if (wcscmp(Param1, _T("columncolor")) == 0) {
+            p->m_ListInfo.dwColumnColor = ZuiStr2Color(Param2);
+            p->m_ListInfo.bShowColumnLine = TRUE;
+        }
+        else if (wcscmp(Param1, _T("hotbkcolor")) == 0) {
+            p->m_ListInfo.dwHotBkColor = ZuiStr2Color(Param2);
+        }
+        else if (wcscmp(Param1, _T("selectedbkcolor")) == 0) {
+            p->m_ListInfo.dwSelectedBkColor = ZuiStr2Color(Param2);
+        }
 
 
         break;
@@ -84,10 +84,10 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
                 //ZuiVerticalLayoutProc(Proc_Layout_Remove, cp, p->old_udata, p->m_pHeader, (ZuiAny)TRUE, NULL);
                 FreeZuiControl(p->m_pHeader, FALSE);
                 p->m_pHeader = Param1;
-				if (cp->m_pOs != NULL)
-					ZuiControlCall(Proc_SetOs, (ZuiControl)p->m_pHeader, cp->m_pOs, cp, (ZuiAny)TRUE);
+                if (cp->m_pOs != NULL)
+                    ZuiControlCall(Proc_SetOs, (ZuiControl)p->m_pHeader, cp->m_pOs, cp, (ZuiAny)TRUE);
                 p->m_ListInfo.nColumns = MIN((int)ZuiControlCall(Proc_Layout_GetCount, p->m_pHeader, NULL, NULL, NULL), ZLIST_MAX_COLUMNS);
-				return 0;//ZuiVerticalLayoutProc(Proc_Layout_AddAt, cp, p->old_udata, p->m_pHeader, 0, NULL);
+                return 0;//ZuiVerticalLayoutProc(Proc_Layout_AddAt, cp, p->old_udata, p->m_pHeader, 0, NULL);
             }
             return FALSE;
         }
@@ -126,13 +126,13 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
             if (p->m_pHeader != Param1 && ZuiControlCall(Proc_Layout_GetCount, p->m_pHeader, NULL, NULL, NULL) == 0) {
                 //删除原来的头元素
                 //ZuiVerticalLayoutProc(Proc_Layout_Remove, cp, p->old_udata, p->m_pHeader, (ZuiAny)TRUE, NULL);
-				FreeZuiControl(p->m_pHeader, FALSE);
+                FreeZuiControl(p->m_pHeader, FALSE);
                 p->m_pHeader = Param1;
-				if (cp->m_pOs != NULL)
-					ZuiControlCall(Proc_SetOs, (ZuiControl)p->m_pHeader, cp->m_pOs, cp, (void*)TRUE);
+                if (cp->m_pOs != NULL)
+                    ZuiControlCall(Proc_SetOs, (ZuiControl)p->m_pHeader, cp->m_pOs, cp, (void*)TRUE);
                 p->m_ListInfo.nColumns = MIN((int)ZuiControlCall(Proc_Layout_GetCount, p->m_pHeader, NULL, NULL, NULL), ZLIST_MAX_COLUMNS);
                 //表头永远在第一个位置
-				return 0; //ZuiVerticalLayoutProc(Proc_Layout_AddAt, cp, p->old_udata, p->m_pHeader, 0, NULL);
+                return 0; //ZuiVerticalLayoutProc(Proc_Layout_AddAt, cp, p->old_udata, p->m_pHeader, 0, NULL);
             }
             return FALSE;
         }
@@ -148,22 +148,22 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         if (ZuiControlCall(Proc_GetObject, Param1, (ZuiAny)Type_ListElement, NULL, NULL)) {
             return ZuiControlCall(Proc_Layout_Add, p->m_pList, Param1, Param2, NULL);
         }
-   /*     if (!ZuiControlCall(Proc_Layout_AddAt, p->m_pList, Param1, Param2, NULL)) return FALSE;
+        /*     if (!ZuiControlCall(Proc_Layout_AddAt, p->m_pList, Param1, Param2, NULL)) return FALSE;
 
-        // 设置初始化当前控件
-        if (ZuiControlCall(Proc_GetObject, Param1, (ZuiAny)Type_ListElement, NULL, NULL)) {
-            ZuiControlCall(Proc_ListElement_SetOwner, Param1, cp, NULL, NULL);
-            ZuiControlCall(Proc_ListElement_SetIndex, Param1, ZuiControlCall(Proc_List_GetCount, p->m_pList, NULL, NULL, NULL), NULL, NULL);
-        }
-        */
-        //for (int i = iIndex + 1; i < m_pList->GetCount(); ++i) {
-        //    CControlUI* p = m_pList->GetItemAt(i);
-        //    pListItem = static_cast<IListItemUI*>(p->GetInterface(_T("ListItem")));
-        //    if (pListItem != NULL) {
-        //        pListItem->SetIndex(i);
-        //    }
-        //}
-        //if (m_iCurSel >= iIndex) m_iCurSel += 1;
+             // 设置初始化当前控件
+             if (ZuiControlCall(Proc_GetObject, Param1, (ZuiAny)Type_ListElement, NULL, NULL)) {
+                 ZuiControlCall(Proc_ListElement_SetOwner, Param1, cp, NULL, NULL);
+                 ZuiControlCall(Proc_ListElement_SetIndex, Param1, ZuiControlCall(Proc_List_GetCount, p->m_pList, NULL, NULL, NULL), NULL, NULL);
+             }
+             */
+             //for (int i = iIndex + 1; i < m_pList->GetCount(); ++i) {
+             //    CControlUI* p = m_pList->GetItemAt(i);
+             //    pListItem = static_cast<IListItemUI*>(p->GetInterface(_T("ListItem")));
+             //    if (pListItem != NULL) {
+             //        pListItem->SetIndex(i);
+             //    }
+             //}
+             //if (m_iCurSel >= iIndex) m_iCurSel += 1;
         return (ZuiAny)TRUE;
     }
     case Proc_List_Remove: {
@@ -240,7 +240,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         //if (p->bTakeFocus) pControl->SetFocus();//设置焦点
         if (cp->m_pOs != NULL && iLastSel != p->m_iCurSel) {
             //事件通知
-            
+
             //m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMSELECT, iIndex);
         }
 
@@ -272,12 +272,12 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
             //}
         }
         else {
-            if (Param1 < 0) 
+            if (Param1 < 0)
                 return FALSE;
             ZuiControl pControl = ZuiControlCall(Proc_List_GetItemAt, cp, Param1, NULL, NULL);
             if (pControl == NULL) return FALSE;
             if (!pControl->m_bEnabled) return FALSE;
-            
+
             int aIndex = darray_find(p->m_aSelItems, Param1);
             if (aIndex < 0) return FALSE;
             if (!ZuiControlCall(Proc_ListElement_SelectMulti, pControl, FALSE, NULL, NULL)) return FALSE;
@@ -301,7 +301,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         p->m_iCurSel = -1;
         return (ZuiAny)TRUE;
     }
-    //直接转发到列表体的消息
+                                     //直接转发到列表体的消息
     case Proc_Layout_LineUp:
     case Proc_Layout_LineDown:
     case Proc_Layout_PageUp:
@@ -330,7 +330,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         //创建表头
         p->m_pHeader = NewZuiControl(L"ListHeader", NULL, NULL, NULL);
         ZuiVerticalLayoutProc(Proc_Layout_Add, cp, p->old_udata, p->m_pHeader, NULL, NULL);
-        ZuiControlCall(Proc_SetBkColor, p->m_pHeader, (ZuiAny)BK_Color,(ZuiAny)ARGB(255, 111, 222, 200), NULL);
+        ZuiControlCall(Proc_SetBkColor, p->m_pHeader, (ZuiAny)BK_Color, (ZuiAny)ARGB(255, 111, 222, 200), NULL);
         //创建表主体
         p->m_pList = NewZuiControl(L"ListBody", NULL, NULL, NULL);
         ZuiVerticalLayoutProc(Proc_Layout_Add, cp, p->old_udata, p->m_pList, NULL, NULL);
@@ -382,13 +382,13 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
     }
     case Proc_Layout_AddAt:
     {
-        if (!ZuiVerticalLayoutProc(Proc_Layout_AddAt, cp,p->old_udata, Param1, Param2, NULL)) return FALSE;
+        if (!ZuiVerticalLayoutProc(Proc_Layout_AddAt, cp, p->old_udata, Param1, Param2, NULL)) return FALSE;
         ZuiControlCall(Proc_ListElement_SetOwner, Param1, cp, NULL, NULL);
         ZuiControlCall(Proc_ListElement_SetIndex, Param1, Param2, NULL, NULL);
         int j = (int)ZuiControlCall(Proc_List_GetCount, cp, NULL, NULL, NULL);
         for (int index = (int)Param2 + 1; index < j; index++) {
-            ZuiControl pControl = ZuiControlCall(Proc_Layout_GetItemAt,cp, (ZuiAny)index,NULL,NULL);
-            if(pControl)
+            ZuiControl pControl = ZuiControlCall(Proc_Layout_GetItemAt, cp, (ZuiAny)index, NULL, NULL);
+            if (pControl)
                 ZuiControlCall(Proc_ListElement_SetIndex, pControl, (ZuiAny)index, NULL, NULL);
         }
         return 0;
@@ -404,44 +404,44 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
         }
         return 0;
     }
-	case Proc_OnPaint: {
-		p->old_call(ProcId, cp, p->old_udata, Param1, Param2, Param3);
-		ZuiRect rrc = &cp->m_rcItem;
-		ZuiRect rc = Param2;
-		ZuiLayout op = ZuiControlCall(Proc_GetObject, cp, (ZuiAny)Type_Layout, NULL, NULL);
-		if (op->m_pVerticalScrollBar && op->m_pVerticalScrollBar->m_bVisible) {
-			ZuiInt sw = (ZuiInt)ZuiControlCall(Proc_GetFixedWidth, op->m_pVerticalScrollBar, NULL, NULL, NULL);
-			if (rc->right > (rrc->right - sw)) {
-				rc->right -= sw;
-			}
-		}
-		//if (op->m_pHorizontalScrollBar && op->m_pHorizontalScrollBar->m_bVisible)
-			//rc->bottom -= (ZuiInt)ZuiControlCall(Proc_GetFixedHeight, op->m_pHorizontalScrollBar, NULL, NULL, NULL);
-		ZuiControl pHeader = ((ZuiList)ZuiControlCall(Proc_GetObject, p->m_pOwner, (ZuiAny)Type_List, NULL, NULL))->m_pHeader;
-		if (pHeader->m_bVisible) {
-			ZuiControlCall(ProcId, pHeader, Param1, rc, Param3);
-		}
-		return 0;
-	}
-	case Proc_FindControl: {
-		ZuiControl pResult = NULL;
-		pResult= ZuiControlCall(ProcId, ((ZuiList)ZuiControlCall(Proc_GetObject, p->m_pOwner, (ZuiAny)Type_List, NULL, NULL))->m_pHeader, Param1, Param2, Param3);
-		if (pResult) return pResult;
-		return p->old_call(ProcId, cp, p->old_udata, Param1, Param2, Param3);
-	}
+    case Proc_OnPaint: {
+        p->old_call(ProcId, cp, p->old_udata, Param1, Param2, Param3);
+        ZuiRect rrc = &cp->m_rcItem;
+        ZuiRect rc = Param2;
+        ZuiLayout op = ZuiControlCall(Proc_GetObject, cp, (ZuiAny)Type_Layout, NULL, NULL);
+        if (op->m_pVerticalScrollBar && op->m_pVerticalScrollBar->m_bVisible) {
+            ZuiInt sw = (ZuiInt)ZuiControlCall(Proc_GetFixedWidth, op->m_pVerticalScrollBar, NULL, NULL, NULL);
+            if (rc->right > (rrc->right - sw)) {
+                rc->right -= sw;
+            }
+        }
+        //if (op->m_pHorizontalScrollBar && op->m_pHorizontalScrollBar->m_bVisible)
+            //rc->bottom -= (ZuiInt)ZuiControlCall(Proc_GetFixedHeight, op->m_pHorizontalScrollBar, NULL, NULL, NULL);
+        ZuiControl pHeader = ((ZuiList)ZuiControlCall(Proc_GetObject, p->m_pOwner, (ZuiAny)Type_List, NULL, NULL))->m_pHeader;
+        if (pHeader->m_bVisible) {
+            ZuiControlCall(ProcId, pHeader, Param1, rc, Param3);
+        }
+        return 0;
+    }
+    case Proc_FindControl: {
+        ZuiControl pResult = NULL;
+        pResult = ZuiControlCall(ProcId, ((ZuiList)ZuiControlCall(Proc_GetObject, p->m_pOwner, (ZuiAny)Type_List, NULL, NULL))->m_pHeader, Param1, Param2, Param3);
+        if (pResult) return pResult;
+        return p->old_call(ProcId, cp, p->old_udata, Param1, Param2, Param3);
+    }
     case Proc_SetPos: {
         ZuiDefaultControlProc(ProcId, cp, 0, Param1, Param2, Param3);
         ZRect rc = *(ZRect*)Param1;
         ZuiLayout op = ZuiControlCall(Proc_GetObject, cp, (ZuiAny)Type_Layout, NULL, NULL);
         // Adjust for inset
-		rc.left += op->m_rcInset.left;
-		rc.top += op->m_rcInset.top;
-		rc.right -= op->m_rcInset.right;
-		rc.bottom -= op->m_rcInset.bottom;
-		rc.left += cp->m_dwBorderWidth;
-		rc.top += cp->m_dwBorderWidth;
-		rc.right -= cp->m_dwBorderWidth;
-		rc.bottom -= cp->m_dwBorderWidth;
+        rc.left += op->m_rcInset.left;
+        rc.top += op->m_rcInset.top;
+        rc.right -= op->m_rcInset.right;
+        rc.bottom -= op->m_rcInset.bottom;
+        rc.left += cp->m_dwBorderWidth;
+        rc.top += cp->m_dwBorderWidth;
+        rc.right -= cp->m_dwBorderWidth;
+        rc.bottom -= cp->m_dwBorderWidth;
         if (op->m_pVerticalScrollBar && op->m_pVerticalScrollBar->m_bVisible)
             rc.right -= (ZuiInt)ZuiControlCall(Proc_GetFixedWidth, op->m_pVerticalScrollBar, NULL, NULL, NULL);
         if (op->m_pHorizontalScrollBar && op->m_pHorizontalScrollBar->m_bVisible)
@@ -486,30 +486,30 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
         }
         cyFixed += (nEstimateNum - 1) * op->m_iChildPadding;
 
-		int ph = 0;
+        int ph = 0;
         if (p->m_pOwner) {
             //得到表头控件
             ZuiControl pHeader = ZuiControlCall(Proc_List_GetHeader, p->m_pOwner, cp, NULL, NULL);
             if (pHeader != NULL && ZuiControlCall(Proc_Layout_GetCount, pHeader, NULL, NULL, NULL) > 0) {
                 SIZE sz = { rc.right - rc.left, rc.bottom - rc.top };
                 cxNeeded = MAX(0, ((SIZE *)ZuiControlCall(Proc_EstimateSize, pHeader, (void *)&sz, 0, 0))->cx);
-				if (pHeader->m_bVisible) {
-					ph = ((SIZE *)ZuiControlCall(Proc_EstimateSize, pHeader, (void *)&sz, 0, 0))->cy;
-				}
-				ZRect rcHeader = *(ZRect *)ZuiControlCall(Proc_GetPos, pHeader, NULL, NULL, NULL);
+                if (pHeader->m_bVisible) {
+                    ph = ((SIZE *)ZuiControlCall(Proc_EstimateSize, pHeader, (void *)&sz, 0, 0))->cy;
+                }
+                ZRect rcHeader = *(ZRect *)ZuiControlCall(Proc_GetPos, pHeader, NULL, NULL, NULL);
                 if (op->m_pHorizontalScrollBar && op->m_pHorizontalScrollBar->m_bVisible)
                 {
                     int nOffset = (LONG)ZuiControlCall(Proc_ScrollBar_GetScrollPos, op->m_pHorizontalScrollBar, NULL, NULL, NULL);
-					rcHeader.left = rc.left - nOffset; rcHeader.top = rc.top; rcHeader.right = rc.right; rcHeader.bottom = rc.top + ph;
+                    rcHeader.left = rc.left - nOffset; rcHeader.top = rc.top; rcHeader.right = rc.right; rcHeader.bottom = rc.top + ph;
                     ZuiControlCall(Proc_SetPos, pHeader, &rcHeader, FALSE, 0);
                 }
-				else {
-					rcHeader.left = rc.left; rcHeader.top = rc.top; rcHeader.right = rc.right; rcHeader.bottom = rc.top + ph;
-					ZuiControlCall(Proc_SetPos, pHeader, &rcHeader, FALSE, 0);
-				}
+                else {
+                    rcHeader.left = rc.left; rcHeader.top = rc.top; rcHeader.right = rc.right; rcHeader.bottom = rc.top + ph;
+                    ZuiControlCall(Proc_SetPos, pHeader, &rcHeader, FALSE, 0);
+                }
             }
         }
-		rc.top += ph;
+        rc.top += ph;
         // Place elements
         int cyNeeded = 0;
         int cyExpand = 0;
@@ -571,29 +571,29 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
         }
         cyNeeded += (nEstimateNum - 1) * op->m_iChildPadding;
 
- /*       if (op->m_pHorizontalScrollBar != NULL) {
-            if (cxNeeded > rc.right - rc.left) {
-                if (op->m_pHorizontalScrollBar->m_bVisible) {
-                    ZuiControlCall(Proc_ScrollBar_SetScrollRange, op->m_pHorizontalScrollBar, (ZuiAny)(cxNeeded - (rc.right - rc.left)), NULL, NULL);
-                }
-                else {
-                    ZuiControlCall(Proc_SetVisible, op->m_pHorizontalScrollBar, (ZuiAny)TRUE, NULL, NULL);
-                    ZuiControlCall(Proc_ScrollBar_SetScrollRange, op->m_pHorizontalScrollBar, (ZuiAny)(cxNeeded - (rc.right - rc.left)), NULL, NULL);
-                    ZuiControlCall(Proc_ScrollBar_SetScrollPos, op->m_pHorizontalScrollBar, 0, NULL, NULL);
-                    rc.bottom -= (LONG)ZuiControlCall(Proc_GetFixedHeight, op->m_pHorizontalScrollBar, 0, 0, 0);
-                }
-            }
-            else {
-                if (op->m_pHorizontalScrollBar->m_bVisible) {
-                    ZuiControlCall(Proc_SetVisible, op->m_pHorizontalScrollBar, FALSE, NULL, NULL);
-                    ZuiControlCall(Proc_ScrollBar_SetScrollRange, op->m_pHorizontalScrollBar, 0, NULL, NULL);
-                    ZuiControlCall(Proc_ScrollBar_SetScrollPos, op->m_pHorizontalScrollBar, 0, NULL, NULL);
-                    rc.bottom += (LONG)ZuiControlCall(Proc_GetFixedHeight, op->m_pHorizontalScrollBar, 0, 0, 0);
-                }
-            }
-        } */
-        // Process the scrollbar
-		rc.top -= ph; cyNeeded += ph;
+        /*       if (op->m_pHorizontalScrollBar != NULL) {
+                   if (cxNeeded > rc.right - rc.left) {
+                       if (op->m_pHorizontalScrollBar->m_bVisible) {
+                           ZuiControlCall(Proc_ScrollBar_SetScrollRange, op->m_pHorizontalScrollBar, (ZuiAny)(cxNeeded - (rc.right - rc.left)), NULL, NULL);
+                       }
+                       else {
+                           ZuiControlCall(Proc_SetVisible, op->m_pHorizontalScrollBar, (ZuiAny)TRUE, NULL, NULL);
+                           ZuiControlCall(Proc_ScrollBar_SetScrollRange, op->m_pHorizontalScrollBar, (ZuiAny)(cxNeeded - (rc.right - rc.left)), NULL, NULL);
+                           ZuiControlCall(Proc_ScrollBar_SetScrollPos, op->m_pHorizontalScrollBar, 0, NULL, NULL);
+                           rc.bottom -= (LONG)ZuiControlCall(Proc_GetFixedHeight, op->m_pHorizontalScrollBar, 0, 0, 0);
+                       }
+                   }
+                   else {
+                       if (op->m_pHorizontalScrollBar->m_bVisible) {
+                           ZuiControlCall(Proc_SetVisible, op->m_pHorizontalScrollBar, FALSE, NULL, NULL);
+                           ZuiControlCall(Proc_ScrollBar_SetScrollRange, op->m_pHorizontalScrollBar, 0, NULL, NULL);
+                           ZuiControlCall(Proc_ScrollBar_SetScrollPos, op->m_pHorizontalScrollBar, 0, NULL, NULL);
+                           rc.bottom += (LONG)ZuiControlCall(Proc_GetFixedHeight, op->m_pHorizontalScrollBar, 0, 0, 0);
+                       }
+                   }
+               } */
+               // Process the scrollbar
+        rc.top -= ph; cyNeeded += ph;
         ZuiControlCall(Proc_Layout_ProcessScrollBar, cp, (ZuiAny)&rc, (ZuiAny)cxNeeded, (ZuiAny)cyNeeded);
         return 0;
     }
@@ -710,35 +710,35 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
 ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListElement p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
     switch (ProcId)
     {
-	case Proc_Layout_Add:
-	case Proc_Layout_AddAt: {
-		ZuiLayoutProc(ProcId, cp, p->old_udata, Param1, Param2, Param3);
-		if (p->m_pOwner == NULL) return FALSE;
-		ZuiControl pHeader = ZuiControlCall(Proc_List_GetHeader, p->m_pOwner, cp, NULL, NULL);
-		if (pHeader == NULL)
-			return FALSE;
-		ZuiLayout op = ZuiControlCall(Proc_GetObject, cp, (ZuiAny)Type_Layout, NULL, NULL);
-		int i = darray_find(op->m_items, Param1);
+    case Proc_Layout_Add:
+    case Proc_Layout_AddAt: {
+        ZuiLayoutProc(ProcId, cp, p->old_udata, Param1, Param2, Param3);
+        if (p->m_pOwner == NULL) return FALSE;
+        ZuiControl pHeader = ZuiControlCall(Proc_List_GetHeader, p->m_pOwner, cp, NULL, NULL);
+        if (pHeader == NULL)
+            return FALSE;
+        ZuiLayout op = ZuiControlCall(Proc_GetObject, cp, (ZuiAny)Type_Layout, NULL, NULL);
+        int i = darray_find(op->m_items, Param1);
 
-		if (i >= 0) {
-			ZuiControl pHeaderItem = ZuiControlCall(Proc_Layout_GetItemAt, pHeader, (ZuiAny)i, NULL, NULL);
-			if (pHeaderItem == NULL) break;
+        if (i >= 0) {
+            ZuiControl pHeaderItem = ZuiControlCall(Proc_Layout_GetItemAt, pHeader, (ZuiAny)i, NULL, NULL);
+            if (pHeaderItem == NULL) break;
 
-			ZuiListHeaderItem lhi = ZuiControlCall(Proc_GetObject, pHeaderItem, (ZuiAny)Type_ListHeaderItem, NULL, NULL);
-			ZuiLabel lop = ZuiControlCall(Proc_GetObject, op->m_items->data[i], (ZuiAny)Type_Label, NULL, NULL);
-			lop->m_uTextStyle |= lhi->m_uListTextStyle;
-			lop->m_cTextColor = lhi->m_cTextColor;
-			lop->m_rFont = lhi->m_rListFont;
+            ZuiListHeaderItem lhi = ZuiControlCall(Proc_GetObject, pHeaderItem, (ZuiAny)Type_ListHeaderItem, NULL, NULL);
+            ZuiLabel lop = ZuiControlCall(Proc_GetObject, op->m_items->data[i], (ZuiAny)Type_Label, NULL, NULL);
+            lop->m_uTextStyle |= lhi->m_uListTextStyle;
+            lop->m_cTextColor = lhi->m_cTextColor;
+            lop->m_rFont = lhi->m_rListFont;
 
-		}
-		return (ZuiAny)TRUE;
-	}
+        }
+        return (ZuiAny)TRUE;
+    }
     case Proc_OnEvent: {
         TEventUI *event = (TEventUI *)Param1;
         if (!cp->m_bMouseEnabled && event->Type > ZEVENT__MOUSEBEGIN && event->Type < ZEVENT__MOUSEEND) {
-            if (p->m_pOwner != NULL) 
+            if (p->m_pOwner != NULL)
                 ZuiControlCall(Proc_OnEvent, p->m_pOwner, Param1, NULL, NULL);
-            else 
+            else
                 ZuiLayoutProc(Proc_OnEvent, cp, 0, Param1, NULL, NULL);
             return 0;
         }
@@ -897,14 +897,14 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
 
                 //rt.right--;
                 //rt.bottom--;
-                
+
                 ZuiControlCall(Proc_SetPos, pListItem, &rt, FALSE, 0);
             }
         }
-		ZuiControl tmpHeaderItem = ZuiControlCall(Proc_Layout_GetItemAt, pHeader, (ZuiAny)((int)ZuiControlCall(Proc_Layout_GetCount, pHeader, NULL, NULL, NULL)-1), NULL, NULL);
-		if (tmpHeaderItem) {
-			cp->m_rcItem.right = tmpHeaderItem->m_rcItem.right;
-		}
+        ZuiControl tmpHeaderItem = ZuiControlCall(Proc_Layout_GetItemAt, pHeader, (ZuiAny)((int)ZuiControlCall(Proc_Layout_GetCount, pHeader, NULL, NULL, NULL) - 1), NULL, NULL);
+        if (tmpHeaderItem) {
+            cp->m_rcItem.right = tmpHeaderItem->m_rcItem.right;
+        }
         return 0;
     }
     case Proc_OnPaintBkColor: {
@@ -912,8 +912,8 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
         ZRect *rc = (ZRect*)&cp->m_rcItem;
         if (p->m_pOwner == NULL) return 0;
         ZuiListInfo pInfo = ZuiControlCall(Proc_List_GetListInfo, p->m_pOwner, cp, NULL, NULL);
-        
-        
+
+
 
         DWORD iBackColor = 0;
         if (!pInfo->bAlternateBk || p->m_iIndex % 2 == 0) iBackColor = pInfo->dwBkColor;
@@ -962,12 +962,12 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
         //    }
         //}
 
-		if (pInfo->dwLineColor != 0) {
-			if (pInfo->bShowRowLine) {
-				ZuiDrawLine(gp, pInfo->dwLineColor, rc->left, rc->bottom - 1, rc->right, rc->bottom, 1);
-			}
-		}
-		if (pInfo->dwColumnColor){
+        if (pInfo->dwLineColor != 0) {
+            if (pInfo->bShowRowLine) {
+                ZuiDrawLine(gp, pInfo->dwLineColor, rc->left, rc->bottom - 1, rc->right, rc->bottom, 1);
+            }
+        }
+        if (pInfo->dwColumnColor) {
             if (pInfo->bShowColumnLine) {
                 for (int i = 0; i < pInfo->nColumns; i++) {
                     ZuiDrawLine(gp, pInfo->dwColumnColor, pInfo->rcColumn[i].right - 1, rc->top, pInfo->rcColumn[i].right, rc->bottom, 1);
@@ -1076,7 +1076,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderProc(ZuiInt ProcId, ZuiControl cp, ZuiListHead
         //创建继承的控件 保存数据指针
         p->old_udata = ZuiHorizontalLayoutProc(Proc_OnCreate, cp, 0, 0, 0, 0);
         p->old_call = (ZCtlProc)&ZuiHorizontalLayoutProc;
-		//cp->m_BkgColor= ARGB(255, 255, 255, 255);
+        //cp->m_BkgColor= ARGB(255, 255, 255, 255);
 
         return p;
     }
@@ -1195,10 +1195,10 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
             else
                 rcSeparator->right += 4;
             if (cp->m_bEnabled && p->m_bDragable && PtInRect((LPRECT)rcSeparator, *(POINT *)&event->ptMouse)) {
-				ZuiOsSetCursor((ZuiUInt)IDC_SIZEWE);
+                ZuiOsSetCursor((ZuiUInt)IDC_SIZEWE);
                 return 0;
             }
-			ZuiOsSetCursor((ZuiUInt)IDC_ARROW);
+            ZuiOsSetCursor((ZuiUInt)IDC_ARROW);
         }
         if (event->Type == ZEVENT_MOUSEENTER)
         {
@@ -1248,8 +1248,8 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
                 img = p->m_diNormal->p;
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
             }
-			else
-				ZuiDrawFillRect(gp, p->m_ColorPushed, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+            else
+                ZuiDrawFillRect(gp, p->m_ColorPushed, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
         }
         else if ((p->m_uButtonState & ZSTATE_HOT) != 0) {
             if (p->m_diHot) {
@@ -1260,8 +1260,8 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
                 img = p->m_diNormal->p;
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
             }
-			else
-				ZuiDrawFillRect(gp, p->m_ColorHot, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+            else
+                ZuiDrawFillRect(gp, p->m_ColorHot, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
         }
         else if ((p->m_uButtonState & ZSTATE_FOCUSED) != 0) {
             if (p->m_diFocused) {
@@ -1272,16 +1272,16 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
                 img = p->m_diNormal->p;
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
             }
-			else
-				ZuiDrawFillRect(gp, p->m_ColorFocused, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+            else
+                ZuiDrawFillRect(gp, p->m_ColorFocused, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
         }
         else {
             if (p->m_diNormal) {
                 img = p->m_diNormal->p;
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
             }
-			else
-				ZuiDrawFillRect(gp, p->m_ColorNormal, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+            else
+                ZuiDrawFillRect(gp, p->m_ColorNormal, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
         }
 
         ZRect *rcThumb = ZuiControlCall(Proc_ListHeaderItem_GetThumbRect, cp, NULL, NULL, NULL);
@@ -1290,12 +1290,12 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
             img = p->m_diSep->p;
             ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
         }
-		else {
-			rc = rcThumb;
-			ZuiDrawFillRect(gp, p->m_ColorSep, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
-		}
+        else {
+            rc = rcThumb;
+            ZuiDrawFillRect(gp, p->m_ColorSep, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+        }
         //DrawImage(hDC, );*/
-		return 0;
+        return 0;
     }
     case Proc_ListHeaderItem_GetThumbRect: {
         if (p->m_iSepWidth >= 0) {
@@ -1342,28 +1342,28 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
 
         p->m_uTextStyle = ZDT_VCENTER | ZDT_SINGLELINE;
         p->m_cTextColor = ARGB(255, 0, 0, 0);
-		ZRect rctmp = { 2,1,2,1 };
-		p->m_rcPadding = rctmp;
+        ZRect rctmp = { 2,1,2,1 };
+        p->m_rcPadding = rctmp;
         return p;
     }
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
         old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
-		if (p->m_diNormal)
-			ZuiResDBDelRes(p->m_diNormal);
-		if (p->m_diHot)
-			ZuiResDBDelRes(p->m_diHot);
-		if (p->m_diPushed)
-			ZuiResDBDelRes(p->m_diPushed);
-		if (p->m_diFocused)
-			ZuiResDBDelRes(p->m_diFocused);
-		if (p->m_diSep)
-			ZuiResDBDelRes(p->m_diSep);
-		if (p->m_rFont)
-			ZuiResDBDelRes(p->m_rFont);
-		if (p->m_rListFont)
-			ZuiResDBDelRes(p->m_rListFont);
+        if (p->m_diNormal)
+            ZuiResDBDelRes(p->m_diNormal);
+        if (p->m_diHot)
+            ZuiResDBDelRes(p->m_diHot);
+        if (p->m_diPushed)
+            ZuiResDBDelRes(p->m_diPushed);
+        if (p->m_diFocused)
+            ZuiResDBDelRes(p->m_diFocused);
+        if (p->m_diSep)
+            ZuiResDBDelRes(p->m_diSep);
+        if (p->m_rFont)
+            ZuiResDBDelRes(p->m_rFont);
+        if (p->m_rListFont)
+            ZuiResDBDelRes(p->m_rListFont);
         free(p);
 
         return 0;
@@ -1380,108 +1380,108 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
         else if (wcscmp(Param1, _T("hotimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetHotImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         else if (wcscmp(Param1, _T("pushedimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetPushedImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         else if (wcscmp(Param1, _T("focusedimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetFocusedImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
-		else if (wcscmp(Param1, _T("sepimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetSepImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
-		else if (wcscmp(Param1, _T("normalcolor")) == 0)  p->m_ColorNormal = ZuiStr2Color(Param2);
-		else if (wcscmp(Param1, _T("hotcolor")) == 0)  p->m_ColorHot = ZuiStr2Color(Param2);
-		else if (wcscmp(Param1, _T("pushedcolor")) == 0)  p->m_ColorPushed = ZuiStr2Color(Param2);
-		else if (wcscmp(Param1, _T("focusedcolor")) == 0)  p->m_ColorFocused = ZuiStr2Color(Param2);
-		else if (wcscmp(Param1, _T("sepcolor")) == 0)  p->m_ColorSep = ZuiStr2Color(Param2);
-		else if (wcscmp(Param1, _T("font")) == 0) {
-			if (p->m_rFont)
-				ZuiResDBDelRes(p->m_rFont);
-			p->m_rFont = ZuiResDBGetRes(Param2, ZREST_FONT);
-			ZuiControlNeedUpdate(cp);
-		}
-		else if (wcscmp(Param1, L"listfont") == 0) {
-			if (p->m_rListFont)
-				ZuiResDBDelRes(p->m_rListFont);
-			p->m_rListFont = ZuiResDBGetRes(Param2, ZREST_FONT);
-			ZuiControlNeedUpdate(cp);
-		}
-		else if (wcscmp(Param1, L"align") == 0) {
-			//横向对齐方式
-			if (wcscmp(Param2, L"left") == 0) {
-				p->m_uTextStyle &= ~(ZDT_CENTER | ZDT_RIGHT);
-				p->m_uTextStyle |= ZDT_LEFT;
-			}
-			if (wcscmp(Param2, L"center") == 0) {
-				p->m_uTextStyle &= ~(ZDT_LEFT | ZDT_RIGHT);
-				p->m_uTextStyle |= ZDT_CENTER;
-			}
-			if (wcscmp(Param2, L"right") == 0) {
-				p->m_uTextStyle &= ~(ZDT_LEFT | ZDT_CENTER);
-				p->m_uTextStyle |= ZDT_RIGHT;
-			}
-			ZuiControlNeedUpdate(cp);
-		}
-		else if (wcscmp(Param1, L"valign") == 0) {
-			//纵向对齐方式
-			if (wcscmp(Param2, L"top") == 0) {
-				p->m_uTextStyle &= ~(ZDT_BOTTOM | ZDT_VCENTER | ZDT_WORDBREAK);
-				p->m_uTextStyle |= (ZDT_TOP | ZDT_SINGLELINE);
-			}
-			if (wcscmp(Param2, L"vcenter") == 0) {
-				p->m_uTextStyle &= ~(ZDT_TOP | ZDT_BOTTOM | ZDT_WORDBREAK);
-				p->m_uTextStyle |= (ZDT_VCENTER | ZDT_SINGLELINE);
-			}
-			if (wcscmp(Param2, L"bottom") == 0) {
-				p->m_uTextStyle &= ~(ZDT_TOP | ZDT_VCENTER | ZDT_WORDBREAK);
-				p->m_uTextStyle |= (ZDT_BOTTOM | ZDT_SINGLELINE);
-			}
-			ZuiControlNeedUpdate(cp);
-		}
-		else if (wcscmp(Param1, L"listalign") == 0) {
-			//横向对齐方式
-			if (wcscmp(Param2, L"left") == 0) {
-				p->m_uListTextStyle &= ~(ZDT_CENTER | ZDT_RIGHT);
-				p->m_uListTextStyle |= ZDT_LEFT;
-			}
-			if (wcscmp(Param2, L"center") == 0) {
-				p->m_uListTextStyle &= ~(ZDT_LEFT | ZDT_RIGHT);
-				p->m_uListTextStyle |= ZDT_CENTER;
-			}
-			if (wcscmp(Param2, L"right") == 0) {
-				p->m_uListTextStyle &= ~(ZDT_LEFT | ZDT_CENTER);
-				p->m_uListTextStyle |= ZDT_RIGHT;
-			}
-			ZuiControlNeedUpdate(cp);
-		}
-		else if (wcscmp(Param1, L"listvalign") == 0) {
-			//纵向对齐方式
-			if (wcscmp(Param2, L"top") == 0) {
-				p->m_uListTextStyle &= ~(ZDT_BOTTOM | ZDT_VCENTER | ZDT_WORDBREAK);
-				p->m_uListTextStyle |= (ZDT_TOP | ZDT_SINGLELINE);
-			}
-			if (wcscmp(Param2, L"vcenter") == 0) {
-				p->m_uListTextStyle &= ~(ZDT_TOP | ZDT_BOTTOM | ZDT_WORDBREAK);
-				p->m_uListTextStyle |= (ZDT_VCENTER | ZDT_SINGLELINE);
-			}
-			if (wcscmp(Param2, L"bottom") == 0) {
-				p->m_uListTextStyle &= ~(ZDT_TOP | ZDT_VCENTER | ZDT_WORDBREAK);
-				p->m_uListTextStyle |= (ZDT_BOTTOM | ZDT_SINGLELINE);
-			}
-		}
-		else if (wcscmp(Param1, L"textcolor") == 0) {
-			//字体颜色
+        else if (wcscmp(Param1, _T("sepimage")) == 0) ZuiControlCall(Proc_ListHeaderItem_SetSepImage, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+        else if (wcscmp(Param1, _T("normalcolor")) == 0)  p->m_ColorNormal = ZuiStr2Color(Param2);
+        else if (wcscmp(Param1, _T("hotcolor")) == 0)  p->m_ColorHot = ZuiStr2Color(Param2);
+        else if (wcscmp(Param1, _T("pushedcolor")) == 0)  p->m_ColorPushed = ZuiStr2Color(Param2);
+        else if (wcscmp(Param1, _T("focusedcolor")) == 0)  p->m_ColorFocused = ZuiStr2Color(Param2);
+        else if (wcscmp(Param1, _T("sepcolor")) == 0)  p->m_ColorSep = ZuiStr2Color(Param2);
+        else if (wcscmp(Param1, _T("font")) == 0) {
+            if (p->m_rFont)
+                ZuiResDBDelRes(p->m_rFont);
+            p->m_rFont = ZuiResDBGetRes(Param2, ZREST_FONT);
+            ZuiControlNeedUpdate(cp);
+        }
+        else if (wcscmp(Param1, L"listfont") == 0) {
+            if (p->m_rListFont)
+                ZuiResDBDelRes(p->m_rListFont);
+            p->m_rListFont = ZuiResDBGetRes(Param2, ZREST_FONT);
+            ZuiControlNeedUpdate(cp);
+        }
+        else if (wcscmp(Param1, L"align") == 0) {
+            //横向对齐方式
+            if (wcscmp(Param2, L"left") == 0) {
+                p->m_uTextStyle &= ~(ZDT_CENTER | ZDT_RIGHT);
+                p->m_uTextStyle |= ZDT_LEFT;
+            }
+            if (wcscmp(Param2, L"center") == 0) {
+                p->m_uTextStyle &= ~(ZDT_LEFT | ZDT_RIGHT);
+                p->m_uTextStyle |= ZDT_CENTER;
+            }
+            if (wcscmp(Param2, L"right") == 0) {
+                p->m_uTextStyle &= ~(ZDT_LEFT | ZDT_CENTER);
+                p->m_uTextStyle |= ZDT_RIGHT;
+            }
+            ZuiControlNeedUpdate(cp);
+        }
+        else if (wcscmp(Param1, L"valign") == 0) {
+            //纵向对齐方式
+            if (wcscmp(Param2, L"top") == 0) {
+                p->m_uTextStyle &= ~(ZDT_BOTTOM | ZDT_VCENTER | ZDT_WORDBREAK);
+                p->m_uTextStyle |= (ZDT_TOP | ZDT_SINGLELINE);
+            }
+            if (wcscmp(Param2, L"vcenter") == 0) {
+                p->m_uTextStyle &= ~(ZDT_TOP | ZDT_BOTTOM | ZDT_WORDBREAK);
+                p->m_uTextStyle |= (ZDT_VCENTER | ZDT_SINGLELINE);
+            }
+            if (wcscmp(Param2, L"bottom") == 0) {
+                p->m_uTextStyle &= ~(ZDT_TOP | ZDT_VCENTER | ZDT_WORDBREAK);
+                p->m_uTextStyle |= (ZDT_BOTTOM | ZDT_SINGLELINE);
+            }
+            ZuiControlNeedUpdate(cp);
+        }
+        else if (wcscmp(Param1, L"listalign") == 0) {
+            //横向对齐方式
+            if (wcscmp(Param2, L"left") == 0) {
+                p->m_uListTextStyle &= ~(ZDT_CENTER | ZDT_RIGHT);
+                p->m_uListTextStyle |= ZDT_LEFT;
+            }
+            if (wcscmp(Param2, L"center") == 0) {
+                p->m_uListTextStyle &= ~(ZDT_LEFT | ZDT_RIGHT);
+                p->m_uListTextStyle |= ZDT_CENTER;
+            }
+            if (wcscmp(Param2, L"right") == 0) {
+                p->m_uListTextStyle &= ~(ZDT_LEFT | ZDT_CENTER);
+                p->m_uListTextStyle |= ZDT_RIGHT;
+            }
+            ZuiControlNeedUpdate(cp);
+        }
+        else if (wcscmp(Param1, L"listvalign") == 0) {
+            //纵向对齐方式
+            if (wcscmp(Param2, L"top") == 0) {
+                p->m_uListTextStyle &= ~(ZDT_BOTTOM | ZDT_VCENTER | ZDT_WORDBREAK);
+                p->m_uListTextStyle |= (ZDT_TOP | ZDT_SINGLELINE);
+            }
+            if (wcscmp(Param2, L"vcenter") == 0) {
+                p->m_uListTextStyle &= ~(ZDT_TOP | ZDT_BOTTOM | ZDT_WORDBREAK);
+                p->m_uListTextStyle |= (ZDT_VCENTER | ZDT_SINGLELINE);
+            }
+            if (wcscmp(Param2, L"bottom") == 0) {
+                p->m_uListTextStyle &= ~(ZDT_TOP | ZDT_VCENTER | ZDT_WORDBREAK);
+                p->m_uListTextStyle |= (ZDT_BOTTOM | ZDT_SINGLELINE);
+            }
+        }
+        else if (wcscmp(Param1, L"textcolor") == 0) {
+            //字体颜色
 /*			ZuiText pstr = NULL;
-			ZuiColor clrColor;
-			while (*(wchar_t *)Param2 > L'\0' && *(wchar_t *)Param2 <= L' ') Param2 = ZuiCharNext((wchar_t *)Param2);
-			if (*(wchar_t *)Param2 == L'#') Param2 = ZuiCharNext((wchar_t *)Param2);
-			clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);*/
-			p->m_cTextColor = ZuiStr2Color(Param2);
-			ZuiControlNeedUpdate(cp);
-		}
-		else if (wcscmp(Param1, L"textpadding") == 0) {
-			//字体边距
-			ZRect rcPadding = { 0 };
-			ZuiText pstr = NULL;
-			rcPadding.left = _tcstol(Param2, &pstr, 10);  ASSERT(pstr);
-			rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
-			rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
-			rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
-			memcpy(&p->m_rcPadding, &rcPadding, sizeof(ZRect));
-			ZuiControlNeedUpdate(cp);
-		}
+            ZuiColor clrColor;
+            while (*(wchar_t *)Param2 > L'\0' && *(wchar_t *)Param2 <= L' ') Param2 = ZuiCharNext((wchar_t *)Param2);
+            if (*(wchar_t *)Param2 == L'#') Param2 = ZuiCharNext((wchar_t *)Param2);
+            clrColor = _tcstoul((wchar_t *)Param2, &pstr, 16);*/
+            p->m_cTextColor = ZuiStr2Color(Param2);
+            ZuiControlNeedUpdate(cp);
+        }
+        else if (wcscmp(Param1, L"textpadding") == 0) {
+            //字体边距
+            ZRect rcPadding = { 0 };
+            ZuiText pstr = NULL;
+            rcPadding.left = _tcstol(Param2, &pstr, 10);  ASSERT(pstr);
+            rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+            rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+            rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+            memcpy(&p->m_rcPadding, &rcPadding, sizeof(ZRect));
+            ZuiControlNeedUpdate(cp);
+        }
         break;
     }
     case Proc_ListHeaderItem_SetDragable: {

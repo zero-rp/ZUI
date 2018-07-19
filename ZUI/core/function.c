@@ -7,6 +7,7 @@
 #include "resdb.h"
 #include "template.h"
 #include "builder.h"
+#include "export.h"
 ZuiText Global_DefaultFontName;     //系统默认字体名称
 ZuiFont Global_Font;                //默认字体
 
@@ -37,6 +38,7 @@ uint32_t Zui_Hash(wchar_t* str) {
 ZuiText ZuiCharNext(ZuiText str) {
     return str + 1;
 }
+
 ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
     if (!config->default_res)
         return FALSE;
@@ -89,6 +91,11 @@ ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
         return FALSE;
     }
 #endif
+    /*初始化导出接口*/
+    if (!ZuiInitZuiFunc())
+    {
+        return FALSE;
+    }
     /*初始化资源池*/
     if (!ZuiResDBInit()) {
         return FALSE;
@@ -147,27 +154,27 @@ ZuiAny ZCALL MsgBox_Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAn
     if (wcscmp(msg, L"onclick") == 0)
     {
         if (wcscmp(p->m_sName, L"WindowCtl_clos") == 0) {
-            ZuiControlCall(Proc_OnClose,p->m_pOs->m_pRoot, (ZuiAny)ZuiCANCEL,NULL,NULL);
+            ZuiControlCall(Proc_OnClose, p->m_pOs->m_pRoot, (ZuiAny)ZuiCANCEL, NULL, NULL);
             //PostMessage(0, WM_APP + 10, 0, 0);
         }
-		else if (wcscmp(p->m_sName, L"ok") == 0) {
-			ZuiControlCall(Proc_OnClose, p->m_pOs->m_pRoot, (ZuiAny)ZuiOK, NULL, NULL);
-		}
-		else if (wcscmp(p->m_sName, L"cancel") == 0) {
-			ZuiControlCall(Proc_OnClose, p->m_pOs->m_pRoot, (ZuiAny)ZuiCANCEL, NULL, NULL);
-		}
+        else if (wcscmp(p->m_sName, L"ok") == 0) {
+            ZuiControlCall(Proc_OnClose, p->m_pOs->m_pRoot, (ZuiAny)ZuiOK, NULL, NULL);
+        }
+        else if (wcscmp(p->m_sName, L"cancel") == 0) {
+            ZuiControlCall(Proc_OnClose, p->m_pOs->m_pRoot, (ZuiAny)ZuiCANCEL, NULL, NULL);
+        }
     }
     return 0;
 }
 
 ZuiAny ZCALL Default_NotifyProc(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
-	if (wcscmp(msg, L"onclose") == 0) {
+    if (wcscmp(msg, L"onclose") == 0) {
         ZuiOsAddDelayedCleanup(p, Param1, Param2);
-	}
+    }
     else if (wcscmp(msg, L"ondestroy") == 0) {
         ZuiMsgLoop_exit((int)Param1);
     }
-	return 0;
+    return 0;
 }
 
 ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
@@ -177,7 +184,7 @@ ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
         FreeZuiControl(MsgBox_pRoot, FALSE);
         return 0;
     }
-	ZuiControlRegNotify(MsgBox_pRoot, Default_NotifyProc);
+    ZuiControlRegNotify(MsgBox_pRoot, Default_NotifyProc);
     //取消最小化按钮
     p = ZuiControlFindName(MsgBox_pRoot, L"WindowCtl_min");
     ZuiControlCall(Proc_SetVisible, p, FALSE, NULL, NULL);
@@ -382,12 +389,12 @@ ZuiColor ZuiStr2Color(ZuiAny str)
     ZuiColor clrColor = 0xFFFFFFFF;
     while (*(ZuiText)str > _T('\0') && *(ZuiText)str <= _T(' '))
         str = ZuiCharNext((ZuiText)str);
-    if (*(ZuiText)str == _T('#')){
+    if (*(ZuiText)str == _T('#')) {
         str = ZuiCharNext((ZuiText)str);
     }
-    else if (*(ZuiText)str == _T('0') && *((ZuiText)str+1) == _T('x')){
-            str = ZuiCharNext((ZuiText)str);
-            str = ZuiCharNext((ZuiText)str);
+    else if (*(ZuiText)str == _T('0') && *((ZuiText)str + 1) == _T('x')) {
+        str = ZuiCharNext((ZuiText)str);
+        str = ZuiCharNext((ZuiText)str);
     }
     else
         return clrColor;

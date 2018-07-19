@@ -89,8 +89,8 @@ typedef struct _ZPoint
 /**点(浮点)*/
 typedef struct _ZPointR
 {
-	ZuiReal x;
-	ZuiReal y;
+    ZuiReal x;
+    ZuiReal y;
 } *ZuiPointR, ZPointR;
 /**大小*/
 typedef struct _ZSize
@@ -221,7 +221,11 @@ enum ZREST
 #define LOG_WARNING(fmt, ...)
 #define LOG_INFO(fmt, ...)
 #define LOG_DUK(ctx)
-#endif 
+#endif
+//--------------------------------------------------------------------plugin类
+#if 1
+
+#endif
 //--------------------------------------------------------------------Base类
 #if 1
 //功能宏
@@ -367,14 +371,16 @@ enum ZREST
 
 #define ZuiLayoutAdd(p,cp) ZuiControlCall(Proc_Layout_Add,(p),(cp),NULL,NULL)
 
-#endif // 1
-
 //--------Tile
 #define Proc_TileLayout_SetColumns      150
 #define Proc_TileLayout_SetItemSize     151
+
 //--------Tab
 #define Proc_TabLayout_SelectItem       161    //当前Tab
 
+#endif // 1
+
+//--------------------------------------------------------------------Label类
 #if 1
 #define Type_Label                  0xe538ac26
 #define Proc_Label_SetFont          171     //设置字体
@@ -399,7 +405,6 @@ enum ZREST
 #define Proc_Button_SetColorFocused   209    //焦点图片
 #define Proc_Button_SetColorDisabled  210    //非激活状态
 #endif // 1
-//--------------------------------------------------------------------Label类
 
 //--------------------------------------------------------------------类
 #if 1
@@ -411,7 +416,7 @@ enum ZREST
 #endif // 1
 //--------------------------------------------------------------------SplitterBar类
 #if 1
-#define Type_SplitterBar    0xd77cbbba
+#define Type_SplitterBar            0xd77cbbba
 #endif // 1
 //--------------------------------------------------------------------ProgressBar类
 #if 1
@@ -420,7 +425,7 @@ enum ZREST
 
 //--------------------------------------------------------------------CheckBox类
 #if 1
-#define Type_CheckBox            0x251a8a44
+#define Type_CheckBox               0x251a8a44
 #endif // 1
 //--------------------------------------------------------------------List类
 #if 1
@@ -574,9 +579,17 @@ enum ZREST
 #endif // 1
 //--------------------------------------------------------------------内部函数导出表
 //zui引擎
+#define ZuiFuncsVersion                     1.1
 typedef struct _ZuiFuncs {
     uint16_t size;      //结构大小
     uint16_t version;   //结构版本
+
+    ZuiInt(ZCALL *ZuiMsgLoop)();
+    ZuiVoid(ZCALL *ZuiMsgLoop_exit)(int nRet);
+    ZuiVoid(ZCALL *ZuiPostTask)(ZuiTask task);
+    ZuiControl(ZCALL *NewZuiControl)(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+    ZuiVoid(ZCALL *FreeZuiControl)(ZuiControl p, ZuiBool Delayed);
+    ZuiAny(ZCALL *ZuiControlCall)(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
 
 
 }ZuiFuncs;

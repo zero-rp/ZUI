@@ -32,6 +32,8 @@
 #define HAVE_UV 1
 #endif
 
+#if (defined HAVE_JS) && (HAVE_JS == 1)
 #define JS_GCTIMER  10      //js内存回收间隔 s
+#endif
 
 #endif
