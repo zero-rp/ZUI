@@ -913,7 +913,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
             break;
         }
         case ScrollBar_BK_Color: {
-            ZuiControlCall(Proc_SetColor, cp, (ZuiAny)BK_Color, Param2, Param3);
+            ZuiControlCall(Proc_SetBkColor, cp, (ZuiAny)BK_Color, Param2, Param3);
             break;
         }
         default:

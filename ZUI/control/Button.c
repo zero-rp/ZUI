@@ -93,13 +93,6 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         break;
     }
 #endif
-    case Proc_SetEnabled: {
-        if (0 == (ZuiBool)Param1)
-            p->type = -1;
-        else
-            p->type = 0;
-        break;
-    }
     case Proc_OnPaintStatusImage: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = (ZRect *)&cp->m_rcItem;
@@ -131,7 +124,7 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
                 ZuiDrawFillRect(gp, p->m_ColorPushed, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
             }
         }
-        else  {
+        else {
             if (p->m_ResPushed) {
                 img = p->m_ResDisabled->p;
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
@@ -142,70 +135,61 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         }
         return 0;
     }
-    case Proc_Button_SetRes: {
-        switch ((int)Param1) {
-        case Button_N_Res: {
-            if (p->m_ResNormal)
-                ZuiResDBDelRes(p->m_ResNormal);
-            p->m_ResNormal = Param2;
-            break;
-        }
-        case Button_H_Res: {
-            if (p->m_ResHot)
-                ZuiResDBDelRes(p->m_ResHot);
-            p->m_ResHot = Param2;
-            break;
-        }
-        case Button_P_Res: {
-            if (p->m_ResPushed)
-                ZuiResDBDelRes(p->m_ResPushed);
-            p->m_ResPushed = Param2;
-            break;
-        }
-        case Button_F_Res: {
-            if (p->m_ResFocused)
-                ZuiResDBDelRes(p->m_ResFocused);
-            p->m_ResFocused = Param2;
-            break;
-        }
-        case Button_D_Res: {
-            if (p->m_ResDisabled)
-                ZuiResDBDelRes(p->m_ResDisabled);
-            p->m_ResDisabled = Param2;
-            break;
-        }
-        default:
-            break;
-        }
-        ZuiControlInvalidate(cp, TRUE);
+    case Proc_SetEnabled: {
+        if (0 == (ZuiBool)Param1)
+            p->type = -1;
+        else
+            p->type = 0;
+        break;
+    }
+    case Proc_Button_SetResNormal: {
+        if (p->m_ResNormal)
+            ZuiResDBDelRes(p->m_ResNormal);
+        p->m_ResNormal = Param1;
         return 0;
     }
-    case Proc_Button_SetColor: {
-        switch ((int)Param1) {
-        case Button_N_Color: {
-            p->m_ColorNormal = (ZuiColor)Param2;
-            break;
-        }
-        case Button_H_Color: {
-            p->m_ColorHot = (ZuiColor)Param2;
-            break;
-        }
-        case Button_P_Color: {
-            p->m_ColorPushed = (ZuiColor)Param2;
-            break;
-        }
-        case Button_F_Color: {
-            p->m_ColorFocused = (ZuiColor)Param2;
-            break;
-        }
-        case Button_D_Color: {
-            p->m_ColorDisabled = (ZuiColor)Param2;
-            break;
-        }
-        default:
-            break;
-        }
-        ZuiControlInvalidate(cp,TRUE);
+    case Proc_Button_SetResHot: {
+        if (p->m_ResHot)
+            ZuiResDBDelRes(p->m_ResHot);
+        p->m_ResHot = Param1;
+        return 0;
+    }
+    case Proc_Button_SetResPushed: {
+        if (p->m_ResPushed)
+            ZuiResDBDelRes(p->m_ResPushed);
+        p->m_ResPushed = Param1;
+        return 0;
+    }
+    case Proc_Button_SetResFocused: {
+        if (p->m_ResFocused)
+            ZuiResDBDelRes(p->m_ResFocused);
+        p->m_ResFocused = Param1;
+        return 0;
+    }
+    case Proc_Button_SetResDisabled: {
+        if (p->m_ResDisabled)
+            ZuiResDBDelRes(p->m_ResDisabled);
+        p->m_ResDisabled = Param1;
+        return 0;
+    }
+    case Proc_Button_SetColorNormal: {
+        p->m_ColorNormal = (ZuiColor)Param1;
+        return 0;
+    }
+    case Proc_Button_SetColorHot: {
+        p->m_ColorHot = (ZuiColor)Param1;
+        return 0;
+    }
+    case Proc_Button_SetColorPushed: {
+        p->m_ColorPushed = (ZuiColor)Param1;
+        return 0;
+    }
+    case Proc_Button_SetColorFocused: {
+        p->m_ColorFocused = (ZuiColor)Param1;
+        return 0;
+    }
+    case Proc_Button_SetColorDisabled: {
+        p->m_ColorDisabled = (ZuiColor)Param1;
         return 0;
     }
     case Proc_SetAnimation: {
@@ -215,27 +199,17 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         return 0;
     }
     case Proc_SetAttribute: {
-        if (wcscmp(Param1, L"normalimage") == 0)
-            ZuiControlCall(Proc_Button_SetRes, cp, (ZuiAny)Button_N_Res, ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
-        else if (wcscmp(Param1, L"hotimage") == 0)
-            ZuiControlCall(Proc_Button_SetRes, cp, (ZuiAny)Button_H_Res, ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
-        else if (wcscmp(Param1, L"pushedimage") == 0)
-            ZuiControlCall(Proc_Button_SetRes, cp, (ZuiAny)Button_P_Res, ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
-        else if (wcscmp(Param1, L"focusedimage") == 0)
-            ZuiControlCall(Proc_Button_SetRes, cp, (ZuiAny)Button_F_Res, ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
-        else if (wcscmp(Param1, L"disabledimage") == 0)
-            ZuiControlCall(Proc_Button_SetRes, cp, (ZuiAny)Button_D_Res, ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
+        if (wcscmp(Param1, L"normalimage") == 0) ZuiControlCall(Proc_Button_SetResNormal, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+        else if (wcscmp(Param1, L"hotimage") == 0) ZuiControlCall(Proc_Button_SetResHot, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+        else if (wcscmp(Param1, L"pushedimage") == 0) ZuiControlCall(Proc_Button_SetResPushed, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+        else if (wcscmp(Param1, L"focusedimage") == 0) ZuiControlCall(Proc_Button_SetResFocused, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+        else if (wcscmp(Param1, L"disabledimage") == 0) ZuiControlCall(Proc_Button_SetResDisabled, cp, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         
-        else if (wcscmp(Param1, L"normalcolor") == 0)
-            ZuiControlCall(Proc_Button_SetColor, cp, (ZuiAny)Button_N_Color, (ZuiAny)ZuiStr2Color(Param2), NULL);
-        else if (wcscmp(Param1, L"hotcolor") == 0)
-            ZuiControlCall(Proc_Button_SetColor, cp, (ZuiAny)Button_H_Color, (ZuiAny)ZuiStr2Color(Param2), NULL);
-        else if (wcscmp(Param1, L"pushedcolor") == 0)
-            ZuiControlCall(Proc_Button_SetColor, cp, (ZuiAny)Button_P_Color, (ZuiAny)ZuiStr2Color(Param2), NULL);
-        else if (wcscmp(Param1, L"focusedcolor") == 0)
-            ZuiControlCall(Proc_Button_SetColor, cp, (ZuiAny)Button_F_Color, (ZuiAny)ZuiStr2Color(Param2), NULL);
-        else if (wcscmp(Param1, L"disabledcolor") == 0)
-            ZuiControlCall(Proc_Button_SetColor, cp, (ZuiAny)Button_D_Color, (ZuiAny)ZuiStr2Color(Param2), NULL);
+        else if (wcscmp(Param1, L"normalcolor") == 0) ZuiControlCall(Proc_Button_SetColorNormal, cp, (ZuiAny)ZuiStr2Color(Param2), NULL, NULL);
+        else if (wcscmp(Param1, L"hotcolor") == 0) ZuiControlCall(Proc_Button_SetColorHot, cp, (ZuiAny)ZuiStr2Color(Param2), NULL, NULL);
+        else if (wcscmp(Param1, L"pushedcolor") == 0) ZuiControlCall(Proc_Button_SetColorPushed, cp, (ZuiAny)ZuiStr2Color(Param2), NULL, NULL);
+        else if (wcscmp(Param1, L"focusedcolor") == 0) ZuiControlCall(Proc_Button_SetColorFocused, cp, (ZuiAny)ZuiStr2Color(Param2), NULL, NULL);
+        else if (wcscmp(Param1, L"disabledcolor") == 0) ZuiControlCall(Proc_Button_SetColorDisabled, cp, (ZuiAny)ZuiStr2Color(Param2), NULL, NULL);
         break;
     }
     case Proc_OnCreate: {

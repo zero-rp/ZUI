@@ -128,63 +128,63 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
     case Proc_Option_GetSelected: {
         return (ZuiAny)p->m_bSelected;
     }
-    case Proc_Option_SetRes: {
-        switch ((int)Param1) {
-        case Option_SN_Res: {
-            if (p->m_ResSelected)
-                ZuiResDBDelRes(p->m_ResSelected);
-            p->m_ResSelected = Param2;
-            break;
-        }
-        case Option_SH_Res: {
-            if (p->m_ResSelectedHot)
-                ZuiResDBDelRes(p->m_ResSelectedHot);
-            p->m_ResSelectedHot = Param2;
-            break;
-        }
-        case Option_SP_Res: {
-            if (p->m_ResSelectedPushed)
-                ZuiResDBDelRes(p->m_ResSelectedPushed);
-            p->m_ResSelectedPushed = Param2;
-            break;
-        }
-        case Option_SD_Res: {
-            if (p->m_ResSelectedDisabled)
-                ZuiResDBDelRes(p->m_ResSelectedDisabled);
-            p->m_ResSelectedDisabled = Param2;
-            break;
-        }
-        default:
-            break;
-        }
+    case Proc_Option_SetResNormal: {
+        if (p->m_ResSelected)
+            ZuiResDBDelRes(p->m_ResSelected);
+        p->m_ResSelected = Param1;
         ZuiControlInvalidate(cp, TRUE);
         return 0;
     }
-    case Proc_Option_SetColor: {
-        switch ((int)Param1) {
-        case Option_SN_Color: {
-            p->m_ColorSelected = (ZuiColor)Param2;
-            break;
-        }
-        case Option_SH_Color: {
-            p->m_ColorSelectedHot = (ZuiColor)Param2;
-            break;
-        }
-        case Option_SP_Color: {
-            p->m_ColorSelectedPushed = (ZuiColor)Param2;
-            break;
-        }
-        case Option_SF_Color: {
-            p->m_ColorSelectedFocused = (ZuiColor)Param2;
-            break;
-        }
-        case Option_SD_Color: {
-            p->m_ColorSelectedDisabled = (ZuiColor)Param2;
-            break;
-        }
-        default:
-            break;
-        }
+    case Proc_Option_SetResHot: {
+        if (p->m_ResSelectedHot)
+            ZuiResDBDelRes(p->m_ResSelectedHot);
+        p->m_ResSelectedHot = Param1;
+        ZuiControlInvalidate(cp, TRUE);
+        return 0;
+    }
+    case Proc_Option_SetResPushed: {
+        if (p->m_ResSelectedPushed)
+            ZuiResDBDelRes(p->m_ResSelectedPushed);
+        p->m_ResSelectedPushed = Param1;
+        ZuiControlInvalidate(cp, TRUE);
+        return 0;
+    }
+    case Proc_Option_SetResFocused: {
+        if (p->m_ResSelectedFocused)
+            ZuiResDBDelRes(p->m_ResSelectedFocused);
+        p->m_ResSelectedFocused = Param1;
+        ZuiControlInvalidate(cp, TRUE);
+        return 0;
+    }
+    case Proc_Option_SetResDisabled: {
+        if (p->m_ResSelectedDisabled)
+            ZuiResDBDelRes(p->m_ResSelectedDisabled);
+        p->m_ResSelectedDisabled = Param1;
+        ZuiControlInvalidate(cp, TRUE);
+        return 0;
+    }
+    case Proc_Option_SetColorNormal: {
+        p->m_ColorSelected = (ZuiColor)Param1;
+        ZuiControlInvalidate(cp, TRUE);
+        return 0;
+    }
+    case Proc_Option_SetColorHot: {
+        p->m_ColorSelectedHot = (ZuiColor)Param1;
+        ZuiControlInvalidate(cp, TRUE);
+        return 0;
+    }
+    case Proc_Option_SetColorPushed: {
+        p->m_ColorSelectedPushed = (ZuiColor)Param1;
+        ZuiControlInvalidate(cp, TRUE);
+        return 0;
+    }
+    case Proc_Option_SetColorFocused: {
+        p->m_ColorSelectedFocused = (ZuiColor)Param1;
+        ZuiControlInvalidate(cp, TRUE);
+        return 0;
+    }
+    case Proc_Option_SetColorDisabled: {
+        p->m_ColorSelectedDisabled = (ZuiColor)Param1;
         ZuiControlInvalidate(cp, TRUE);
         return 0;
     }
@@ -194,25 +194,25 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
         else if (_tcscmp(Param1, _T("selected")) == 0)
             ZuiControlCall(Proc_Option_SetSelected, cp, (ZuiAny)(wcscmp(Param2, L"true") == 0 ? TRUE : FALSE), NULL, NULL);
         else if (_tcscmp(Param1, _T("selectedimage")) == 0)
-            ZuiControlCall(Proc_Option_SetRes, cp, (ZuiAny)Option_SN_Res, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
+            ZuiControlCall(Proc_Option_SetResNormal, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         else if (_tcscmp(Param1, _T("selectedhotimage")) == 0)
-            ZuiControlCall(Proc_Option_SetRes, cp, (ZuiAny)Option_SH_Res, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
+            ZuiControlCall(Proc_Option_SetResHot, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         else if (_tcscmp(Param1, _T("selectedpushedimage")) == 0)
-            ZuiControlCall(Proc_Option_SetRes, cp, (ZuiAny)Option_SP_Res, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
+            ZuiControlCall(Proc_Option_SetResPushed, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         else if (_tcscmp(Param1, _T("selectedfocusedimage")) == 0)
-            ZuiControlCall(Proc_Option_SetRes, cp, (ZuiAny)Option_SF_Res, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
+            ZuiControlCall(Proc_Option_SetResFocused, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         else if (_tcscmp(Param1, _T("selecteddisabledimage")) == 0)
-            ZuiControlCall(Proc_Option_SetRes, cp, (ZuiAny)Option_SD_Res, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
+            ZuiControlCall(Proc_Option_SetResDisabled, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
         else if (wcscmp(Param1, L"selectedcolor") == 0)
-            ZuiControlCall(Proc_Button_SetColor, cp, (ZuiAny)Option_SN_Color, (ZuiAny)ZuiStr2Color(Param2), NULL);
+            ZuiControlCall(Proc_Option_SetColorNormal, cp, (ZuiAny)ZuiStr2Color(Param2), NULL, NULL);
         else if (wcscmp(Param1, L"hotselectedcolor") == 0)
-            ZuiControlCall(Proc_Button_SetColor, cp, (ZuiAny)Option_SH_Color, (ZuiAny)ZuiStr2Color(Param2), NULL);
+            ZuiControlCall(Proc_Option_SetColorHot, cp, (ZuiAny)ZuiStr2Color(Param2), NULL, NULL);
         else if (wcscmp(Param1, L"pushedselectedcolor") == 0)
-            ZuiControlCall(Proc_Button_SetColor, cp, (ZuiAny)Option_SP_Color, (ZuiAny)ZuiStr2Color(Param2), NULL);
+            ZuiControlCall(Proc_Option_SetColorPushed, cp, (ZuiAny)ZuiStr2Color(Param2), NULL, NULL);
         else if (wcscmp(Param1, L"focusedselectedcolor") == 0)
-            ZuiControlCall(Proc_Button_SetColor, cp, (ZuiAny)Option_SF_Color, (ZuiAny)ZuiStr2Color(Param2), NULL);
+            ZuiControlCall(Proc_Option_SetColorFocused, cp, (ZuiAny)ZuiStr2Color(Param2), NULL, NULL);
         else if (wcscmp(Param1, L"disabledselectedcolor") == 0)
-            ZuiControlCall(Proc_Button_SetColor, cp, (ZuiAny)Option_SD_Color, (ZuiAny)ZuiStr2Color(Param2), NULL);
+            ZuiControlCall(Proc_Option_SetColorDisabled, cp, (ZuiAny)ZuiStr2Color(Param2), NULL, NULL);
         break;
     }
 #if (defined HAVE_JS) && (HAVE_JS == 1)

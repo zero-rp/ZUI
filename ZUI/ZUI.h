@@ -302,7 +302,7 @@ enum ZREST
 #define Proc_SetDrag            66  //设置拖拽控件
 
 //-------绘图资源
-#define Proc_SetColor           67  //设置背景色
+#define Proc_SetBkColor           67  //设置背景色
 #define Proc_SetBkImage         68  //设置背景图片
 //#define Proc_SetBorderColor     69  //设置边框颜色
 
@@ -387,28 +387,17 @@ enum ZREST
 #if 1
 #define Type_Button                 0x5e7331d7
 
-#define Proc_Button_SetRes    201    //
-//#define Proc_Button_SetResHot       202    //高亮状态
-//#define Proc_Button_SetResPushed    203    //按下状态
-//#define Proc_Button_SetResFocused   204    //焦点图片
-//#define Proc_Button_SetResDisabled  205    //非激活状态
+#define Proc_Button_SetResNormal    201    //普通颜色
+#define Proc_Button_SetResHot       202    //高亮状态
+#define Proc_Button_SetResPushed    203    //按下状态
+#define Proc_Button_SetResFocused   204    //焦点图片
+#define Proc_Button_SetResDisabled  205    //非激活状态
 
-#define Proc_Button_SetColor   206    //
-//#define Proc_Button_SetColorHot       207    //高亮状态
-//#define Proc_Button_SetColorPushed    208    //按下状态
-//#define Proc_Button_SetColorFocused   209    //焦点图片
-//#define Proc_Button_SetColorDisabled  210    //非激活状态
-//------属性名称
-#define Button_N_Color      0x00000001 //普通颜色
-#define Button_H_Color      0x00000002 //高亮颜色
-#define Button_P_Color      0x00000004
-#define Button_F_Color      0x00000008
-#define Button_D_Color      0x00000010
-#define Button_N_Res      0x00000001 //普通图片
-#define Button_H_Res      0x00000002 //高亮图片
-#define Button_P_Res      0x00000004
-#define Button_F_Res      0x00000008
-#define Button_D_Res      0x00000010
+#define Proc_Button_SetColorNormal    206    //普通颜色
+#define Proc_Button_SetColorHot       207    //高亮状态
+#define Proc_Button_SetColorPushed    208    //按下状态
+#define Proc_Button_SetColorFocused   209    //焦点图片
+#define Proc_Button_SetColorDisabled  210    //非激活状态
 #endif // 1
 //--------------------------------------------------------------------Label类
 
@@ -509,22 +498,20 @@ enum ZREST
 #define Type_Option                         0x8f0a0522
 #define Proc_Option_SetSelected             1031    //
 #define Proc_Option_GetSelected             1032    //
-#define Proc_Option_SetRes                  1033    //选中的普通状态
-#define Proc_Option_SetColor                  1034
-//#define Proc_Option_SetResSelectedHot       1034    //选中的点燃状态
-//#define Proc_Option_SetResSelectedPushed    1035    //选中的按下状态
-#define Proc_Option_SetGroup                1036
-//------属性名称
-#define Option_SN_Res      0x00000001 //选中普通图片
-#define Option_SH_Res      0x00000002 //选中高亮图片
-#define Option_SP_Res      0x00000004
-#define Option_SD_Res      0x00000008
-#define Option_SF_Res      0x00000010
-#define Option_SN_Color      0x00000001 //选中普通颜色
-#define Option_SH_Color      0x00000002 //选中高亮颜色
-#define Option_SP_Color      0x00000004
-#define Option_SD_Color      0x00000008
-#define Option_SF_Color      0x00000010
+
+#define Proc_Option_SetResNormal            1033    //选中的普通状态
+#define Proc_Option_SetResHot               1034
+#define Proc_Option_SetResPushed            1035
+#define Proc_Option_SetResFocused           1036
+#define Proc_Option_SetResDisabled          1037
+
+#define Proc_Option_SetColorNormal          1038
+#define Proc_Option_SetColorHot             1039
+#define Proc_Option_SetColorPushed          1040
+#define Proc_Option_SetColorFocused         1041
+#define Proc_Option_SetColorDisabled        1042
+
+#define Proc_Option_SetGroup                1043    //设置到组
 #endif // 1
 
 //--------------------------------------------------------------------ScrollBar类
@@ -585,7 +572,7 @@ enum ZREST
 #define Proc_TreeNode_GetFolderButton       1115
 #define Proc_TreeNode_GetCheckBox           1116
 #endif // 1
-//--------------------------------------------------------------------内部函数
+//--------------------------------------------------------------------内部函数导出表
 //zui引擎
 typedef struct _ZuiFuncs {
     uint16_t size;      //结构大小
@@ -619,9 +606,9 @@ extern "C"
     ZEXPORT ZuiControl ZCALL NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);//创建控件
     ZEXPORT ZuiVoid ZCALL FreeZuiControl(ZuiControl p, ZuiBool Delayed);//销毁控件
     ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);//调用控件处理函数
-	ZEXPORT ZuiControl ZCALL ZuiControlFindName(ZuiControl p, ZuiText Name);
-	ZEXPORT ZuiVoid ZCALL ZuiControlRegNotify(ZuiControl p, ZNotifyProc pNotify);
-	ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title);
+    ZEXPORT ZuiControl ZCALL ZuiControlFindName(ZuiControl p, ZuiText Name);
+    ZEXPORT ZuiVoid ZCALL ZuiControlRegNotify(ZuiControl p, ZNotifyProc pNotify);
+    ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title);
 
     //载入布局窗口
     ZEXPORT ZuiControl ZCALL ZuiLayoutLoad(ZuiAny xml, ZuiInt len);
@@ -635,12 +622,8 @@ extern "C"
     ZEXPORT ZuiRes ZCALL ZuiResDBGetRes(ZuiText Path, ZuiInt type);//获取一个资源
     ZEXPORT ZuiVoid ZCALL ZuiResDBDelRes(ZuiRes res);//释放一个资源
     ZEXPORT ZuiAny ZCALL ZuiResGetData(ZuiRes res,ZuiInt *plen);//获取资源中的数据
-
-    
-
-
 #ifdef PLATFORM_OS_WIN
-    ZEXPORT ZuiBool ZCALL ZuiResDBAddPE(ZuiText name, ZuiAny hInstance);
+    ZEXPORT ZuiBool ZCALL ZuiResDBAddPE(ZuiText name, ZuiAny hInstance);//添加一个PE文件到资源池
 #endif // PLATFORM_OS_WIN
 
 

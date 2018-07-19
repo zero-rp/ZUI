@@ -373,15 +373,15 @@ ZEXPORT ZuiAny ZCALL ZuiTreeNodeProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeNode p
         p->pItemButton = NewZuiControl(L"Option", NULL, NULL, NULL);
 
         //加载默认资源
-        ZuiControlCall(Proc_Button_SetRes, p->pFolderButton, (ZuiAny)Button_N_Res, ZuiResDBGetRes(L"default:default/treeview_a.png:src='0,0,16,16'", ZREST_IMG), NULL);
-        ZuiControlCall(Proc_Button_SetRes, p->pFolderButton, (ZuiAny)Button_H_Res, ZuiResDBGetRes(L"default:default/treeview_a.png:src='16,0,16,16'", ZREST_IMG), NULL);
+        ZuiControlCall(Proc_Button_SetResNormal, p->pFolderButton, ZuiResDBGetRes(L"default:default/treeview_a.png:src='0,0,16,16'", ZREST_IMG), NULL, NULL);
+        ZuiControlCall(Proc_Button_SetResHot, p->pFolderButton, ZuiResDBGetRes(L"default:default/treeview_a.png:src='16,0,16,16'", ZREST_IMG), NULL, NULL);
 
-        ZuiControlCall(Proc_Button_SetRes, p->pCheckBox, (ZuiAny)Button_N_Res, ZuiResDBGetRes(L"default:default/unchecked.png", ZREST_IMG), NULL);
-        ZuiControlCall(Proc_Button_SetRes, p->pCheckBox, (ZuiAny)Button_H_Res, ZuiResDBGetRes(L"default:default/unchecked.png", ZREST_IMG), NULL);
-        ZuiControlCall(Proc_Button_SetRes, p->pCheckBox, (ZuiAny)Button_P_Res, ZuiResDBGetRes(L"default:default/unchecked.png", ZREST_IMG), NULL);
-        ZuiControlCall(Proc_Option_SetRes, p->pCheckBox, (ZuiAny)Option_SN_Res, ZuiResDBGetRes(L"default:default/checked.png", ZREST_IMG), NULL);
-        ZuiControlCall(Proc_Option_SetRes, p->pCheckBox, (ZuiAny)Option_SH_Res, ZuiResDBGetRes(L"default:default/checked.png", ZREST_IMG), NULL);
-        ZuiControlCall(Proc_Option_SetRes, p->pCheckBox, (ZuiAny)Option_SP_Res, ZuiResDBGetRes(L"default:default/checked.png", ZREST_IMG), NULL);
+        ZuiControlCall(Proc_Button_SetResNormal, p->pCheckBox, ZuiResDBGetRes(L"default:default/unchecked.png", ZREST_IMG), NULL, NULL);
+        ZuiControlCall(Proc_Button_SetResHot, p->pCheckBox, ZuiResDBGetRes(L"default:default/unchecked.png", ZREST_IMG), NULL, NULL);
+        ZuiControlCall(Proc_Button_SetResPushed, p->pCheckBox, ZuiResDBGetRes(L"default:default/unchecked.png", ZREST_IMG), NULL, NULL);
+        ZuiControlCall(Proc_Option_SetResNormal, p->pCheckBox, ZuiResDBGetRes(L"default:default/checked.png", ZREST_IMG), NULL, NULL);
+        ZuiControlCall(Proc_Option_SetResHot, p->pCheckBox, ZuiResDBGetRes(L"default:default/checked.png", ZREST_IMG), NULL, NULL);
+        ZuiControlCall(Proc_Option_SetResPushed, p->pCheckBox, ZuiResDBGetRes(L"default:default/checked.png", ZREST_IMG), NULL, NULL);
 
         ZuiControlCall(Proc_SetFixedHeight, cp, (ZuiAny)18, NULL, NULL);
         ZuiControlCall(Proc_SetFixedWidth, cp, (ZuiAny)250, NULL, NULL);

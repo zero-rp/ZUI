@@ -330,7 +330,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         //创建表头
         p->m_pHeader = NewZuiControl(L"ListHeader", NULL, NULL, NULL);
         ZuiVerticalLayoutProc(Proc_Layout_Add, cp, p->old_udata, p->m_pHeader, NULL, NULL);
-        ZuiControlCall(Proc_SetColor, p->m_pHeader, (ZuiAny)BK_Color,(ZuiAny)ARGB(255, 111, 222, 200), NULL);
+        ZuiControlCall(Proc_SetBkColor, p->m_pHeader, (ZuiAny)BK_Color,(ZuiAny)ARGB(255, 111, 222, 200), NULL);
         //创建表主体
         p->m_pList = NewZuiControl(L"ListBody", NULL, NULL, NULL);
         ZuiVerticalLayoutProc(Proc_Layout_Add, cp, p->old_udata, p->m_pList, NULL, NULL);

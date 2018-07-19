@@ -148,7 +148,7 @@ void duk_push_string_w(duk_context *ctx, wchar_t *str) {
 }
 
 static duk_ret_t ZuiJsBind_Call_exit(duk_context *ctx) {
-    ZuiMsgLoop_exit();
+    ZuiMsgLoop_exit(0);
     return 0;
 }
 duk_ret_t ZuiJsBind_Call_print(duk_context *ctx) {

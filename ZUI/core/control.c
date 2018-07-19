@@ -507,7 +507,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         return ((FINDCONTROLPROC)Param1)(p, Param2);
         break;
     }
-    case Proc_SetColor: {
+    case Proc_SetBkColor: {
         if ((int)Param1 & BK_Color) {
             p->m_BkgColor = (ZuiColor)Param2;
             ZuiControlInvalidate(p, TRUE);
@@ -643,7 +643,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         else if (wcscmp(Param1, L"bkcolor") == 0) {
 			ZuiColor clrColor;
 			clrColor = ZuiStr2Color(Param2);
-            ZuiControlCall(Proc_SetColor, p, (ZuiAny)BK_Color,(ZuiAny)clrColor, NULL);
+            ZuiControlCall(Proc_SetBkColor, p, (ZuiAny)BK_Color,(ZuiAny)clrColor, NULL);
         }
         else if (wcscmp(Param1, L"drag") == 0) ZuiControlCall(Proc_SetDrag, p, (ZuiAny)(wcscmp(Param2, L"true") == 0 ? TRUE : FALSE), NULL, NULL);
         else if (wcscmp(Param1, L"bkimage") == 0) ZuiControlCall(Proc_SetBkImage, p, ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
@@ -659,7 +659,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         else if (wcscmp(Param1, L"bordercolor") == 0) {
 			ZuiColor clrColor;
 			clrColor = ZuiStr2Color(Param2);
-            ZuiControlCall(Proc_SetColor, p, (ZuiAny)Border_Color,(ZuiAny)clrColor, NULL);
+            ZuiControlCall(Proc_SetBkColor, p, (ZuiAny)Border_Color,(ZuiAny)clrColor, NULL);
         }
         else if (wcscmp(Param1, L"name") == 0) ZuiControlCall(Proc_SetName, p, Param2, NULL, NULL);
         else if (wcscmp(Param1, L"float") == 0) {
@@ -930,7 +930,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         switch ((ZuiInt)Param2)
         {
         case Js_Id_close: {
-            ZuiOsAddDelayedCleanup(p->m_pOs, p);
+            ZuiOsAddDelayedCleanup(p->m_pOs, p, 0, 0);
             return 0;
         }
         default:

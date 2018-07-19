@@ -14,12 +14,12 @@ enum EVENTTYPE_UI
     ZEVENT_SYSKEY,
     ZEVENT__KEYEND,
     ZEVENT__MOUSEBEGIN,
-    ZEVENT_MOUSEMOVE,//鼠标移动
-    ZEVENT_MOUSELEAVE,//鼠标离开
-    ZEVENT_MOUSEENTER,//鼠标进入
-    ZEVENT_MOUSEHOVER,
-    ZEVENT_LBUTTONDOWN,
-    ZEVENT_LBUTTONUP,
+    ZEVENT_MOUSEMOVE,       //鼠标移动
+    ZEVENT_MOUSELEAVE,      //鼠标离开
+    ZEVENT_MOUSEENTER,      //鼠标进入
+    ZEVENT_MOUSEHOVER,      //鼠标悬停
+    ZEVENT_LBUTTONDOWN,     //
+    ZEVENT_LBUTTONUP,       
     ZEVENT_RBUTTONDOWN,
     ZEVENT_LDBLCLICK,
     ZEVENT_CONTEXTMENU,
@@ -27,9 +27,9 @@ enum EVENTTYPE_UI
     ZEVENT__MOUSEEND,
     ZEVENT_KILLFOCUS,
     ZEVENT_SETFOCUS,
-    ZEVENT_WINDOWSIZE,
-    ZEVENT_SETCURSOR,
-    ZEVENT_TIMER,
+    ZEVENT_WINDOWSIZE,      
+    ZEVENT_SETCURSOR,       //即将设置光标
+    ZEVENT_TIMER,           //定时器
     ZEVENT_NOTIFY,
     ZEVENT_COMMAND,
     ZEVENT__LAST
@@ -42,10 +42,10 @@ typedef struct tagTEventUI
     ZuiControl pSender;     //事件对应的控件
     ZuiInt dwTimestamp;     //时间戳
     ZPoint ptMouse;         //鼠标位置
-    _ZuiText chKey;     //
-    ZuiInt wKeyState;   //
-    ZuiUInt wParam;     //
-    ZuiUInt lParam;     //
+    ZText chKey;            //
+    ZuiInt wKeyState;       //
+    ZuiUInt wParam;         //
+    ZuiUInt lParam;         //
 } TEventUI;
 
 
