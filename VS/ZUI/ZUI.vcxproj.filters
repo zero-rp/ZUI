@@ -21,7 +21,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\ZUI\zuidebug.c" />
     <ClCompile Include="..\..\ZUI\platform\os\win.c">
       <Filter>platform\os</Filter>
     </ClCompile>
@@ -112,6 +111,13 @@
     <ClCompile Include="..\..\ZUI\vc6.cpp" />
     <ClCompile Include="..\..\ZUI\core\unzip.c">
       <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\ZUI.c" />
+    <ClCompile Include="..\..\ZUI\core\export.c">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ZUI\platform\graph\skia.cpp">
+      <Filter>platform\graph</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -221,6 +227,12 @@
     </ClInclude>
     <ClInclude Include="..\..\ZUI\core\unzip.h">
       <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\core\export.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ZUI\platform\graph\skia.h">
+      <Filter>platform\graph</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

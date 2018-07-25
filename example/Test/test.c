@@ -14,9 +14,10 @@ ZuiAny ZCALL Main_Button_enable(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiA
 ZuiControl win;
 
 int _stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-    ZInitConfig config;
+    ZInitConfig config = { 0 };
     config.m_hInstance = hInstance;
     config.default_res = L"file:default.zip";
+    config.default_fontname = L"微软雅黑";
     if (!ZuiInit(&config)) return 0;
 
     ZuiRes	res = ZuiResDBGetRes(L"default:default_msgbox.xml", ZREST_STREAM);

@@ -1463,7 +1463,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
         }
         else if (wcscmp(Param1, L"textcolor") == 0) {
             //字体颜色
-/*			ZuiText pstr = NULL;
+/*          ZuiText pstr = NULL;
             ZuiColor clrColor;
             while (*(wchar_t *)Param2 > L'\0' && *(wchar_t *)Param2 <= L' ') Param2 = ZuiCharNext((wchar_t *)Param2);
             if (*(wchar_t *)Param2 == L'#') Param2 = ZuiCharNext((wchar_t *)Param2);

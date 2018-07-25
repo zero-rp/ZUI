@@ -276,6 +276,7 @@
     <ClCompile Include="..\..\ZUI\core\builder.c" />
     <ClCompile Include="..\..\ZUI\core\carray.c" />
     <ClCompile Include="..\..\ZUI\core\control.c" />
+    <ClCompile Include="..\..\ZUI\core\export.c" />
     <ClCompile Include="..\..\ZUI\core\function.c" />
     <ClCompile Include="..\..\ZUI\core\mxml.c" />
     <ClCompile Include="..\..\ZUI\core\resdb.c" />
@@ -287,13 +288,14 @@
     <ClCompile Include="..\..\ZUI\layout\TileLayout.c" />
     <ClCompile Include="..\..\ZUI\layout\VerticalLayout.c" />
     <ClCompile Include="..\..\ZUI\platform\graph\agg.cpp" />
+    <ClCompile Include="..\..\ZUI\platform\graph\skia.cpp" />
     <ClCompile Include="..\..\ZUI\platform\os\android.c" />
     <ClCompile Include="..\..\ZUI\platform\os\linux.c" />
     <ClCompile Include="..\..\ZUI\platform\os\win.c" />
     <ClCompile Include="..\..\ZUI\vc6.cpp">
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">false</WholeProgramOptimization>
     </ClCompile>
-    <ClCompile Include="..\..\ZUI\zuidebug.c" />
+    <ClCompile Include="..\..\ZUI\ZUI.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ZUI\config.h" />
@@ -313,6 +315,7 @@
     <ClInclude Include="..\..\ZUI\core\builder.h" />
     <ClInclude Include="..\..\ZUI\core\carray.h" />
     <ClInclude Include="..\..\ZUI\core\control.h" />
+    <ClInclude Include="..\..\ZUI\core\export.h" />
     <ClInclude Include="..\..\ZUI\core\function.h" />
     <ClInclude Include="..\..\ZUI\core\mxml.h" />
     <ClInclude Include="..\..\ZUI\core\resdb.h" />
@@ -327,6 +330,7 @@
     <ClInclude Include="..\..\ZUI\platform\graph\agg.h" />
     <ClInclude Include="..\..\ZUI\platform\graph\format.h" />
     <ClInclude Include="..\..\ZUI\platform\graph\graph.h" />
+    <ClInclude Include="..\..\ZUI\platform\graph\skia.h" />
     <ClInclude Include="..\..\ZUI\platform\os\android.h" />
     <ClInclude Include="..\..\ZUI\platform\os\linux.h" />
     <ClInclude Include="..\..\ZUI\platform\os\os.h" />

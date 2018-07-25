@@ -890,19 +890,19 @@ Agg2D::PointD Agg2D::Font::textSize(const wchar_t* str, const int len, unsigned 
     int i;
     for (i = 0; str[i]; i++)
     {
-		if (wcsncmp(&str[i], L" ", 1) == 0)
-			if (m_fontEngine.width() == 0)
-				point.x += (m_fontEngine.height() / 2.4);
-			else
-				point.x += m_fontEngine.width() *2.4;
-		glyph = m_fontCacheManager.glyph(str[i]);//取字模
+        if (wcsncmp(&str[i], L" ", 1) == 0)
+            if (m_fontEngine.width() == 0)
+                point.x += (m_fontEngine.height() / 2.4);
+            else
+                point.x += m_fontEngine.width() *2.4;
+        glyph = m_fontCacheManager.glyph(str[i]);//取字模
         if (glyph)
         {
             if (glyph->bounds.x1 < 0)
                 point.x += -glyph->bounds.x1;
 
             //调整坐标
-			point.x += glyph->bounds.x2;
+            point.x += glyph->bounds.x2;
             point.y += glyph->advance_y;
         }
     }
@@ -954,7 +954,7 @@ void Agg2D::text(Font& font, double x, double y, double x1, double y1, const wch
 
     if ((style & ZDT_VCENTER) != 0) {
         //纵向居中,
-        start_y = (int)(y + (y1 - y + asc) / 2)-1;
+        start_y = (int)(y + (y1 - y + asc) / 2) - 1;
     }
     if ((style & ZDT_BOTTOM) != 0) {
         //纵向靠底,
@@ -964,9 +964,9 @@ void Agg2D::text(Font& font, double x, double y, double x1, double y1, const wch
         //横向居中,
         start_x = (int)(x + (x1 - x) / 2 - font.textSize(str, len, style).x / 2);
     }
-	if ((style & ZDT_RIGHT) != 0) {
-		start_x = (int)(x + (x1 - x) - font.textSize(str, len, style).x);
-	}
+    if ((style & ZDT_RIGHT) != 0) {
+        start_x = (int)(x + (x1 - x) - font.textSize(str, len, style).x);
+    }
 
     agg::trans_affine  mtx;
     agg::conv_transform<FontCacheManager::path_adaptor_type> tr(font.m_fontCacheManager.path_adaptor(), mtx);
@@ -978,19 +978,20 @@ void Agg2D::text(Font& font, double x, double y, double x1, double y1, const wch
     {
         ch = str[i];
         if (wcsncmp(&ch, L" ", 1) == 0)
-			if (font.m_fontEngine.width() == 0)
-				start_x += (asc / 2.4);
-			else
-				start_x += font.m_fontEngine.width() *2.4;
-reglyph:  glyph = font.m_fontCacheManager.glyph(ch);//取字模
+            if (font.m_fontEngine.width() == 0)
+                start_x += (asc / 2.4);
+            else
+                start_x += font.m_fontEngine.width() *2.4;
+    reglyph:  
+        glyph = font.m_fontCacheManager.glyph(ch);//取字模
         if (glyph)
         {
             if (glyph->bounds.x1 < 0)
                 start_x += -glyph->bounds.x1;
-            if (i) 
+            if (i)
                 font.m_fontCacheManager.add_kerning(&start_x, &start_y);    //调整字距
             font.m_fontCacheManager.init_embedded_adaptors(glyph, start_x, start_y);
-            
+
             //调整坐标
             start_x += glyph->bounds.x2;
             start_y += glyph->advance_y;

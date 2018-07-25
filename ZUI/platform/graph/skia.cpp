@@ -1,6 +1,7 @@
-﻿#include "agg.h"
+﻿#include "skia.h"
 #include "graph.h"
-#if PLATFORM_GRAPH_AGG
+#if PLATFORM_GRAPH_SKIA
+
 #if defined(__cplusplus)
 #include "include\agg_color_rgba.h"
 #pragma comment(lib, "Gdiplus.lib")
@@ -348,7 +349,7 @@ extern "C"
         if (!Image) { return NULL; }
         memset(Image, 0, sizeof(ZImage));
         Image->image = new ZuiAggImage();
-		if (!Image->image) { free(Image); return NULL; }
+        if (!Image->image) { free(Image); return NULL; }
         HGLOBAL hMem = GlobalAlloc(GMEM_ZEROINIT | GMEM_MOVEABLE, len);
         void *str;
         CreateStreamOnHGlobal(hMem, 0, &str);
@@ -408,5 +409,4 @@ extern "C"
 }
 #endif
 
-
-#endif // PLATFORM_GRAPH_AGG
+#endif // PLATFORM_GRAPH_SKIA

@@ -15,8 +15,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\example\test.c">
+    <ClCompile Include="..\..\..\example\Test\test.c">
       <Filter>源文件</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\..\..\example\Test\itest.xml">
+      <Filter>源文件</Filter>
+    </Xml>
+    <Xml Include="..\..\..\example\Test\test.xml">
+      <Filter>源文件</Filter>
+    </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\example\Test\readme.txt">
+      <Filter>源文件</Filter>
+    </Text>
   </ItemGroup>
 </Project>

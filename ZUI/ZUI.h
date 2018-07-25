@@ -134,8 +134,10 @@ typedef struct _ZuiInitConfig
 #if (defined PLATFORM_OS_WIN)
     ZuiAny m_hInstance;  //库所在的模块句柄,动态库默认自动为当前模块,静态链接须设置此参数
 #endif
-    ZuiBool debug;          //启动调试器
-    ZuiText default_res;    //默认资源文件,必备,资源字符串
+    ZuiBool debug;              //启动调试器
+    ZuiText default_res;        //默认资源文件,必备,资源字符串
+    ZuiText default_fontname;   //默认字体名字
+
 } *ZuiInitConfig, ZInitConfig;
 //Task结构
 typedef struct _ZuiTask
@@ -158,9 +160,9 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define ZFIND_TOP_FIRST     0x00000010  //自顶
 #define ZFIND_ME_FIRST      0x80000000
 //控件标志
-#define ZFLAG_TABSTOP       0x00000001
-#define ZFLAG_SETCURSOR     0x00000002
-#define ZFLAG_WANTRETURN    0x00000004
+#define ZFLAG_TABSTOP       0x00000001  
+#define ZFLAG_SETCURSOR     0x00000002  
+#define ZFLAG_WANTRETURN    0x00000004  
 //--------------------------------------------------------------------ResDB类
 /*资源类型*/
 enum ZREST

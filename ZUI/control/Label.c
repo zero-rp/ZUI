@@ -42,7 +42,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
             return 0;
         }
         case Js_Id_Label_align: {
-            ZuiText align= duk_get_string_w(ctx, 0);
+            ZuiText align = duk_get_string_w(ctx, 0);
             //横向对齐方式
             if (wcscmp(align, L"left") == 0) {
                 p->m_uTextStyle &= ~(ZDT_CENTER | ZDT_RIGHT);
@@ -108,12 +108,12 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         if (p->m_rFont)
             ZuiResDBDelRes(p->m_rFont);
         p->m_rFont = Param1;
-		ZuiControlNeedUpdate(cp);
+        ZuiControlNeedUpdate(cp);
         return 0;
     }
     case Proc_Label_SetTextColor: {
         p->m_cTextColor = (ZuiColor)Param1;
-		ZuiControlNeedUpdate(cp);
+        ZuiControlNeedUpdate(cp);
         return 0;
     }
     case Proc_Label_SetTextColorDisabled: {
@@ -122,15 +122,15 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         return 0;
     }
     case Proc_Label_SetTextPadding: {
-		memcpy(&p->m_rcPadding, Param1, sizeof(ZRect));
-		ZuiControlNeedUpdate(cp);
+        memcpy(&p->m_rcPadding, Param1, sizeof(ZRect));
+        ZuiControlNeedUpdate(cp);
         return 0;
     }
     case Proc_SetAttribute: {
         if (wcscmp(Param1, L"font") == 0) ZuiControlCall(Proc_Label_SetFont, cp, ZuiResDBGetRes(Param2, ZREST_FONT), NULL, NULL);
         if (wcscmp(Param1, L"align") == 0) {
             //横向对齐方式
-            if (wcscmp(Param2,  L"left") == 0) {
+            if (wcscmp(Param2, L"left") == 0) {
                 p->m_uTextStyle &= ~(ZDT_CENTER | ZDT_RIGHT | ZDT_WORDBREAK | ZDT_EDITCONTROL);
                 p->m_uTextStyle |= ZDT_LEFT;
             }
@@ -142,7 +142,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
                 p->m_uTextStyle &= ~(ZDT_LEFT | ZDT_CENTER | ZDT_WORDBREAK | ZDT_EDITCONTROL);
                 p->m_uTextStyle |= ZDT_RIGHT;
             }
-			ZuiControlNeedUpdate(cp);
+            ZuiControlNeedUpdate(cp);
         }
         else if (wcscmp(Param1, L"valign") == 0) {
             //纵向对齐方式
@@ -158,7 +158,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
                 p->m_uTextStyle &= ~(ZDT_TOP | ZDT_VCENTER | ZDT_WORDBREAK | ZDT_EDITCONTROL);
                 p->m_uTextStyle |= (ZDT_BOTTOM | ZDT_SINGLELINE);
             }
-			ZuiControlNeedUpdate(cp);
+            ZuiControlNeedUpdate(cp);
         }
         else if (wcscmp(Param1, L"textcolor") == 0) {
             //字体颜色
@@ -214,17 +214,17 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         p->old_call = cp->call;
 
         p->m_uTextStyle = ZDT_VCENTER | ZDT_SINGLELINE;
-        p->m_cTextColor = ARGB(255,0,0,0);
+        p->m_cTextColor = ARGB(255, 0, 0, 0);
         p->m_cTextColorDisabled = ARGB(255, 176, 176, 176);
-		ZRect rctmp = { 2,1,2,1 };
-		p->m_rcPadding = rctmp;
+        ZRect rctmp = { 2,1,2,1 };
+        p->m_rcPadding = rctmp;
         return p;
     }
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
 
         old_call(ProcId, cp, 0, Param1, Param2, Param3);
-		if (p->m_rFont && !Param1) ZuiResDBDelRes(p->m_rFont);
+        if (p->m_rFont && !Param1) ZuiResDBDelRes(p->m_rFont);
         free(p);
 
         return 0;

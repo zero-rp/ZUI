@@ -16,6 +16,10 @@
     #define PLATFORM_OS_ANDROID
 #endif
 
+//图形接口定义
+#define PLATFORM_GRAPH_AGG  0
+#define PLATFORM_GRAPH_SKIA 1
+
 #define HAVE_JS 0
 #define HAVE_UV 0
 #define HAVE_DUV 0

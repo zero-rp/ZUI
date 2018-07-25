@@ -51,7 +51,7 @@ extern "C"
     //绘制直线
     ZEXPORT ZuiVoid ZCALL ZuiDrawLine(ZuiGraphics Graphics, ZuiColor Color, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2, ZuiReal LineWidth);
     //绘制文本
-	ZEXPORT ZuiVoid ZCALL ZuiDrawStringPt(ZuiGraphics Graphics, ZuiFont Font, ZuiColor Color, ZuiText String, ZuiInt StrLens, ZPointR Pt[]);
+    ZEXPORT ZuiVoid ZCALL ZuiDrawStringPt(ZuiGraphics Graphics, ZuiFont Font, ZuiColor Color, ZuiText String, ZuiInt StrLens, ZPointR Pt[]);
     ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiFont Font, ZuiText String, ZuiInt StrLens, ZRectR *Rect, ZuiColor Color, ZuiUInt TextStyle);
     //测量字符大小
     ZEXPORT ZuiVoid ZCALL ZuiMeasureTextSize(ZuiFont Font, _ZuiText String, ZuiSizeR Size);

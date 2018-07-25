@@ -67,12 +67,18 @@ ZEXPORT ZuiBool ZCALL ZuiInit(ZuiInitConfig config) {
     }
     /*初始化全局变量*/
     {
+        if (config->default_fontname) {
+            Global_DefaultFontName = _wcsdup(config->default_fontname);
+        }
+        else
+        {
 #if (defined PLATFORM_OS_WIN)
-        LOGFONT lf;
-        SystemParametersInfo(SPI_GETICONTITLELOGFONT, sizeof(LOGFONT), &lf, 0);
-        Global_DefaultFontName = _wcsdup(lf.lfFaceName);
-        Global_Font = ZuiCreateFont(Global_DefaultFontName, 12, FALSE, FALSE);
+            LOGFONT lf;
+            SystemParametersInfo(SPI_GETICONTITLELOGFONT, sizeof(LOGFONT), &lf, 0);
+            Global_DefaultFontName = _wcsdup(lf.lfFaceName);
 #endif
+        }
+        Global_Font = ZuiCreateFont(Global_DefaultFontName, 12, FALSE, FALSE);
     }
     /*初始化模版管理器*/
     if (!ZuiTemplateInit())
