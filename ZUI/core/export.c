@@ -13,5 +13,5 @@ ZuiBool ZuiInitZuiFunc() {
     p->NewZuiControl = &NewZuiControl;
     p->FreeZuiControl = &FreeZuiControl;
     p->ZuiControlCall = &ZuiControlCall;
-
+    return 1;
 }
