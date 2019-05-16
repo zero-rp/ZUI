@@ -10503,15 +10503,7 @@ ISOLATION_AWARE_INLINE FARPROC WINAPI CommctrlIsolationAwarePrivatetRgCebPnQQeRf
 #endif /* ISOLATION_AWARE_ENABLED */
 #endif /* RC */
 
-#define TVN_ITEMCHANGINGW       (TVN_FIRST-17)
-typedef struct tagTVITEMCHANGE {
-    NMHDR hdr;
-    UINT uChanged;
-    HTREEITEM hItem;
-    UINT uStateNew;
-    UINT uStateOld;
-    LPARAM lParam;
-} NMTVITEMCHANGE;
+
 
 #ifdef __cplusplus
 }
