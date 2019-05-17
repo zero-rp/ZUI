@@ -2235,6 +2235,18 @@
     <ClInclude Include="..\..\skia\src\gpu\gl\GrGLVertexArray.h">
       <Filter>src\gpu\gl</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\skia\src\codec\SkGifCodec.h">
+      <Filter>src\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\skia\src\codec\SkPngCodec.h">
+      <Filter>src\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\skia\src\codec\SkPngPriv.h">
+      <Filter>src\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\skia\src\codec\SkWbmpCodec.h">
+      <Filter>src\codec</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\skia\src\effects\Sk1DPathEffect.cpp">
@@ -4201,6 +4213,15 @@
     </ClCompile>
     <ClCompile Include="..\..\skia\src\gpu\gl\GrGLVertexArray.cpp">
       <Filter>src\gpu\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\skia\src\codec\SkGifCodec.cpp">
+      <Filter>src\codec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\skia\src\codec\SkPngCodec.cpp">
+      <Filter>src\codec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\skia\src\codec\SkWbmpCodec.cpp">
+      <Filter>src\codec</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

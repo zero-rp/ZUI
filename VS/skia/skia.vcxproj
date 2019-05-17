@@ -39,16 +39,20 @@
     <ClInclude Include="..\..\skia\src\codec\SkCodecPriv.h" />
     <ClInclude Include="..\..\skia\src\codec\SkColorTable.h" />
     <ClInclude Include="..\..\skia\src\codec\SkFrameHolder.h" />
+    <ClInclude Include="..\..\skia\src\codec\SkGifCodec.h" />
     <ClInclude Include="..\..\skia\src\codec\SkHeifCodec.h" />
     <ClInclude Include="..\..\skia\src\codec\SkIcoCodec.h" />
     <ClInclude Include="..\..\skia\src\codec\SkMasks.h" />
     <ClInclude Include="..\..\skia\src\codec\SkMaskSwizzler.h" />
+    <ClInclude Include="..\..\skia\src\codec\SkPngCodec.h" />
+    <ClInclude Include="..\..\skia\src\codec\SkPngPriv.h" />
     <ClInclude Include="..\..\skia\src\codec\SkSampledCodec.h" />
     <ClInclude Include="..\..\skia\src\codec\SkSampler.h" />
     <ClInclude Include="..\..\skia\src\codec\SkScalingCodec.h" />
     <ClInclude Include="..\..\skia\src\codec\SkStreamBuffer.h" />
     <ClInclude Include="..\..\skia\src\codec\SkStubHeifDecoderAPI.h" />
     <ClInclude Include="..\..\skia\src\codec\SkSwizzler.h" />
+    <ClInclude Include="..\..\skia\src\codec\SkWbmpCodec.h" />
     <ClInclude Include="..\..\skia\src\core\Sk4px.h" />
     <ClInclude Include="..\..\skia\src\core\SkAAClip.h" />
     <ClInclude Include="..\..\skia\src\core\SkAdvancedTypefaceMetrics.h" />
@@ -753,15 +757,18 @@
     <ClCompile Include="..\..\skia\src\codec\SkCodecImageGenerator.cpp" />
     <ClCompile Include="..\..\skia\src\codec\SkColorTable.cpp" />
     <ClCompile Include="..\..\skia\src\codec\SkEncodedInfo.cpp" />
+    <ClCompile Include="..\..\skia\src\codec\SkGifCodec.cpp" />
     <ClCompile Include="..\..\skia\src\codec\SkHeifCodec.cpp" />
     <ClCompile Include="..\..\skia\src\codec\SkIcoCodec.cpp" />
     <ClCompile Include="..\..\skia\src\codec\SkMasks.cpp" />
     <ClCompile Include="..\..\skia\src\codec\SkMaskSwizzler.cpp" />
     <ClCompile Include="..\..\skia\src\codec\SkOrientationMarker.cpp" />
+    <ClCompile Include="..\..\skia\src\codec\SkPngCodec.cpp" />
     <ClCompile Include="..\..\skia\src\codec\SkSampledCodec.cpp" />
     <ClCompile Include="..\..\skia\src\codec\SkSampler.cpp" />
     <ClCompile Include="..\..\skia\src\codec\SkStreamBuffer.cpp" />
     <ClCompile Include="..\..\skia\src\codec\SkSwizzler.cpp" />
+    <ClCompile Include="..\..\skia\src\codec\SkWbmpCodec.cpp" />
     <ClCompile Include="..\..\skia\src\core\SkAAClip.cpp" />
     <ClCompile Include="..\..\skia\src\core\SkAlphaRuns.cpp" />
     <ClCompile Include="..\..\skia\src\core\SkAnalyticEdge.cpp" />
@@ -1500,7 +1507,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;SK_IGNORE_ETC1_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;SK_IGNORE_ETC1_SUPPORT;SK_HAS_PNG_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.;..\..\skia\;..\..\skia\include\config;..\..\skia\include\core;..\..\skia\src\core;..\..\skia\include\gpu;..\..\skia\src\gpu;..\..\skia\include\images;..\..\skia\include\utils;..\..\skia\include\utils\win;..\..\skia\src\utils;..\..\skia\include\ports;..\..\skia\include\text;..\..\skia\include\effects;..\..\skia\src\sfnt;..\..\skia\include\pathops;..\..\skia\src\image;..\..\skia\src\opts;..\..\skia\src\lazy;..\..\skia\include\third_party\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -1512,10 +1519,12 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_LIB;SK_IGNORE_ETC1_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;..\..\skia\;..\..\skia\include\config;..\..\skia\include\core;..\..\skia\src\core;..\..\skia\include\gpu;..\..\skia\src\gpu;..\..\skia\include\images;..\..\skia\include\utils;..\..\skia\include\utils\win;..\..\skia\src\utils;..\..\skia\include\ports;..\..\skia\include\text;..\..\skia\include\effects;..\..\skia\src\sfnt;..\..\skia\include\pathops;..\..\skia\src\image;..\..\skia\src\opts;..\..\skia\src\lazy;..\..\skia\include\third_party\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_LIB;SK_IGNORE_ETC1_SUPPORT;SK_HAS_PNG_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;..\..\libpng\;..\..\skia\;..\..\skia\include\config;..\..\skia\include\core;..\..\skia\src\core;..\..\skia\include\gpu;..\..\skia\src\gpu;..\..\skia\include\images;..\..\skia\include\utils;..\..\skia\include\utils\win;..\..\skia\src\utils;..\..\skia\include\ports;..\..\skia\include\text;..\..\skia\include\effects;..\..\skia\src\sfnt;..\..\skia\include\pathops;..\..\skia\src\image;..\..\skia\src\opts;..\..\skia\src\lazy;..\..\skia\include\third_party\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996;4244</DisableSpecificWarnings>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -1529,7 +1538,7 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;SK_IGNORE_ETC1_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;SK_IGNORE_ETC1_SUPPORT;SK_HAS_PNG_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <StringPooling>true</StringPooling>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -1549,7 +1558,7 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;USING_VC6RT=1;SK_IGNORE_ETC1_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;USING_VC6RT=1;SK_IGNORE_ETC1_SUPPORT;SK_HAS_PNG_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <StringPooling>true</StringPooling>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -1570,14 +1579,15 @@
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <Optimization>Full</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_LIB;SK_IGNORE_ETC1_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <PreprocessorDefinitions>NDEBUG;_LIB;SK_IGNORE_ETC1_SUPPORT;SK_HAS_PNG_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalIncludeDirectories>.;..\..\skia\;..\..\skia\include\config;..\..\skia\include\core;..\..\skia\src\core;..\..\skia\include\gpu;..\..\skia\src\gpu;..\..\skia\include\images;..\..\skia\include\utils;..\..\skia\include\utils\win;..\..\skia\src\utils;..\..\skia\include\ports;..\..\skia\include\text;..\..\skia\include\effects;..\..\skia\src\sfnt;..\..\skia\include\pathops;..\..\skia\src\image;..\..\skia\src\opts;..\..\skia\src\lazy;..\..\skia\include\third_party\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
