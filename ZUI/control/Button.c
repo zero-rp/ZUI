@@ -100,37 +100,37 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         if (p->type == 0) {
             if (p->m_ResNormal) {
                 img = p->m_ResNormal->p;
-                ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
+                ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right, rc->bottom, 0, 0, 0, 0, 255);
             }
             else {
-                ZuiDrawFillRect(gp, p->m_ColorNormal, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+                ZuiDrawFillRect(gp, p->m_ColorNormal, rc->left, rc->top, rc->right, rc->bottom);
             }
         }
         else if (p->type == 1) {
             if (p->m_ResHot) {
                 img = p->m_ResHot->p;
-                ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
+                ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right, rc->bottom, 0, 0, 0, 0, 255);
             }
             else {
-                ZuiDrawFillRect(gp, p->m_ColorHot, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+                ZuiDrawFillRect(gp, p->m_ColorHot, rc->left, rc->top, rc->right, rc->bottom);
             }
         }
         else if (p->type == 2) {
             if (p->m_ResPushed) {
                 img = p->m_ResPushed->p;
-                ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
+                ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right, rc->bottom, 0, 0, 0, 0, 255);
             }
             else {
-                ZuiDrawFillRect(gp, p->m_ColorPushed, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+                ZuiDrawFillRect(gp, p->m_ColorPushed, rc->left, rc->top, rc->right, rc->bottom);
             }
         }
         else {
             if (p->m_ResPushed) {
                 img = p->m_ResDisabled->p;
-                ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
+                ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right, rc->bottom, 0, 0, 0, 0, 255);
             }
             else {
-                ZuiDrawFillRect(gp, p->m_ColorDisabled, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+                ZuiDrawFillRect(gp, p->m_ColorDisabled, rc->left, rc->top, rc->right, rc->bottom);
             }
         }
         return 0;

@@ -9,7 +9,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
     switch (ProcId)
     {
     case Proc_OnEvent: {
-        TEventUI *event = (TEventUI *)Param1;
+        TEventUI* event = (TEventUI*)Param1;
         if (!cp->m_bMouseEnabled && event->Type > ZEVENT__MOUSEBEGIN && event->Type < ZEVENT__MOUSEEND) {
             if (p->m_pOwner != NULL)
                 ZuiControlCall(Proc_OnEvent, p->m_pOwner, Param1, NULL, NULL);
@@ -165,7 +165,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                         ZuiControlInvalidate(cp, TRUE);
                     }
                 }
-                else if((p->m_uButton1State & ZSTATE_HOT) == 0 || (p->m_uButton2State & ZSTATE_HOT) == 0 || (p->m_uThumbState & ZSTATE_HOT) == 0)
+                else if ((p->m_uButton1State & ZSTATE_HOT) == 0 || (p->m_uButton2State & ZSTATE_HOT) == 0 || (p->m_uThumbState & ZSTATE_HOT) == 0)
                 {
                     p->m_uThumbState &= ~ZSTATE_HOT;
                     p->m_uButton1State &= ~ZSTATE_HOT;
@@ -238,7 +238,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
             else {
                 ZPoint pt = { 0 };
                 if (p->m_nScrollRepeatDelay <= 5) return 0;
-                GetCursorPos((LPPOINT)&pt);
+                GetCursorPos((LPPOINT)& pt);
                 ZuiScreenToClient(cp, &pt);
                 if (!p->m_bHorizontal) {
                     if (pt.y < p->m_rcThumb.top) {
@@ -316,7 +316,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
     }
     case Proc_OnPaintBkImage: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        ZRect *rc = (ZRect *)&cp->m_rcItem;
+        ZRect* rc = (ZRect*)& cp->m_rcItem;
         ZuiImage img;
         if (p->m_sImageRes) {
             img = p->m_sImageRes->p;
@@ -327,7 +327,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
     }
     case Proc_OnPaintStatusImage: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
-        ZRect *rc = (ZRect *)&cp->m_rcItem;
+        ZRect* rc = (ZRect*)& cp->m_rcItem;
         ZuiImage img;
         //绘制第一个按钮
         if (p->m_bShowButton1) {
@@ -350,7 +350,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                     if (!p->m_bHorizontal)
                         ZuiDrawFilltriangle(gp, p->m_DisableColor, rc->left + cp->m_cxyFixed.cx / 2, rc->top + 2 * SB_INSET, rc->left + SB_INSET, rc->bottom - SB_INSET, rc->right - SB_INSET, rc->bottom - SB_INSET);
                     else
-                        ZuiDrawFilltriangle(gp, p->m_DisableColor, rc->left + 2 * SB_INSET, rc->top+cp->m_cxyFixed.cy / 2, rc->right - SB_INSET, rc->top + SB_INSET,  rc->right - SB_INSET, rc->bottom - SB_INSET);
+                        ZuiDrawFilltriangle(gp, p->m_DisableColor, rc->left + 2 * SB_INSET, rc->top + cp->m_cxyFixed.cy / 2, rc->right - SB_INSET, rc->top + SB_INSET, rc->right - SB_INSET, rc->bottom - SB_INSET);
                 }
             }
             else if ((p->m_uButton1State & ZSTATE_PUSHED) != 0) {
@@ -361,9 +361,9 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 }
                 else {
                     if (!p->m_bHorizontal)
-                        ZuiDrawFilltriangle(gp, p->m_bPushColor, rc->left + cp->m_cxyFixed.cx / 2, rc->top +2*SB_INSET, rc->left +SB_INSET, rc->bottom -SB_INSET, rc->right -SB_INSET, rc->bottom -SB_INSET);
+                        ZuiDrawFilltriangle(gp, p->m_bPushColor, rc->left + cp->m_cxyFixed.cx / 2, rc->top + 2 * SB_INSET, rc->left + SB_INSET, rc->bottom - SB_INSET, rc->right - SB_INSET, rc->bottom - SB_INSET);
                     else
-                        ZuiDrawFilltriangle(gp, p->m_bPushColor, rc->left + 2 * SB_INSET, rc->top + cp->m_cxyFixed.cy / 2, rc->right -SB_INSET, rc->top +SB_INSET, rc->right -SB_INSET, rc->bottom -SB_INSET);
+                        ZuiDrawFilltriangle(gp, p->m_bPushColor, rc->left + 2 * SB_INSET, rc->top + cp->m_cxyFixed.cy / 2, rc->right - SB_INSET, rc->top + SB_INSET, rc->right - SB_INSET, rc->bottom - SB_INSET);
                 }
             }
             else if ((p->m_uButton1State & ZSTATE_HOT) != 0) {
@@ -374,9 +374,9 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 }
                 else {
                     if (!p->m_bHorizontal)
-                        ZuiDrawFilltriangle(gp, p->m_bHotColor, rc->left + cp->m_cxyFixed.cx / 2, rc->top + 2 * SB_INSET, rc->left +SB_INSET, rc->bottom -SB_INSET, rc->right -SB_INSET, rc->bottom -SB_INSET);
+                        ZuiDrawFilltriangle(gp, p->m_bHotColor, rc->left + cp->m_cxyFixed.cx / 2, rc->top + 2 * SB_INSET, rc->left + SB_INSET, rc->bottom - SB_INSET, rc->right - SB_INSET, rc->bottom - SB_INSET);
                     else
-                        ZuiDrawFilltriangle(gp, p->m_bHotColor, rc->left + 2 * SB_INSET, rc->top + cp->m_cxyFixed.cy / 2, rc->right -SB_INSET, rc->top +SB_INSET, rc->right -SB_INSET, rc->bottom -SB_INSET);
+                        ZuiDrawFilltriangle(gp, p->m_bHotColor, rc->left + 2 * SB_INSET, rc->top + cp->m_cxyFixed.cy / 2, rc->right - SB_INSET, rc->top + SB_INSET, rc->right - SB_INSET, rc->bottom - SB_INSET);
                 }
             }
             else {
@@ -387,9 +387,9 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 }
                 else {
                     if (!p->m_bHorizontal)
-                        ZuiDrawFilltriangle(gp, p->m_bNormalColor, rc->left + cp->m_cxyFixed.cx / 2, rc->top + 2 * SB_INSET, rc->left +SB_INSET, rc->bottom -SB_INSET, rc->right -SB_INSET, rc->bottom -SB_INSET);
+                        ZuiDrawFilltriangle(gp, p->m_bNormalColor, rc->left + cp->m_cxyFixed.cx / 2, rc->top + 2 * SB_INSET, rc->left + SB_INSET, rc->bottom - SB_INSET, rc->right - SB_INSET, rc->bottom - SB_INSET);
                     else
-                        ZuiDrawFilltriangle(gp, p->m_bNormalColor, rc->left + 2 * SB_INSET, rc->top + cp->m_cxyFixed.cy / 2, rc->right -SB_INSET, rc->top +SB_INSET, rc->right -SB_INSET, rc->bottom -SB_INSET);
+                        ZuiDrawFilltriangle(gp, p->m_bNormalColor, rc->left + 2 * SB_INSET, rc->top + cp->m_cxyFixed.cy / 2, rc->right - SB_INSET, rc->top + SB_INSET, rc->right - SB_INSET, rc->bottom - SB_INSET);
                 }
             }
             //绘制按钮1边框
@@ -406,14 +406,14 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
             if ((p->m_uButton2State & ZSTATE_DISABLED) != 0) {
                 if (p->m_sImageRes) {
                     img = p->m_sImageRes->p;
-                    memcpy(&img->src, &p->m_rcArray[2*COL_RES - 1], sizeof(ZRect));
+                    memcpy(&img->src, &p->m_rcArray[2 * COL_RES - 1], sizeof(ZRect));
                     ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
                 }
                 else {
                     if (!p->m_bHorizontal)
-                        ZuiDrawFilltriangle(gp, p->m_DisableColor, rc->left + cp->m_cxyFixed.cx / 2, rc->bottom- 2 * SB_INSET, rc->left +SB_INSET, rc->top +SB_INSET, rc->right -SB_INSET, rc->top +SB_INSET);
+                        ZuiDrawFilltriangle(gp, p->m_DisableColor, rc->left + cp->m_cxyFixed.cx / 2, rc->bottom - 2 * SB_INSET, rc->left + SB_INSET, rc->top + SB_INSET, rc->right - SB_INSET, rc->top + SB_INSET);
                     else
-                        ZuiDrawFilltriangle(gp, p->m_DisableColor, rc->right - 2 * SB_INSET, rc->top + cp->m_cxyFixed.cy / 2, rc->left +SB_INSET, rc->top +SB_INSET, rc->left +SB_INSET, rc->bottom -SB_INSET);
+                        ZuiDrawFilltriangle(gp, p->m_DisableColor, rc->right - 2 * SB_INSET, rc->top + cp->m_cxyFixed.cy / 2, rc->left + SB_INSET, rc->top + SB_INSET, rc->left + SB_INSET, rc->bottom - SB_INSET);
                 }
             }
             else if ((p->m_uButton2State & ZSTATE_PUSHED) != 0) {
@@ -424,9 +424,9 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 }
                 else {
                     if (!p->m_bHorizontal)
-                        ZuiDrawFilltriangle(gp, p->m_bPushColor, rc->left + cp->m_cxyFixed.cx / 2, rc->bottom - 2 * SB_INSET, rc->left +SB_INSET, rc->top +SB_INSET, rc->right -SB_INSET, rc->top +SB_INSET);
+                        ZuiDrawFilltriangle(gp, p->m_bPushColor, rc->left + cp->m_cxyFixed.cx / 2, rc->bottom - 2 * SB_INSET, rc->left + SB_INSET, rc->top + SB_INSET, rc->right - SB_INSET, rc->top + SB_INSET);
                     else
-                        ZuiDrawFilltriangle(gp, p->m_bPushColor, rc->right - 2 * SB_INSET, rc->top + cp->m_cxyFixed.cy / 2, rc->left +SB_INSET, rc->top +SB_INSET, rc->left +SB_INSET, rc->bottom -SB_INSET);
+                        ZuiDrawFilltriangle(gp, p->m_bPushColor, rc->right - 2 * SB_INSET, rc->top + cp->m_cxyFixed.cy / 2, rc->left + SB_INSET, rc->top + SB_INSET, rc->left + SB_INSET, rc->bottom - SB_INSET);
                 }
             }
             else if ((p->m_uButton2State & ZSTATE_HOT) != 0) {
@@ -437,9 +437,9 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 }
                 else {
                     if (!p->m_bHorizontal)
-                        ZuiDrawFilltriangle(gp, p->m_bHotColor, rc->left + cp->m_cxyFixed.cx / 2, rc->bottom - 2 * SB_INSET, rc->left +SB_INSET, rc->top +SB_INSET, rc->right -SB_INSET, rc->top +SB_INSET);
+                        ZuiDrawFilltriangle(gp, p->m_bHotColor, rc->left + cp->m_cxyFixed.cx / 2, rc->bottom - 2 * SB_INSET, rc->left + SB_INSET, rc->top + SB_INSET, rc->right - SB_INSET, rc->top + SB_INSET);
                     else
-                        ZuiDrawFilltriangle(gp, p->m_bHotColor, rc->right - 2 * SB_INSET, rc->top + cp->m_cxyFixed.cy / 2, rc->left +SB_INSET, rc->top +SB_INSET, rc->left +SB_INSET, rc->bottom -SB_INSET);
+                        ZuiDrawFilltriangle(gp, p->m_bHotColor, rc->right - 2 * SB_INSET, rc->top + cp->m_cxyFixed.cy / 2, rc->left + SB_INSET, rc->top + SB_INSET, rc->left + SB_INSET, rc->bottom - SB_INSET);
                 }
             }
             else {
@@ -450,9 +450,9 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 }
                 else {
                     if (!p->m_bHorizontal)
-                        ZuiDrawFilltriangle(gp, p->m_bNormalColor, rc->left + cp->m_cxyFixed.cx / 2, rc->bottom - 2 * SB_INSET, rc->left +SB_INSET, rc->top +SB_INSET, rc->right -SB_INSET, rc->top +SB_INSET);
+                        ZuiDrawFilltriangle(gp, p->m_bNormalColor, rc->left + cp->m_cxyFixed.cx / 2, rc->bottom - 2 * SB_INSET, rc->left + SB_INSET, rc->top + SB_INSET, rc->right - SB_INSET, rc->top + SB_INSET);
                     else
-                        ZuiDrawFilltriangle(gp, p->m_bNormalColor, rc->right - 2 * SB_INSET, rc->top + cp->m_cxyFixed.cy / 2, rc->left +SB_INSET, rc->top +SB_INSET, rc->left +SB_INSET, rc->bottom -SB_INSET);
+                        ZuiDrawFilltriangle(gp, p->m_bNormalColor, rc->right - 2 * SB_INSET, rc->top + cp->m_cxyFixed.cy / 2, rc->left + SB_INSET, rc->top + SB_INSET, rc->left + SB_INSET, rc->bottom - SB_INSET);
                 }
             }
             //绘制按钮1边框
@@ -473,15 +473,15 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, 0, 0, 255);
                 memcpy(&img->src, &p->m_rcArray[4 * COL_RES - 1], sizeof(ZRect));
                 if (!p->m_bHorizontal)
-                    ZuiDrawImageEx(gp, img, rc->left, rc->top + (rc->bottom - rc->top)/2 - p->m_rcArray[4 * COL_RES - 1].bottom/2, p->m_rcArray[4 * COL_RES - 1].right, p->m_rcArray[4 * COL_RES - 1].bottom, 0, 0, 0, 0, 255);
+                    ZuiDrawImageEx(gp, img, rc->left, rc->top + (rc->bottom - rc->top) / 2 - p->m_rcArray[4 * COL_RES - 1].bottom / 2, p->m_rcArray[4 * COL_RES - 1].right, p->m_rcArray[4 * COL_RES - 1].bottom, 0, 0, 0, 0, 255);
                 else
-                    ZuiDrawImageEx(gp, img, rc->left + (rc->right - rc->left)/2 - p->m_rcArray[4 * COL_RES - 1].right/2, rc->top, p->m_rcArray[4 * COL_RES - 1].right, p->m_rcArray[4 * COL_RES - 1].bottom, 0, 0, 0, 0, 255);
+                    ZuiDrawImageEx(gp, img, rc->left + (rc->right - rc->left) / 2 - p->m_rcArray[4 * COL_RES - 1].right / 2, rc->top, p->m_rcArray[4 * COL_RES - 1].right, p->m_rcArray[4 * COL_RES - 1].bottom, 0, 0, 0, 0, 255);
             }
             else {
                 if (!p->m_bHorizontal)
-                    ZuiDrawFillRect(gp, p->m_DisableColor, rc->left+2, rc->top, rc->right - rc->left-4, rc->bottom - rc->top);
+                    ZuiDrawFillRect(gp, p->m_DisableColor, rc->left + 2, rc->top, rc->right - 4, rc->bottom);
                 else
-                    ZuiDrawFillRect(gp, p->m_DisableColor, rc->left, rc->top+2, rc->right - rc->left, rc->bottom - rc->top-4);
+                    ZuiDrawFillRect(gp, p->m_DisableColor, rc->left, rc->top + 2, rc->right, rc->bottom - 4);
             }
         }
         else if ((p->m_uThumbState & ZSTATE_PUSHED) != 0) {
@@ -495,11 +495,11 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                 else
                     ZuiDrawImageEx(gp, img, rc->left + (rc->right - rc->left) / 2 - p->m_rcArray[4 * COL_RES - 1].right / 2, rc->top, p->m_rcArray[4 * COL_RES - 1].right, p->m_rcArray[4 * COL_RES - 1].bottom, 0, 0, 0, 0, 255);
             }
-            else{
+            else {
                 if (!p->m_bHorizontal)
-                    ZuiDrawFillRect(gp, p->m_tPushColor, rc->left +SB_INSET, rc->top, rc->right - rc->left -2*SB_INSET, rc->bottom - rc->top);
+                    ZuiDrawFillRect(gp, p->m_tPushColor, rc->left + SB_INSET, rc->top, rc->right - 2 * SB_INSET, rc->bottom);
                 else
-                    ZuiDrawFillRect(gp, p->m_tPushColor, rc->left, rc->top +SB_INSET, rc->right - rc->left, rc->bottom - rc->top -2*SB_INSET);
+                    ZuiDrawFillRect(gp, p->m_tPushColor, rc->left, rc->top + SB_INSET, rc->right, rc->bottom - 2 * SB_INSET);
             }
         }
         else if ((p->m_uThumbState & ZSTATE_HOT) != 0) {
@@ -515,9 +515,9 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
             }
             else {
                 if (!p->m_bHorizontal)
-                    ZuiDrawFillRect(gp, p->m_tHotColor, rc->left +SB_INSET, rc->top, rc->right - rc->left -2*SB_INSET, rc->bottom - rc->top);
+                    ZuiDrawFillRect(gp, p->m_tHotColor, rc->left + SB_INSET, rc->top, rc->right - 2 * SB_INSET, rc->bottom);
                 else
-                    ZuiDrawFillRect(gp, p->m_tHotColor, rc->left, rc->top +SB_INSET, rc->right - rc->left, rc->bottom - rc->top -2*SB_INSET);
+                    ZuiDrawFillRect(gp, p->m_tHotColor, rc->left, rc->top + SB_INSET, rc->right, rc->bottom - 2 * SB_INSET);
             }
         }
         else {
@@ -533,9 +533,9 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
             }
             else {
                 if (!p->m_bHorizontal)
-                    ZuiDrawFillRect(gp, p->m_tNormalColor, rc->left +SB_INSET, rc->top, rc->right - rc->left -2*SB_INSET, rc->bottom - rc->top);
+                    ZuiDrawFillRect(gp, p->m_tNormalColor, rc->left + SB_INSET, rc->top, rc->right - 2 * SB_INSET, rc->bottom);
                 else
-                    ZuiDrawFillRect(gp, p->m_tNormalColor, rc->left, rc->top +SB_INSET, rc->right - rc->left, rc->bottom - rc->top -2*SB_INSET);
+                    ZuiDrawFillRect(gp, p->m_tNormalColor, rc->left, rc->top + SB_INSET, rc->right, rc->bottom - 2 * SB_INSET);
             }
         }
 
@@ -818,17 +818,17 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
             break;
         }
         else if (wcscmp(Param1, _T("sbb1show")) == 0) {
-            ZuiControlCall(Proc_ScrollBar_bShow, cp, (ZuiAny)ScrollBar_B1_Show, (ZuiAny)(_tcscmp(Param2, _T("true")) == 0? TRUE:FALSE), NULL);
+            ZuiControlCall(Proc_ScrollBar_bShow, cp, (ZuiAny)ScrollBar_B1_Show, (ZuiAny)(_tcscmp(Param2, _T("true")) == 0 ? TRUE : FALSE), NULL);
             break;
         }
         else if (wcscmp(Param1, _T("sbb2show")) == 0) {
-            ZuiControlCall(Proc_ScrollBar_bShow, cp, (ZuiAny)ScrollBar_B2_Show, (ZuiAny)(_tcscmp(Param2, _T("true")) == 0? TRUE:FALSE), NULL);
+            ZuiControlCall(Proc_ScrollBar_bShow, cp, (ZuiAny)ScrollBar_B2_Show, (ZuiAny)(_tcscmp(Param2, _T("true")) == 0 ? TRUE : FALSE), NULL);
             break;
         }
         else if (wcscmp(Param1, _T("sbimageres")) == 0) {
             if (p->m_sImageRes)
                 ZuiResDBDelRes(p->m_sImageRes);
-            p->m_sImageRes =  ZuiResDBGetRes(Param2, ZREST_IMG);
+            p->m_sImageRes = ZuiResDBGetRes(Param2, ZREST_IMG);
             break;
         }
         else if (wcscmp(Param1, _T("sbvsrc")) == 0) {
@@ -874,7 +874,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         break;
     }
     case Proc_ScrollBar_bShow: {
-        if((int)Param1 == ScrollBar_B1_Show)
+        if ((int)Param1 == ScrollBar_B1_Show)
             p->m_bShowButton1 = (ZuiBool)Param2;
         else if ((int)Param1 == ScrollBar_B2_Show)
             p->m_bShowButton2 = (ZuiBool)Param2;

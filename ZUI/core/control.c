@@ -542,7 +542,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = (ZRect *)&p->m_rcItem;
         if (p->m_BkgColor)
-            ZuiDrawFillRect(gp, p->m_BkgColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+            ZuiDrawFillRect(gp, p->m_BkgColor, rc->left, rc->top, rc->right, rc->bottom);
         break;
     }
     case Proc_OnPaintBkImage: {
@@ -550,7 +550,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         ZRect *rc = &p->m_rcItem;
         if (p->m_BkgImg) {
             ZuiImage img = p->m_BkgImg->p;
-            ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
+            ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right, rc->bottom, 0, 0, img->Width, img->Height, 255);
         }
         break;
     }
@@ -559,9 +559,9 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         ZRect *rc = &p->m_rcItem;
 		if (p->m_dwBorderColor) {
 			if(p->m_dwBorderWidth)
-				ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - rc->left - 1, rc->bottom - rc->top - 1 , p->m_dwBorderWidth);
+				ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - 1, rc->bottom - 1 , p->m_dwBorderWidth);
 			else
-				ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 1);
+				ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - 1, rc->bottom - 1, 1);
 		}
         break;
     }

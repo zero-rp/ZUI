@@ -32,7 +32,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
                     ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
                 }
                 else {
-                    ZuiDrawFillRect(gp, p->m_ColorSelected, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+                    ZuiDrawFillRect(gp, p->m_ColorSelected, rc->left, rc->top, rc->right, rc->bottom);
                 }
             }
             else if (((ZuiButton)p->old_udata)->type == 1) {
@@ -41,7 +41,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
                     ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
                 }
                 else {
-                    ZuiDrawFillRect(gp, p->m_ColorSelectedHot, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+                    ZuiDrawFillRect(gp, p->m_ColorSelectedHot, rc->left, rc->top, rc->right, rc->bottom);
                 }
             }
             else if (((ZuiButton)p->old_udata)->type == 2) {
@@ -50,7 +50,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
                     ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
                 }
                 else {
-                    ZuiDrawFillRect(gp, p->m_ColorSelectedPushed, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+                    ZuiDrawFillRect(gp, p->m_ColorSelectedPushed, rc->left, rc->top, rc->right, rc->bottom);
                 }
             }
             else {
@@ -59,7 +59,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
                     ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, 0, 0, img->Width, img->Height, 255);
                 }
                 else {
-                    ZuiDrawFillRect(gp, p->m_ColorSelectedDisabled, rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top);
+                    ZuiDrawFillRect(gp, p->m_ColorSelectedDisabled, rc->left, rc->top, rc->right, rc->bottom);
                 }
             }
             ZuiControlCall(Proc_OnPaintText, cp, Param1, Param2, NULL);//绘制文本

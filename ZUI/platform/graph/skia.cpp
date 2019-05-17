@@ -66,10 +66,10 @@ extern "C"
     }
 
     /*填充矩形*/
-    ZEXPORT ZuiVoid ZCALL ZuiDrawFillRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Width, ZuiReal Height) {
+    ZEXPORT ZuiVoid ZCALL ZuiDrawFillRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Right, ZuiReal Bottom) {
         if (!Graphics)
             return;
-        SkRect rc = { Left, Top, Left + Width, Top + Height };
+        SkRect rc = { Left, Top, Right, Bottom };
 
         SkPaint paint;
 
@@ -78,10 +78,10 @@ extern "C"
         Graphics->graphics->SkCanvas->drawRect(rc, paint);
     }
     /*画矩形*/
-    ZEXPORT ZuiVoid ZCALL ZuiDrawRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Width, ZuiReal Height, ZuiReal LineWidth) {
+    ZEXPORT ZuiVoid ZCALL ZuiDrawRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Right, ZuiReal Bottom, ZuiReal LineWidth) {
         if (!Graphics)
             return;
-        SkRect rc = { Left, Top, Left + Width, Top + Height };
+        SkRect rc = { Left, Top, Right, Bottom };
 
         SkPaint paint;
 
