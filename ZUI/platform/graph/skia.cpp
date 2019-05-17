@@ -11,6 +11,7 @@
 #include <core\SkCanvas.h>
 #include <core\SkBitmap.h>
 #include <core\SkRegion.h>
+#include <core\SkPath.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -87,6 +88,7 @@ extern "C"
 
         paint.setColor(Color);
         paint.setStyle(SkPaint::kStroke_Style);
+        paint.setStrokeWidth(LineWidth);
         Graphics->graphics->SkCanvas->drawRect(rc, paint);
     }
     //填充三角形
@@ -94,12 +96,31 @@ extern "C"
     {
         if (!Graphics)
             return;
+        SkPath     skPath;
+        skPath.moveTo(SkPoint::Make(x1, y1));
+        skPath.lineTo(SkPoint::Make(x2, y2));
+        skPath.lineTo(SkPoint::Make(x3, y3));
+        SkPaint paint;
+        paint.setAntiAlias(true);
+        paint.setColor(Color);
+        paint.setStyle(SkPaint::kFill_Style);
+        Graphics->graphics->SkCanvas->drawPath(skPath, paint);
     }
     //绘制三角形
     ZEXPORT ZuiVoid ZCALL ZuiDrawtriangle(ZuiGraphics Graphics, ZuiColor Color, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2, ZuiReal x3, ZuiReal y3, ZuiReal LineWidth)
     {
         if (!Graphics)
             return;
+        SkPath     skPath;
+        skPath.moveTo(SkPoint::Make(x1, y1));
+        skPath.lineTo(SkPoint::Make(x2, y2));
+        skPath.lineTo(SkPoint::Make(x3, y3));
+        SkPaint paint;
+        paint.setAntiAlias(true);
+        paint.setColor(Color);
+        paint.setStyle(SkPaint::kStroke_Style);
+        paint.setStrokeWidth(LineWidth);
+        Graphics->graphics->SkCanvas->drawPath(skPath, paint);
     }
     /*画直线*/
     ZEXPORT ZuiVoid ZCALL ZuiDrawLine(ZuiGraphics Graphics, ZuiColor Color, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2, ZuiReal LineWidth)
