@@ -10,7 +10,7 @@
 #endif
 /**图像*/
 typedef struct _ZImage {
-    struct ZuiAggImage *image;	///图形句柄
+    struct ZuiSkiaImage *image;	///图形句柄
     ZuiInt Width;
     ZuiInt Height;
     ZRect src;      //源矩形
@@ -20,7 +20,7 @@ typedef struct _ZImage {
 typedef struct _ZGraphics {
     ZuiInt Width;
     ZuiInt Height;
-    struct ZuiAggGraphics *graphics;	///图形句柄
+    struct ZuiSkiaGraphics *graphics;	///图形句柄
 #ifdef PLATFORM_OS_WIN
     HDC hdc;		///内存场景
     HBITMAP HBitmap;///位图句柄
@@ -33,7 +33,7 @@ typedef struct _ZFont {
     ZuiColor TextColor;
     ZuiColor ShadowColor;
     ZuiReal FontSize;       ///字体大小
-    struct ZuiAggFont *font;
+    struct ZuiSkiaFont *font;
 }*ZuiFont, ZFont;
 
 #endif //__ZUI_PLATFORM_GRAPH_SKIA_H__

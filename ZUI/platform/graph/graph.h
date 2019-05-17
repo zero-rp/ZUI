@@ -6,12 +6,12 @@ extern "C"
 {
 #endif
 
-    #define ARGB(A,R,G,B) ((int)((((A)&0xff)<<24)|(((R)&0xff)<<16)|(((G)&0xff)<<8)|((B)&0xff)))
-    #define RGBA(R,G,B,A) ARGB(A,R,G,B)
-    #define RGB2ARGB(COLOR,A) RGBA(((COLOR) >> 16 & 0xFF), ((COLOR) >> 8 & 0xFF), ((COLOR) & 0xFF), (A))
-    #ifdef LINUX
-    #define RGB(r,g,b) ((ZuiInt)(((ZuiByte)(r)|((short)((ZuiByte)(g))<<8))|(((ZuiInt)(ZuiByte)(b))<<16)))
-    #endif
+#define ARGB(A,R,G,B) ((int)((((A)&0xff)<<24)|(((R)&0xff)<<16)|(((G)&0xff)<<8)|((B)&0xff)))
+#define RGBA(R,G,B,A) ARGB(A,R,G,B)
+#define RGB2ARGB(COLOR,A) RGBA(((COLOR) >> 16 & 0xFF), ((COLOR) >> 8 & 0xFF), ((COLOR) & 0xFF), (A))
+#ifdef LINUX
+#define RGB(r,g,b) ((ZuiInt)(((ZuiByte)(r)|((short)((ZuiByte)(g))<<8))|(((ZuiInt)(ZuiByte)(b))<<16)))
+#endif
 
     /*FontStyleRegular    = 0,//常规
     FontStyleBold       = 1,//加粗
@@ -38,6 +38,8 @@ extern "C"
     */
     ZuiBool ZuiGraphInitialize();
     ZuiVoid ZuiGraphUnInitialize();
+    //--------------------Render
+
     //填充三角形
     ZEXPORT ZuiVoid ZCALL ZuiDrawFilltriangle(ZuiGraphics Graphics, ZuiColor Color, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2, ZuiReal x3, ZuiReal y3);
     //绘制三角形
@@ -47,12 +49,12 @@ extern "C"
     //绘制矩形
     ZEXPORT ZuiVoid ZCALL ZuiDrawRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Width, ZuiReal Height, ZuiReal LineWidth);
     //绘制多边形
-    ZEXPORT ZuiVoid ZCALL ZuiDrawPolygon(ZuiGraphics Graphics, ZuiColor Color, ZuiPointR *point, ZuiInt count, ZuiReal LineWidth);
+    ZEXPORT ZuiVoid ZCALL ZuiDrawPolygon(ZuiGraphics Graphics, ZuiColor Color, ZuiPointR * point, ZuiInt count, ZuiReal LineWidth);
     //绘制直线
     ZEXPORT ZuiVoid ZCALL ZuiDrawLine(ZuiGraphics Graphics, ZuiColor Color, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2, ZuiReal LineWidth);
     //绘制文本
     ZEXPORT ZuiVoid ZCALL ZuiDrawStringPt(ZuiGraphics Graphics, ZuiFont Font, ZuiColor Color, ZuiText String, ZuiInt StrLens, ZPointR Pt[]);
-    ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiFont Font, ZuiText String, ZuiInt StrLens, ZRectR *Rect, ZuiColor Color, ZuiUInt TextStyle);
+    ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiFont Font, ZuiText String, ZuiInt StrLens, ZRectR * Rect, ZuiColor Color, ZuiUInt TextStyle);
     //测量字符大小
     ZEXPORT ZuiVoid ZCALL ZuiMeasureTextSize(ZuiFont Font, _ZuiText String, ZuiSizeR Size);
     //绘制图像
@@ -74,12 +76,22 @@ extern "C"
     ZEXPORT ZuiGraphics ZCALL ZuiCreateGraphicsAttach(ZuiGraphics Graphics, ZuiAny bits, ZuiInt Width, ZuiInt Height, ZuiInt stride);
     //销毁图形
     ZEXPORT ZuiVoid ZCALL ZuiDestroyGraphics(ZuiGraphics Graphics);
-    //设置剪辑区
-    ZEXPORT ZuiBool ZCALL ZuiGraphicsSetClipBox(ZuiGraphics Graphics, ZuiRectR box);
-    //获取剪辑区
+
+    //设置剪裁区
+    ZEXPORT ZuiBool ZCALL ZuiGraphicsPushClipRect(ZuiGraphics Graphics, ZuiRectR box, ZuiInt mode);
+    //ZEXPORT ZuiBool ZCALL PushClipRegion(IRegion* pRegion, UINT mode = RGN_AND);
+    ZEXPORT ZuiBool ZCALL ZuiGraphicsPopClip(ZuiGraphics Graphics);
+
+    ZEXPORT ZuiBool ZCALL ZuiGraphicsExcludeClipRect(ZuiGraphics Graphics, ZuiRectR box);
+    ZEXPORT ZuiBool ZCALL ZuiGraphicsIntersectClipRect(ZuiGraphics Graphics, ZuiRectR box);
+    //
+    ZEXPORT ZuiBool ZCALL ZuiGraphicsSaveClip(ZuiGraphics Graphics, ZuiInt * pnState);
+    ZEXPORT ZuiBool ZCALL ZuiGraphicsRestoreClip(ZuiGraphics Graphics, ZuiInt nState);
+    //获取剪裁区
+    //ZEXPORT ZuiVoid ZCALL GetClipRegion(IRegion** ppRegion);
     ZEXPORT ZuiBool ZCALL ZuiGraphicsGetClipBox(ZuiGraphics Graphics, ZuiRectR box);
-    //重置剪辑区
-    ZEXPORT ZuiBool ZCALL ZuiGraphicsResetClip(ZuiGraphics Graphics);
+
+
     /** 此函数用作从文件载入图像.
     * @param FileName 路径
     * @return 成功返回ZuiImage对象.
@@ -96,7 +108,7 @@ extern "C"
     /*取图像帧数*/
     ZEXPORT ZuiInt ZCALL ZuiImageGetFrameCount(ZuiImage Image);
     /*取图像各帧延时*/
-    ZEXPORT ZuiInt ZCALL ZuiImageGetFrameIniDly(ZuiImage Image, ZuiInt *arry);
+    ZEXPORT ZuiInt ZCALL ZuiImageGetFrameIniDly(ZuiImage Image, ZuiInt * arry);
     /*设置图像当前帧*/
     ZEXPORT ZuiInt ZCALL ZuiImageSetFrame(ZuiImage Image, ZuiInt index);
     /** 此函数用作销毁ZuiImage对象.
