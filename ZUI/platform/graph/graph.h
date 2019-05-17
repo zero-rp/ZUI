@@ -40,16 +40,16 @@ extern "C"
     ZuiVoid ZuiGraphUnInitialize();
     //--------------------Render
 
-    //填充三角形
-    ZEXPORT ZuiVoid ZCALL ZuiDrawFilltriangle(ZuiGraphics Graphics, ZuiColor Color, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2, ZuiReal x3, ZuiReal y3);
-    //绘制三角形
-    ZEXPORT ZuiVoid ZCALL ZuiDrawtriangle(ZuiGraphics Graphics, ZuiColor Color, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2, ZuiReal x3, ZuiReal y3, ZuiReal LineWidth);
     //填充矩形
     ZEXPORT ZuiVoid ZCALL ZuiDrawFillRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Right, ZuiReal Bottom);
     //绘制矩形
     ZEXPORT ZuiVoid ZCALL ZuiDrawRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Right, ZuiReal Bottom, ZuiReal LineWidth);
-    //绘制多边形
-    ZEXPORT ZuiVoid ZCALL ZuiDrawPolygon(ZuiGraphics Graphics, ZuiColor Color, ZuiPointR * point, ZuiInt count, ZuiReal LineWidth);
+    //填充三角形
+    ZEXPORT ZuiVoid ZCALL ZuiDrawFilltriangle(ZuiGraphics Graphics, ZuiColor Color, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2, ZuiReal x3, ZuiReal y3);
+    //绘制三角形
+    ZEXPORT ZuiVoid ZCALL ZuiDrawtriangle(ZuiGraphics Graphics, ZuiColor Color, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2, ZuiReal x3, ZuiReal y3, ZuiReal LineWidth);
+    //绘制路径
+    ZEXPORT ZuiVoid ZCALL ZuiDrawPath(ZuiGraphics Graphics, ZuiColor Color, ZuiPointR * point, ZuiInt count, ZuiReal LineWidth);
     //绘制直线
     ZEXPORT ZuiVoid ZCALL ZuiDrawLine(ZuiGraphics Graphics, ZuiColor Color, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2, ZuiReal LineWidth);
     //绘制文本
