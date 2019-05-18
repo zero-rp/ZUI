@@ -25,7 +25,6 @@ int _stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     ZuiAny	xml = ZuiResGetData(res, &len);
     ZuiLayoutLoad(xml, len);
 
-
     res = ZuiResDBGetRes(L"file:test.xml", ZREST_STREAM);
     len = 0;
     xml = ZuiResGetData(res, &len);

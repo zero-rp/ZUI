@@ -7,14 +7,14 @@
 #undef min
 #undef max
 #include <stdint.h>
-#include <core\SkCanvas.h>
-#include <core\SkBitmap.h>
-#include <core\SkRegion.h>
-#include <core\SkPath.h>
-#include <core\SkPicture.h>
-#include <core\SkImage.h>
-#include <core\SkTypeface.h>
-#include <core\SkFont.h>
+#include "core/SkCanvas.h"
+#include "core/SkBitmap.h"
+#include "core/SkRegion.h"
+#include "core/SkPath.h"
+#include "core/SkPicture.h"
+#include "core/SkImage.h"
+#include "core/SkTypeface.h"
+#include "core/SkFont.h"
 
 extern "C"
 {
@@ -423,7 +423,7 @@ extern "C"
         if (Image) {
             if (Image->image->buf)
                 free(Image->image->buf);
-            delete Image->image->data;
+            delete Image->image;
             free(Image);
         }
     }

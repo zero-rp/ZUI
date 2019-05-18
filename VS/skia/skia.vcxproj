@@ -1586,7 +1586,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>.;..\..\skia\;..\..\skia\include\config;..\..\skia\include\core;..\..\skia\src\core;..\..\skia\include\gpu;..\..\skia\src\gpu;..\..\skia\include\images;..\..\skia\include\utils;..\..\skia\include\utils\win;..\..\skia\src\utils;..\..\skia\include\ports;..\..\skia\include\text;..\..\skia\include\effects;..\..\skia\src\sfnt;..\..\skia\include\pathops;..\..\skia\src\image;..\..\skia\src\opts;..\..\skia\src\lazy;..\..\skia\include\third_party\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\libpng;.;..\..;..\..\skia\;..\..\skia\include\config;..\..\skia\include\core;..\..\skia\src\core;..\..\skia\include\gpu;..\..\skia\src\gpu;..\..\skia\include\images;..\..\skia\include\utils;..\..\skia\include\utils\win;..\..\skia\src\utils;..\..\skia\include\ports;..\..\skia\include\text;..\..\skia\include\effects;..\..\skia\src\sfnt;..\..\skia\include\pathops;..\..\skia\src\image;..\..\skia\src\opts;..\..\skia\src\lazy;..\..\skia\include\third_party\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
