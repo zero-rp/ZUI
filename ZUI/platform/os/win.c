@@ -1383,6 +1383,11 @@ ZuiInt ZuiOsUnicodeToAscii(ZuiText str, ZuiInt slen, ZuiAny out, ZuiInt olen)
     return WideCharToMultiByte(CP_ACP, 0, str, slen, out, olen, NULL, NULL);
 }
 
+ZuiInt ZuiOsUnicodeToUtf8(ZuiText str, ZuiInt slen, ZuiAny out, ZuiInt olen)
+{
+    return WideCharToMultiByte(CP_UTF8, 0, str, slen, out, olen, NULL, NULL);
+}
+
 ZuiVoid ZuiOsClientToScreen(ZuiControl p, ZuiPoint pt) {
     if (p && pt) {
         ClientToScreen(p->m_pOs->m_hWnd, (LPPOINT)pt);

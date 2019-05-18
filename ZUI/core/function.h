@@ -37,7 +37,7 @@ ZuiBool ZuiStingIsUtf8(ZuiAny str, ZuiInt length);
 ZuiInt ZuiUtf8ToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen);
 ZuiInt ZuiAsciiToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen);
 ZuiInt ZuiUnicodeToAscii(ZuiText str, ZuiInt slen, ZuiAny out, ZuiInt olen);
-
+ZuiInt ZuiUnicodeToUtf8(ZuiText str, ZuiInt slen, ZuiAny out, ZuiInt olen);
 
 
 #endif //__ZUI_CORE_FUNCTION_H__

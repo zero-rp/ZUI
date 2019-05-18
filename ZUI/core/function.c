@@ -388,7 +388,9 @@ ZuiInt ZuiUnicodeToAscii(ZuiText str, ZuiInt slen, ZuiAny out, ZuiInt olen)
 {
     return ZuiOsUnicodeToAscii(str, slen, out, olen);
 }
-
+ZuiInt ZuiUnicodeToUtf8(ZuiText str, ZuiInt slen, ZuiAny out, ZuiInt olen) {
+    return ZuiOsUnicodeToUtf8(str, slen, out, olen);
+}
 ZuiColor ZuiStr2Color(ZuiAny str)
 {
     ZuiText pstr = NULL;

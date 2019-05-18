@@ -1,7 +1,6 @@
 ﻿#include "skia.h"
 #include "graph.h"
 #if PLATFORM_GRAPH_SKIA
-#pragma comment(lib, "Gdiplus.lib")
 #if defined(__cplusplus)
 //图像解码器
 
@@ -14,21 +13,15 @@
 #include <core\SkPath.h>
 #include <core\SkPicture.h>
 #include <core\SkImage.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifdef __cplusplus
-}
-#endif
-
+#include <core\SkTypeface.h>
+#include <core\SkFont.h>
 
 extern "C"
 {
 #endif
-#define ARGBTORGBA8(A) (agg::rgba8(((A) >> 16) & 0xFF, ((A) >> 8) & 0xFF, (A) & 0xff, ((A) >> 24) & 0xFF))
-#define ARGBTORGBA8P(A) (new agg::rgba8(((A) >> 16) & 0xFF, ((A) >> 8) & 0xFF, (A) & 0xff, ((A) >> 24) & 0xFF))
+
+#include <core/function.h>
+
     /**SKIA图形*/
     struct ZuiSkiaGraphics {
         SkCanvas* SkCanvas;
@@ -40,6 +33,11 @@ extern "C"
         sk_sp<SkImage> image;
         sk_sp<SkData> data;
     };
+    /**字体*/
+    struct ZuiSkiaFont {
+        sk_sp<SkTypeface> SkFontType;   //定义字体
+        SkFont *font;
+    };
 
     /*初始化图形接口*/
     ZuiBool ZuiGraphInitialize() {
@@ -50,7 +48,100 @@ extern "C"
     ZuiVoid ZuiGraphUnInitialize() {
 
     }
+    //---------------------------------------------------图形
+    /*创建图形*/
+    ZEXPORT ZuiGraphics ZCALL ZuiCreateGraphicsInMemory(ZuiInt Width, ZuiInt Height) {
+        ZuiGraphics Graphics = (ZuiGraphics)malloc(sizeof(ZGraphics));
+        if (!Graphics) { return NULL; }
+        memset(Graphics, 0, sizeof(ZGraphics));
+        Graphics->Width = Width;
+        Graphics->Height = Height;
+        HDC tempdc = GetDC(0);
+        Graphics->hdc = CreateCompatibleDC(tempdc);
+        ReleaseDC(0, tempdc);
+        BITMAPINFO BitmapInfo;
+        memset(&BitmapInfo, 0, sizeof(BitmapInfo));
+        BitmapInfo.bmiHeader.biSize = sizeof(BitmapInfo.bmiHeader);
+        BitmapInfo.bmiHeader.biBitCount = 32;
+        BitmapInfo.bmiHeader.biWidth = Width;
+        BitmapInfo.bmiHeader.biHeight = -Height;
+        BitmapInfo.bmiHeader.biPlanes = 1;
+        BitmapInfo.bmiHeader.biCompression = BI_RGB;
+        Graphics->HBitmap = CreateDIBSection(Graphics->hdc, &BitmapInfo, DIB_RGB_COLORS, &Graphics->Bits, 0, 0);
+        if (!Graphics->HBitmap) {
+            DeleteDC(Graphics->hdc);
+            return NULL;
+        }
+        HBITMAP OldBitmap = (HBITMAP)SelectObject(Graphics->hdc, (HGDIOBJ)Graphics->HBitmap);
 
+        Graphics->graphics = new ZuiSkiaGraphics();
+
+        Graphics->graphics->SkBitmap = new SkBitmap();
+        Graphics->graphics->SkBitmap->setInfo(SkImageInfo::Make(Width, Height, kN32_SkColorType, kPremul_SkAlphaType));
+        Graphics->graphics->SkBitmap->setPixels(Graphics->Bits);
+        Graphics->graphics->SkCanvas = new SkCanvas(*Graphics->graphics->SkBitmap);
+
+        Graphics->graphics->SkCanvas->clear(ARGB(0, 0, 0, 0));
+        return Graphics;
+    }
+    /*创建一个可复用的图形*/
+    ZEXPORT ZuiGraphics ZCALL ZuiCreateGraphics() {
+        ZuiGraphics Graphics = (ZuiGraphics)malloc(sizeof(ZGraphics));
+        if (!Graphics) { return NULL; }
+        memset(Graphics, 0, sizeof(ZGraphics));
+        Graphics->graphics = new ZuiSkiaGraphics();
+
+
+
+        return Graphics;
+    }
+    /*附加到一块内存上*/
+    ZEXPORT ZuiGraphics ZCALL ZuiCreateGraphicsAttach(ZuiGraphics Graphics, ZuiAny bits, ZuiInt Width, ZuiInt Height, ZuiInt stride) {
+        if (!Graphics) { return NULL; }
+        if (Graphics->hdc) {
+            DeleteDC(Graphics->hdc);
+            Graphics->hdc = NULL;
+        }
+        if (Graphics->HBitmap) {
+            DeleteObject(Graphics->HBitmap);
+            Graphics->HBitmap = NULL;
+        }
+        Graphics->Bits = bits;
+        Graphics->Width = Width;
+        Graphics->Height = Height;
+
+        Graphics->graphics = new ZuiSkiaGraphics();
+
+        Graphics->graphics->SkBitmap = new SkBitmap();
+        Graphics->graphics->SkBitmap->setInfo(SkImageInfo::Make(Width, Height, kN32_SkColorType, kPremul_SkAlphaType));
+        Graphics->graphics->SkBitmap->setPixels(Graphics->Bits);
+        Graphics->graphics->SkCanvas = new SkCanvas(*Graphics->graphics->SkBitmap);
+
+        Graphics->graphics->SkCanvas->clear(ARGB(0, 0, 0, 0));
+        return Graphics;
+    }
+    /*销毁图形*/
+    ZEXPORT ZuiVoid ZCALL ZuiDestroyGraphics(ZuiGraphics Graphics) {
+        if (Graphics) {
+            if (Graphics->graphics) {
+                if (Graphics->graphics->SkCanvas)
+                    delete Graphics->graphics->SkCanvas;
+                if (Graphics->graphics->SkBitmap)
+                    delete Graphics->graphics->SkBitmap;
+                delete Graphics->graphics;
+            }
+            if (Graphics->hdc) {
+                DeleteDC(Graphics->hdc);
+                Graphics->hdc = NULL;
+            }
+            if (Graphics->HBitmap) {
+                DeleteObject(Graphics->HBitmap);
+                Graphics->HBitmap = NULL;
+            }
+            free(Graphics);
+        }
+    }
+    //-----------------------绘制
     /*填充矩形*/
     ZEXPORT ZuiVoid ZCALL ZuiDrawFillRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Right, ZuiReal Bottom) {
         if (!Graphics)
@@ -125,11 +216,19 @@ extern "C"
         if (!String || !Font || !Graphics)
             return;
 
+
+        
     }
     ZEXPORT ZuiVoid ZCALL ZuiDrawString(ZuiGraphics Graphics, ZuiFont Font, ZuiText String, ZuiInt StrLen, ZRectR * Rect, ZuiColor Color, ZuiUInt TextStyle) {
         if (!String || !Font || !Graphics)
             return;
+        SkPaint paint;
 
+        paint.setColor(Color);
+        paint.setAntiAlias(true);
+        paint.setStyle(SkPaint::kStrokeAndFill_Style);
+
+        Graphics->graphics->SkCanvas->drawSimpleText(String, StrLen * 2, SkTextEncoding::kUTF16, Rect->left,Rect->bottom, *Font->font->font, paint);
     }
     /*测量文本大小*/
     ZEXPORT ZuiVoid ZCALL ZuiMeasureTextSize(ZuiFont Font, _ZuiText String, ZuiSizeR Size)
@@ -177,7 +276,7 @@ extern "C"
         SkPaint paint;
         paint.setAntiAlias(true);
         paint.setStyle(SkPaint::kFill_Style);
-        //paint.setColor(SK_ColorBLACK);
+        paint.setColor(SK_ColorBLACK);
         SkRect src = { xSrc, ySrc, xSrc + WidthSrc, ySrc + HeightSrc };
         SkRect dst = { x, y, x + Width, y + Height };
         Graphics->graphics->SkCanvas->drawImage(Image->image->image, x, y);
@@ -188,12 +287,21 @@ extern "C"
     ZEXPORT ZuiVoid ZCALL ZuiAlphaBlendEx(ZuiGraphics Dest, ZuiInt srcX1, ZuiInt srcY1, ZuiInt srcX2, ZuiInt srcY2, ZuiInt dstX, ZuiInt dstY, ZuiGraphics Src, ZuiByte Alpha) {
         if (!Dest || !Src)
             return;
-
-
+        SkPaint paint;
+        if (Alpha != 0xFF) paint.setAlpha(Alpha);
+        paint.setStyle(SkPaint::kFill_Style);
+        SkIRect isrc = { srcX1,srcY1,srcX2,srcY2 };
+        SkRect skrc = { dstX , dstY , dstX + (srcX2 - srcX1), dstY + (srcY2 - srcY1) };
+        Dest->graphics->SkCanvas->drawBitmapRect(*Src->graphics->SkBitmap, isrc, skrc, &paint);
     }
     ZEXPORT ZuiVoid ZCALL ZuiBitBltEx(ZuiGraphics Dest, ZuiInt srcX1, ZuiInt srcY1, ZuiInt srcX2, ZuiInt srcY2, ZuiInt dstX, ZuiInt dstY, ZuiGraphics Src) {
         if (!Dest || !Src)
             return;
+        SkPaint paint;
+        paint.setStyle(SkPaint::kFill_Style);
+        SkIRect isrc = { srcX1,srcY1,srcX2,srcY2 };
+        SkRect skrc = { dstX , dstY , dstX + (srcX2 - srcX1), dstY + (srcY2 - srcY1) };
+        Dest->graphics->SkCanvas->drawBitmapRect(*Src->graphics->SkBitmap, isrc, skrc, &paint);
     }
     /*清除图形*/
     ZEXPORT ZuiVoid ZCALL ZuiGraphicsClear(ZuiGraphics Graphics, ZuiColor Color) {
@@ -201,114 +309,33 @@ extern "C"
             return;
         Graphics->graphics->SkCanvas->clear(Color);
     }
+    //---------------------------------------------------字体
     /*创建字体*/
     ZEXPORT ZuiFont ZCALL ZuiCreateFont(ZuiText FontName, ZuiReal FontSize, ZuiBool Bold, ZuiBool Italic) {
         int i = 0;
         ZuiFont Font = (ZuiFont)malloc(sizeof(ZFont));
         if (!Font) { return NULL; }
         memset(Font, 0, sizeof(ZFont));
-
+        Font->font = new ZuiSkiaFont;
+        int weight = 0;
+        int width = 0;
+        if (Bold) width |= SkFontStyle::kBold_Weight;
+        SkFontStyle style(weight, width, Italic ? SkFontStyle::kItalic_Slant : SkFontStyle::kUpright_Slant);
+        Font->font->SkFontType = SkTypeface::MakeFromName("微软雅黑", style);
+        Font->font->font = new SkFont(Font->font->SkFontType);
+        Font->font->font->setSize(FontSize);
         return Font;
     }
     /*销毁字体*/
     ZEXPORT ZuiVoid ZCALL ZuiDestroyFont(ZuiFont StringFormat) {
         if (!StringFormat)
             return;
-    }
-    /*创建图形*/
-    ZEXPORT ZuiGraphics ZCALL ZuiCreateGraphicsInMemory(ZuiInt Width, ZuiInt Height) {
-        ZuiGraphics Graphics = (ZuiGraphics)malloc(sizeof(ZGraphics));
-        if (!Graphics) { return NULL; }
-        memset(Graphics, 0, sizeof(ZGraphics));
-        Graphics->Width = Width;
-        Graphics->Height = Height;
-        HDC tempdc = GetDC(0);
-        Graphics->hdc = CreateCompatibleDC(tempdc);
-        ReleaseDC(0, tempdc);
-        BITMAPINFO BitmapInfo;
-        memset(&BitmapInfo, 0, sizeof(BitmapInfo));
-        BitmapInfo.bmiHeader.biSize = sizeof(BitmapInfo.bmiHeader);
-        BitmapInfo.bmiHeader.biBitCount = 32;
-        BitmapInfo.bmiHeader.biWidth = Width;
-        BitmapInfo.bmiHeader.biHeight = -Height;
-        BitmapInfo.bmiHeader.biPlanes = 1;
-        BitmapInfo.bmiHeader.biCompression = BI_RGB;
-        Graphics->HBitmap = CreateDIBSection(Graphics->hdc, &BitmapInfo, DIB_RGB_COLORS, &Graphics->Bits, 0, 0);
-        if (!Graphics->HBitmap) {
-            DeleteDC(Graphics->hdc);
-            return NULL;
-        }
-        HBITMAP OldBitmap = (HBITMAP)SelectObject(Graphics->hdc, (HGDIOBJ)Graphics->HBitmap);
-
-        Graphics->graphics = new ZuiSkiaGraphics();
-
-        Graphics->graphics->SkBitmap = new SkBitmap();
-        Graphics->graphics->SkBitmap->setInfo(SkImageInfo::Make(Width, Height, kN32_SkColorType, kPremul_SkAlphaType));
-        Graphics->graphics->SkBitmap->setPixels(Graphics->Bits);
-        Graphics->graphics->SkCanvas = new SkCanvas(*Graphics->graphics->SkBitmap);
-
-        Graphics->graphics->SkCanvas->clear(ARGB(0, 0, 0, 0));
-        return Graphics;
-    }
-    /*创建一个可复用的图形*/
-    ZEXPORT ZuiGraphics ZCALL ZuiCreateGraphics() {
-        ZuiGraphics Graphics = (ZuiGraphics)malloc(sizeof(ZGraphics));
-        if (!Graphics) { return NULL; }
-        memset(Graphics, 0, sizeof(ZGraphics));
-        Graphics->graphics = new ZuiSkiaGraphics();
-
-
-
-        return Graphics;
-    }
-    /*附加到一块内存上*/
-    ZEXPORT ZuiGraphics ZCALL ZuiCreateGraphicsAttach(ZuiGraphics Graphics, ZuiAny bits, ZuiInt Width, ZuiInt Height, ZuiInt stride) {
-        if (!Graphics) { return NULL; }
-        if (Graphics->hdc) {
-            DeleteDC(Graphics->hdc);
-            Graphics->hdc = NULL;
-        }
-        if (Graphics->HBitmap) {
-            DeleteObject(Graphics->HBitmap);
-            Graphics->HBitmap = NULL;
-        }
-        Graphics->Bits = bits;
-        Graphics->Width = Width;
-        Graphics->Height = Height;
-
-        Graphics->graphics = new ZuiSkiaGraphics();
-
-        Graphics->graphics->SkBitmap = new SkBitmap();
-        Graphics->graphics->SkBitmap->setInfo(SkImageInfo::Make(Width, Height, kN32_SkColorType, kPremul_SkAlphaType));
-        Graphics->graphics->SkBitmap->setPixels(Graphics->Bits);
-        Graphics->graphics->SkCanvas = new SkCanvas(*Graphics->graphics->SkBitmap);
-
-        Graphics->graphics->SkCanvas->clear(ARGB(0, 0, 0, 0));
-        return Graphics;
+        delete StringFormat->font->font;
+        delete StringFormat->font;
+        free(StringFormat);
     }
 
-    /*销毁图形*/
-    ZEXPORT ZuiVoid ZCALL ZuiDestroyGraphics(ZuiGraphics Graphics) {
-        if (Graphics) {
-            if (Graphics->graphics) {
-                if (Graphics->graphics->SkCanvas)
-                    delete Graphics->graphics->SkCanvas;
-                if (Graphics->graphics->SkBitmap)
-                    delete Graphics->graphics->SkBitmap;
-                delete Graphics->graphics;
-            }
-            if (Graphics->hdc) {
-                DeleteDC(Graphics->hdc);
-                Graphics->hdc = NULL;
-            }
-            if (Graphics->HBitmap) {
-                DeleteObject(Graphics->HBitmap);
-                Graphics->HBitmap = NULL;
-            }
-            free(Graphics);
-        }
-    }
-
+    //---------------------------------------------------剪裁区
     /*压入剪裁区*/
     ZEXPORT ZuiBool ZCALL ZuiGraphicsPushClipRect(ZuiGraphics Graphics, ZuiRectR box, ZuiInt mode) {
         if (!Graphics)
@@ -374,8 +401,7 @@ extern "C"
     }
 
 
-
-
+    //---------------------------------------------------图像
     /*加载图像自内存*/
     ZEXPORT ZuiImage ZCALL ZuiLoadImageFromBinary(ZuiAny buf, ZuiInt len) {
         ZuiImage Image = (ZuiImage)malloc(sizeof(ZImage));
@@ -397,7 +423,7 @@ extern "C"
         if (Image) {
             if (Image->image->buf)
                 free(Image->image->buf);
-            delete Image->image;
+            delete Image->image->data;
             free(Image);
         }
     }

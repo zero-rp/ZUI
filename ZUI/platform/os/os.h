@@ -111,6 +111,7 @@ ZuiVoid ZuiOsPostTask(ZuiTask task);
 ZuiInt ZuiOsUtf8ToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen);
 ZuiInt ZuiOsAsciiToUnicode(ZuiAny str, ZuiInt slen, ZuiText out, ZuiInt olen);
 ZuiInt ZuiOsUnicodeToAscii(ZuiText str, ZuiInt slen, ZuiAny out, ZuiInt olen);
+ZuiInt ZuiOsUnicodeToUtf8(ZuiText str, ZuiInt slen, ZuiAny out, ZuiInt olen);
 
 ZuiVoid ZuiOsClientToScreen(ZuiControl p, ZuiPoint pt);
 ZuiVoid ZuiOsScreenToClient(ZuiControl p, ZuiPoint pt);
