@@ -29,7 +29,6 @@ extern "C"
     };
     /**SKIA图像*/
     struct ZuiSkiaImage {
-        void* buf;
         sk_sp<SkImage> image;
         sk_sp<SkData> data;
     };
@@ -413,10 +412,7 @@ extern "C"
         memset(Image, 0, sizeof(ZImage));
         Image->image = new ZuiSkiaImage();
         if (!Image->image) { free(Image); return NULL; }
-        Image->image->buf = malloc(len);
-        if (!Image->image->buf) { delete Image->image; free(Image); return NULL; }
-        memcpy(Image->image->buf, buf, len);
-        Image->image->data = SkData::MakeFromMalloc(Image->image->buf, len);
+        Image->image->data = SkData::MakeWithCopy(buf, len);
         Image->image->image = SkImage::MakeFromEncoded(Image->image->data);
         Image->Height = Image->image->image->height();
         Image->Width = Image->image->image->width();
@@ -425,8 +421,6 @@ extern "C"
     /*销毁图像*/
     ZEXPORT ZuiVoid ZCALL ZuiDestroyImage(ZuiImage Image) {
         if (Image) {
-            if (Image->image->buf)
-                free(Image->image->buf);
             delete Image->image;
             free(Image);
         }
