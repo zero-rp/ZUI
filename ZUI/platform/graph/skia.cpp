@@ -334,6 +334,10 @@ extern "C"
         delete StringFormat->font;
         free(StringFormat);
     }
+    //---------------------------------------------------路径
+
+
+
 
     //---------------------------------------------------剪裁区
     /*压入剪裁区*/
@@ -423,7 +427,7 @@ extern "C"
         if (Image) {
             if (Image->image->buf)
                 free(Image->image->buf);
-            delete Image->image->data;
+            delete Image->image;
             free(Image);
         }
     }

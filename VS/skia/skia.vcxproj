@@ -1302,9 +1302,9 @@
     <ClCompile Include="..\..\skia\src\ports\SkFontMgr_custom_directory.cpp" />
     <ClCompile Include="..\..\skia\src\ports\SkFontMgr_custom_embedded.cpp" />
     <ClCompile Include="..\..\skia\src\ports\SkFontMgr_custom_empty.cpp" />
-    <ClCompile Include="..\..\skia\src\ports\SkFontMgr_empty_factory.cpp" />
     <ClCompile Include="..\..\skia\src\ports\SkFontMgr_FontConfigInterface.cpp" />
     <ClCompile Include="..\..\skia\src\ports\SkFontMgr_win_dw.cpp" />
+    <ClCompile Include="..\..\skia\src\ports\SkFontMgr_win_dw_factory.cpp" />
     <ClCompile Include="..\..\skia\src\ports\SkGlobalInitialization_default.cpp" />
     <ClCompile Include="..\..\skia\src\ports\SkImageEncoder_CG.cpp" />
     <ClCompile Include="..\..\skia\src\ports\SkImageEncoder_WIC.cpp" />
@@ -1508,7 +1508,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;SK_IGNORE_ETC1_SUPPORT;SK_HAS_PNG_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;..\..\skia\;..\..\skia\include\config;..\..\skia\include\core;..\..\skia\src\core;..\..\skia\include\gpu;..\..\skia\src\gpu;..\..\skia\include\images;..\..\skia\include\utils;..\..\skia\include\utils\win;..\..\skia\src\utils;..\..\skia\include\ports;..\..\skia\include\text;..\..\skia\include\effects;..\..\skia\src\sfnt;..\..\skia\include\pathops;..\..\skia\src\image;..\..\skia\src\opts;..\..\skia\src\lazy;..\..\skia\include\third_party\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\..\libpng;..\..\skia\;..\..\skia\include\config;..\..\skia\include\core;..\..\skia\src\core;..\..\skia\include\gpu;..\..\skia\src\gpu;..\..\skia\include\images;..\..\skia\include\utils;..\..\skia\include\utils\win;..\..\skia\src\utils;..\..\skia\include\ports;..\..\skia\include\text;..\..\skia\include\effects;..\..\skia\src\sfnt;..\..\skia\include\pathops;..\..\skia\src\image;..\..\skia\src\opts;..\..\skia\src\lazy;..\..\skia\include\third_party\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -1542,7 +1542,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <StringPooling>true</StringPooling>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>.;..\..\skia\;..\..\skia\include\config;..\..\skia\include\core;..\..\skia\src\core;..\..\skia\include\gpu;..\..\skia\src\gpu;..\..\skia\include\images;..\..\skia\include\utils;..\..\skia\include\utils\win;..\..\skia\src\utils;..\..\skia\include\ports;..\..\skia\include\text;..\..\skia\include\effects;..\..\skia\src\sfnt;..\..\skia\include\pathops;..\..\skia\src\image;..\..\skia\src\opts;..\..\skia\src\lazy;..\..\skia\include\third_party\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\..\libpng;..\..\skia\;..\..\skia\include\config;..\..\skia\include\core;..\..\skia\src\core;..\..\skia\include\gpu;..\..\skia\src\gpu;..\..\skia\include\images;..\..\skia\include\utils;..\..\skia\include\utils\win;..\..\skia\src\utils;..\..\skia\include\ports;..\..\skia\include\text;..\..\skia\include\effects;..\..\skia\src\sfnt;..\..\skia\include\pathops;..\..\skia\src\image;..\..\skia\src\opts;..\..\skia\src\lazy;..\..\skia\include\third_party\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -1566,7 +1566,7 @@
       <ExceptionHandling>false</ExceptionHandling>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <AdditionalOptions> /Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>.;..\..\skia\;..\..\skia\include\config;..\..\skia\include\core;..\..\skia\src\core;..\..\skia\include\gpu;..\..\skia\src\gpu;..\..\skia\include\images;..\..\skia\include\utils;..\..\skia\include\utils\win;..\..\skia\src\utils;..\..\skia\include\ports;..\..\skia\include\text;..\..\skia\include\effects;..\..\skia\src\sfnt;..\..\skia\include\pathops;..\..\skia\src\image;..\..\skia\src\opts;..\..\skia\src\lazy;..\..\skia\include\third_party\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\..\libpng;..\..\skia\;..\..\skia\include\config;..\..\skia\include\core;..\..\skia\src\core;..\..\skia\include\gpu;..\..\skia\src\gpu;..\..\skia\include\images;..\..\skia\include\utils;..\..\skia\include\utils\win;..\..\skia\src\utils;..\..\skia\include\ports;..\..\skia\include\text;..\..\skia\include\effects;..\..\skia\src\sfnt;..\..\skia\include\pathops;..\..\skia\src\image;..\..\skia\src\opts;..\..\skia\src\lazy;..\..\skia\include\third_party\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -1586,7 +1586,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>.;..\..\skia\;..\..\skia\include\config;..\..\skia\include\core;..\..\skia\src\core;..\..\skia\include\gpu;..\..\skia\src\gpu;..\..\skia\include\images;..\..\skia\include\utils;..\..\skia\include\utils\win;..\..\skia\src\utils;..\..\skia\include\ports;..\..\skia\include\text;..\..\skia\include\effects;..\..\skia\src\sfnt;..\..\skia\include\pathops;..\..\skia\src\image;..\..\skia\src\opts;..\..\skia\src\lazy;..\..\skia\include\third_party\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\..\libpng\;..\..\skia\;..\..\skia\include\config;..\..\skia\include\core;..\..\skia\src\core;..\..\skia\include\gpu;..\..\skia\src\gpu;..\..\skia\include\images;..\..\skia\include\utils;..\..\skia\include\utils\win;..\..\skia\src\utils;..\..\skia\include\ports;..\..\skia\include\text;..\..\skia\include\effects;..\..\skia\src\sfnt;..\..\skia\include\pathops;..\..\skia\src\image;..\..\skia\src\opts;..\..\skia\src\lazy;..\..\skia\include\third_party\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>

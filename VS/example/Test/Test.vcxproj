@@ -142,7 +142,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>zui.lib;agg.lib;zlib.lib;duktape.lib;libuv.lib;ws2_32.lib;dukluv.lib;IPHLPAPI.lib;Userenv.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libpng.lib;skia.lib;usp10.lib;zui.lib;agg.lib;zlib.lib;duktape.lib;libuv.lib;ws2_32.lib;dukluv.lib;IPHLPAPI.lib;Userenv.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OutDir);$(OutDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
     </Link>
@@ -158,7 +158,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(OutDir);$(OutDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>zui.lib;agg.lib;zlib.lib;duktape.lib;libuv.lib;ws2_32.lib;dukluv.lib;IPHLPAPI.lib;Userenv.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libpng.lib;skia.lib;usp10.lib;zui.lib;agg.lib;zlib.lib;duktape.lib;libuv.lib;ws2_32.lib;dukluv.lib;IPHLPAPI.lib;Userenv.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -178,7 +178,7 @@
     <Link>
       <AdditionalLibraryDirectories>$(OutDir);$(OutDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>zui.lib;agg.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Userenv.lib;Psapi.lib;Iphlpapi.lib;ws2_32.lib;duktape.lib;libuv.lib;dukluv.lib;libpng.lib;zui.lib;agg.lib;zlib.lib;skia.lib;Usp10.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <MinimumRequiredVersion>5.02</MinimumRequiredVersion>
     </Link>
@@ -200,7 +200,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(OutDir);$(OutDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>zui.lib;agg.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Psapi.lib;Iphlpapi.lib;Userenv.lib;ws2_32.lib;duktape.lib;libuv.lib;dukluv.lib;libpng.lib;skia.lib;usp10.lib;zui.lib;agg.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -221,7 +221,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(OutDir);$(OutDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>zui.lib;agg.lib;zlib.lib;duktape.lib;libuv.lib;ws2_32.lib;dukluv.lib;IPHLPAPI.lib;Userenv.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libpng.lib;zui.lib;agg.lib;zlib.lib;duktape.lib;libuv.lib;ws2_32.lib;dukluv.lib;IPHLPAPI.lib;Userenv.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <SubSystem>Windows</SubSystem>

@@ -2933,9 +2933,6 @@
     <ClCompile Include="..\..\skia\src\core\SkFontLCDConfig.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\skia\src\core\SkFontMgr.cpp">
-      <Filter>src\core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\skia\src\core\SkFontPriv.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
@@ -4052,9 +4049,6 @@
     <ClCompile Include="..\..\skia\src\ports\SkFontMgr_custom_empty.cpp">
       <Filter>src\ports</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\skia\src\ports\SkFontMgr_empty_factory.cpp">
-      <Filter>src\ports</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\skia\src\ports\SkFontMgr_FontConfigInterface.cpp">
       <Filter>src\ports</Filter>
     </ClCompile>
@@ -4222,6 +4216,12 @@
     </ClCompile>
     <ClCompile Include="..\..\skia\src\codec\SkWbmpCodec.cpp">
       <Filter>src\codec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\skia\src\core\SkFontMgr.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\skia\src\ports\SkFontMgr_win_dw_factory.cpp">
+      <Filter>src\ports</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
