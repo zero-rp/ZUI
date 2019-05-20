@@ -128,6 +128,8 @@ typedef struct _ZGraphics *ZuiGraphics, ZGraphics;
 typedef struct _ZImage *ZuiImage, ZImage;
 //字体
 typedef struct _ZFont *ZuiFont, ZFont;
+//路径
+typedef struct _ZPath* ZuiPath, ZPath;
 //初始化结构
 typedef struct _ZuiInitConfig
 {

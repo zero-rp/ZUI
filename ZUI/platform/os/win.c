@@ -1336,6 +1336,7 @@ ZuiVoid ZuiOsPostMessage(ZuiControl cp, ZuiAny Msg, ZuiAny Param1, ZuiAny Param2
     PostMessage(cp->m_pOs->m_hWnd, (UINT)Msg, (WPARAM)Param1, (LPARAM)Param2);
 }
 ZuiVoid ZuiOsPostTask(ZuiTask task) {
+    //会漏消息
     PostThreadMessage(m_hMainThreadId, WM_APP + 2, (WPARAM)task, 0);
 }
 ZEXPORT ZuiInt ZuiDoModel(ZuiControl cp)

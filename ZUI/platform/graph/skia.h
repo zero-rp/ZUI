@@ -36,4 +36,8 @@ typedef struct _ZFont {
     struct ZuiSkiaFont *font;
 }*ZuiFont, ZFont;
 
+/**路径*/
+typedef struct _ZPath {
+    struct ZuiSkiaPath* path;
+}*ZuiPath, ZPath;
 #endif //__ZUI_PLATFORM_GRAPH_SKIA_H__

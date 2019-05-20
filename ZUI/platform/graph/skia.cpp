@@ -37,6 +37,11 @@ extern "C"
         sk_sp<SkTypeface> SkFontType;   //定义字体
         SkFont *font;
     };
+    /**路径*/
+    struct ZuiSkiaPath {
+        SkPath path;
+    };
+    /**区域*/
 
     /*初始化图形接口*/
     ZuiBool ZuiGraphInitialize() {
@@ -234,51 +239,53 @@ extern "C"
     {
         if (!String || !Font)
             return;
+
+        
     }
     /*画图像缩放*/
-    ZEXPORT ZuiVoid ZCALL ZuiDrawImageEx(ZuiGraphics Graphics, ZuiImage Image, ZuiReal x, ZuiReal y, ZuiReal Width, ZuiReal Height, ZuiReal xSrc, ZuiReal ySrc, ZuiReal WidthSrc, ZuiReal HeightSrc, ZuiByte Alpha) {
+    ZEXPORT ZuiVoid ZCALL ZuiDrawImageEx(ZuiGraphics Graphics, ZuiImage Image, ZuiReal x, ZuiReal y, ZuiReal x2, ZuiReal y2, ZuiReal xSrc, ZuiReal ySrc, ZuiReal x2Src, ZuiReal y2Src, ZuiByte Alpha) {
         if (!(Graphics && Image)) {
             return;
         }
         if (Image->src.left)
-            xSrc = Image->src.left;
+            xSrc += Image->src.left;
         if (Image->src.top)
-            ySrc = Image->src.top;
+            ySrc += Image->src.top;
 
-        if (Width <= 0) {
+        if (x2 <= 0) {
             if (Image->src.right)
-                Width = Image->src.right - xSrc;
+                x2 = Image->src.right;
             else
-                Width = (ZuiInt)(Image->Width - xSrc);
+                x2 = (ZuiInt)(Image->Width);
         }
-        if (Height <= 0) {
+        if (y2 <= 0) {
             if (Image->src.bottom)
-                Height = Image->src.bottom - ySrc;
+                y2 = Image->src.bottom;
             else
-                Height = (ZuiInt)(Image->Height - ySrc);
+                y2 = (ZuiInt)(Image->Height);
         }
 
 
-        if (WidthSrc <= 0 || WidthSrc + xSrc > Image->Width) {
+        if (x2Src <= 0 || x2Src + xSrc > Image->Width) {
             if (Image->src.right)
-                WidthSrc = Image->src.right;
+                x2Src = Image->src.right;
             else
-                WidthSrc = (ZuiInt)(Image->Width - xSrc);
+                x2Src = (ZuiInt)(Image->Width);
         }
-        if (HeightSrc <= 0 || HeightSrc + ySrc > Image->Height) {
+        if (y2Src <= 0 || y2Src + ySrc > Image->Height) {
             if (Image->src.bottom)
-                HeightSrc = Image->src.bottom;
+                y2Src = Image->src.bottom;
             else
-                HeightSrc = (ZuiInt)(Image->Height - ySrc);
+                y2Src = (ZuiInt)(Image->Height);
         }
 
         SkPaint paint;
         paint.setAntiAlias(true);
         paint.setStyle(SkPaint::kFill_Style);
         paint.setColor(SK_ColorBLACK);
-        SkRect src = { xSrc, ySrc, xSrc + WidthSrc, ySrc + HeightSrc };
-        SkRect dst = { x, y, x + Width, y + Height };
-        Graphics->graphics->SkCanvas->drawImage(Image->image->image, x, y);
+        SkRect src = { xSrc, ySrc, x2Src, y2Src };
+        SkRect dst = { x, y, x2, y2 };
+        Graphics->graphics->SkCanvas->drawImageRect(Image->image->image.get(), src, dst, &paint);
 
         return;
     }
@@ -334,8 +341,21 @@ extern "C"
         free(StringFormat);
     }
     //---------------------------------------------------路径
-
-
+    /*创建路径*/
+    ZEXPORT ZuiPath ZCALL ZuiCreatePath() {
+        ZuiPath Path = (ZuiPath)malloc(sizeof(ZPath));
+        if (!Path) { return NULL; }
+        memset(Path, 0, sizeof(ZPath));
+        Path->path = new ZuiSkiaPath;
+        return Path;
+    }
+    /*销毁路径*/
+    ZEXPORT ZuiVoid ZCALL ZuiDestroyPath(ZuiPath path) {
+        if (!path)
+            return;
+        delete path->path;
+        free(path);
+    }
 
 
     //---------------------------------------------------剪裁区
