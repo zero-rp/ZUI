@@ -559,9 +559,9 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         ZRect *rc = &p->m_rcItem;
 		if (p->m_dwBorderColor) {
 			if(p->m_dwBorderWidth)
-				ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - 1, rc->bottom - 1 , p->m_dwBorderWidth);
+				ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right, rc->bottom, p->m_dwBorderWidth);
 			else
-				ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - 1, rc->bottom - 1, 1);
+				ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right, rc->bottom, 1);
 		}
         break;
     }
