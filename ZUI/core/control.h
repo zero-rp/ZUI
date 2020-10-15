@@ -86,6 +86,7 @@ typedef struct _ZControl
     ZSize m_cxyFixed;                //预设的控件大小
     ZSize m_cxyMin;                  //控件最小大小
     ZSize m_cxyMax;                  //控件最大大小
+    ZSize m_rRound;                   //控件圆角
     ZuiBool m_bVisible;             //可视
     ZuiBool m_bEnabled;             //激活
     ZuiBool m_bMouseEnabled;        //鼠标激活

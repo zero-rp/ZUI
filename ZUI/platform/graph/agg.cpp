@@ -102,6 +102,25 @@ extern "C"
             Graphics->graphics->graphics->rectangle(Left + LineWidth/2, Top + LineWidth / 2, Right - LineWidth / 2, Bottom - LineWidth / 2);
         }
     }
+    //填充圆角矩形
+    ZEXPORT ZuiVoid ZCALL ZuiDrawFillRoundRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Right, ZuiReal Bottom, ZuiReal w, ZuiReal h) {   
+        if (Graphics)
+        {
+            Graphics->graphics->graphics->fillColor(ARGBTORGBA8(Color));
+            Graphics->graphics->graphics->noLine();//不画边框
+            Graphics->graphics->graphics->roundedRect(Left, Top, Right, Bottom,w,h);
+        }
+    }
+    //绘制圆角矩形
+    ZEXPORT ZuiVoid ZCALL ZuiDrawRoundRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Right, ZuiReal Bottom, ZuiReal w, ZuiReal h, ZuiReal LineWidth) {
+        if (Graphics) {
+            Graphics->graphics->graphics->lineWidth(LineWidth);
+            Graphics->graphics->graphics->lineColor(ARGBTORGBA8(Color));
+            Graphics->graphics->graphics->noFill();//不填充
+            Graphics->graphics->graphics->roundedRect(Left, Top, Right, Bottom,w,h);
+        }
+    }
+
     //填充三角形
     ZEXPORT ZuiVoid ZCALL ZuiDrawFilltriangle(ZuiGraphics Graphics, ZuiColor Color, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2, ZuiReal x3, ZuiReal y3)
     {

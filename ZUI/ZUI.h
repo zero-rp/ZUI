@@ -319,6 +319,7 @@ enum ZREST
 #define	Proc_GetBorderWidth		72
 #define Proc_OnClose			73
 #define Proc_GetEnabled         74
+#define Proc_SetRound           75  //设置圆角
 //------属性名称
 #define BK_Color        0x00000001 //背景色
 #define Border_Color    0x00000002 //边框颜色
