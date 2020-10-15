@@ -1,5 +1,6 @@
 ﻿#include "agg.h"
 #include "graph.h"
+#include "core/carray.h"
 #if PLATFORM_GRAPH_AGG
 #if defined(__cplusplus)
 #include "include\agg_color_rgba.h"
@@ -65,6 +66,7 @@ extern "C"
     struct ZuiAggFont {
         Agg2D::Font *font;
     };
+    DArray* rcDarray;
 
     ZuiInt pGdiToken;
     /*初始化图形接口*/
@@ -73,31 +75,52 @@ extern "C"
         memset(&gdiplusStartupInput, 0, sizeof(GdiplusStartupInput));
         gdiplusStartupInput.GdiplusVersion = 1;
         GdiplusStartup((int *)&pGdiToken, &gdiplusStartupInput, NULL);//初始化GDI+
+        rcDarray = darray_create();
         return TRUE;
     }
     /*反初始化图形接口*/
     ZuiVoid ZuiGraphUnInitialize() {
         GdiplusShutdown(pGdiToken);
+        darray_destroy(rcDarray);
     }
     
     /*填充矩形*/
-    ZEXPORT ZuiVoid ZCALL ZuiDrawFillRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Width, ZuiReal Height) {
+    ZEXPORT ZuiVoid ZCALL ZuiDrawFillRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Right, ZuiReal Bottom) {
         if (Graphics)
         {
             Graphics->graphics->graphics->fillColor(ARGBTORGBA8(Color));
             Graphics->graphics->graphics->noLine();//不画边框
-            Graphics->graphics->graphics->rectangle(Left, Top, Left + Width, Top + Height);
+            Graphics->graphics->graphics->rectangle(Left, Top, Right, Bottom);
         }
     }
     /*画矩形*/
-    ZEXPORT ZuiVoid ZCALL ZuiDrawRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Width, ZuiReal Height, ZuiReal LineWidth) {
+    ZEXPORT ZuiVoid ZCALL ZuiDrawRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Right, ZuiReal Bottom, ZuiReal LineWidth) {
         if (Graphics) {
             Graphics->graphics->graphics->lineWidth(LineWidth);
             Graphics->graphics->graphics->lineColor(ARGBTORGBA8(Color));
             Graphics->graphics->graphics->noFill();//不填充
-            Graphics->graphics->graphics->rectangle(Left + LineWidth/2, Top + LineWidth / 2, Left + Width - LineWidth / 2, Top + Height - LineWidth / 2);
+            Graphics->graphics->graphics->rectangle(Left + LineWidth/2, Top + LineWidth / 2, Right - LineWidth / 2, Bottom - LineWidth / 2);
         }
     }
+    //填充圆角矩形
+    ZEXPORT ZuiVoid ZCALL ZuiDrawFillRoundRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Right, ZuiReal Bottom, ZuiReal w, ZuiReal h) {   
+        if (Graphics)
+        {
+            Graphics->graphics->graphics->fillColor(ARGBTORGBA8(Color));
+            Graphics->graphics->graphics->noLine();//不画边框
+            Graphics->graphics->graphics->roundedRect(Left, Top, Right, Bottom,w,h);
+        }
+    }
+    //绘制圆角矩形
+    ZEXPORT ZuiVoid ZCALL ZuiDrawRoundRect(ZuiGraphics Graphics, ZuiColor Color, ZuiReal Left, ZuiReal Top, ZuiReal Right, ZuiReal Bottom, ZuiReal w, ZuiReal h, ZuiReal LineWidth) {
+        if (Graphics) {
+            Graphics->graphics->graphics->lineWidth(LineWidth);
+            Graphics->graphics->graphics->lineColor(ARGBTORGBA8(Color));
+            Graphics->graphics->graphics->noFill();//不填充
+            Graphics->graphics->graphics->roundedRect(Left, Top, Right, Bottom,w,h);
+        }
+    }
+
     //填充三角形
     ZEXPORT ZuiVoid ZCALL ZuiDrawFilltriangle(ZuiGraphics Graphics, ZuiColor Color, ZuiReal x1, ZuiReal y1, ZuiReal x2, ZuiReal y2, ZuiReal x3, ZuiReal y3)
     {
@@ -157,7 +180,8 @@ extern "C"
         }
     }
     /*画图像缩放*/
-    ZEXPORT ZuiVoid ZCALL ZuiDrawImageEx(ZuiGraphics Graphics, ZuiImage Image, ZuiReal x, ZuiReal y, ZuiReal Width, ZuiReal Height, ZuiReal xSrc, ZuiReal ySrc, ZuiReal WidthSrc, ZuiReal HeightSrc, ZuiByte Alpha) {
+    ZEXPORT ZuiVoid ZCALL ZuiDrawImageEx(ZuiGraphics Graphics, ZuiImage Image, ZuiReal x, ZuiReal y, ZuiReal Right, ZuiReal Bottom, ZuiReal xSrc, ZuiReal ySrc, ZuiReal WidthSrc, ZuiReal HeightSrc, ZuiByte Alpha) {
+        ZuiReal Width, Height;
         if (!(Graphics && Image)) {
             return;
         }
@@ -165,7 +189,8 @@ extern "C"
             xSrc = Image->src.left;
         if (Image->src.top)
             ySrc = Image->src.top;
-
+        Width = Right - x;
+        Height = Bottom - y;
         if (Width <= 0) {
             if (Image->src.right)
                 Width = Image->src.right - xSrc;
@@ -295,6 +320,27 @@ extern "C"
         Graphics->Height = Height;
         Graphics->graphics->graphics->attach((agg::int8u *)Graphics->Bits, Width, Height, stride * 4);
         return Graphics;
+    }
+    ZEXPORT ZuiBool ZCALL ZuiGraphicsPushClipRect(ZuiGraphics Graphics, ZuiRectR box, ZuiInt mode) {
+        if (!Graphics)
+            return FALSE;
+        ZuiRectR prc = (ZuiRectR)malloc(sizeof(ZRectR));
+        Agg2D::RectD rc = Graphics->graphics->graphics->clipBox();
+        prc->left = rc.x1; prc->top = rc.y1; prc->right = rc.x2; prc->bottom = rc.y2;
+        darray_append(rcDarray,prc);
+        Graphics->graphics->graphics->clipBox(box->left, box->top, box->right, box->bottom);
+        return TRUE;
+    }
+    //ZEXPORT ZuiVoid ZCALL PushClipRegion(IRegion* pRegion, ZuiInt mode){}
+    /*弹出剪裁区*/
+    ZEXPORT ZuiBool ZCALL ZuiGraphicsPopClip(ZuiGraphics Graphics) {
+        if (!Graphics)
+            return FALSE;
+        ZuiRectR prc = (ZuiRectR)darray_getat(rcDarray,rcDarray->count - 1);
+        Graphics->graphics->graphics->clipBox(prc->left, prc->top, prc->right, prc->bottom);
+        darray_delete(rcDarray,rcDarray->count - 1);
+        free(prc);
+        return TRUE;
     }
 
     /*销毁图形*/

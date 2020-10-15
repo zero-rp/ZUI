@@ -16,7 +16,11 @@
     #include "os/android.h"
 #endif
 
-#include "graph/agg.h"
+#if (defined PLATFORM_GRAPH_AGG)&&(PLATFORM_GRAPH_AGG == 1)
+	#include "graph/agg.h"
+#elif (defined PLATFORM_GRAPH_SKIA)&&(PLATFORM_GRAPH_SKIA == 1)
+	#include "graph/skia.h"
+#endif
 
 /*移植层接口定义头文件*/
 #include "graph/graph.h"

@@ -428,6 +428,12 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         ZuiControlNeedParentUpdate(p);
         break;
     }
+    case Proc_SetRound: {
+        p->m_rRound.cx = (ZuiInt)Param1;
+        p->m_rRound.cy = (ZuiInt)Param2;
+        ZuiControlNeedParentUpdate(p);
+        break;
+    }
     case Proc_GetFixedWidth: {
         return (void *)p->m_cxyFixed.cx;
         break;
@@ -541,8 +547,12 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
     case Proc_OnPaintBkColor: {
         ZuiGraphics gp = (ZuiGraphics)Param1;
         ZRect *rc = (ZRect *)&p->m_rcItem;
-        if (p->m_BkgColor)
-            ZuiDrawFillRect(gp, p->m_BkgColor, rc->left, rc->top, rc->right, rc->bottom);
+        if (p->m_BkgColor) {
+            if (p->m_rRound.cx)
+                ZuiDrawFillRoundRect(gp, p->m_BkgColor, rc->left, rc->top, rc->right, rc->bottom, p->m_rRound.cx, p->m_rRound.cy);
+            else
+                ZuiDrawFillRect(gp, p->m_BkgColor, rc->left, rc->top, rc->right, rc->bottom);
+        }
         break;
     }
     case Proc_OnPaintBkImage: {
@@ -559,9 +569,15 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         ZRect *rc = &p->m_rcItem;
 		if (p->m_dwBorderColor) {
 			if(p->m_dwBorderWidth)
-				ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - 1, rc->bottom - 1 , p->m_dwBorderWidth);
+                if (p->m_rRound.cx)
+                    ZuiDrawRoundRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right, rc->bottom, p->m_rRound.cx, p->m_rRound.cy, p->m_dwBorderWidth);
+                else
+				    ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right, rc->bottom, p->m_dwBorderWidth);
 			else
-				ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right - 1, rc->bottom - 1, 1);
+                if (p->m_rRound.cx)
+                    ZuiDrawRoundRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right, rc->bottom, p->m_rRound.cx, p->m_rRound.cy,1);
+                else
+				    ZuiDrawRect(gp, p->m_dwBorderColor, rc->left, rc->top, rc->right, rc->bottom, 1);
 		}
         break;
     }
@@ -640,6 +656,12 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         else if (wcscmp(Param1, L"minheight") == 0) ZuiControlCall(Proc_SetMinHeight, p, (ZuiAny)(_wtoi(Param2)), NULL, NULL);
         else if (wcscmp(Param1, L"maxwidth") == 0) ZuiControlCall(Proc_SetMaxWidth, p, (ZuiAny)(_wtoi(Param2)), NULL, NULL);
         else if (wcscmp(Param1, L"maxheight") == 0) ZuiControlCall(Proc_SetMaxHeight, p, (ZuiAny)(_wtoi(Param2)), NULL, NULL);
+        else if (wcscmp(Param1, L"round") == 0) {
+            ZuiText pstr = NULL;
+            int cx = wcstol(Param2, &pstr, 10);  ASSERT(pstr);
+            int cy = wcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+            ZuiControlCall(Proc_SetRound, p, (ZuiAny)cx, (ZuiAny)cy, NULL);
+        }
         else if (wcscmp(Param1, L"bkcolor") == 0) {
 			ZuiColor clrColor;
 			clrColor = ZuiStr2Color(Param2);
