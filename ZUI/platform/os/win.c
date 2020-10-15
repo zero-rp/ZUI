@@ -158,6 +158,33 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         //不允许背景擦除,防止闪屏
         return 1;
     }
+    case WM_NCCALCSIZE:
+    {
+        if (wParam) {
+            NCCALCSIZE_PARAMS* ncP = (NCCALCSIZE_PARAMS*)lParam;
+            RECT aRect;
+            RECT bRect;
+
+            CopyRect(&aRect, &ncP->rgrc[1]);
+            CopyRect(&bRect, &ncP->rgrc[0]);
+            if (IsZoomed(hWnd)) {
+                bRect.left += GetSystemMetrics(SM_CXSIZEFRAME);
+                bRect.right -= GetSystemMetrics(SM_CXSIZEFRAME);
+                bRect.top += GetSystemMetrics(SM_CYSIZEFRAME);
+                bRect.bottom -= GetSystemMetrics(SM_CYSIZEFRAME);
+            }
+            CopyRect(&ncP->rgrc[0], &bRect);
+            CopyRect(&ncP->rgrc[1], &bRect);
+            CopyRect(&ncP->rgrc[2], &aRect);
+        }
+        return TRUE;
+    }
+    case WM_NCACTIVATE:
+    case WM_NCPAINT:
+    {
+        ZuiOsInvalidate(p);
+        return 1;
+    }
     case WM_PAINT:  //绘制
     {
         PAINTSTRUCT ps = { 0 };
@@ -383,16 +410,29 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     case WM_GETMINMAXINFO:  //取窗口最大最小位置
     {
         LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
-        if (p->m_szMinWindow.cx > 0) lpMMI->ptMinTrackSize.x = p->m_szMinWindow.cx;
-        if (p->m_szMinWindow.cy > 0) lpMMI->ptMinTrackSize.y = p->m_szMinWindow.cy;
-        if (p->m_szMaxWindow.cx > 0) lpMMI->ptMaxTrackSize.x = p->m_szMaxWindow.cx;
-        if (p->m_szMaxWindow.cy > 0) lpMMI->ptMaxTrackSize.y = p->m_szMaxWindow.cy;
+        if (p) {
+            if (p->m_szMinWindow.cx > 0) lpMMI->ptMinTrackSize.x = p->m_szMinWindow.cx;
+            if (p->m_szMinWindow.cy > 0) lpMMI->ptMinTrackSize.y = p->m_szMinWindow.cy;
+            if (p->m_szMaxWindow.cx > 0) lpMMI->ptMaxTrackSize.x = p->m_szMaxWindow.cx;
+            if (p->m_szMaxWindow.cy > 0) lpMMI->ptMaxTrackSize.y = p->m_szMaxWindow.cy;
+        }
         lpMMI->ptMaxSize.y = GetSystemMetrics(SM_CYFULLSCREEN) + GetSystemMetrics(SM_CYCAPTION);// +GetSystemMetrics(SM_CYDLGFRAME);
         break;
     }
     case WM_SIZE:   //大小被改变
     {
         GetWindowRect(hWnd, (LPRECT)&p->m_rect);
+        RECT tmprc;
+        HRGN tmprgn;
+        GetClientRect(p->m_hWnd, &tmprc);
+        if (wParam == SIZE_MAXIMIZED) {
+            tmprc.left += GetSystemMetrics(SM_CXSIZEFRAME);
+            tmprc.right += GetSystemMetrics(SM_CXSIZEFRAME);
+            tmprc.top += GetSystemMetrics(SM_CYSIZEFRAME);
+            tmprc.bottom += GetSystemMetrics(SM_CYSIZEFRAME);
+        }
+        tmprgn = CreateRectRgn(tmprc.left, tmprc.top, tmprc.right, tmprc.bottom);
+        SetWindowRgn(p->m_hWnd, tmprgn, TRUE);
         if (p->m_pFocus != NULL) {
             TEventUI event = { 0 };
             event.Type = ZEVENT_WINDOWSIZE;
@@ -960,7 +1000,7 @@ ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show, ZuiAny pcontrol) {
         memset(OsWindow, 0, sizeof(ZOsWindow));
 
         OsWindow->m_hWnd = CreateWindowEx(0, L"ZUI", L"",
-            WS_POPUP | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_MINIMIZEBOX,
+            WS_OVERLAPPEDWINDOW | WS_VISIBLE ,
             CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
             tmphwnd, NULL, GetModuleHandle(NULL),
             OsWindow);

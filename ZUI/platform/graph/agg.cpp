@@ -66,7 +66,7 @@ extern "C"
     struct ZuiAggFont {
         Agg2D::Font *font;
     };
-    DArray* rcDarray =darray_create();
+    DArray* rcDarray;
 
     ZuiInt pGdiToken;
     /*初始化图形接口*/
@@ -75,11 +75,13 @@ extern "C"
         memset(&gdiplusStartupInput, 0, sizeof(GdiplusStartupInput));
         gdiplusStartupInput.GdiplusVersion = 1;
         GdiplusStartup((int *)&pGdiToken, &gdiplusStartupInput, NULL);//初始化GDI+
+        rcDarray = darray_create();
         return TRUE;
     }
     /*反初始化图形接口*/
     ZuiVoid ZuiGraphUnInitialize() {
         GdiplusShutdown(pGdiToken);
+        darray_destroy(rcDarray);
     }
     
     /*填充矩形*/

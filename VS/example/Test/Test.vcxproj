@@ -145,6 +145,7 @@
       <AdditionalDependencies>libpng.lib;skia.lib;usp10.lib;zui.lib;agg.lib;zlib.lib;duktape.lib;libuv.lib;ws2_32.lib;dukluv.lib;IPHLPAPI.lib;Userenv.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OutDir);$(OutDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
+      <MinimumRequiredVersion>5.01</MinimumRequiredVersion>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -161,6 +162,7 @@
       <AdditionalDependencies>libpng.lib;skia.lib;usp10.lib;zui.lib;agg.lib;zlib.lib;duktape.lib;libuv.lib;ws2_32.lib;dukluv.lib;IPHLPAPI.lib;Userenv.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <MinimumRequiredVersion>5.01</MinimumRequiredVersion>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -202,6 +204,7 @@
       <AdditionalLibraryDirectories>$(OutDir);$(OutDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Psapi.lib;Iphlpapi.lib;Userenv.lib;ws2_32.lib;duktape.lib;libuv.lib;dukluv.lib;libpng.lib;skia.lib;usp10.lib;zui.lib;agg.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
+      <MinimumRequiredVersion>5.02</MinimumRequiredVersion>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
