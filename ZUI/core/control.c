@@ -169,7 +169,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
 
         if (!p->m_bSetPos && bSize) {
             p->m_bSetPos = TRUE;
-            ZuiControlCall(Proc_OnSize, p, (ZuiAny)(p->m_rcItem.right - p->m_rcItem.left), (ZuiAny)(p->m_rcItem.bottom - p->m_rcItem.top), NULL);
+            ZuiControlCall(Proc_OnSize, p, -1,MAKEPARAM((p->m_rcItem.right - p->m_rcItem.left),(p->m_rcItem.bottom - p->m_rcItem.top)), NULL);
             p->m_bSetPos = FALSE;
         }
 
@@ -304,16 +304,21 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             if (p->m_rOnchar) {
                 duv_push_ref(p->m_pOs->m_ctx, p->m_rOnchar);
                 ZuiBuilderJs_pushControl(p->m_pOs->m_ctx, p);
-                duk_push_int(p->m_pOs->m_ctx, ((TEventUI *)Param1)->wParam);
+                duk_push_int(p->m_pOs->m_ctx, ((TEventUI*)Param1)->wParam);
                 if (duk_pcall_method(p->m_pOs->m_ctx, 2)) {
                     LOG_DUK(p->m_pOs->m_ctx);
                 }
                 duk_pop(p->m_pOs->m_ctx);
             }
 #endif
-            ZuiControlNotify(L"onchar", p, &((TEventUI *)Param1)->wParam, NULL, NULL);
+            ZuiControlNotify(L"onchar", p, &((TEventUI*)Param1)->wParam, NULL, NULL);
+            break;
         }
-                          break;
+        case ZEVENT_WINDOWSIZE:
+        {
+            ZuiControlCall(Proc_OnSize, p, ((TEventUI*)Param1)->wParam, ((TEventUI*)Param1)->lParam, 0);
+            return 0;
+        }
         default:
             break;
         }

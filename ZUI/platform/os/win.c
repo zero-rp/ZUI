@@ -430,6 +430,9 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             tmprc.right += GetSystemMetrics(SM_CXSIZEFRAME);
             tmprc.top += GetSystemMetrics(SM_CYSIZEFRAME);
             tmprc.bottom += GetSystemMetrics(SM_CYSIZEFRAME);
+            if (!p->m_bMax) {
+                p->m_bMax = TRUE;
+            }
         }
         int w = 0, h = 0;
         if (p){
@@ -439,7 +442,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         tmprgn = CreateRoundRectRgn(tmprc.left, tmprc.top, tmprc.right+1, tmprc.bottom+1,w,h);
         SetWindowRgn(p->m_hWnd, tmprgn, TRUE);
         DeleteObject(tmprgn);
-        if (p->m_pFocus != NULL) {
+        if (p->m_pRoot != NULL) {
             TEventUI event = { 0 };
             event.Type = ZEVENT_WINDOWSIZE;
             event.pSender = p->m_pFocus;
@@ -448,18 +451,17 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             event.dwTimestamp = GetTickCount();
             event.ptMouse = p->m_ptLastMousePos;
             event.wKeyState = MapKeyState();
-            ZuiControlEvent(p->m_pFocus, &event);
+            ZuiControlEvent(p->m_pRoot, &event);
         }
         if (wParam == SIZE_RESTORED) {
             p->m_bMax = FALSE;
-            ZuiControl pmax = ZuiControlFindName(p->m_pRoot, _T("WindowCtl_max"));
-            if (pmax)
-                ZuiControlCall(Proc_Option_SetSelected, pmax, (ZuiAny)FALSE, NULL, NULL);
         }
-        if (p->m_pRoot != NULL)
-            ZuiControlNeedUpdate(p->m_pRoot);
-        if (p->m_bLayered)
-            ZuiOsInvalidate(p);
+        if (wParam != SIZE_MINIMIZED) {
+            if (p->m_pRoot != NULL)
+                ZuiControlNeedUpdate(p->m_pRoot);
+            if (p->m_bLayered)
+                ZuiOsInvalidate(p);
+        }
         return 0;
     }
     case WM_TIMER:  //时钟事件
