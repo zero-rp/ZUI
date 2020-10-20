@@ -49,6 +49,9 @@
 #define ASSERT(expr)  _ASSERTE(expr)
 #endif
 
+#define MAKEPARAM(a, b)  ((b & 0xFFFFFFFF) << 16) | (a & 0xFFFF)
+#define HPARAM(a)   (a & 0xFFFFFFFF) >> 16
+#define LPARAM(a)   a & 0xFFFF
 //--------------------------------------------------------------------基础数据类型
 typedef wchar_t*        ZuiText, _ZuiText, ZText;   //内核默认Unicode存储字符
 typedef float           ZuiReal;

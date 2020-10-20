@@ -103,7 +103,7 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right, rc->bottom, 0, 0, 0, 0, 255);
             }
             else {
-                ZuiDrawFillRect(gp, p->m_ColorNormal, rc->left, rc->top, rc->right, rc->bottom);
+                ZuiDrawFillRoundRect(gp, p->m_ColorNormal, rc->left, rc->top, rc->right, rc->bottom,cp->m_rRound.cx,cp->m_rRound.cy);
             }
         }
         else if (p->type == 1) {
@@ -112,7 +112,7 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right, rc->bottom, 0, 0, 0, 0, 255);
             }
             else {
-                ZuiDrawFillRect(gp, p->m_ColorHot, rc->left, rc->top, rc->right, rc->bottom);
+                ZuiDrawFillRoundRect(gp, p->m_ColorHot, rc->left, rc->top, rc->right, rc->bottom, cp->m_rRound.cx, cp->m_rRound.cy);
             }
         }
         else if (p->type == 2) {
@@ -121,16 +121,16 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right, rc->bottom, 0, 0, 0, 0, 255);
             }
             else {
-                ZuiDrawFillRect(gp, p->m_ColorPushed, rc->left, rc->top, rc->right, rc->bottom);
+                ZuiDrawFillRoundRect(gp, p->m_ColorPushed, rc->left, rc->top, rc->right, rc->bottom, cp->m_rRound.cx, cp->m_rRound.cy);
             }
         }
         else {
-            if (p->m_ResPushed) {
+            if (p->m_ResDisabled) {
                 img = p->m_ResDisabled->p;
                 ZuiDrawImageEx(gp, img, rc->left, rc->top, rc->right, rc->bottom, 0, 0, 0, 0, 255);
             }
             else {
-                ZuiDrawFillRect(gp, p->m_ColorDisabled, rc->left, rc->top, rc->right, rc->bottom);
+                ZuiDrawFillRoundRect(gp, p->m_ColorDisabled, rc->left, rc->top, rc->right, rc->bottom, cp->m_rRound.cx, cp->m_rRound.cy);
             }
         }
         return 0;

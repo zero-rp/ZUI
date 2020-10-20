@@ -113,6 +113,20 @@ ZuiAny ZCALL Main_Notify(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Para
     {
         ZuiMsgLoop_exit(0);
     }
+    else if (wcscmp(msg, L"onsize") == 0)
+    {
+        if ((ZuiInt)Param1 == 2) {
+            ZuiControl pmax = ZuiControlFindName(win, _T("WindowCtl_max"));
+            if (pmax)
+                ZuiControlCall(Proc_Option_SetSelected, pmax, (ZuiAny)TRUE, NULL, NULL);
+        }
+        else if(Param1 == 0)
+        {
+            ZuiControl pmax = ZuiControlFindName(p, _T("WindowCtl_max"));
+            if (pmax)
+                ZuiControlCall(Proc_Option_SetSelected, pmax, (ZuiAny)FALSE, NULL, NULL);
+        }
+    }
     return 0;
 }
 ZuiAny ZCALL msgbox_Notify(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
