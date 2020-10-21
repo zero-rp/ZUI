@@ -7,7 +7,7 @@ ZuiVoid ZCALL OnPaint(ZuiControl p, ZuiAny Param1, ZuiAny Param2) {
         ZuiOsKillTimer_Id(p, 1);
         p->m_aAnime->steup += 1;
         ZRect rc = { 0,0,p->m_rcItem.right - p->m_rcItem.left, p->m_rcItem.bottom - p->m_rcItem.top };
-        ZuiControlCall(Proc_OnPaint, p, p->m_aAnime->m_hDcOffscreen, &rc, NULL);
+        ZuiControlCall(Proc_OnPaint, p, p->m_aAnime->m_hDcOffscreen, &rc);
         ZuiOsSetTimer(p, 1, 50);
         
     }
@@ -36,7 +36,7 @@ ZuiVoid ZCALL OnEvent(ZuiControl p, TEventUI *event) {
     }
 }
 
-ZuiAnimation ZuiAnimationNew(ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+ZuiAnimation ZuiAnimationNew(ZuiAny Param1, ZuiAny Param2) {
     ZuiAnimation p = (ZuiAnimation)malloc(sizeof(ZAnimation));
     p->steup = 0;
     p->OnPaint = OnPaint;

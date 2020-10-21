@@ -15,7 +15,7 @@ typedef struct _ZuiTabLayout
     ZuiAny old_udata;
 }*ZuiTabLayout, ZTabLayout;
 
-void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Param1, void* Param2, void* Param3);
+void* ZCALL ZuiTabLayoutProc(int ProcId, ZuiControl cp, ZuiTabLayout p, void* Param1, void* Param2);
 
 
 

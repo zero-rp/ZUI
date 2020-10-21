@@ -10,7 +10,7 @@ typedef struct _ZCheckBox
 
     ZCtlProc old_call;
 }*ZuiCheckBox, ZCheckBox;
-ZEXPORT ZuiAny ZCALL ZuiCheckBoxProc(ZuiInt ProcId, ZuiControl cp, ZuiCheckBox p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+ZEXPORT ZuiAny ZCALL ZuiCheckBoxProc(ZuiInt ProcId, ZuiControl cp, ZuiCheckBox p, ZuiAny Param1, ZuiAny Param2);
 
 
 #endif	//__CheckBox_H__

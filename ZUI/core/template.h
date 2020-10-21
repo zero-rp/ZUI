@@ -18,5 +18,5 @@ extern struct _ZTemplate_Tree *Global_TemplateClass;
 ZuiBool ZuiTemplateInit();
 ZuiVoid ZuiTemplateUnInit();
 ZuiVoid ZuiAddTemplate(mxml_node_t *node);
-ZuiVoid ZuiLoadTemplate(mxml_node_t *n, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+ZuiVoid ZuiLoadTemplate(mxml_node_t *n, ZuiControl p, ZuiAny Param1, ZuiAny Param2);
 #endif //__TEMPLATE_H__

@@ -156,24 +156,24 @@ ZEXPORT ZuiVoid ZCALL ZuiPostTask(ZuiTask task) {
 }
 
 ZuiControl MsgBox_pRoot;
-ZuiAny ZCALL MsgBox_Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+ZuiAny ZCALL MsgBox_Notify_ctl(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2) {
     if (wcscmp(msg, L"onclick") == 0)
     {
         if (wcscmp(p->m_sName, L"WindowCtl_clos") == 0) {
-            ZuiControlCall(Proc_OnClose, p->m_pOs->m_pRoot, (ZuiAny)ZuiCANCEL, NULL, NULL);
+            ZuiControlCall(Proc_OnClose, p->m_pOs->m_pRoot, (ZuiAny)ZuiCANCEL, NULL);
             //PostMessage(0, WM_APP + 10, 0, 0);
         }
         else if (wcscmp(p->m_sName, L"ok") == 0) {
-            ZuiControlCall(Proc_OnClose, p->m_pOs->m_pRoot, (ZuiAny)ZuiOK, NULL, NULL);
+            ZuiControlCall(Proc_OnClose, p->m_pOs->m_pRoot, (ZuiAny)ZuiOK, NULL);
         }
         else if (wcscmp(p->m_sName, L"cancel") == 0) {
-            ZuiControlCall(Proc_OnClose, p->m_pOs->m_pRoot, (ZuiAny)ZuiCANCEL, NULL, NULL);
+            ZuiControlCall(Proc_OnClose, p->m_pOs->m_pRoot, (ZuiAny)ZuiCANCEL, NULL);
         }
     }
     return 0;
 }
 
-ZuiAny ZCALL Default_NotifyProc(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+ZuiAny ZCALL Default_NotifyProc(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2) {
     if (wcscmp(msg, L"onclose") == 0) {
         ZuiOsAddDelayedCleanup(p, Param1, Param2);
     }
@@ -185,7 +185,7 @@ ZuiAny ZCALL Default_NotifyProc(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiA
 
 ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
     ZuiControl p;
-    MsgBox_pRoot = NewZuiControl(L"MessageBox", NULL, rp, NULL);
+    MsgBox_pRoot = NewZuiControl(L"MessageBox", NULL, rp);
     if (!MsgBox_pRoot->m_pOs) {
         FreeZuiControl(MsgBox_pRoot, FALSE);
         return 0;
@@ -193,10 +193,10 @@ ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
     ZuiControlRegNotify(MsgBox_pRoot, Default_NotifyProc);
     //取消最小化按钮
     p = ZuiControlFindName(MsgBox_pRoot, L"WindowCtl_min");
-    ZuiControlCall(Proc_SetVisible, p, FALSE, NULL, NULL);
+    ZuiControlCall(Proc_SetVisible, p, FALSE, NULL);
     //取消最大化按钮
     p = ZuiControlFindName(MsgBox_pRoot, L"WindowCtl_max");
-    ZuiControlCall(Proc_SetVisible, p, FALSE, NULL, NULL);
+    ZuiControlCall(Proc_SetVisible, p, FALSE, NULL);
     //挂接关闭按钮事件
     p = ZuiControlFindName(MsgBox_pRoot, L"WindowCtl_clos");
     ZuiControlRegNotify(p, MsgBox_Notify_ctl);
@@ -208,9 +208,9 @@ ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title) {
     ZuiControlRegNotify(p, MsgBox_Notify_ctl);
 
     p = ZuiControlFindName(MsgBox_pRoot, L"text");
-    ZuiControlCall(Proc_SetText, p, text, NULL, NULL);
+    ZuiControlCall(Proc_SetText, p, text, NULL);
     p = ZuiControlFindName(MsgBox_pRoot, L"title");
-    ZuiControlCall(Proc_SetText, p, title, NULL, NULL);
+    ZuiControlCall(Proc_SetText, p, title, NULL);
 
     return ZuiDoModel(MsgBox_pRoot);
 }

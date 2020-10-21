@@ -83,13 +83,13 @@ static  ZuiControl ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
             }
 #endif
             else if (!node->user_data) {//当前节点还未创建
-                Control = NewZuiControl(ClassName, NULL, NULL, NULL);
+                Control = NewZuiControl(ClassName, NULL, NULL);
                 if (node->parent->user_data && _wcsicmp(ClassName, L"window") != 0) {
                     //上级控件已存在且当前欲创建的子窗口不为窗口对象
                     if (Control) {
                         node->user_data = Control;//保存控件到节点
                                                   /*添加到容器*/
-                        ZuiControlCall(Proc_Layout_Add, node->parent->user_data, Control, NULL, NULL);
+                        ZuiControlCall(Proc_Layout_Add, node->parent->user_data, Control, NULL);
                     }
                     else {
                         /*当前控件创建失败 子控件肯定创建不了 删除节点*/
@@ -111,7 +111,7 @@ static  ZuiControl ZuiLayoutLoadNode(mxml_node_t *tree, ZuiControl win) {
                 /*解析属性*/
                 for (ZuiInt i = 0; i < node->value.num_attrs; i++)
                 {
-                    ZuiControlCall(Proc_SetAttribute, Control, node->value.attrs[i].name, node->value.attrs[i].value, NULL);
+                    ZuiControlCall(Proc_SetAttribute, Control, node->value.attrs[i].name, node->value.attrs[i].value);
                 }
             }
         }

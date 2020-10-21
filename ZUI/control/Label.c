@@ -8,7 +8,7 @@
 #if (defined HAVE_JS) && (HAVE_JS == 1)
 #include <duktape.h>
 #endif
-ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiAny Param1, ZuiAny Param2) {
     switch (ProcId)
     {
     case Proc_OnPaintText: {
@@ -127,7 +127,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
         return 0;
     }
     case Proc_SetAttribute: {
-        if (wcscmp(Param1, L"font") == 0) ZuiControlCall(Proc_Label_SetFont, cp, ZuiResDBGetRes(Param2, ZREST_FONT), NULL, NULL);
+        if (wcscmp(Param1, L"font") == 0) ZuiControlCall(Proc_Label_SetFont, cp, ZuiResDBGetRes(Param2, ZREST_FONT), NULL);
         if (wcscmp(Param1, L"align") == 0) {
             //横向对齐方式
             if (wcscmp(Param2, L"left") == 0) {
@@ -167,11 +167,11 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
             while (*(wchar_t *)Param2 > L'\0' && *(wchar_t *)Param2 <= L' ') Param2 = ZuiCharNext((wchar_t *)Param2);
             if (*(wchar_t *)Param2 == L'#') Param2 = ZuiCharNext((wchar_t *)Param2);*/
             ZuiColor clrColor = ZuiStr2Color(Param2);
-            ZuiControlCall(Proc_Label_SetTextColor, cp, (ZuiAny)clrColor, NULL, NULL);
+            ZuiControlCall(Proc_Label_SetTextColor, cp, (ZuiAny)clrColor, NULL);
         }
         else if (wcscmp(Param1, L"textcolordisabled") == 0) {
             ZuiColor clrColor = ZuiStr2Color(Param2);
-            ZuiControlCall(Proc_Label_SetTextColorDisabled, cp, (ZuiAny)clrColor, NULL, NULL);
+            ZuiControlCall(Proc_Label_SetTextColorDisabled, cp, (ZuiAny)clrColor, NULL);
         }
         else if (wcscmp(Param1, L"textpadding") == 0) {
             //字体边距
@@ -181,7 +181,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
             rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
             rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
             rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
-            ZuiControlCall(Proc_Label_SetTextPadding, cp, &rcPadding, NULL, NULL);
+            ZuiControlCall(Proc_Label_SetTextPadding, cp, &rcPadding, NULL);
         }
         else if (wcscmp(Param1, L"wordbreak") == 0) {
             //自动换行
@@ -223,7 +223,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
 
-        old_call(ProcId, cp, 0, Param1, Param2, Param3);
+        old_call(ProcId, cp, 0, Param1, Param2);
         if (p->m_rFont && !Param1) ZuiResDBDelRes(p->m_rFont);
         free(p);
 
@@ -242,7 +242,7 @@ ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiA
     default:
         break;
     }
-    return p->old_call(ProcId, cp, 0, Param1, Param2, Param3);
+    return p->old_call(ProcId, cp, 0, Param1, Param2);
 }
 
 

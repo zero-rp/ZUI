@@ -26,7 +26,7 @@ RB_GENERATE(_ZClass_Tree, _ZClass, entry, ZClass_Compare);
 struct _ZClass_Tree *Global_ControlClass = NULL;
 
 static ZuiBool ZuiCoreInit(void *data) {
-    return (ZuiBool)((ZCtlProc)data)(Proc_CoreInit, NULL, NULL, NULL, NULL, NULL);
+    return (ZuiBool)((ZCtlProc)data)(Proc_CoreInit, NULL, NULL, NULL, NULL);
 }
 ZuiBool ZuiClassInit()
 {
@@ -64,7 +64,7 @@ ZuiVoid ZuiClassUnInit() {
     struct _ZClass * c = NULL;
     struct _ZClass * cc = NULL;
     RB_FOREACH_SAFE(c, _ZClass_Tree, Global_ControlClass, cc) {
-        c->cb(Proc_CoreUnInit, NULL, NULL, NULL, NULL, NULL);
+        c->cb(Proc_CoreUnInit, NULL, NULL, NULL, NULL);
         RB_REMOVE(_ZClass_Tree, Global_ControlClass, c);
         free(c);
     }

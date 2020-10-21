@@ -48,6 +48,6 @@ typedef struct _ZScrollBar
 
     ZCtlProc old_call;
 }*ZuiScrollBar, ZScrollBar;
-ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar p, ZuiAny Param1, ZuiAny Param2);
 
 #endif // __UISCROLLBAR_H__
