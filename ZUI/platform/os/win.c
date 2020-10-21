@@ -456,12 +456,10 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         if (wParam == SIZE_RESTORED) {
             p->m_bMax = FALSE;
         }
-        if (wParam != SIZE_MINIMIZED) {
-            if (p->m_pRoot != NULL)
-                ZuiControlNeedUpdate(p->m_pRoot);
-            if (p->m_bLayered)
-                ZuiOsInvalidate(p);
-        }
+        if (p->m_pRoot != NULL)
+            ZuiControlNeedUpdate(p->m_pRoot);
+        if (p->m_bLayered)
+            ZuiOsInvalidate(p);
         return 0;
     }
     case WM_TIMER:  //时钟事件
