@@ -31,7 +31,7 @@ typedef struct _ZOption
     ZCtlProc old_call;
     ZuiAny old_udata;
 }*ZuiOption, ZOption;
-ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, ZuiAny Param1, ZuiAny Param2);
 
 
 #endif  //__OPTION_H__

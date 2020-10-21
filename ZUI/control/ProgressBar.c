@@ -1,7 +1,7 @@
 ﻿#include "ProgressBar.h"
 #include <core/control.h>
 #include <core/resdb.h>
-ZEXPORT ZuiAny ZCALL ZuiProgressBarProc(ZuiInt ProcId, ZuiControl cp, ZuiProgressBar p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+ZEXPORT ZuiAny ZCALL ZuiProgressBarProc(ZuiInt ProcId, ZuiControl cp, ZuiProgressBar p, ZuiAny Param1, ZuiAny Param2) {
     switch (ProcId)
     {
 
@@ -16,7 +16,7 @@ ZEXPORT ZuiAny ZCALL ZuiProgressBarProc(ZuiInt ProcId, ZuiControl cp, ZuiProgres
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
 
-        old_call(ProcId, cp, 0, Param1, Param2, Param3);
+        old_call(ProcId, cp, 0, Param1, Param2);
         free(p);
 
         return 0;
@@ -34,7 +34,7 @@ ZEXPORT ZuiAny ZCALL ZuiProgressBarProc(ZuiInt ProcId, ZuiControl cp, ZuiProgres
     default:
         break;
     }
-    return p->old_call(ProcId, cp, 0, Param1, Param2, Param3);
+    return p->old_call(ProcId, cp, 0, Param1, Param2);
 }
 
 

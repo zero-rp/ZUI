@@ -67,7 +67,7 @@ ZuiVoid ZuiAddTemplate(mxml_node_t *node)
     }
 }
 
-ZuiVoid ZuiLoadTemplate(mxml_node_t *n, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+ZuiVoid ZuiLoadTemplate(mxml_node_t *n, ZuiControl p, ZuiAny Param1, ZuiAny Param2) {
     ZuiText Layout = _T("Layout");
     ZuiText ClassName = NULL;
     ZuiControl Control;
@@ -79,34 +79,34 @@ ZuiVoid ZuiLoadTemplate(mxml_node_t *n, ZuiControl p, ZuiAny Param1, ZuiAny Para
             Layout = node->value.attrs[i].value;
             if (wcscmp(Layout, L"layout") == 0)
             {
-                p->m_sUserData = ZuiLayoutProc(Proc_OnCreate, p, 0, Param1, Param2, Param3);
+                p->m_sUserData = ZuiLayoutProc(Proc_OnCreate, p, 0, Param1, Param2);
                 p->call = (ZCtlProc)&ZuiLayoutProc;
             }
             else if (wcscmp(Layout, L"horizontal") == 0)
             {
-                p->m_sUserData = ZuiHorizontalLayoutProc(Proc_OnCreate, p, 0, Param1, Param2, Param3);
+                p->m_sUserData = ZuiHorizontalLayoutProc(Proc_OnCreate, p, 0, Param1, Param2);
                 p->call = (ZCtlProc)&ZuiHorizontalLayoutProc;
             }
             else if (wcscmp(Layout, L"vertical") == 0)
             {
-                p->m_sUserData = ZuiVerticalLayoutProc(Proc_OnCreate, p, 0, Param1, Param2, Param3);
+                p->m_sUserData = ZuiVerticalLayoutProc(Proc_OnCreate, p, 0, Param1, Param2);
                 p->call = (ZCtlProc)&ZuiVerticalLayoutProc;
             }
             else if (wcscmp(Layout, L"tile") == 0)
             {
-                p->m_sUserData = ZuiTileLayoutProc(Proc_OnCreate, p, 0, Param1, Param2, Param3);
+                p->m_sUserData = ZuiTileLayoutProc(Proc_OnCreate, p, 0, Param1, Param2);
                 p->call = (ZCtlProc)&ZuiTileLayoutProc;
             }
             else if (wcscmp(Layout, L"window") == 0)
             {
-                p->m_sUserData = ZuiWindowProc(Proc_OnCreate, p, 0, Param1, Param2, Param3);
+                p->m_sUserData = ZuiWindowProc(Proc_OnCreate, p, 0, Param1, Param2);
                 p->call = (ZCtlProc)&ZuiWindowProc;
             }
 
         }
         else
         {
-            ZuiControlCall(Proc_SetAttribute, p, node->value.attrs[i].name, node->value.attrs[i].value, NULL);
+            ZuiControlCall(Proc_SetAttribute, p, node->value.attrs[i].name, node->value.attrs[i].value);
         }
     }
 
@@ -115,15 +115,15 @@ ZuiVoid ZuiLoadTemplate(mxml_node_t *n, ZuiControl p, ZuiAny Param1, ZuiAny Para
     {
         ClassName = node->value.name;
         LOG_DEGUB(L"Template创建控件: 类名:%ls\r\n", ClassName);
-        Control = NewZuiControl(ClassName, NULL, NULL, NULL);
+        Control = NewZuiControl(ClassName, NULL, NULL);
         if (Control) {
             node->user_data = Control;//保存控件到节点
                                       /*添加到容器*/
-            ZuiControlCall(Proc_Layout_Add, node->parent->user_data, Control, NULL, NULL);
+            ZuiControlCall(Proc_Layout_Add, node->parent->user_data, Control, NULL);
             /*解析属性*/
             for (ZuiInt i = 0; i < node->value.num_attrs; i++)
             {
-                ZuiControlCall(Proc_SetAttribute, Control, node->value.attrs[i].name, node->value.attrs[i].value, NULL);
+                ZuiControlCall(Proc_SetAttribute, Control, node->value.attrs[i].name, node->value.attrs[i].value);
             }
         }
     }

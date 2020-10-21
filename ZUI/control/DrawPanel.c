@@ -1,6 +1,6 @@
 ﻿#include "DrawPanel.h"
 #include <core/control.h>
-ZEXPORT ZuiAny ZCALL ZuiDrawPanelProc(ZuiInt ProcId, ZuiControl cp, ZuiDrawPanel p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+ZEXPORT ZuiAny ZCALL ZuiDrawPanelProc(ZuiInt ProcId, ZuiControl cp, ZuiDrawPanel p, ZuiAny Param1, ZuiAny Param2) {
     switch (ProcId)
     {
     case Proc_OnCreate: {
@@ -12,7 +12,7 @@ ZEXPORT ZuiAny ZCALL ZuiDrawPanelProc(ZuiInt ProcId, ZuiControl cp, ZuiDrawPanel
         return p;
     }
     case Proc_OnDestroy: {
-        p->old_call(ProcId, cp, 0, Param1, Param2, Param3);
+        p->old_call(ProcId, cp, 0, Param1, Param2);
         free(p);
 
         return 0;
@@ -30,7 +30,7 @@ ZEXPORT ZuiAny ZCALL ZuiDrawPanelProc(ZuiInt ProcId, ZuiControl cp, ZuiDrawPanel
     default:
         break;
     }
-    return p->old_call(ProcId, cp, 0, Param1, Param2, Param3);
+    return p->old_call(ProcId, cp, 0, Param1, Param2);
 }
 
 

@@ -4,11 +4,11 @@
 #if (defined HAVE_JS) && (HAVE_JS == 1)
 #include <duktape.h>
 #endif
-ZEXPORT ZuiAny ZCALL ZuiCheckBoxProc(ZuiInt ProcId, ZuiControl cp, ZuiCheckBox p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+ZEXPORT ZuiAny ZCALL ZuiCheckBoxProc(ZuiInt ProcId, ZuiControl cp, ZuiCheckBox p, ZuiAny Param1, ZuiAny Param2) {
     switch (ProcId)
     {
     case Proc_OnCreate: {
-        return ZuiOptionProc(Proc_OnCreate, cp, (ZuiOption)p, Param1, Param2, Param3);
+        return ZuiOptionProc(Proc_OnCreate, cp, (ZuiOption)p, Param1, Param2);
     }
     case Proc_GetObject:
         if (Param1 == (ZuiAny)Type_CheckBox)
@@ -23,7 +23,7 @@ ZEXPORT ZuiAny ZCALL ZuiCheckBoxProc(ZuiInt ProcId, ZuiControl cp, ZuiCheckBox p
     default:
         break;
     }
-    return ZuiOptionProc(ProcId, cp, (ZuiOption)p, Param1, Param2, Param3);
+    return ZuiOptionProc(ProcId, cp, (ZuiOption)p, Param1, Param2);
 }
 
 

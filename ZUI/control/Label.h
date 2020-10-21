@@ -21,7 +21,7 @@ typedef struct _ZLabel
     ZuiColor    m_cTextColorDisabled;
     ZCtlProc old_call;
 }*ZuiLabel, ZLabel;
-ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+ZEXPORT ZuiAny ZCALL ZuiLabelProc(ZuiInt ProcId, ZuiControl cp, ZuiLabel p, ZuiAny Param1, ZuiAny Param2);
 
 
 #endif	//__LABEL_H__

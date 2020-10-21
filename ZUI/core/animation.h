@@ -14,6 +14,6 @@ typedef struct _ZAnimation
     ZAnimeProcOnSize    OnSize;     //大小被改变
 }*ZuiAnimation, ZAnimation;
 
-ZuiAnimation ZuiAnimationNew(ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+ZuiAnimation ZuiAnimationNew(ZuiAny Param1, ZuiAny Param2);
 ZuiVoid ZuiAnimationFree(ZuiAnimation p);
 #endif	//__ZUI_CORE_ANIMATION_H__

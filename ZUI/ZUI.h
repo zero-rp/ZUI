@@ -153,8 +153,8 @@ typedef struct _ZuiTask
 
 //--------------------------------------------------------------------回调定义
 typedef ZuiControl(ZCALL* FINDCONTROLPROC)(ZuiControl, ZuiAny);
-typedef ZuiAny(ZCALL *ZCtlProc)(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
-typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+typedef ZuiAny(ZCALL *ZCtlProc)(ZuiInt ProcId, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2);
+typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2);
 
 //查找控件参数
 #define ZFIND_ALL           0x00000000  //查找全部控件
@@ -163,6 +163,10 @@ typedef ZuiAny(ZCALL *ZNotifyProc)(ZuiText msg, ZuiControl p, ZuiAny UserData, Z
 #define ZFIND_HITTEST       0x00000004
 #define ZFIND_UPDATETEST    0x00000008
 #define ZFIND_TOP_FIRST     0x00000010  //自顶
+#define ZFIND_FROM_UPDATE   0x01000000
+#define ZFIND_FROM_TAB      0x02000000
+#define ZFIND_FROM_POINT    0x04000000
+#define ZFIND_FROM_NAME     0x08000000
 #define ZFIND_ME_FIRST      0x80000000
 //控件标志
 #define ZFLAG_TABSTOP       0x00000001  
@@ -595,9 +599,9 @@ typedef struct _ZuiFuncs {
     ZuiInt(ZCALL *ZuiMsgLoop)();
     ZuiVoid(ZCALL *ZuiMsgLoop_exit)(int nRet);
     ZuiVoid(ZCALL *ZuiPostTask)(ZuiTask task);
-    ZuiControl(ZCALL *NewZuiControl)(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+    ZuiControl(ZCALL *NewZuiControl)(ZuiText classname, ZuiAny Param1, ZuiAny Param2);
     ZuiVoid(ZCALL *FreeZuiControl)(ZuiControl p, ZuiBool Delayed);
-    ZuiAny(ZCALL *ZuiControlCall)(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);
+    ZuiAny(ZCALL *ZuiControlCall)(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2);
 
 
 }ZuiFuncs;
@@ -624,9 +628,9 @@ extern "C"
     //投递一个任务到Zui线程
     ZEXPORT ZuiVoid ZCALL ZuiPostTask(ZuiTask task);
     
-    ZEXPORT ZuiControl ZCALL NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);//创建控件
+    ZEXPORT ZuiControl ZCALL NewZuiControl(ZuiText classname, ZuiAny Param1, ZuiAny Param2);//创建控件
     ZEXPORT ZuiVoid ZCALL FreeZuiControl(ZuiControl p, ZuiBool Delayed);//销毁控件
-    ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3);//调用控件处理函数
+    ZEXPORT ZuiAny ZCALL ZuiControlCall(ZuiInt ProcId, ZuiControl p, ZuiAny Param1, ZuiAny Param2);//调用控件处理函数
     ZEXPORT ZuiControl ZCALL ZuiControlFindName(ZuiControl p, ZuiText Name);
     ZEXPORT ZuiVoid ZCALL ZuiControlRegNotify(ZuiControl p, ZNotifyProc pNotify);
     ZEXPORT ZuiInt ZCALL ZuiMsgBox(ZuiControl rp, ZuiText text, ZuiText title);

@@ -5,7 +5,7 @@
 #if (defined HAVE_JS) && (HAVE_JS == 1)
 #include <duktape.h>
 #endif
-ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, ZuiAny Param1, ZuiAny Param2, ZuiAny Param3) {
+ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, ZuiAny Param1, ZuiAny Param2) {
     switch (ProcId)
     {
     case Proc_OnEvent: {
@@ -13,7 +13,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
         switch (event->Type)
         {
         case ZEVENT_LBUTTONUP: {
-            ZuiControlCall(Proc_Option_SetSelected, cp, (ZuiAny)(!ZuiControlCall(Proc_Option_GetSelected, cp, NULL, NULL, NULL)), NULL, NULL);
+            ZuiControlCall(Proc_Option_SetSelected, cp, (ZuiAny)(!ZuiControlCall(Proc_Option_GetSelected, cp, NULL, NULL)), NULL);
             break;
         }
         default:
@@ -62,7 +62,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
                     ZuiDrawFillRect(gp, p->m_ColorSelectedDisabled, rc->left, rc->top, rc->right, rc->bottom);
                 }
             }
-            ZuiControlCall(Proc_OnPaintText, cp, Param1, Param2, NULL);//绘制文本
+            ZuiControlCall(Proc_OnPaintText, cp, Param1, Param2);//绘制文本
             return 0;//选择状态下不由按钮控件绘制
         }
         break;
@@ -73,13 +73,13 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
 
         if (p->m_bGroup) {
             if (Param1) {
-                for (size_t i = 0; i < (size_t)ZuiControlCall(Proc_Layout_GetCount, cp->m_pParent, NULL, NULL, NULL); i++)
+                for (size_t i = 0; i < (size_t)ZuiControlCall(Proc_Layout_GetCount, cp->m_pParent, NULL, NULL); i++)
                 {
                     ZuiControl pControl;
-                    if ((pControl = ZuiControlCall(Proc_Layout_GetItemAt, cp->m_pParent, (ZuiAny)i, NULL, NULL)) != cp)
+                    if ((pControl = ZuiControlCall(Proc_Layout_GetItemAt, cp->m_pParent, (ZuiAny)i, NULL)) != cp)
                     {
                         if (pControl != cp) {
-                            ZuiControlCall(Proc_Option_SetSelected, pControl, FALSE, NULL, NULL);
+                            ZuiControlCall(Proc_Option_SetSelected, pControl, FALSE, NULL);
                         }
 
                     }
@@ -89,13 +89,13 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
             else {
                 //在分组情况下反选,需要保证至少一个被选中
                 int select = 0;
-                for (size_t i = 0; i < (size_t)ZuiControlCall(Proc_Layout_GetCount, cp->m_pParent, NULL, NULL, NULL); i++)
+                for (size_t i = 0; i < (size_t)ZuiControlCall(Proc_Layout_GetCount, cp->m_pParent, NULL, NULL); i++)
                 {
                     ZuiControl pControl;
-                    if ((pControl = ZuiControlCall(Proc_Layout_GetItemAt, cp->m_pParent, (ZuiAny)i, NULL, NULL)) != cp)
+                    if ((pControl = ZuiControlCall(Proc_Layout_GetItemAt, cp->m_pParent, (ZuiAny)i, NULL)) != cp)
                     {
                         if (pControl != cp) {
-                            select += ZuiControlCall(Proc_Option_GetSelected, pControl, NULL, NULL, NULL) ? 1 : 0;
+                            select += ZuiControlCall(Proc_Option_GetSelected, pControl, NULL, NULL) ? 1 : 0;
                         }
 
                     }
@@ -117,7 +117,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
             duk_pop(cp->m_pOs->m_ctx);
         }
 #endif
-        ZuiControlNotify(L"selectchanged", cp, Param1, NULL, NULL);
+        ZuiControlNotify(L"selectchanged", cp, Param1, NULL);
         ZuiControlInvalidate(cp, TRUE);
         break;
     }
@@ -190,29 +190,29 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
     }
     case Proc_SetAttribute: {
         if (_tcscmp(Param1, _T("group")) == 0)
-            ZuiControlCall(Proc_Option_SetGroup, cp, (ZuiAny)(wcscmp(Param2, L"true") == 0 ? TRUE : FALSE), NULL, NULL);
+            ZuiControlCall(Proc_Option_SetGroup, cp, (ZuiAny)(wcscmp(Param2, L"true") == 0 ? TRUE : FALSE), NULL);
         else if (_tcscmp(Param1, _T("selected")) == 0)
-            ZuiControlCall(Proc_Option_SetSelected, cp, (ZuiAny)(wcscmp(Param2, L"true") == 0 ? TRUE : FALSE), NULL, NULL);
+            ZuiControlCall(Proc_Option_SetSelected, cp, (ZuiAny)(wcscmp(Param2, L"true") == 0 ? TRUE : FALSE), NULL);
         else if (_tcscmp(Param1, _T("selectedimage")) == 0)
-            ZuiControlCall(Proc_Option_SetResNormal, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+            ZuiControlCall(Proc_Option_SetResNormal, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
         else if (_tcscmp(Param1, _T("selectedhotimage")) == 0)
-            ZuiControlCall(Proc_Option_SetResHot, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+            ZuiControlCall(Proc_Option_SetResHot, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
         else if (_tcscmp(Param1, _T("selectedpushedimage")) == 0)
-            ZuiControlCall(Proc_Option_SetResPushed, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+            ZuiControlCall(Proc_Option_SetResPushed, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
         else if (_tcscmp(Param1, _T("selectedfocusedimage")) == 0)
-            ZuiControlCall(Proc_Option_SetResFocused, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+            ZuiControlCall(Proc_Option_SetResFocused, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
         else if (_tcscmp(Param1, _T("selecteddisabledimage")) == 0)
-            ZuiControlCall(Proc_Option_SetResDisabled, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL, NULL);
+            ZuiControlCall(Proc_Option_SetResDisabled, cp, (ZuiAny)ZuiResDBGetRes(Param2, ZREST_IMG), NULL);
         else if (wcscmp(Param1, L"selectedcolor") == 0)
-            ZuiControlCall(Proc_Option_SetColorNormal, cp, (ZuiAny)ZuiStr2Color(Param2), NULL, NULL);
+            ZuiControlCall(Proc_Option_SetColorNormal, cp, (ZuiAny)ZuiStr2Color(Param2), NULL);
         else if (wcscmp(Param1, L"hotselectedcolor") == 0)
-            ZuiControlCall(Proc_Option_SetColorHot, cp, (ZuiAny)ZuiStr2Color(Param2), NULL, NULL);
+            ZuiControlCall(Proc_Option_SetColorHot, cp, (ZuiAny)ZuiStr2Color(Param2), NULL);
         else if (wcscmp(Param1, L"pushedselectedcolor") == 0)
-            ZuiControlCall(Proc_Option_SetColorPushed, cp, (ZuiAny)ZuiStr2Color(Param2), NULL, NULL);
+            ZuiControlCall(Proc_Option_SetColorPushed, cp, (ZuiAny)ZuiStr2Color(Param2), NULL);
         else if (wcscmp(Param1, L"focusedselectedcolor") == 0)
-            ZuiControlCall(Proc_Option_SetColorFocused, cp, (ZuiAny)ZuiStr2Color(Param2), NULL, NULL);
+            ZuiControlCall(Proc_Option_SetColorFocused, cp, (ZuiAny)ZuiStr2Color(Param2), NULL);
         else if (wcscmp(Param1, L"disabledselectedcolor") == 0)
-            ZuiControlCall(Proc_Option_SetColorDisabled, cp, (ZuiAny)ZuiStr2Color(Param2), NULL, NULL);
+            ZuiControlCall(Proc_Option_SetColorDisabled, cp, (ZuiAny)ZuiStr2Color(Param2), NULL);
         break;
     }
 #if (defined HAVE_JS) && (HAVE_JS == 1)
@@ -272,7 +272,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
         memset(p, 0, sizeof(ZOption));
         //保存原来的回调地址,创建成功后回调地址指向当前函数
         //创建继承的控件 保存数据指针
-        p->old_udata = ZuiButtonProc(Proc_OnCreate, cp, 0, 0, 0, 0);
+        p->old_udata = ZuiButtonProc(Proc_OnCreate, cp, 0, 0, 0);
         p->old_call = (ZCtlProc)&ZuiButtonProc;
         p->m_ColorSelected = ARGB(200, 12, 111, 255);		//选中的普通状态
         p->m_ColorSelectedHot = ARGB(200, 0, 255, 255);		//选中的点燃状态
@@ -283,7 +283,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
     case Proc_OnDestroy: {
         ZCtlProc old_call = p->old_call;
         ZuiAny old_udata = p->old_udata;
-        old_call(ProcId, cp, old_udata, Param1, Param2, Param3);
+        old_call(ProcId, cp, old_udata, Param1, Param2);
         free(p);
 
         return 0;
@@ -301,7 +301,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
     default:
         break;
     }
-    return p->old_call(ProcId, cp, p->old_udata, Param1, Param2, Param3);
+    return p->old_call(ProcId, cp, p->old_udata, Param1, Param2);
 }
 
 

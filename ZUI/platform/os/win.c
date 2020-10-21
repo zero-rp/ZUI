@@ -122,11 +122,11 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
                 }
             }
             if (darray_len(p->m_aDelayedCleanup) == 0) {
-                ZuiControlCall(Proc_OnDestroy, cp, (ZuiAny)wParam, (ZuiAny)lParam, NULL);
+                ZuiControlCall(Proc_OnDestroy, cp, (ZuiAny)wParam, (ZuiAny)lParam);
                 break;
             }
             else
-                ZuiControlCall(Proc_OnDestroy, cp, (ZuiAny)wParam, (ZuiAny)lParam, NULL);
+                ZuiControlCall(Proc_OnDestroy, cp, (ZuiAny)wParam, (ZuiAny)lParam);
         };
         return 0;
     }
@@ -150,7 +150,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 
 
         //FreeZuiControl(p->m_pRoot, FALSE);
-        ZuiControlCall(Proc_OnClose, p->m_pRoot, 0, 0, 0);
+        ZuiControlCall(Proc_OnClose, p->m_pRoot, 0, 0);
         return 0;
     }
     case WM_ERASEBKGND:
@@ -239,20 +239,20 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
                         rcRoot.bottom -= p->m_rcLayeredInset.bottom;
                     }
                     p->m_pRoot->m_bUpdateNeeded = FALSE;
-                    ZuiControlCall(Proc_SetPos, p->m_pRoot, &rcRoot, (void *)TRUE, 0);
+                    ZuiControlCall(Proc_SetPos, p->m_pRoot, &rcRoot, (void *)TRUE);
                 }
                 else {
                     ZuiControl pControl = NULL;
                     darray_empty(p->m_aFoundControls);
-                    ZuiControlCall(Proc_FindControl, p->m_pRoot, __FindControlsFromUpdate, NULL, (void *)(ZFIND_VISIBLE | ZFIND_ME_FIRST | ZFIND_UPDATETEST));
+                    ZuiControlCall(Proc_FindControl, p->m_pRoot, NULL, (void *)(ZFIND_FROM_UPDATE | ZFIND_VISIBLE | ZFIND_ME_FIRST | ZFIND_UPDATETEST));
                     for (int it = 0; it < darray_len(p->m_aFoundControls); it++) {
                         pControl = (ZuiControl)(p->m_aFoundControls->data[it]);
                         if (!pControl->m_bFloat)
-                            ZuiControlCall(Proc_SetPos, pControl, (ZRect *)ZuiControlCall(Proc_GetPos, pControl, NULL, NULL, NULL), (void *)TRUE, 0);
+                            ZuiControlCall(Proc_SetPos, pControl, (ZRect *)ZuiControlCall(Proc_GetPos, pControl, NULL, NULL), (void *)TRUE);
                         else {
                             RECT rcP;
-                            ZuiControlCall(Proc_GetRelativePos, pControl, &rcP, NULL, NULL);
-                            ZuiControlCall(Proc_SetPos, pControl, &rcP, (void *)TRUE, 0);
+                            ZuiControlCall(Proc_GetRelativePos, pControl, &rcP, NULL);
+                            ZuiControlCall(Proc_SetPos, pControl, &rcP, (void *)TRUE);
                         }
                     }
                 }
@@ -276,7 +276,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             rcRoot.top += p->m_rcLayeredInset.top;
             rcRoot.right -= p->m_rcLayeredInset.right;
             rcRoot.bottom -= p->m_rcLayeredInset.bottom;
-            ZuiControlCall(Proc_SetPos, p->m_pRoot, &rcRoot, (void *)TRUE, 0);
+            ZuiControlCall(Proc_SetPos, p->m_pRoot, &rcRoot, (void *)TRUE);
         }
         // Set focus to first control?
         if (p->m_bFocusNeeded) {
@@ -291,13 +291,13 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             FINDTABINFO info1 = { 0 };
             info1.pFocus = p->m_pFocus;
             info1.bForward = TRUE;
-            ZuiControl pControl = (ZuiControl)ZuiControlCall(Proc_FindControl, p->m_pRoot, __FindControlFromTab, &info1, (void *)(ZFIND_VISIBLE | ZFIND_ENABLED | ZFIND_ME_FIRST));
+            ZuiControl pControl = (ZuiControl)ZuiControlCall(Proc_FindControl, p->m_pRoot, &info1, (void *)(ZFIND_FROM_TAB | ZFIND_VISIBLE | ZFIND_ENABLED | ZFIND_ME_FIRST));
             if (pControl == NULL) {
                 // Wrap around
                 FINDTABINFO info2 = { 0 };
                 info2.pFocus = NULL;
                 info2.bForward = TRUE;
-                pControl = (ZuiControl)ZuiControlCall(Proc_FindControl, p->m_pRoot, __FindControlFromTab, &info2, (void *)(ZFIND_VISIBLE | ZFIND_ENABLED | ZFIND_ME_FIRST));
+                pControl = (ZuiControl)ZuiControlCall(Proc_FindControl, p->m_pRoot, &info2, (void *)(ZFIND_FROM_TAB | ZFIND_VISIBLE | ZFIND_ENABLED | ZFIND_ME_FIRST));
             }
             if (pControl != NULL) ZuiOsSetFocus(p, pControl, TRUE);
             p->m_bFocusNeeded = FALSE;
@@ -320,11 +320,11 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             //int iSaveDC = SaveDC(p->m_hDcOffscreen->hdc);
             //if (p->m_bLayered && p->m_diLayered.pImageInfo == NULL) {
 
-            ZuiControlCall(Proc_OnPaint, p->m_pRoot, p->m_hDcOffscreen, &rcPaint, NULL);
+            ZuiControlCall(Proc_OnPaint, p->m_pRoot, p->m_hDcOffscreen, &rcPaint);
 
             for (int i = 0; i < darray_len(p->m_aPostPaintControls); i++) {
                 ZuiControl pPostPaintControl = (ZuiControl)(p->m_aPostPaintControls->data[i]);
-                ZuiControlCall(Proc_OnPostPaint, pPostPaintControl, p->m_hDcOffscreen, &rcPaint, NULL);
+                ZuiControlCall(Proc_OnPostPaint, pPostPaintControl, p->m_hDcOffscreen, &rcPaint);
             }
             //RestoreDC(p->m_hDcOffscreen->hdc, iSaveDC);
             if (p->m_bLayered) {
@@ -368,7 +368,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         {
             // A standard paint job
             int iSaveDC = SaveDC(p->m_hDcPaint);
-            ZuiControlCall(Proc_OnPaint, p->m_pRoot, p->m_hDcPaint, &rcPaint, NULL);
+            ZuiControlCall(Proc_OnPaint, p->m_pRoot, p->m_hDcPaint, &rcPaint);
             RestoreDC(p->m_hDcPaint, iSaveDC);
         }
         // 全部完毕!
@@ -386,7 +386,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         GetClientRect(p->m_hWnd, &rcClient);
         HDC hDC = (HDC)wParam;
         int save = SaveDC(hDC);
-        ZuiControlCall(Proc_OnPaint, p->m_pRoot, hDC, &rcClient, NULL);
+        ZuiControlCall(Proc_OnPaint, p->m_pRoot, hDC, &rcClient);
         // Check for traversing children. The crux is that WM_PRINT will assume
         // that the DC is positioned at frame coordinates and will paint the child
         // control at the wrong position. We'll simulate the entire thing instead.
@@ -496,7 +496,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         ZPoint pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
         ZuiControl pHover = NULL;
         if (p->m_pRoot)
-            pHover = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_HITTEST | ZFIND_TOP_FIRST));
+            pHover = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, &pt, (void *)(ZFIND_FROM_POINT | ZFIND_VISIBLE | ZFIND_HITTEST | ZFIND_TOP_FIRST));
         if (pHover == NULL) break;
         // Generate mouse hover event
         if (p->m_pEventHover != NULL) {
@@ -520,7 +520,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         p->m_ToolTip.uId = (UINT_PTR)p->m_hWnd;
         p->m_ToolTip.hinst = m_hInstance;
         p->m_ToolTip.lpszText = (LPWSTR)pHover->m_sToolTip;
-        memcpy(&p->m_ToolTip.rect, (ZRect *)ZuiControlCall(Proc_GetPos, pHover, NULL, NULL, NULL), sizeof(ZRect));
+        memcpy(&p->m_ToolTip.rect, (ZRect *)ZuiControlCall(Proc_GetPos, pHover, NULL, NULL), sizeof(ZRect));
         if (p->m_hwndTooltip == NULL) {
             p->m_hwndTooltip = CreateWindowEx(0, TOOLTIPS_CLASS, NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, p->m_hWnd, NULL, m_hInstance, NULL);
             if (p->m_hwndTooltip != NULL && p->m_iTooltipWidth >= 0) {
@@ -574,7 +574,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         p->m_ptLastMousePos = pt;
         ZuiControl pNewHover = NULL;
         if (p->m_pRoot)
-            pNewHover = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_ENABLED | ZFIND_HITTEST | ZFIND_TOP_FIRST));
+            pNewHover = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, &pt, (void *)(ZFIND_FROM_POINT | ZFIND_VISIBLE | ZFIND_ENABLED | ZFIND_HITTEST | ZFIND_TOP_FIRST));
         if (pNewHover != NULL && pNewHover->m_pOs != p) break;
         TEventUI event = { 0 };
         event.ptMouse = pt;
@@ -585,7 +585,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         if (!p->m_bMouseCapture) {
             pNewHover = NULL;
             if (p->m_pRoot)
-                pNewHover = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_ENABLED | ZFIND_HITTEST | ZFIND_TOP_FIRST));
+                pNewHover = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, &pt, (void *)(ZFIND_FROM_POINT | ZFIND_VISIBLE | ZFIND_ENABLED | ZFIND_HITTEST | ZFIND_TOP_FIRST));
             if (pNewHover != NULL && pNewHover->m_pOs != p) break;
             if (pNewHover != p->m_pEventHover && p->m_pEventHover != NULL) {
                 event.Type = ZEVENT_MOUSELEAVE;
@@ -628,7 +628,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         p->m_ptLastMousePos = pt;
         ZuiControl pControl = NULL;
         if (p->m_pRoot)
-            pControl = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_ENABLED | ZFIND_HITTEST | ZFIND_TOP_FIRST));
+            pControl = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, &pt, (void *)(ZFIND_FROM_POINT | ZFIND_VISIBLE | ZFIND_ENABLED | ZFIND_HITTEST | ZFIND_TOP_FIRST));
         if (pControl == NULL) break;
         if (pControl->m_pOs != p) break;
         if (pControl->m_drag) {
@@ -641,7 +641,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             return SendMessage(pControl->m_pOs->m_hWnd, WM_NCLBUTTONDOWN, HTCAPTION, 0);
         }
         p->m_pEventClick = pControl;
-        ZuiControlCall(Proc_SetFocus, pControl, 0, 0, 0);
+        ZuiControlCall(Proc_SetFocus, pControl, 0, 0);
         ZuiOsSetCapture(p);
         TEventUI event = { 0 };
         event.Type = ZEVENT_LBUTTONDOWN;
@@ -665,7 +665,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         p->m_ptLastMousePos = pt;
         ZuiControl pControl = NULL;
         if (p->m_pRoot)
-            pControl = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_ENABLED | ZFIND_HITTEST | ZFIND_TOP_FIRST));
+            pControl = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, &pt, (void *)(ZFIND_FROM_POINT | ZFIND_VISIBLE | ZFIND_ENABLED | ZFIND_HITTEST | ZFIND_TOP_FIRST));
         if (pControl == NULL) break;
         if (pControl->m_pOs != p) break;
         ZuiOsSetCapture(p);
@@ -709,10 +709,10 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         p->m_ptLastMousePos = pt;
         ZuiControl pControl = NULL;
         if (p->m_pRoot)
-            pControl = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_HITTEST | ZFIND_TOP_FIRST));
+            pControl = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, &pt, (void *)(ZFIND_FROM_POINT | ZFIND_VISIBLE | ZFIND_HITTEST | ZFIND_TOP_FIRST));
         if (pControl == NULL) break;
         if (pControl->m_pOs != p) break;
-        ZuiControlCall(Proc_SetFocus, pControl, 0, 0, 0);
+        ZuiControlCall(Proc_SetFocus, pControl, 0, 0);
         TEventUI event = { 0 };
         event.Type = ZEVENT_RBUTTONDOWN;
         event.pSender = pControl;
@@ -752,7 +752,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         p->m_ptLastMousePos = pt;
         ZuiControl pControl = NULL;
         if (p->m_pRoot)
-            pControl = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_HITTEST | ZFIND_TOP_FIRST));
+            pControl = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, &pt, (void *)(ZFIND_FROM_POINT | ZFIND_VISIBLE | ZFIND_HITTEST | ZFIND_TOP_FIRST));
         if (pControl == NULL) break;
         if (pControl->m_pOs != p) break;
         int zDelta = (int)(short)HIWORD(wParam);
@@ -830,9 +830,9 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         ScreenToClient(p->m_hWnd, (LPPOINT)&pt);
         ZuiControl pControl = NULL;
         if (p->m_pRoot)
-            pControl = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, __FindControlFromPoint, &pt, (void *)(ZFIND_VISIBLE | ZFIND_HITTEST | ZFIND_TOP_FIRST));
+            pControl = p->m_pRoot->call(Proc_FindControl, p->m_pRoot, p->m_pRoot->m_sUserData, &pt, (void *)(ZFIND_FROM_POINT | ZFIND_VISIBLE | ZFIND_HITTEST | ZFIND_TOP_FIRST));
         if (pControl == NULL) break;
-        if (((int)ZuiControlCall(Proc_GetControlFlags, pControl, NULL, NULL, NULL) & ZFLAG_SETCURSOR) == 0) break;
+        if (((int)ZuiControlCall(Proc_GetControlFlags, pControl, NULL, NULL) & ZFLAG_SETCURSOR) == 0) break;
         TEventUI event = { 0 };
         event.Type = ZEVENT_SETCURSOR;
         event.pSender = pControl;
@@ -884,7 +884,7 @@ static LRESULT WINAPI __WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     }
     case WM_IME_STARTCOMPOSITION: {
         if (p->m_pFocus == NULL) break;
-        ZuiPoint pt = ZuiControlCall(Proc_GetImePoint, p->m_pFocus, 0, 0, 0);
+        ZuiPoint pt = ZuiControlCall(Proc_GetImePoint, p->m_pFocus, 0, 0);
         COMPOSITIONFORM COMPOSITIONFORM;
         COMPOSITIONFORM.dwStyle = CFS_POINT | CFS_FORCE_POSITION;
         if (pt)
@@ -1023,7 +1023,8 @@ ZuiOsWindow ZuiOsCreateWindow(ZuiControl root, ZuiBool show, ZuiAny pcontrol) {
 
 
         // Initiate all control
-        ZuiControlCall(Proc_SetOs, root, OsWindow, NULL, (void*)TRUE);
+        root->m_pOs = OsWindow;
+        ZuiControlCall(Proc_OnInit, root, 0,0);
 
         OsWindow->m_iTooltipWidth = -1;
         OsWindow->m_iHoverTime = 1000;
@@ -1084,8 +1085,8 @@ ZuiBool ZuiOsSetWindowRestor(ZuiOsWindow OsWindow) {
     return ShowWindow(OsWindow->m_hWnd, SW_RESTORE);
 }
 ZuiBool ZuiOsSetWindowSize(ZuiOsWindow OsWindow, ZuiUInt w, ZuiUInt h) {
-    ZuiControlCall(Proc_SetFixedWidth, OsWindow->m_pRoot, (ZuiAny)w, NULL, NULL);
-    ZuiControlCall(Proc_SetFixedHeight, OsWindow->m_pRoot, (ZuiAny)h, NULL, NULL);
+    ZuiControlCall(Proc_SetFixedWidth, OsWindow->m_pRoot, (ZuiAny)w, NULL);
+    ZuiControlCall(Proc_SetFixedHeight, OsWindow->m_pRoot, (ZuiAny)h, NULL);
     return SetWindowPos(OsWindow->m_hWnd, NULL, 0, 0, w, h, SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
 }
 ZuiBool ZuiOsSetWindowNoBox(ZuiOsWindow OsWindow, ZuiBool b) {
@@ -1337,7 +1338,7 @@ ZuiVoid ZuiOsReapObjects(ZuiOsWindow p, ZuiControl pControl) {
 
 ZuiVoid ZuiOsAddDelayedCleanup(ZuiControl pControl, ZuiAny Param1, ZuiAny Param2)
 {
-    ZuiControlCall(Proc_Layout_Remove, pControl->m_pParent, pControl, (ZuiAny)TRUE, NULL);
+    ZuiControlCall(Proc_Layout_Remove, pControl->m_pParent, pControl, (ZuiAny)TRUE);
     //ZuiControlCall(Proc_SetOs, pControl, pControl->m_pOs, NULL, (void*)FALSE);
     darray_append(pControl->m_pOs->m_aDelayedCleanup, pControl);
     PostMessage(pControl->m_pOs->m_hWnd, WM_APP + 1, (WPARAM)Param1, (LPARAM)Param2);
