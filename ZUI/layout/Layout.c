@@ -611,10 +611,30 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
         int width = cp->m_rcItem.right - cp->m_rcItem.left - (cp->m_dwBorderWidth * 2);
         int height = cp->m_rcItem.bottom - cp->m_rcItem.top - (cp->m_dwBorderWidth * 2);
         ZRect rcCtrl = { 0 };
-        rcCtrl.left = width * pControl->m_piFloatPercent.left + szXY->cx;
-        rcCtrl.top = height * pControl->m_piFloatPercent.top + szXY->cy;
-        rcCtrl.right = rcCtrl.left + width * pControl->m_piFloatPercent.right + sz.cx;
-        rcCtrl.bottom = rcCtrl.top + height * pControl->m_piFloatPercent.bottom + sz.cy;
+        if (pControl->m_piFloatPercent.left >= 1) {
+            rcCtrl.left = cp->m_rcItem.left + pControl->m_piFloatPercent.left;
+        }
+        else {
+            rcCtrl.left = width * pControl->m_piFloatPercent.left + szXY->cx;
+        }
+        if (pControl->m_piFloatPercent.top >= 1) {
+            rcCtrl.top = cp->m_rcItem.top + pControl->m_piFloatPercent.top;
+        }
+        else {
+            rcCtrl.top = height * pControl->m_piFloatPercent.top + szXY->cy;
+        }
+        if (pControl->m_piFloatPercent.right >= 1) {
+            rcCtrl.right = rcCtrl.left + pControl->m_piFloatPercent.right;
+        }
+        else {
+            rcCtrl.right = rcCtrl.left + width * pControl->m_piFloatPercent.right + sz.cx;
+        }
+        if (pControl->m_piFloatPercent.bottom >= 1) {
+            rcCtrl.bottom = rcCtrl.top + pControl->m_piFloatPercent.bottom;
+        }
+        else {
+            rcCtrl.bottom = rcCtrl.top + height * pControl->m_piFloatPercent.bottom + sz.cy;
+        }
         ZuiControlCall(Proc_SetPos, pControl, &rcCtrl, FALSE);
 
         break;

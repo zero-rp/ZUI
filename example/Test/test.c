@@ -115,7 +115,7 @@ ZuiAny ZCALL Main_Notify(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Para
     }
     else if (wcscmp(msg, L"onsize") == 0)
     {
-        if ((ZuiInt)Param1 == 2) {
+        if ((LPARAM)Param1 == 2) {
             ZuiControl pmax = ZuiControlFindName(win, _T("WindowCtl_max"));
             if (pmax)
                 ZuiControlCall(Proc_Option_SetSelected, pmax, (ZuiAny)TRUE, NULL);
