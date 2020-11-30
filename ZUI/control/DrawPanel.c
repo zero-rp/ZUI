@@ -18,7 +18,7 @@ ZEXPORT ZuiAny ZCALL ZuiDrawPanelProc(ZuiInt ProcId, ZuiControl cp, ZuiDrawPanel
         return 0;
     }
     case Proc_GetObject:
-        if (Param1 == Type_DrawPanel)
+        if (_wcsicmp(Param1, (ZuiAny)Type_DrawPanel) == 0)
             return (ZuiAny)p;
         break;
     case Proc_GetType:

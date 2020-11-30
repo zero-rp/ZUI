@@ -201,7 +201,7 @@ void* ZCALL ZuiHorizontalLayoutProc(int ProcId, ZuiControl cp, ZuiHorizontalLayo
         return 0;
     }
     case Proc_GetObject:
-        if (Param1 == (ZuiAny)Type_HorizontalLayout)
+        if (_wcsicmp(Param1, (ZuiAny)Type_HorizontalLayout) == 0)
             return (ZuiAny)p;
         break;
     case Proc_GetType:

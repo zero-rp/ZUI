@@ -961,7 +961,7 @@ void* ZCALL ZuiLayoutProc(ZuiInt ProcId, ZuiControl cp, ZuiLayout p, ZuiAny Para
         return 0;
     }
     case Proc_GetObject:
-        if (Param1 == (ZuiAny)Type_Layout)
+        if (_wcsicmp(Param1, (ZuiAny)Type_Layout) == 0)
             return (ZuiAny)p;
         break;
     case Proc_GetType:

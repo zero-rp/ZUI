@@ -353,7 +353,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         return 0;
     }
     case Proc_GetObject: {
-        if (Param1 == (ZuiAny)Type_List)
+        if (_wcsicmp(Param1, (ZuiAny)Type_List) == 0)
             return (ZuiAny)p;
         break;
     }
@@ -690,7 +690,7 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
         return 0;
     }
     case Proc_GetObject: {
-        if (Param1 == (ZuiAny)Type_ListBody)
+        if (_wcsicmp(Param1, (ZuiAny)Type_ListBody) == 0)
             return (ZuiAny)p;
         break;
     }
@@ -1030,7 +1030,7 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
         return 0;
     }
     case Proc_GetObject: {
-        if (Param1 == (ZuiAny)Type_ListElement)
+        if (_wcsicmp(Param1, (ZuiAny)Type_ListElement) == 0)
             return (ZuiAny)p;
         break;
     }
@@ -1089,7 +1089,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderProc(ZuiInt ProcId, ZuiControl cp, ZuiListHead
         return 0;
     }
     case Proc_GetObject: {
-        if (Param1 == (ZuiAny)Type_ListHeader)
+        if (_wcsicmp(Param1, (ZuiAny)Type_ListHeader) == 0)
             return (ZuiAny)p;
         break;
     }
@@ -1369,7 +1369,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
         return 0;
     }
     case Proc_GetObject: {
-        if (Param1 == (ZuiAny)Type_ListHeaderItem)
+        if (_wcsicmp(Param1, (ZuiAny)Type_ListHeaderItem) == 0)
             return (ZuiAny)p;
         break;
     }

@@ -193,7 +193,7 @@ ZEXPORT ZuiAny ZCALL ZuiWindowProc(ZuiInt ProcId, ZuiControl cp, ZuiWindow p, Zu
         break;
     }
     case Proc_GetObject:
-        if (Param1 == (ZuiAny)Type_Window)
+        if (_wcsicmp(Param1, (ZuiAny)Type_Window) == 0)
             return (ZuiAny)p;
         break;
     case Proc_GetType: {

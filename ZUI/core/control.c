@@ -1013,7 +1013,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                       //    }
 #endif
     case Proc_GetObject: {
-        if (Param1 == (ZuiAny)Type_Null)
+        if (_wcsicmp(Param1, (ZuiAny)Type_Null) == 0)
             return p;
         break;
     }

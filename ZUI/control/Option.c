@@ -289,7 +289,7 @@ ZEXPORT ZuiAny ZCALL ZuiOptionProc(ZuiInt ProcId, ZuiControl cp, ZuiOption p, Zu
         return 0;
     }
     case Proc_GetObject:
-        if (Param1 == (ZuiAny)Type_Option)
+        if (_wcsicmp(Param1, (ZuiAny)Type_Option) == 0)
             return (ZuiAny)p;
         break;
     case Proc_GetType:

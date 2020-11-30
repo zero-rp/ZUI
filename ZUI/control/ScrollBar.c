@@ -951,7 +951,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         return 0;
     }
     case Proc_GetObject:
-        if (Param1 == (ZuiAny)Type_ScrollBar)
+        if (_wcsicmp(Param1, (ZuiAny)Type_ScrollBar) == 0)
             return (ZuiAny)p;
         break;
     case Proc_GetType:

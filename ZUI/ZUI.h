@@ -240,7 +240,7 @@ enum ZREST
 //--------------------------------------------------------------------Base类
 #if 1
 //功能宏
-#define Type_Null               0xc6268d0b
+#define Type_Null               L"Null"
 
 #define ZTYLE_BOX               1   //单线边框
 #define ZTYLE_BKGColor          2   //具有背景色
@@ -337,11 +337,11 @@ enum ZREST
 
 //--------------------------------------------------------------------Layout类
 #if 1
-#define Type_Layout                     0xbebc5b1a
-#define Type_VerticalLayout             0xd72bfbd7
-#define Type_HorizontalLayout           0xf20a2d07
-#define Type_TileLayout                 0x15e48812
-#define Type_TabLayout                  0x61b7311c
+#define Type_Layout                     L"Layout"
+#define Type_VerticalLayout             L"VerticalLayout"
+#define Type_HorizontalLayout           L"HorizontalLayout"
+#define Type_TileLayout                 L"TileLayout"
+#define Type_TabLayout                  L"TabLayout"
 
 //--------base
 #define Proc_Layout_Add                 101 ///添加控件
@@ -394,7 +394,7 @@ enum ZREST
 
 //--------------------------------------------------------------------Label类
 #if 1
-#define Type_Label                  0xe538ac26
+#define Type_Label                  L"Label"
 #define Proc_Label_SetFont          171     //设置字体
 #define Proc_Label_SetTextColor     172     //设置文本颜色
 #define Proc_Label_SetTextPadding   173     //字体边距
@@ -403,7 +403,7 @@ enum ZREST
 
 //--------------------------------------------------------------------Button类
 #if 1
-#define Type_Button                 0x5e7331d7
+#define Type_Button                 L"Button"
 
 #define Proc_Button_SetResNormal    201    //普通颜色
 #define Proc_Button_SetResHot       202    //高亮状态
@@ -422,30 +422,30 @@ enum ZREST
 #if 1
 
 #endif // 1
-//--------------------------------------------------------------------类
+//--------------------------------------------------------------------DrawPanel类
 #if 1
-
+#define Type_DrawPanel            L"DrawPanel"
 #endif // 1
 //--------------------------------------------------------------------SplitterBar类
 #if 1
-#define Type_SplitterBar            0xd77cbbba
+#define Type_SplitterBar            L"SplitterBar"
 #endif // 1
 //--------------------------------------------------------------------ProgressBar类
 #if 1
-#define Type_ProgressBar            0x251a8a44
+#define Type_ProgressBar            L"ProgressBar"
 #endif
 
 //--------------------------------------------------------------------CheckBox类
 #if 1
-#define Type_CheckBox               0x251a8a44
+#define Type_CheckBox               L"CheckBox"
 #endif // 1
 //--------------------------------------------------------------------List类
 #if 1
-#define Type_List                           0x86c6c0f9
-#define Type_ListBody                       0x66e9ee9e
-#define Type_ListElement                    0x0362584a
-#define Type_ListHeader                     0x39323603
-#define Type_ListHeaderItem                 0x25996255
+#define Type_List                           L"List"
+#define Type_ListBody                       L"ListBody"
+#define Type_ListElement                    L"listElement"
+#define Type_ListHeader                     L"listHeader"
+#define Type_ListHeaderItem                 L"listHeaderItem"
 
 
 #define Proc_List_GetHeader                 400    //取列表头控件
@@ -494,7 +494,7 @@ enum ZREST
 
 //--------------------------------------------------------------------Window类
 #if 1
-#define Type_Window                 0x5e298cdf
+#define Type_Window                 L"Window"
 
 #define Proc_Window_SetNoBox        1001    //设置为无边框窗体
 #define Proc_Window_SetWindowMin    1002    //
@@ -512,7 +512,7 @@ enum ZREST
 
 //--------------------------------------------------------------------Option类
 #if 1
-#define Type_Option                         0x8f0a0522
+#define Type_Option                         L"Option"
 #define Proc_Option_SetSelected             1031    //
 #define Proc_Option_GetSelected             1032    //
 
@@ -533,7 +533,7 @@ enum ZREST
 
 //--------------------------------------------------------------------ScrollBar类
 #if 1
-#define Type_ScrollBar                  0xd2473c6e
+#define Type_ScrollBar                  L"ScrollBar"
 #define Proc_ScrollBar_SetHorizontal    1050 //设置为横向滚动条
 #define Proc_ScrollBar_SetScrollPos     1051 //设置位置
 #define Proc_ScrollBar_GetScrollPos     1052 //获取位置
@@ -557,8 +557,8 @@ enum ZREST
 #endif //1
 //--------------------------------------------------------------------TreeView类
 #if 1
-#define Type_TreeView                   0xa1526942
-#define Type_TreeNode                   0xa78958f4
+#define Type_TreeView                   L"TreeView"
+#define Type_TreeNode                   L"TreeNode"
 
 #define Proc_TreeView_Add                   Proc_Layout_Add  
 #define Proc_TreeView_AddAt                 Proc_Layout_AddAt
