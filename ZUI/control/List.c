@@ -361,8 +361,8 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         return (ZuiAny)Type_List;
     case Proc_CoreInit:
         //将辅助控件注册到系统
-        ZuiControlRegisterAdd(L"listbody", (ZCtlProc)&ZuiListBodyProc);
-        ZuiControlRegisterAdd(L"listheader", (ZCtlProc)&ZuiListHeaderProc);
+        ZuiControlRegisterAdd(Type_ListBody, (ZCtlProc)&ZuiListBodyProc);
+        ZuiControlRegisterAdd(Type_ListHeader, (ZCtlProc)&ZuiListHeaderProc);
         return (ZuiAny)TRUE;
     case Proc_CoreUnInit:
         return (ZuiAny)TRUE;
@@ -698,7 +698,7 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
         return (ZuiAny)Type_ListBody;
     case Proc_CoreInit:
         //将辅助控件注册到系统
-        ZuiControlRegisterAdd(L"listelement", (ZCtlProc)&ZuiListElementProc);
+        ZuiControlRegisterAdd(Type_ListElement, (ZCtlProc)&ZuiListElementProc);
         return (ZuiAny)TRUE;
     case Proc_CoreUnInit:
         return (ZuiAny)NULL;
@@ -1097,7 +1097,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderProc(ZuiInt ProcId, ZuiControl cp, ZuiListHead
         return (ZuiAny)Type_ListHeader;
     case Proc_CoreInit:
         //将辅助控件注册到系统
-        ZuiControlRegisterAdd(L"listheaderitem", (ZCtlProc)&ZuiListHeaderItemProc);
+        ZuiControlRegisterAdd(Type_ListHeaderItem, (ZCtlProc)&ZuiListHeaderItemProc);
         return (ZuiAny)TRUE;
     case Proc_CoreUnInit: {
         return (ZuiAny)TRUE;

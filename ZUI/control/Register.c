@@ -56,11 +56,7 @@ ZuiBool ZuiClassInit()
     ZuiControlRegisterAdd(Type_Option, (ZCtlProc)&ZuiOptionProc);
     ZuiControlRegisterAdd(Type_CheckBox, (ZCtlProc)&ZuiCheckBoxProc);
     ZuiControlRegisterAdd(Type_List, (ZCtlProc)&ZuiListProc);
-    ZuiControlRegisterAdd(Type_ListElement, (ZCtlProc)&ZuiListElementProc);
-    ZuiControlRegisterAdd(Type_ListHeader, (ZCtlProc)&ZuiListHeaderProc);
-    ZuiControlRegisterAdd(Type_ListHeaderItem, (ZCtlProc)&ZuiListHeaderItemProc);
     ZuiControlRegisterAdd(Type_TreeView, (ZCtlProc)&ZuiTreeViewProc);
-    ZuiControlRegisterAdd(Type_TreeNode, (ZCtlProc)&ZuiTreeNodeProc);
     
     return TRUE;
 }

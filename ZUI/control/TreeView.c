@@ -204,7 +204,7 @@ ZEXPORT ZuiAny ZCALL ZuiTreeViewProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeView p
         return (ZuiAny)Type_TreeView;
     case Proc_CoreInit:
         //将辅助控件注册到系统
-        ZuiControlRegisterAdd(L"treenode", (ZCtlProc)&ZuiTreeNodeProc);
+        ZuiControlRegisterAdd(Type_TreeNode, (ZCtlProc)&ZuiTreeNodeProc);
         return (ZuiAny)TRUE;
     case Proc_CoreUnInit:
         return (ZuiAny)NULL;
