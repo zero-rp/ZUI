@@ -353,7 +353,7 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         return 0;
     }
     case Proc_GetObject: {
-        if (Param1 == (ZuiAny)Type_List)
+        if (_wcsicmp(Param1, (ZuiAny)Type_List) == 0)
             return (ZuiAny)p;
         break;
     }
@@ -361,8 +361,8 @@ ZEXPORT ZuiAny ZCALL ZuiListProc(ZuiInt ProcId, ZuiControl cp, ZuiList p, ZuiAny
         return (ZuiAny)Type_List;
     case Proc_CoreInit:
         //将辅助控件注册到系统
-        ZuiControlRegisterAdd(L"listbody", (ZCtlProc)&ZuiListBodyProc);
-        ZuiControlRegisterAdd(L"listheader", (ZCtlProc)&ZuiListHeaderProc);
+        ZuiControlRegisterAdd(Type_ListBody, (ZCtlProc)&ZuiListBodyProc);
+        ZuiControlRegisterAdd(Type_ListHeader, (ZCtlProc)&ZuiListHeaderProc);
         return (ZuiAny)TRUE;
     case Proc_CoreUnInit:
         return (ZuiAny)TRUE;
@@ -690,7 +690,7 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
         return 0;
     }
     case Proc_GetObject: {
-        if (Param1 == (ZuiAny)Type_ListBody)
+        if (_wcsicmp(Param1, (ZuiAny)Type_ListBody) == 0)
             return (ZuiAny)p;
         break;
     }
@@ -698,7 +698,7 @@ ZEXPORT ZuiAny ZCALL ZuiListBodyProc(ZuiInt ProcId, ZuiControl cp, ZuiListBody p
         return (ZuiAny)Type_ListBody;
     case Proc_CoreInit:
         //将辅助控件注册到系统
-        ZuiControlRegisterAdd(L"listelement", (ZCtlProc)&ZuiListElementProc);
+        ZuiControlRegisterAdd(Type_ListElement, (ZCtlProc)&ZuiListElementProc);
         return (ZuiAny)TRUE;
     case Proc_CoreUnInit:
         return (ZuiAny)NULL;
@@ -1030,7 +1030,7 @@ ZEXPORT ZuiAny ZCALL ZuiListElementProc(ZuiInt ProcId, ZuiControl cp, ZuiListEle
         return 0;
     }
     case Proc_GetObject: {
-        if (Param1 == (ZuiAny)Type_ListElement)
+        if (_wcsicmp(Param1, (ZuiAny)Type_ListElement) == 0)
             return (ZuiAny)p;
         break;
     }
@@ -1089,7 +1089,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderProc(ZuiInt ProcId, ZuiControl cp, ZuiListHead
         return 0;
     }
     case Proc_GetObject: {
-        if (Param1 == (ZuiAny)Type_ListHeader)
+        if (_wcsicmp(Param1, (ZuiAny)Type_ListHeader) == 0)
             return (ZuiAny)p;
         break;
     }
@@ -1097,7 +1097,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderProc(ZuiInt ProcId, ZuiControl cp, ZuiListHead
         return (ZuiAny)Type_ListHeader;
     case Proc_CoreInit:
         //将辅助控件注册到系统
-        ZuiControlRegisterAdd(L"listheaderitem", (ZCtlProc)&ZuiListHeaderItemProc);
+        ZuiControlRegisterAdd(Type_ListHeaderItem, (ZCtlProc)&ZuiListHeaderItemProc);
         return (ZuiAny)TRUE;
     case Proc_CoreUnInit: {
         return (ZuiAny)TRUE;
@@ -1369,7 +1369,7 @@ ZEXPORT ZuiAny ZCALL ZuiListHeaderItemProc(ZuiInt ProcId, ZuiControl cp, ZuiList
         return 0;
     }
     case Proc_GetObject: {
-        if (Param1 == (ZuiAny)Type_ListHeaderItem)
+        if (_wcsicmp(Param1, (ZuiAny)Type_ListHeaderItem) == 0)
             return (ZuiAny)p;
         break;
     }

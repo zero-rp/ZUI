@@ -197,14 +197,14 @@ ZEXPORT ZuiAny ZCALL ZuiTreeViewProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeView p
         return 0;
     }
     case Proc_GetObject:
-        if (Param1 == (ZuiAny)Type_TreeView)
+        if (_wcsicmp(Param1, (ZuiAny)Type_TreeView) == 0)
             return (ZuiAny)p;
         break;
     case Proc_GetType:
         return (ZuiAny)Type_TreeView;
     case Proc_CoreInit:
         //将辅助控件注册到系统
-        ZuiControlRegisterAdd(L"treenode", (ZCtlProc)&ZuiTreeNodeProc);
+        ZuiControlRegisterAdd(Type_TreeNode, (ZCtlProc)&ZuiTreeNodeProc);
         return (ZuiAny)TRUE;
     case Proc_CoreUnInit:
         return (ZuiAny)NULL;
@@ -415,7 +415,7 @@ ZEXPORT ZuiAny ZCALL ZuiTreeNodeProc(ZuiInt ProcId, ZuiControl cp, ZuiTreeNode p
         return 0;
     }
     case Proc_GetObject:
-        if (Param1 == (ZuiAny)Type_TreeNode)
+        if (_wcsicmp(Param1, (ZuiAny)Type_TreeNode) == 0)
             return (ZuiAny)p;
         break;
     case Proc_GetType:

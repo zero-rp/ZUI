@@ -11,7 +11,7 @@ ZEXPORT ZuiAny ZCALL ZuiCheckBoxProc(ZuiInt ProcId, ZuiControl cp, ZuiCheckBox p
         return ZuiOptionProc(Proc_OnCreate, cp, (ZuiOption)p, Param1, Param2);
     }
     case Proc_GetObject:
-        if (Param1 == (ZuiAny)Type_CheckBox)
+        if (_wcsicmp(Param1, (ZuiAny)Type_CheckBox) == 0)
             return (ZuiAny)p;
         break;
     case Proc_GetType:

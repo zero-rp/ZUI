@@ -1,7 +1,6 @@
 ﻿#ifndef __DrawPanel_H__
 #define __DrawPanel_H__
 #include <ZUI.h>
-#define Type_DrawPanel            0x0
 
 /**按钮控件结构*/
 typedef struct _ZDrawPanel

@@ -410,7 +410,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
         break;
     }
     case Proc_SetFloatPercent: {
-        memcpy(&p->m_piFloatPercent, Param1, sizeof(ZRect));
+        memcpy(&p->m_piFloatPercent, Param1, sizeof(ZRectR));
         ZuiControlNeedParentUpdate(p);
         break;
     }
@@ -703,10 +703,10 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
             else {
                 ZRectR piFloatPercent = { 0 };
                 ZuiText pstr = NULL;
-                piFloatPercent.left = _tcstod(Param2, &pstr);  ASSERT(pstr); if (*pstr == _T('%')) { piFloatPercent.left /= 100; pstr++; }
-                piFloatPercent.top = _tcstod(pstr + 1, &pstr);    ASSERT(pstr); if (*pstr == _T('%')) { piFloatPercent.top /= 100; pstr++; }
-                piFloatPercent.right = _tcstod(pstr + 1, &pstr);  ASSERT(pstr); if (*pstr == _T('%')) { piFloatPercent.right /= 100; pstr++; }
-                piFloatPercent.bottom = _tcstod(pstr + 1, &pstr); ASSERT(pstr); if (*pstr == _T('%')) { piFloatPercent.bottom /= 100; pstr++; }
+                piFloatPercent.left = _tcstof(Param2, &pstr);  ASSERT(pstr); if (*pstr == _T('%')) { piFloatPercent.left /= 100; pstr++; }
+                piFloatPercent.top = _tcstof(pstr + 1, &pstr);    ASSERT(pstr); if (*pstr == _T('%')) { piFloatPercent.top /= 100; pstr++; }
+                piFloatPercent.right = _tcstof(pstr + 1, &pstr);  ASSERT(pstr); if (*pstr == _T('%')) { piFloatPercent.right /= 100; pstr++; }
+                piFloatPercent.bottom = _tcstof(pstr + 1, &pstr); ASSERT(pstr); if (*pstr == _T('%')) { piFloatPercent.bottom /= 100; pstr++; }
                 ZuiControlCall(Proc_SetFloatPercent, p, &piFloatPercent, NULL);
                 ZuiControlCall(Proc_SetFloat, p, (ZuiAny)TRUE, NULL);
             }
@@ -1013,7 +1013,7 @@ ZEXPORT ZuiAny ZCALL ZuiDefaultControlProc(ZuiInt ProcId, ZuiControl p, ZuiAny U
                       //    }
 #endif
     case Proc_GetObject: {
-        if (Param1 == (ZuiAny)Type_Null)
+        if (_wcsicmp(Param1, (ZuiAny)Type_Null) == 0)
             return p;
         break;
     }

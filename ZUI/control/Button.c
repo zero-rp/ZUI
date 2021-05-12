@@ -250,7 +250,7 @@ ZEXPORT ZuiAny ZCALL ZuiButtonProc(ZuiInt ProcId, ZuiControl cp, ZuiButton p, Zu
         return 0;
     }
     case Proc_GetObject:
-        if (Param1 == (ZuiAny)Type_Button)
+        if (_wcsicmp(Param1, (ZuiAny)Type_Button) == 0)
             return (ZuiAny)p;
         break;
     case Proc_GetType:

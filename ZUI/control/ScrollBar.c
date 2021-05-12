@@ -217,7 +217,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
                     if (p->m_pOwner != NULL)
                         ZuiControlCall(Proc_Layout_LineLeft, p->m_pOwner, NULL, NULL);
                     else
-                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nScrollPos - p->m_nLineSize), NULL, NULL);
+                        ZuiControlCall(Proc_ScrollBar_SetScrollPos, cp, (ZuiAny)(p->m_nScrollPos - p->m_nLineSize), NULL);
                 }
             }
             else if ((p->m_uButton2State & ZSTATE_PUSHED) != 0) {
@@ -951,7 +951,7 @@ ZEXPORT ZuiAny ZCALL ZuiScrollBarProc(ZuiInt ProcId, ZuiControl cp, ZuiScrollBar
         return 0;
     }
     case Proc_GetObject:
-        if (Param1 == (ZuiAny)Type_ScrollBar)
+        if (_wcsicmp(Param1, (ZuiAny)Type_ScrollBar) == 0)
             return (ZuiAny)p;
         break;
     case Proc_GetType:
