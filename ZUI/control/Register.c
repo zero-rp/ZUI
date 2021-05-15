@@ -38,21 +38,12 @@ ZuiBool ZuiClassInit()
     ZuiControlRegisterAdd(Type_HorizontalLayout, (ZCtlProc)&ZuiHorizontalLayoutProc);
     ZuiControlRegisterAdd(Type_TabLayout, (ZCtlProc)&ZuiTabLayoutProc);
     ZuiControlRegisterAdd(Type_TileLayout, (ZCtlProc)&ZuiTileLayoutProc);
-    //ZuiControlRegisterAdd(L"virtual", (ZCtlProc)&ZuiVirtualProc);
-    //ZuiControlRegisterAdd(L"menubar", (ZCtlProc)&ZuiMenuBarProc);
-    //ZuiControlRegisterAdd(L"menu", (ZCtlProc)&ZuiMenuProc);
-
-
     ZuiControlRegisterAdd(Type_Window, (ZCtlProc)&ZuiWindowProc);
-    //ZuiControlRegisterAdd(L"html", (ZCtlProc)&ZuiHtmlProc);
     ZuiControlRegisterAdd(Type_ScrollBar, (ZCtlProc)&ZuiScrollBarProc);
     ZuiControlRegisterAdd(Type_SplitterBar, (ZCtlProc)&ZuiSplitterBarProc);
     ZuiControlRegisterAdd(Type_Label, (ZCtlProc)&ZuiLabelProc);
     ZuiControlRegisterAdd(Type_ProgressBar, (ZCtlProc)&ZuiProgressBarProc);
     ZuiControlRegisterAdd(Type_Button, (ZCtlProc)&ZuiButtonProc);
-    //ZuiControlRegisterAdd(L"browser", (ZCtlProc)&ZuiBrowserProc);
-    //ZuiControlRegisterAdd(L"edit", (ZCtlProc)&ZuiEditProc);
-    //ZuiControlRegisterAdd(L"singleedit", (ZCtlProc)&ZuiSingleEditProc);
     ZuiControlRegisterAdd(Type_Option, (ZCtlProc)&ZuiOptionProc);
     ZuiControlRegisterAdd(Type_CheckBox, (ZCtlProc)&ZuiCheckBoxProc);
     ZuiControlRegisterAdd(Type_List, (ZCtlProc)&ZuiListProc);

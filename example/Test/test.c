@@ -21,7 +21,7 @@ int _stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     if (!ZuiInit(&config)) return 0;
 
     ZuiRes	res = ZuiResDBGetRes(L"default:default_msgbox.xml", ZREST_STREAM);
-    ZuiInt	len = 0;
+    int	len = 0;
     ZuiAny	xml = ZuiResGetData(res, &len);
     ZuiLayoutLoad(xml, len);
 
@@ -104,7 +104,7 @@ ZuiAny ZCALL Main_Notify_ctl_max(ZuiText msg, ZuiControl p, ZuiAny UserData, Zui
 ZuiAny ZCALL Main_Notify(ZuiText msg, ZuiControl p, ZuiAny UserData, ZuiAny Param1, ZuiAny Param2) {
     if (wcscmp(msg, L"onclose") == 0)
     {
-        ZuiInt ret = ZuiMsgBox(win, L"是否退出程序？", L"提示!!");
+        int ret = ZuiMsgBox(win, L"是否退出程序？", L"提示!!");
         if (ret == ZuiOK) {
             FreeZuiControl(win, 1);
         }
